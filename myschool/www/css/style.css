@@ -1,0 +1,7 @@
+/* Empty. Add your own CSS if you like */
+.list .item, .title {
+    text-transform: capitalize;
+}
+.center {
+    text-align: center;
+}
