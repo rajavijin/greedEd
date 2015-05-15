@@ -49,16 +49,18 @@ angular.module('starter.controllers', ['starter.services'])
         $rootScope.filters = true;
     } else {
         $rootScope.filters = false;
-    }      
-    if(page == 'app.studentDashboard') {
-      filtersData.typeofexams[0] = "NoAll";
-      if(filtersData.typeofexam == 0) filtersData.typeofexam = user.typeofexams.indexOf(user.latesttypeofexam);
-    } else {
-      filtersData.typeofexams[0] = "All";
-    }
-    console.log("filt data", filtersData);
-    localStorage.setItem('filtersData', JSON.stringify(filtersData));
-    $rootScope.filtersData = filtersData;
+    }     
+    if(filtersData.typeofexams) {
+      if(page == 'app.studentDashboard') {
+        filtersData.typeofexams[0] = "NoAll";
+        if(filtersData.typeofexam == 0) filtersData.typeofexam = user.typeofexams.indexOf(user.latesttypeofexam);
+      } else {
+        filtersData.typeofexams[0] = "All";
+      }
+      console.log("filt data", filtersData);
+      localStorage.setItem('filtersData', JSON.stringify(filtersData));
+      $rootScope.filtersData = filtersData;
+    } 
   } 
   $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
     filterStatus(toState.name);
