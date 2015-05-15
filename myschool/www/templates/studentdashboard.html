@@ -1,5 +1,5 @@
 <ion-view cache-view="false">
-<ion-nav-title>{{title}} Dashboard</ion-nav-title>
+<ion-nav-title>{{title}} Report</ion-nav-title>
   <ion-header-bar class="bar-positive">
     <h1 class="title">Pull to Refresh!</h1>
   </ion-header-bar>
@@ -44,7 +44,7 @@
     Remark
     <span class="badge badge-positive">{{mark.remark}}</span>
   </a>    
-  <a listtodash id="{{mark.studentid}}" ng-if="dashboardStatus != 'empty'" class="item item-icon-left" href="#/app/studentoveralldashboard">
+  <a listtodash id="{{mark.studentid}}-{{mark.student}}" ng-if="dashboardStatus != 'empty'" class="item item-icon-left" href="#/app/studentoveralldashboard">
     <i class="icon ion-stats-bars positive"></i>
     View Overall report
   </a>

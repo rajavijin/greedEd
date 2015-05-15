@@ -10,7 +10,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'underscore', 'starter.controll
 
 .run(function($ionicPlatform, $state, $cordovaSQLite) {
   $ionicPlatform.ready(function() {
-    if(window.cordova) {
+    if(window.cordova && window.sqlitePlugin) {
       db = $cordovaSQLite.openDB({ name: "mytest.db" });
     } else {
       db = window.openDatabase("mytest.db", "1.0", "my test data", 200000);

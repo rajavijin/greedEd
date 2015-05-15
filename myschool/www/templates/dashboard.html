@@ -50,7 +50,7 @@
     <span style="color:#aaa;font-weight:bold;font-size:14px">Class topper</span>
     <span class="badge">Mark</span>
   </a>
-  <a class="item item-icon-left" href="#" ng-repeat="(k, v) in toppers | orderBy: 'total':'reverse'" >
+  <a listtodash id="{{v.studentid}}-{{v.student}}" class="item item-icon-left" href="#/app/studentdashboard" ng-repeat="(k, v) in toppers | orderBy: 'total':'reverse'" >
     <i class="icon ion-easel positive"></i>
     {{v.student}} - {{v.standard}}:{{v.division}}
     <span class="badge badge-positive">{{v.total}}</span>

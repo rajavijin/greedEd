@@ -26,7 +26,7 @@ exports.show = function(req, res) {
 exports.getMark = function(req, res) {
   var params = req.params;
   console.log("requested", req.params);
-  if(req.params.typeofexam.toLowerCase() == "all") {
+/*  if(req.params.typeofexam.toLowerCase() == "all") {
     delete params.typeofexam;
   }
   if(req.params.studentid.toLowerCase() == "all") {
@@ -40,9 +40,14 @@ exports.getMark = function(req, res) {
   }  
   if((req.params.division == 'undefined') || (req.params.division.toLowerCase() == "all")) {
     delete params.division;
-  }
+  }*/
+  _.each(req.params, function(p, pkey) {
+    if((p.toLowerCase() == 'all') || (p.toLowerCase() == 'undefined')) {
+      delete params[pkey];
+    }
+  })
   console.log("request", params);
-  Marks.find(params, function (err, marks) {
+  Marks.find(params, null, {sort:{_id: 1}}, function (err, marks) {
     if(err) { return handleError(res, err); }
     if(!marks) { return res.send(404); }
     return res.json(marks);

@@ -39,7 +39,7 @@
             <div class="item item-divider"><strong>Year</strong></div>
             <ion-radio name="year" ng-model="filtersData.educationyear" ng-repeat="(k,v) in filtersData.years" ng-value="{{k}}">{{v}}</ion-radio>
             <div class="item item-divider" ng-hide="noexams"><strong>Exam</strong></div>
-            <ion-radio name="exam" ng-hide="noexams" ng-model="filtersData.typeofexam" ng-repeat="(k,v) in filtersData.typeofexams" ng-value="{{k}}">{{v}}</ion-radio>
+            <ion-radio name="exam" ng-hide="noexams" ng-if="v != 'NoAll'" ng-model="filtersData.typeofexam" ng-repeat="(k,v) in filtersData.typeofexams" ng-value="{{k}}">{{v}}</ion-radio>
         </div>
       <div class="row" ng-if="page == 'app.dashboard'">
         <button menu-close class="col col-33 col-offset-33 button icon-left ion-chevron-left button-block button-positive" ng-click="filterResults(page)">Go</button>

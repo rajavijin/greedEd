@@ -31,6 +31,7 @@ angular.module('starter.controllers', ['starter.services'])
     filtersData.years = user.years;
     filtersData.educationyear = user.years.indexOf(user.educationyear);
     if(user.typeofexams.length > 0) {
+      console.log("MY current page:", $state.current.name);
       user.typeofexams.unshift("All");
       filtersData.typeofexams = user.typeofexams;
       filtersData.typeofexam = user.typeofexams.indexOf(user.latesttypeofexam);
@@ -44,12 +45,20 @@ angular.module('starter.controllers', ['starter.services'])
     $rootScope.page = page;
     console.log("dashboard index:", page.indexOf('ashboard'));
     console.log("Page:", page);
-    console.log("filt data", filtersData);
     if((page.indexOf('ashboard') > 0) && (filtersData.years.length > 0)) {
         $rootScope.filters = true;
     } else {
         $rootScope.filters = false;
     }      
+    if(page == 'app.studentDashboard') {
+      filtersData.typeofexams[0] = "NoAll";
+      if(filtersData.typeofexam == 0) filtersData.typeofexam = user.typeofexams.indexOf(user.latesttypeofexam);
+    } else {
+      filtersData.typeofexams[0] = "All";
+    }
+    console.log("filt data", filtersData);
+    localStorage.setItem('filtersData', JSON.stringify(filtersData));
+    $rootScope.filtersData = filtersData;
   } 
   $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
     filterStatus(toState.name);
@@ -332,10 +341,10 @@ angular.module('starter.controllers', ['starter.services'])
     }
     if(toppers[v.standard]) {
       if(toppers[v.standard].total < v.total) {
-        toppers[v.standard] = {student: v.student, standard: v.standard, division: v.division.toUpperCase(), total: v.total};
+        toppers[v.standard] = {student: v.student, studentid:v.studentid, standard: v.standard, division: v.division.toUpperCase(), total: v.total};
       }
     } else {
-      toppers[v.standard] = {student: v.student, standard: v.standard, division: v.division.toUpperCase(), total: v.total};
+      toppers[v.standard] = {student: v.student, studentid:v.studentid, standard: v.standard, division: v.division.toUpperCase(), total: v.total};
     }
   }
   var applyMarks = function() {
@@ -520,15 +529,13 @@ angular.module('starter.controllers', ['starter.services'])
   }
 })
 .controller('StudentDashboardCtrl', function($scope, $rootScope, $cordovaSQLite, $state, $stateParams, $ionicSideMenuDelegate, MyService) {
-  var filtersData = JSON.parse(localStorage.getItem('filtersData'));
+  console.log("SD filtersData", filtersData);
+  var filtersData = JSON.parse(localStorage.getItem('filtersData')) || {};
   console.log("filtersData", filtersData);
-  if(filtersData.typeofexams)
-    filtersData.typeofexams.splice(0, 1);
   $rootScope.filtersData = filtersData;
   $scope.user = user;
   $rootScope.studentFilterResults = function(page) {
     filtersData = $rootScope.filtersData;
-    filtersData.typeofexams.unshift("All");
     localStorage.setItem('filtersData', JSON.stringify(filtersData));
     $scope.getMarksData();
   }
@@ -539,8 +546,8 @@ angular.module('starter.controllers', ['starter.services'])
     params.schoolid = user.schoolid;
     params.year = user.years[params.educationyear];
     var sdashparams = localStorage.getItem("DashParam") || '';
-    console.log("sdashparams", sdashparams);
     if(sdashparams) {
+      console.log("Came from list: ", sdashparams);
       var sdash = sdashparams.split("-");
       params.studentid = sdash[0];
       params.standard = "all";
@@ -556,14 +563,19 @@ angular.module('starter.controllers', ['starter.services'])
     $scope.studentid = params.studentid;
     console.log("params", params);
     var dbkey = params.schoolid +'_'+params.year+'_'+user.typeofexams[params.typeofexam]+params.studentid;
-    subjectMarks = [];
-    subjectLabels = []; 
+    if(params.typeofexam % 1 === 0) {
+      $scope.title += " "+user.typeofexams[params.typeofexam];
+    } else {
+      $scope.title += " "+params.typeofexam;
+    }
     if(MyService.online()) {
       MyService.getMarks(params).then(function(studentMarks) {
         totalrecords = studentMarks.length;
         console.log("Got marks:", totalrecords);
         if(totalrecords > 0) {
           $scope.dashboardStatus = "not empty";
+          subjectMarks = [];
+          subjectLabels = []; 
           angular.forEach(studentMarks, function(v,k) {
             processMarksVal(v, k, "online");
           })
@@ -586,6 +598,8 @@ angular.module('starter.controllers', ['starter.services'])
         totalrecords = res.rows.length;
         if(totalrecords > 0) {
           $scope.dashboardStatus = "not empty";
+          subjectMarks = [];
+          subjectLabels = [];
           var allmarks = JSON.parse(res.rows.item(0).value);
           console.log("allmarks", allmarks);
           angular.forEach(allmarks, function(v,k) {
@@ -655,7 +669,8 @@ angular.module('starter.controllers', ['starter.services'])
     var dashparam = localStorage.getItem("DashParam") || '';
     console.log("dashparam", dashparam);
     if(dashparam) {
-      params.studentid = dashparam;
+      var dashp = dashparam.split("-");
+      params.studentid = dashp[0];
     }    
 /*    if($stateParams.studentid) {
       params.studentid = $stateParams.studentid;
@@ -767,7 +782,7 @@ angular.module('starter.controllers', ['starter.services'])
       chart: {renderTo: 'ranks',type: 'line', options3d: {enabled: true,alpha: 10,beta: 20,depth: 50}},
       plotOptions: {line: {dataLabels: {enabled: true},enableMouseTracking: false, depth: 1.}},
       xAxis: {categories: examLabels},
-      yAxis: {title: {text: null},tickInterval: 1},
+      yAxis: {title: {text: null},tickInterval: 1, min: 0,},
       series: [{name: 'Rank',data: ranks}]
     }; 
     $scope.opassfailConfig = {
@@ -927,26 +942,26 @@ angular.module('starter.controllers', ['starter.services'])
 .controller('LoginCtrl', function($scope, $rootScope, $http, $state, $ionicPopup, MyService) {
   $scope.message = "";
   $scope.doingLogin = false;
+  //hm
+  $scope.user = {
+    email: '8951572125@school-a.com',
+    password: 'TdBTtJQacQk3gQ5hdSt+Ug=='
+  };
   //parent with multiple student
   $scope.user = {
     email: '9944046100@school-a.com',
     password: '3w92lz0k9'
+  };
+  //parent with single student
+  $scope.user = {
+    email: '8879900341@school-a.com',
+    password: 'z0db49529'
   };
   //teacher
    $scope.user = {
     email: '7890003311@school-a.com',
     password: 'lgbzc9pb9'
   };  
-  //parent with single student
-  $scope.user = {
-    email: '8879900341@school-a.com',
-    password: 'z0db49529'
-  };
-  //hm
-  $scope.user = {
-    email: '8951572125@school-a.com',
-    password: 'TdBTtJQacQk3gQ5hdSt+Ug=='
-  };
   $scope.login = function() {
     if(($scope.user.email == null) || ($scope.user.password == null)) {
       alert('Please fill the fields');
@@ -978,7 +993,6 @@ angular.module('starter.controllers', ['starter.services'])
     console.log("Logging out:");
     localStorage.removeItem('uid');
     localStorage.removeItem("DashParam");
-    localStorage.removeItem("filtersData");
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     $state.go("home", {}, {reload: true});

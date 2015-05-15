@@ -5,7 +5,7 @@
       <div class="bar bar-header item-input-inset">
       <ion-search placeholder="Search a user" filter="query.search"></ion-search>
       </div>
-      <ion-item collection-repeat="user in users | filter:query.search.value" id="{{user._id}}-{{user.name}}" class="item item-icon-left positive" href="#/app/studentdashboard">
+      <ion-item listtodash collection-repeat="user in users | filter:query.search.value" id="{{user._id}}-{{user.name}}" class="item item-icon-left positive" href="#/app/studentdashboard">
       <i class="icon ion-person"></i>
       <h2>{{user.name}}</h2>
     </ion-item>

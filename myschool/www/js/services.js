@@ -1,8 +1,8 @@
 angular.module('starter.services', [])
 .factory('MyService', function($rootScope, $ionicPopup, $state, $http, $q) {
   var baseUrl = 'http://myschool-bridgeserver.rhcloud.com';
-  //var baseUrl = 'http://localhost\:9000';
-  var baseUrl = 'http://192.168.1.3\:9000';
+  var baseUrl = 'http://192.168.1.2\:9000';
+  var baseUrl = 'http://localhost\:9000';
   var loginEndpoint       = baseUrl +'/api/users/verify';
   var logoutEndpoint       = baseUrl +'/api/users/';
   var token = localStorage.getItem('token') || '';
@@ -84,11 +84,15 @@ angular.module('starter.services', [])
     },    
     getMarks: function(student) {
       var defer = $q.defer();
-      console.log("student params", student);
       var type = student.typeofexam;
       if(student.typeofexam % 1 === 0) {
         type = user.typeofexams[student.typeofexam];
+/*      if($state.current.name == "app.studentDashboard") {
+          type = user.typeofexams[student.typeofexam - 1];
+        } else {
+        }*/
       }
+      console.log("Mark url:", '/api/marks/'+student.schoolid+'/'+student.year+'/'+type+'/'+student.studentid+'/'+student.standard+'/'+student.division);
       $http.get(baseUrl+'/api/marks/'+student.schoolid+'/'+student.year+'/'+type+'/'+student.studentid+'/'+student.standard+'/'+student.division)
       .success(function(data, status, headers, config){
         defer.resolve(data);
