@@ -1,0 +1,18 @@
+{
+  "name": "myschoolblue",
+  "app_id": "f2327183",
+  "gulpStartupTasks": [
+    "sass",
+    "watch"
+  ],
+  "watchPatterns": [
+    "www/**/*",
+    "!www/lib/**/*"
+  ],
+  "proxies": [
+    {
+      "path": "/api",
+      "proxyUrl": "http://localhost:9000/api"
+    }
+  ]
+}

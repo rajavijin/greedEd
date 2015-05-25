@@ -3,6 +3,9 @@
     text-transform: capitalize;
     white-space: normal;
 }
+.noclick {
+	pointer-events: none;
+}
 .center {
     text-align: center;
 }

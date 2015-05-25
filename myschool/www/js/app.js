@@ -15,8 +15,6 @@ angular.module('starter', ['ionic', 'ngCordova', 'underscore', 'starter.controll
     } else {
       db = window.openDatabase("mytest.db", "1.0", "my test data", 200000);
     }
-    //$cordovaSQLite.execute(db, "DROP TABLE marks");
-    //$cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS marks (id integer primary key, _id text, student text, studentid text, school text, schoolid text, typeofexam text, marks blob, total integer, percentage integer, grade text, attendance text, status text, year integer, educationyear text, subjects blob, teacher text, teacherid text, standard text, division text, created integer, action text)");
     $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS marks (key text, value blob, created)");
     $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS users (key text, value blob, created)");
 

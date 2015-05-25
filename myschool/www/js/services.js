@@ -87,10 +87,6 @@ angular.module('starter.services', [])
       var type = student.typeofexam;
       if(student.typeofexam % 1 === 0) {
         type = user.typeofexams[student.typeofexam];
-/*      if($state.current.name == "app.studentDashboard") {
-          type = user.typeofexams[student.typeofexam - 1];
-        } else {
-        }*/
       }
       console.log("Mark url:", '/api/marks/'+student.schoolid+'/'+student.year+'/'+type+'/'+student.studentid+'/'+student.standard+'/'+student.division);
       $http.get(baseUrl+'/api/marks/'+student.schoolid+'/'+student.year+'/'+type+'/'+student.studentid+'/'+student.standard+'/'+student.division)
@@ -119,7 +115,6 @@ angular.module('starter.services', [])
       return defer.promise;
     },            
     online: function() {
-      return true;
       if(navigator.platform == "Linux x86_64") {
         return true;
       }
@@ -139,61 +134,8 @@ angular.module('starter.services', [])
       else {
         return true;
       }
-    },
-    charts: function(marks, chartlist) {
-    	var allcharts = {};
-    	console.log("user in chart service", user);
-    	var updateditems = subjectMarks = subjectLabels = gradeLabels = subjectDataPass = subjectDataFail = toppers = [];  
-  		var pass = fail = attendanceVal = totalrecords = 0;
-		var gradeData = j = [];
-		angular.forEach(marks, function(v,k) {
-		    var subjects = user.subjects;
-		    var marks = v.marks;
-			if(v.status == "Pass")
-			  pass++;
-			if(v.status == "Fail")
-			  fail++;
-			if(toppers[v.standard]) {
-			if(toppers[v.standard].total < v.total) {
-			  toppers[v.standard] = {student: v.student, standard: v.standard, division: v.division, total: v.total};
-			}
-			} else {
-			toppers[v.standard] = {student: v.student, standard: v.standard, division: v.division, total: v.total};
-			}
-			marks.forEach(function(mv, mk) {
-			angular.forEach(mv, function(mvv, mkk) {
-			  if(subjects.indexOf(mkk) > -1) {
-			    subjectDataPass[mkk] = (subjectDataPass[mkk]) ? subjectDataPass[mkk] : 0;
-			    subjectDataFail[mkk] = (subjectDataFail[mkk]) ? subjectDataFail[mkk] : 0;   
-			    if(mvv >= user.passmark) {
-			      subjectDataPass[mkk]++;
-			    } else {
-			      subjectDataFail[mkk]++;
-			    }
-			  }
-			})
-			})
-
-			gradeLabels = [];
-			for (var i = 0; i < user.grades.length; i++) {
-			j[i] = (j[i]) ? j[i] : 0;
-			if(user.grades[i].grade == v.grade) {
-			    j[i]++;
-			}
-			gradeLabels[i] = user.grades[i].grade;
-			};
-			gradeData = j;
-			if(attendanceVal > 0) {
-			attendanceVal = parseInt(v.attendance);
-			} else {
-			attendanceVal = attendanceVal + parseInt(v.attendance);
-			}
-		})
-		applyMarks();
     }
   };
   return service;
 })
-angular.module('underscore', []).factory('_', function() {
-    return window._; // assumes underscore has already been loaded on the page
-});
+angular.module('underscore', []).factory('_', function() {return window._;});

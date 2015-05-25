@@ -624,7 +624,7 @@ angular.module('starter.controllers', ['starter.services'])
     })
     $scope.ssubjectsConfig = {
       chart: {renderTo: 'ssubjects',type: 'column', options3d: {enabled: true,alpha: 10,beta: 20,depth: 50}},
-      plotOptions: {column: {depth: 25}},
+      plotOptions: {column: {depth: 25,events: {legendItemClick: function () {return false;}}}},
       xAxis: {categories: subjectLabels},
       yAxis: {title: {text: null}},
       series: [{name: 'Marks',data: subjectMarks}]
@@ -642,7 +642,7 @@ angular.module('starter.controllers', ['starter.services'])
   $scope.getMarksData();
 })
 .controller('StudentOverallDashboardCtrl', function($scope, $rootScope, $stateParams, $cordovaSQLite, MyService) {
-    var examLabels = examMarks = examGrades = allsubjects = attendance = ranks = [];
+    var examLabels = examMarks = examGrades = allsubjects = attendance = ranks = allMarks = [];
     var subjectDataMarks = {};
     var student = '';
     var pass = fail = 0;
@@ -674,11 +674,6 @@ angular.module('starter.controllers', ['starter.services'])
       var dashp = dashparam.split("-");
       params.studentid = dashp[0];
     }    
-/*    if($stateParams.studentid) {
-      params.studentid = $stateParams.studentid;
-      params.typeofexam = "all";
-      dbkey += '_'+$stateParams.studentid;
-    }*/
     if(!params.studentid) {
       params.studentid = "all";
     }
@@ -694,6 +689,7 @@ angular.module('starter.controllers', ['starter.services'])
     ranks = [];
     pass = 0;
     fail = 0;
+    allMarks = [];
     if(MyService.online()) {
       MyService.getMarks(params).then(function(studentMarks) {
         totalrecords = studentMarks.length;
@@ -738,6 +734,7 @@ angular.module('starter.controllers', ['starter.services'])
   var processMarksVal = function(v, k, status) {
     examLabels.push(v.typeofexam);
     examMarks.push({name: v.typeofexam, y: v.percentage});
+    allMarks.push({name: v.typeofexam, y: v.total});
     attendance.push(v.attendanceP);
     if(v.status == "Pass") pass = pass + 1;
     if(v.status == "Fail") fail = fail + 1;
@@ -761,11 +758,18 @@ angular.module('starter.controllers', ['starter.services'])
     $scope.title = student;
     $scope.somarksConfig = {
       chart: {renderTo: 'somarks',type: 'column', options3d: {enabled: true,alpha: 10,beta: 20,depth: 50}},
-      plotOptions: {column: {depth: 25},allowPointSelect: false},
+      plotOptions: {column: {depth: 25,events: {legendItemClick: function () {return false;}}},allowPointSelect: false},
       xAxis: {categories: examLabels},
       yAxis: {title: {text: null},max:100},
-      series: [{name: 'Marks',data: examMarks}]
+      series: [{name: 'Percentage',data: examMarks}]
     };
+    $scope.allmarksConfig = {
+      chart: {renderTo: 'allmarks',type: 'line', options3d: {enabled: true,alpha: 10,beta: 20,depth: 50}},
+      plotOptions: {line: {depth: 25,events: {legendItemClick: function () {return false;}}},allowPointSelect: false},
+      xAxis: {categories: examLabels},
+      yAxis: {title: {text: null}, max:allsubjects.length*100},
+      series: [{name: 'Total',data: allMarks}]
+    };    
     var allsubjectData = [];
     allsubjects.forEach(function(sv, sk) {
       allsubjectData.push({name: sv, data: subjectDataMarks[sv]});
@@ -775,14 +779,14 @@ angular.module('starter.controllers', ['starter.services'])
     console.log("attendance", attendance);
     $scope.sosubjectsConfig = {
       chart: {renderTo: 'sosubjects',type: 'spline', options3d: {enabled: true,alpha: 10,beta: 20,depth: 50}},
-      plotOptions: {column: {depth: 25}},
+      plotOptions: {spline: {depth: 25}},
       xAxis: {categories: examLabels},
       yAxis: {title: {text: null}},
       series: allsubjectData
     };
     $scope.ranksConfig = {
       chart: {renderTo: 'ranks',type: 'line', options3d: {enabled: true,alpha: 10,beta: 20,depth: 50}},
-      plotOptions: {line: {dataLabels: {enabled: true},enableMouseTracking: false, depth: 1.}},
+      plotOptions: {line: {dataLabels: {enabled: true},enableMouseTracking: false,events: {legendItemClick: function () {return false;}}}},
       xAxis: {categories: examLabels},
       yAxis: {title: {text: null},tickInterval: 1, min: 0,},
       series: [{name: 'Rank',data: ranks}]
@@ -794,14 +798,11 @@ angular.module('starter.controllers', ['starter.services'])
     };        
     $scope.soattendanceConfig = {
       chart: {renderTo: 'soattendance',type: 'column', options3d: {enabled: true,alpha: 10,beta: 20,depth: 50}},
-      plotOptions: {column: {depth: 25},allowPointSelect: false},
+      plotOptions: {column: {depth: 25,events: {legendItemClick: function () {return false;}}},allowPointSelect: false},
       xAxis: {categories: examLabels},
       yAxis: {title: {text: null}, max:100},
       series: [{name: 'Attendance',data: attendance}]
     };
-/*    $scope.allsubjects = allsubjects;
-    $scope.subjectMarks = subjectDataMarks;
-    $scope.attendanceVal = [attendance];*/
   }
 })
 .controller('StudentProfileCtrl', function($scope, $rootScope, $cordovaSQLite, MyService, $stateParams) {
@@ -828,10 +829,8 @@ angular.module('starter.controllers', ['starter.services'])
       params._id = user.students[0].id;
     }
     var dbkey = params.schoolid+'_'+params._id;
-    console.log("GGGGGGGGGGGG", params);
     if(MyService.online()) {
       MyService.getUsers(params).then(function(users) {
-          console.log("Got all users:", users.length);
         if(users.length > 0) {
           $scope.allStudents = true;
           $scope.user = users[0];

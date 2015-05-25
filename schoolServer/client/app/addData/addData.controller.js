@@ -5,7 +5,7 @@ angular.module('schoolServerApp')
   	$scope.result = '';
     $scope.ipdata = {};
     $scope.school = {};
-    $scope.school.school = "school a";
+    $scope.school.school = "St Mary's Hr Sec School";
     $scope.school.schoolphone = "8951572125";
     $scope.school.grades = "Grade A:60-100,Grade B:50-59,Grade C:40-49,Grade F:0-39";
     $scope.school.ranking = "grade";
@@ -31,7 +31,7 @@ angular.module('schoolServerApp')
                         })
                         lastknownData["import"] = true;
                         lastknownData["school"] = $scope.school.school;
-                        lastknownData["email"] = lastknownData["student"].replace(" ", "-").toLowerCase()+lastknownData["studentid"]+"@"+lastknownData["school"].replace(" ", "-").toLowerCase()+".com";
+                        lastknownData["email"] = lastknownData["student"].replace(" ", "-").toLowerCase()+lastknownData["studentid"];
                         lastknown.push(lastknownData);
                     }
                 });

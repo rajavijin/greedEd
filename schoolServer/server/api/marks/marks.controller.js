@@ -26,26 +26,16 @@ exports.show = function(req, res) {
 exports.getMark = function(req, res) {
   var params = req.params;
   console.log("requested", req.params);
-/*  if(req.params.typeofexam.toLowerCase() == "all") {
-    delete params.typeofexam;
-  }
-  if(req.params.studentid.toLowerCase() == "all") {
-    delete params.studentid;
-  }
-  if((req.params.standard == 'undefined') || (req.params.standard == 'all')) {
-    delete params.standard;
-  }
-  if((req.params.typeofexam == 'undefined') || (req.params.typeofexam == 'all')) {
-    delete params.typeofexam;
-  }  
-  if((req.params.division == 'undefined') || (req.params.division.toLowerCase() == "all")) {
-    delete params.division;
-  }*/
   _.each(req.params, function(p, pkey) {
     if((p.toLowerCase() == 'all') || (p.toLowerCase() == 'undefined')) {
       delete params[pkey];
     }
   })
+  if(params.standard == "teacher") {
+    params.marks = {$elemMatch:{teacher:params.division}};
+    delete params.standard;
+    delete params.division;
+  }
   console.log("request", params);
   Marks.find(params, null, {sort:{_id: 1}}, function (err, marks) {
     if(err) { return handleError(res, err); }
@@ -88,17 +78,17 @@ exports.create = function(req, res) {
       var studentMark = req.body;
       studentMark.marks = [];
       student.subjects.forEach(function(sub, si) {
-        studentMark.marks[si] = {};
-        if(studentMark[sub] == "ab") {
+        studentMark.marks[si] = {subject: sub.subject, teacher: sub.teacher};
+        if(studentMark[sub.subject] == "ab") {
           studentMark.marks[si]["status"] = "absent";
-          studentMark.marks[si][sub] = 0;
+          studentMark.marks[si]["mark"] = 0;
           status = "Fail";
         } else {
           studentMark.marks[si]["status"] = "present";
-          studentMark.marks[si][sub] = parseInt(studentMark[sub]);
+          studentMark.marks[si]["mark"] = parseInt(studentMark[sub.subject]);
         }
-        total = parseInt(total) + studentMark.marks[si][sub];
-        if(studentMark[sub] < studentMark.passmark) {
+        total = parseInt(total) + studentMark.marks[si]["mark"];
+        if(studentMark[sub.subject] < studentMark.passmark) {
           status = "Fail";
         }
       })

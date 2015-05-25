@@ -14,7 +14,7 @@ var validationError = function(res, err) {
 
 var createParent = function(res, request, student) {
   //Create Parent
-  var parentEmail = request.parentphone+"@"+student.school.replace(" ", "-").toLowerCase()+".com";
+  var parentEmail = request.parentphone;
   console.log("parent email", parentEmail);
   console.log("parent name", request.parent);
   User.findOne({
@@ -26,7 +26,9 @@ var createParent = function(res, request, student) {
     console.log("parentData", parentData);
     if(parentData) {
       parentData.name = request.parent;
-      parentData.students.push({id:student._id,name:student.name,subjects:student.subjects});
+      if(student._id) {
+        parentData.students.push({id:student._id,name:student.name,subjects:student.subjects});
+      }
       parentData.phone = request.parentphone;
       parentData.pepper = Math.random().toString(36).substring(9);
       parentData.password = parentData.pepper;
@@ -43,8 +45,9 @@ var createParent = function(res, request, student) {
       parentData.email = parentEmail;
       parentData.school = 
       parentData.role = "parent";
-      parentData.students = [student._id];
-      parentData.students = [{id:student._id,name:student.name, subjects:student.subjects}];
+      if(student._id) {
+        parentData.students = [{id:student._id,name:student.name, subjects:student.subjects}];
+      }
       parentData.phone = request.parentphone;
       parentData.pepper = Math.random().toString(36).substring(9);
       parentData.password = parentData.pepper;
@@ -63,17 +66,19 @@ var createParent = function(res, request, student) {
 
 var createTeacher = function(res, request, student) {
   //Create Teacher
-  var teacherEmail = request.teacherphone+"@"+student.school.replace(" ", "-").toLowerCase()+".com";
+  var teacherEmail = request.teacherphone;
   console.log("Email: "+teacherEmail);
   User.findOne({email:teacherEmail}, function(err, teacherData) {
     if (err) return next(err);
     if(teacherData) {
-      teacherData.name = request.teacher;
+      teacherData.name = request.teacher.toLowerCase();
       teacherData.phone = request.teacherphone;
       teacherData.pepper = Math.random().toString(36).substring(9);
       teacherData.password = teacherData.pepper;
       teacherData.provider = request.provider;
-      teacherData.students.push({id:student._id,name:student.name,subjects:student.subjects});
+      if(student) {
+        teacherData.students.push({id:student._id,name:student.name,subjects:student.subjects});
+      }
       teacherData.typeofexams = request.typeofexams;
       teacherData.school = request.school;
       teacherData.schoolid = request.schoolid;
@@ -89,7 +94,9 @@ var createTeacher = function(res, request, student) {
       teacherData.name = request.teacher;
       teacherData.email = teacherEmail;
       teacherData.role = "teacher";
-      teacherData.students = [{id:student._id,name:student.name, subjects: student.subjects}];
+      if(student) {
+        teacherData.students = [{id:student._id,name:student.name, subjects: student.subjects}];
+      }
       teacherData.phone = request.teacherphone;
       teacherData.pepper = Math.random().toString(36).substring(9);
       teacherData.password = teacherData.pepper;
@@ -123,6 +130,9 @@ exports.index = function(req, res) {
  * Creates a new user
  */
 exports.create = function (req, res, next) {
+  if(req.body.student == "Teacher") {
+    return createTeacher(res, req.body, {});
+  }
   //Create student
   var userData = req.body;
   userData.provider = 'local';
@@ -131,9 +141,15 @@ exports.create = function (req, res, next) {
   userData.password = userData.pepper;
   userData.name = req.body.student;
   if(req.body.import) {
-    userData.subjects = req.body.subjects.replace(/ /g,"").split(",");
+    var allsubjects = [];
+    var subjects = req.body.subjects.split(",");
+    _.each(subjects, function(sv, sk) {
+      var sub = sv.toLowerCase().split(":");
+      allsubjects.push({subject: sub[0], teacher: sub[1]});
+    })
+    userData.subjects = allsubjects;
     userData.typeofexams = req.body.typeofexams.replace(/ /g,"").split(",");
-//    console.log("Requested: ", userData);
+    console.log("Requested: ", userData);
     User.findOne({
       email:req.body.email,
       role:"student",
@@ -197,7 +213,11 @@ exports.users = function (req, res, next) {
   if(req.params._id) {
     req.params._id = {$in: req.params._id.split("|")};
   }
-  req.params.role = "student";
+  if(req.params.standard == 'teacher') {
+    req.params.subjects = {$elemMatch: {teacher: req.params.division}};
+    delete req.params.standard;
+    delete req.params.division;
+  }
   console.log("requested users", req.params);
   User.find(req.params).sort({stardard: -1}).exec(function(err, user) {
     if (err) return next(err);
@@ -228,17 +248,12 @@ var senduserdata = function(res, user, data, marksparam) {
               if(data.typeofexams.indexOf(m.typeofexam) == -1) {
                 data.typeofexams.push(m.typeofexam);
               }
-              console.log("Mark iteration:", mkey);
+              if(data.years.indexOf(m.educationyear) == -1) {
+                data.years.push(m.educationyear);
+              }
               if(mkey == totalmarks - 1) {
                 data.educationyear = m.educationyear;
                 data.latesttypeofexam = m.typeofexam;
-                if(m.educationyear.indexOf("-") > -1) {
-                  var year = m.educationyear.split("-");
-                  data.years.push(year[0] - 1 +"-"+year[0]);
-                } else {
-                  data.years.push(data.educationyear - 1);
-                }
-                data.years.push(data.educationyear);
                 console.log("Data", data)
                 res.json(data);
               }
@@ -270,8 +285,12 @@ User.findOne({
       data.phone = user.phone;
       var marksparam = {school: user.school};
       if(user.role == 'teacher') {
-        marksparam.division = data.division = user.division;
-        marksparam.standard = data.standard = user.standard;
+        if(user.standard) {
+          marksparam.division = data.division = user.division;
+          marksparam.standard = data.standard = user.standard;
+        } else {
+          marksparam.marks = {$elemMatch:{"teacher":user.name}};
+        }
 /*        data.typeofexams = user.typeofexams;
         var subjects = {};
         for (var i = 0; i <= user.students.length - 1; i++) {

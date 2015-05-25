@@ -7,13 +7,7 @@
     <ion-refresher pulling-text="Pull to refresh" on-refresh="getMarksData()">
     </ion-refresher>
   <chart id="ssubjects" config="ssubjectsConfig" ng-if="dashboardStatus != 'empty'"></chart>
-  <chart id="sattendance" config="sattendanceConfig" ng-if="dashboardStatus != 'empty'" style="pointer-events:none"></chart>
-  <!-- <div class="item item-list" ng-if="dashboardStatus != 'empty'">
-        <canvas id="line" class="col chart chart-line" data="subjectMarks"
-  labels="subjectLabels"></canvas>
-    <canvas id="pie" class="col chart chart-pie" data="attendanceData"
-  labels="attendanceLabels" legend="true" series="attendanceLabels"></canvas> 
-  </div> -->
+  <chart id="sattendance" config="sattendanceConfig" ng-if="dashboardStatus != 'empty'" class="noclick"></chart>
   <div class="list">
   <a class="item item-icon-left" href="#" ng-if="dashboardStatus == 'empty'">
     <i class="icon ion-compose positive"></i>
@@ -39,6 +33,11 @@
     Status
     <span class="badge badge-positive">{{mark.status}}</span>
   </a>  
+   <a class="item item-icon-left" ng-show="mark.status" href="#" ng-if="dashboardStatus != 'empty'">
+    <i class="icon ion-easel positive"></i>
+    Class
+    <span class="badge badge-positive">{{mark.standard}}{{mark.division}}</span>
+  </a>  
   <a class="item item-icon-left" ng-show="mark.remark" href="#" ng-if="dashboardStatus != 'empty'">
     <i class="icon ion-edit positive"></i>
     Remark
@@ -52,6 +51,6 @@
     <i class="icon ion-person positive"></i>
     View Profile
   </a>  
-</div>
+  </div>
   </ion-content>
 </ion-view>
