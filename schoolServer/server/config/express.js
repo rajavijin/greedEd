@@ -15,7 +15,7 @@ var errorHandler = require('errorhandler');
 var path = require('path');
 var config = require('./environment');
 var passport = require('passport');
-
+var busboy = require('connect-busboy'); //middleware for form/file upload
 module.exports = function(app) {
   var env = app.get('env');
 
@@ -28,6 +28,7 @@ module.exports = function(app) {
   app.use(methodOverride());
   app.use(cookieParser());
   app.use(passport.initialize());
+  app.use(busboy());
   if ('production' === env) {
     app.use(favicon(path.join(config.root, 'public', 'favicon.ico')));
     app.use(express.static(path.join(config.root, 'public')));

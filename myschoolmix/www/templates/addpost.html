@@ -1,0 +1,18 @@
+<ion-view cache-view="false">
+   <ion-nav-title>Add Post</ion-nav-title>
+    <ion-nav-buttons side="right">
+      <button class="button button-icon button-clear ion-camera" ng-click="takePicture()"></button>
+      <button class="button button-icon button-clear ion-image" ng-click="selectPicture()"></button>
+    </ion-nav-buttons>
+   <ion-content>
+      <div class="list card" ng-repeat="v in pictures">
+        <div class="item item-image">
+          <img src="{{v}}" class="full-image"/>
+        </div>
+      </div>
+   </ion-content>
+   <ion-footer-bar class="row">
+      <input type="text" class="col col-80 add-post-text" placeholder="What's on your mind ???" ng-model="post.message">
+      <button class="col send-button button button-icon icon-center button-clean ion-android-send" ng-click="submit()"></button>
+</ion-footer-bar>
+</ion-view>

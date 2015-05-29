@@ -2,7 +2,7 @@ angular.module('starter.services', [])
 .factory('MyService', function($rootScope, $ionicLoading, $ionicPopup, $state, $http, $q) {
   var baseUrl = 'http://myschool-bridgeserver.rhcloud.com';
   var baseUrl = 'http://52.25.97.15';
-  var baseUrl = 'http://localhost:8100/api';
+  var baseUrl = 'http://192.168.1.3:8100/api';
   var loginEndpoint       = baseUrl +'/users/verify';
   var logoutEndpoint       = baseUrl +'/users/';
   var token = localStorage.getItem('token') || '';

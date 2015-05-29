@@ -1,5 +1,5 @@
 /* Empty. Add your own CSS if you like */
-.list .item, .title {
+.list .item, .title, .list .item .col {
     text-transform: capitalize;
     white-space: normal;
 }

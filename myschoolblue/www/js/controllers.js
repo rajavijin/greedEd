@@ -7,18 +7,18 @@ angular.module('starter.controllers', ['starter.services'])
   if($scope.uid) {
     $scope.authorized = true;
     if(user.role == "hm") {
-      $scope.menuLinks = {"Links":[{"title":"Dashboard", "href":"app/hmdashboard", "class":"ion-stats-bars"}, {"title":"Classes", "href":"app/allclasses", "class": "ion-easel"}, {"title":"Students", "href":"app/allstudents", "class": "ion-person-stalker"},{"title":"Teachers", "href":"app/allteachers", "class": "ion-ios-body"},{"title":"log-out", "href":"logout", "class":"ion-log-out"}]};
+      $scope.menuLinks = {"Links":[{"title":"Dashboard", "href":"app/hmdashboard", "class":"ion-stats-bars"}, {"title":"Classes", "href":"app/allclasses", "class": "ion-easel"}, {"title":"Students", "href":"app/allstudents", "class": "ion-person-stalker"},{"title":"Teachers", "href":"app/allteachers", "class": "ion-ios-body"},{"title":"Wall","href":"app/wall","class":"ion-ios-list"},{"title":"log-out", "href":"logout", "class":"ion-log-out"}]};
     } else if (user.role == "parent") {
       if(user.students.length > 1) {
-        $scope.menuLinks = {"Links":[{"title":"Children", "href":"app/allstudents", "class": "ion-person-stalker"},{"title":"log-out", "href":"logout", "class":"ion-log-out"}]};
+        $scope.menuLinks = {"Links":[{"title":"Children", "href":"app/allstudents", "class": "ion-person-stalker"},{"title":"Wall","href":"app/wall","class":"ion-ios-list"},{"title":"log-out", "href":"logout", "class":"ion-log-out"}]};
       } else {
-        $scope.menuLinks = {"Links":[{"title":"Dashboard", "href":"app/studentdashboard", "class":"ion-stats-bars"},{"title":"Profile", "href":"app/studentprofile", "class": "ion-person"},{"title":"log-out", "href":"logout", "class":"ion-log-out"}]};
+        $scope.menuLinks = {"Links":[{"title":"Dashboard", "href":"app/studentdashboard", "class":"ion-stats-bars"},{"title":"Profile", "href":"app/studentprofile", "class": "ion-person"},{"title":"Wall","href":"app/wall","class":"ion-ios-list"},{"title":"log-out", "href":"logout", "class":"ion-log-out"}]};
       }
     } else {
       if(user.standard) {
-        $scope.menuLinks = {"Links":[{"title":"Class Dashboard", "href":"app/dashboard", "class":"ion-stats-bars"},{"title":"Teacher Dashboard", "href":"app/teacherdashboard", "class":"ion-stats-bars"}, {"title":"Students", "href":"app/allstudents", "class": "ion-person-stalker"},{"title":"Profile", "href":"app/classprofile", "class": "ion-person"},{"title":"log-out", "href":"logout", "class":"ion-log-out"}]};
+        $scope.menuLinks = {"Links":[{"title":"Class Dashboard", "href":"app/dashboard", "class":"ion-stats-bars"},{"title":"Teacher Dashboard", "href":"app/teacherdashboard", "class":"ion-stats-bars"}, {"title":"Students", "href":"app/allstudents", "class": "ion-person-stalker"},{"title":"Profile", "href":"app/classprofile", "class": "ion-person"},{"title":"Wall","href":"app/wall","class":"ion-ios-list"},{"title":"log-out", "href":"logout", "class":"ion-log-out"}]};
       } else {
-        $scope.menuLinks = {"Links":[{"title":"Dashboard", "href":"app/teacherdashboard", "class":"ion-stats-bars"},{"title":"Profile", "href":"app/classprofile", "class": "ion-person"},{"title":"log-out", "href":"logout", "class":"ion-log-out"}]};                            
+        $scope.menuLinks = {"Links":[{"title":"Dashboard", "href":"app/teacherdashboard", "class":"ion-stats-bars"},{"title":"Profile", "href":"app/classprofile", "class": "ion-person"},{"title":"Wall","href":"app/wall","class":"ion-ios-list"},{"title":"log-out", "href":"logout", "class":"ion-log-out"}]};                            
       }
     }
   } else {
@@ -92,11 +92,12 @@ angular.module('starter.controllers', ['starter.services'])
     params.year = user.years[params.educationyear];
     params.studentid = "all";
     console.log("params", params);
-    var dbkey = params.schoolid +'_'+params.year+'_'+params.typeofexams[params.typeofexam]+'_hm';
-    if(params.typeofexam == 0) {
+    var dbkey = params.schoolid;
+    if(!params.typeopexam || (params.typeofexam == 0)) {
       $scope.title = "School Overall Dashboard";      
     } else {
       $scope.title = "School "+ params.typeofexams[params.typeofexam] + " Dashboard";
+      dbkey += '_'+params.year+'_'+params.typeofexams[params.typeofexam]+'_hm';
     }
     if(MyService.online()) {
       $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner>'});
@@ -255,12 +256,12 @@ angular.module('starter.controllers', ['starter.services'])
     }
     $scope.standard = params.standard;
     $scope.division = params.division;
-    if(params.typeofexam == 0) {
+    if(!params.typeofexam || (params.typeofexam == 0)) {
       $scope.title = params.standard +'/'+params.division+' Overall Dashboard';
     } else {
       $scope.title = params.standard +'/'+params.division+' '+params.typeofexams[params.typeofexam]+' Dashboard';      
+      var dbkey = params.schoolid +'_'+params.year+'_'+params.typeofexams[params.typeofexam]+'_'+params.standard+'_'+params.division;
     }
-    var dbkey = params.schoolid +'_'+params.year+'_'+params.typeofexams[params.typeofexam]+'_'+params.standard+'_'+params.division;
     console.log("params", params);
     if(MyService.online()) {
       MyService.getMarks(params).then(function(studentMarks) {
@@ -432,9 +433,12 @@ angular.module('starter.controllers', ['starter.services'])
     title = (localStorage.getItem("DashParam")) ? localStorage.getItem("DashParam") : title; 
     params.division = title;
     console.log("params", params);
-    var dbkey = params.schoolid +'_'+params.year+'_'+params.typeofexams[params.typeofexam]+'_'+params.standard+'_'+params.division;
-    $scope.title = title+" "+params.typeofexams[params.typeofexam]+" Dashboard";
     $scope.username = title;
+    $scope.title = title +" Dashboard";
+    if(params.typeofexam) {
+      var dbkey = params.schoolid +'_'+params.year+'_'+params.typeofexams[params.typeofexam]+'_'+params.standard+'_'+params.division;
+      $scope.title = title+" "+params.typeofexams[params.typeofexam]+" Dashboard";
+    }
     if(MyService.online()) {
       MyService.getMarks(params).then(function(studentMarks) {
         totalrecords = studentMarks.length;
@@ -827,11 +831,14 @@ angular.module('starter.controllers', ['starter.services'])
     }
     $scope.studentid = params.studentid;
     console.log("params", params);
-    var dbkey = params.schoolid +'_'+params.year+'_'+user.typeofexams[params.typeofexam]+params.studentid;
-    if(params.typeofexam % 1 === 0) {
-      $scope.title += " "+params.typeofexams[params.typeofexam];
-    } else {
-      $scope.title += " "+params.typeofexam;
+    var dbkey = params.schoolid;
+    if(params.typeofexam) {
+      dbkey += '_'+params.year+'_'+user.typeofexams[params.typeofexam]+params.studentid;
+      if(params.typeofexam % 1 === 0) {
+        $scope.title += " "+params.typeofexams[params.typeofexam];
+      } else {
+        $scope.title += " "+params.typeofexam;
+      }
     }
     if(MyService.online()) {
       MyService.getMarks(params).then(function(studentMarks) {
@@ -1251,27 +1258,125 @@ angular.module('starter.controllers', ['starter.services'])
     classData.allstudents.push({name: v.name, studentid: v._id});
   }
 })
+.controller('WallCtrl', function($scope, $state) {
+  console.log("Awesome Wall");
+  $scope.addpost = function() {
+    $state.go('app.addpost', {});
+  }
+  
+})
+.controller('AddPostCtrl', function($scope, $cordovaCamera, $ionicLoading, MyService) {
+  console.log("Add Post");
+  $scope.post = {};
+  $scope.post.pictures = [];
+  $scope.data = { "ImageURI" :  "Select Image" };
+    $scope.takePicture = function() {
+    var options = {
+        quality: 50,
+        destinationType: Camera.DestinationType.DATA_URL,
+        sourceType: Camera.PictureSourceType.CAMERA,
+      };
+    $cordovaCamera.getPicture(options).then(
+    function(imageURI) {
+      $scope.post.pictures.push("data:image/jpeg;base64," +imageURI);
+      $ionicLoading.show({template: '<ion-spinner icon="lines" class="spinner-calm">Success</ion-spinner>', duration:500});
+    },
+    function(err){
+      $ionicLoading.show({template: '<ion-spinner icon="lines" class="spinner-calm">Error</ion-spinner>', duration:500});
+      })
+    }
+
+    $scope.selectPicture = function() { 
+    var options = {
+      quality: 50,
+      destinationType: Camera.DestinationType.FILE_URI,
+      sourceType: Camera.PictureSourceType.PHOTOLIBRARY
+    };
+
+    $cordovaCamera.getPicture(options).then(
+    function(imageURI) {
+      //A hack that you should include to catch bug on Android 4.4 (bug < Cordova 3.5):
+      console.log("imageURI", imageURI);
+      window.resolveLocalFileSystemURI(imageURI, function(fileEntry) {
+
+        //If this doesn't work
+        $scope.image = fileEntry.nativeURL;
+
+        //Try this
+        //var image = document.getElementById('myImage');
+        //image.src = fileEntry.nativeURL;
+      });
+      $ionicLoading.show({template: '<ion-spinner icon="lines" class="spinner-calm">Success</ion-spinner>', duration:500});
+    },
+    function(err){
+      $ionicLoading.show({template: '<ion-spinner icon="lines" class="spinner-calm">Error</ion-spinner>', duration:500});
+    })
+  };
+
+    $scope.uploadPicture = function() {
+    $ionicLoading.show({template: 'Sto inviando la foto...'});
+    var fileURL = $scope.picData;
+    var options = new FileUploadOptions();
+    options.fileKey = "file";
+    options.fileName = fileURL.substr(fileURL.lastIndexOf('/') + 1);
+    options.mimeType = "image/jpeg";
+    options.chunkedMode = true;
+
+    var params = {};
+    params.value1 = "someparams";
+        params.value2 = "otherparams";
+
+    options.params = params;
+
+    var ft = new FileTransfer();
+    ft.upload(fileURL, encodeURI("http://www.yourdomain.com/upload.php"), viewUploadedPictures, function(error) {$ionicLoading.show({template: 'Errore di connessione...'});
+    $ionicLoading.hide();}, options);
+    }
+  $scope.submit = function() {
+    if(MyService.online()) {
+      var params = $scope.post;
+      params.from = user._id;
+      params.school = user.schoolid;
+      params.to = "";
+      if(user.role == 'hm') {
+        params.to = "all";
+      } else if (user.role == 'teacher') {
+        if(user.standard) {
+          params.to = user.standard+':'+user.division;
+        } else {
+          for (var i = 0; i < user.subjects.length; i++) {
+            params.to += (i == user.subjects.length - 1) ? user.subjects[i].class : user.subjects[i].class + ',';
+          }
+        }
+      }
+      console.log("data", params);
+
+    } else {
+      
+    }
+  }
+})
 .controller('LoginCtrl', function($scope, $rootScope, $http, $state, $ionicPopup, $ionicHistory, $ionicLoading, MyService) {
   $scope.uid = localStorage.getItem('uid') || '';
   user = (localStorage.getItem('user')) ? JSON.parse(localStorage.getItem('user')) : {};
   if($scope.uid) {
     if(user.role == "hm") {
-      $scope.menuLinks = {"Links":[{"title":"Dashboard", "href":"app/hmdashboard", "class":"ion-stats-bars"}, {"title":"Classes", "href":"app/allclasses", "class": "ion-easel"}, {"title":"Students", "href":"app/allstudents", "class": "ion-person-stalker"},{"title":"Teachers", "href":"app/allteachers", "class": "ion-ios-body"},{"title":"log-out", "href":"logout", "class":"ion-log-out"}]};
+      $scope.menuLinks = {"Links":[{"title":"Dashboard", "href":"app/hmdashboard", "class":"ion-stats-bars"}, {"title":"Classes", "href":"app/allclasses", "class": "ion-easel"}, {"title":"Students", "href":"app/allstudents", "class": "ion-person-stalker"},{"title":"Teachers", "href":"app/allteachers", "class": "ion-ios-body"},{"title":"Wall","href":"app/wall","class":"ion-ios-list"},{"title":"log-out", "href":"logout", "class":"ion-log-out"}]};
       $state.go('app.hmdashboard', {}, {reload: true});
     } else if (user.role == "parent") {
       if(user.students.length > 1) {
-        $scope.menuLinks = {"Links":[{"title":"Children", "href":"app/allstudents", "class": "ion-person-stalker"},{"title":"log-out", "href":"logout", "class":"ion-log-out"}]};
+        $scope.menuLinks = {"Links":[{"title":"Children", "href":"app/allstudents", "class": "ion-person-stalker"},{"title":"Wall","href":"app/wall","class":"ion-ios-list"},{"title":"log-out", "href":"logout", "class":"ion-log-out"}]};
         $state.go('app.allstudents', {}, {reload: true});
       } else {
-        $scope.menuLinks = {"Links":[{"title":"Dashboard", "href":"app/studentdashboard", "class":"ion-stats-bars"},{"title":"Profile", "href":"app/studentprofile", "class": "ion-person"},{"title":"log-out", "href":"logout", "class":"ion-log-out"}]};
+        $scope.menuLinks = {"Links":[{"title":"Dashboard", "href":"app/studentdashboard", "class":"ion-stats-bars"},{"title":"Profile", "href":"app/studentprofile", "class": "ion-person"},{"title":"Wall","href":"app/wall","class":"ion-ios-list"},{"title":"log-out", "href":"logout", "class":"ion-log-out"}]};
         $state.go('app.studentDashboard', {}, {reload: true});
       }
     } else {
       if(user.standard) {
-        $scope.menuLinks = {"Links":[{"title":"Class Dashboard", "href":"app/dashboard", "class":"ion-stats-bars"},{"title":"Teacher Dashboard", "href":"app/teacherdashboard", "class":"ion-stats-bars"}, {"title":"Students", "href":"app/allstudents", "class": "ion-person-stalker"},{"title":"Profile", "href":"app/classprofile", "class": "ion-person"},{"title":"log-out", "href":"logout", "class":"ion-log-out"}]};
+        $scope.menuLinks = {"Links":[{"title":"Class Dashboard", "href":"app/dashboard", "class":"ion-stats-bars"},{"title":"Teacher Dashboard", "href":"app/teacherdashboard", "class":"ion-stats-bars"}, {"title":"Students", "href":"app/allstudents", "class": "ion-person-stalker"},{"title":"Profile", "href":"app/classprofile", "class": "ion-person"},{"title":"Wall","href":"app/wall","class":"ion-ios-list"},{"title":"log-out", "href":"logout", "class":"ion-log-out"}]};
         $state.go('app.dashboard', {}, {reload: true});
       } else {
-        $scope.menuLinks = {"Links":[{"title":"Dashboard", "href":"app/teacherdashboard", "class":"ion-stats-bars"}, {"title":"log-out", "href":"logout", "class":"ion-log-out"}]};                            
+        $scope.menuLinks = {"Links":[{"title":"Dashboard", "href":"app/teacherdashboard", "class":"ion-stats-bars"}, {"title":"Wall","href":"app/wall","class":"ion-ios-list"},{"title":"log-out", "href":"logout", "class":"ion-log-out"}]};                            
         $state.go('app.teacherdashboard', {}, {reload: true});
       }
     }
@@ -1291,16 +1396,16 @@ angular.module('starter.controllers', ['starter.services'])
     email: '8879900341@school-a.com',
     password: 'z0db49529'
   };
-  //teacher single
-  $scope.user = {
-    email: '8787876464',
-    password: '8k3z69a4i'
-  }
   //hm
   $scope.user = {
     email: "8951572125",
-    password: '3aDTTzqDJZR1JzDplpcYTQ=='
+    password: 'm1dtovranFLQ1mpgaCuL+w=='
   };
+  //teacher single
+  $scope.user = {
+    email: '8787876464',
+    password: 'ii1ss8aor'
+  }
   $scope.login = function() {
     if(($scope.user.email == null) || ($scope.user.password == null)) {
       alert('Please fill the fields');

@@ -19,6 +19,14 @@
     {
       "locator": "https://github.com/apache/cordova-plugin-network-information.git",
       "id": "cordova-plugin-network-information"
+    },
+    {
+      "locator": "https://github.com/apache/cordova-plugin-camera.git",
+      "id": "cordova-plugin-camera"
+    },
+    {
+      "locator": "https://github.com/apache/cordova-plugin-file",
+      "id": "cordova-plugin-file"
     }
   ],
   "cordovaPlatforms": [

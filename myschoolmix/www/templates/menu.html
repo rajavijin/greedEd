@@ -1,0 +1,35 @@
+<ion-side-menus enable-menu-with-back-views="true" ng-init="AppCtrl">
+   <ion-side-menu-content>
+      <ion-nav-bar ng-show="uid" class="bar-positive">
+         <ion-nav-buttons side="left"><button class="button button-icon button-clear ion-navicon show" menu-toggle="left"></button></ion-nav-buttons>
+         <ion-nav-buttons side="right"><button ng-show="filters" class="button button-icon button-clear ion-funnel" menu-toggle="right"></button></ion-nav-buttons>
+      </ion-nav-bar>
+      <ion-nav-view name="menuContent"></ion-nav-view>
+   </ion-side-menu-content>
+   <ion-side-menu side="left">
+      <ion-content>
+         <ion-list>
+            <ion-item nav-clear class="center"><h2><i class="icon ion-person positive" style="font-size:60px"></i></h2><h2>Welcome {{username}}</h2></ion-item>
+            <ion-item nav-clear menu-close class="item-icon-left" ng-repeat="link in menuLinks.Links" href="#/{{link.href}}"><i class="icon {{link.class}} positive"></i> {{link.title}}</ion-item>
+         </ion-list>
+      </ion-content>
+   </ion-side-menu>
+   <ion-side-menu side="right">
+      <ion-content>
+         <form>
+            <ion-list class="filters">
+               <ion-item class="item-icon-left positive"><i class="icon ion-clock"></i><strong>EducationYear</strong></ion-item>
+               <ion-radio class="item item-complex" name="year" ng-model="filtersData.educationyear" ng-repeat="(k,v) in filtersData.years" ng-value="{{k}}">{{v}}</ion-radio>
+               <ion-item class="item-icon-left positive" ng-hide="noexams"><i class="icon ion-clipboard"></i><strong>Exams</strong></ion-item>
+               <ion-radio class="item item-complex" name="exam" ng-hide="noexams" ng-if="v != 'NoAll'" ng-model="filtersData.typeofexam" ng-repeat="(k,v) in filtersData.typeofexams" ng-value="{{k}}">{{v}}</ion-radio>
+            <ion-item class="item submit first" ng-if="page == 'app.dashboard'"><button menu-close class="button icon-left ion-chevron-left button-block button-positive" ng-click="filterResults(page)">Go</button></ion-item>
+            <ion-item class="item submit first" ng-if="page == 'app.dashboardFilters'"><button menu-close class="button icon-left ion-chevron-left button-block button-positive" ng-click="filterResults(page)">Go</button></ion-item>
+            <ion-item class="item submit first" ng-if="page == 'app.hmdashboard'"><button menu-close class="button icon-left ion-chevron-left button-block button-positive" ng-click="hmfilterResults(page)">Go</button></ion-item>
+            <ion-item class="item submit first" ng-if="page == 'app.studentDashboard'"><button menu-close class="button icon-left ion-chevron-left button-block button-positive" ng-click="studentFilterResults(page)">Go</button></ion-item>
+            <ion-item class="item submit first" ng-if="page == 'app.studentOverallDashboard'"><button menu-close class="button icon-left ion-chevron-left button-block button-positive" ng-click="overallFilterResults(page)">Go</button></ion-item>
+            <ion-item class="item submit first" ng-if="page == 'app.teacherdashboard'"><button menu-close class="button icon-left ion-chevron-left button-block button-positive" ng-click="teacherFilterResults(page)">Go</button></ion-item>
+            </ion-list>
+         </form>
+      </ion-content>
+   </ion-side-menu>
+</ion-side-menus>

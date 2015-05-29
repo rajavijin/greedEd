@@ -91,12 +91,11 @@ var createTeacher = function(res, request, student) {
       });
     } else {
       var teacherData = {};
-      teacherData.name = request.teacher;
+      teacherData.name = request.teacher.toLowerCase();
       teacherData.email = teacherEmail;
       teacherData.role = "teacher";
-      if(student) {
-        teacherData.students = [{id:student._id,name:student.name, subjects: student.subjects}];
-      }
+      if(student) teacherData.students = [{id:student._id,name:student.name, subjects: student.subjects}];
+      if(request.classes) teacherData.subjects = request.classes;
       teacherData.phone = request.teacherphone;
       teacherData.pepper = Math.random().toString(36).substring(9);
       teacherData.password = teacherData.pepper;
@@ -131,6 +130,11 @@ exports.index = function(req, res) {
  */
 exports.create = function (req, res, next) {
   if(req.body.student == "Teacher") {
+    req.body.classes = [];
+    _.each(req.body.subjects.split(","), function(cv, ck) {
+      var cdata = cv.split(":");
+      req.body.classes.push({subject: cdata[0], class:cdata[1]});
+    })
     return createTeacher(res, req.body, {});
   }
   //Create student
@@ -283,6 +287,7 @@ User.findOne({
       data.token = jwt.sign({_id: user._id }, config.secrets.session, { expiresInMinutes: 60*5 });
       data.students = user.students;
       data.phone = user.phone;
+      data.subjects = user.subjects;
       var marksparam = {school: user.school};
       if(user.role == 'teacher') {
         if(user.standard) {
@@ -290,6 +295,16 @@ User.findOne({
           marksparam.standard = data.standard = user.standard;
         } else {
           marksparam.marks = {$elemMatch:{"teacher":user.name}};
+          /*User.find({school: user.school, role: "student", subjects:{$elemMatch:{"teacher":user.name}}, function(err, teacherwoc) {
+            if(teacherwoc) {
+              data.classes = [];
+              _.each(teacherwoc, function(tv, tk) {
+                if(data.classes.indexOf(tv.standard+':'+tv.division) == -1) {
+                  data.classes.push(tv.standard+':'+tv.division);
+                }
+              })
+            }
+          })*/
         }
 /*        data.typeofexams = user.typeofexams;
         var subjects = {};

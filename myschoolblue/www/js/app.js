@@ -123,7 +123,8 @@ angular.module('starter', ['ionic', 'ngCordova', 'underscore', 'starter.controll
   }
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $urlRouterProvider, $compileProvider) {
+  $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|file|blob|cdvfile|content):|data:image\//);
   $stateProvider
   .state('app', {
     url: "/app",
@@ -256,7 +257,25 @@ angular.module('starter', ['ionic', 'ngCordova', 'underscore', 'starter.controll
         controller: 'TeacherProfileCtrl'
       }
     }
+  })
+  .state('app.wall', {
+    url: "/wall",
+    views: {
+      'menuContent' :{
+        templateUrl: "templates/wall.html",
+        controller: 'WallCtrl'
+      }
+    }
   })     
+  .state('app.addpost', {
+    url: "/addpost",
+    views: {
+      'menuContent' :{
+        templateUrl: "templates/addpost.html",
+        controller: 'AddPostCtrl'
+      }
+    }
+  }) 
   .state('home', {
     url: '/home',
     templateUrl: 'templates/home.html',
