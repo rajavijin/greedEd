@@ -1,4 +1,18 @@
 Student;StudentID;Standard;Division;Sex;Address;Teacher;TeacherPhone;Parent;ParentPhone;TypeOfExams;Subjects
+Teacher; ;;;;;Abhi;8787876464;;;periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual;science:1-a,science:1-b,science:2-a,science:2-b
+Teacher; ;;;;;Rajavijin;8787871464;;;periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual;history:1-a,history:1-b,history:2-a,history:2-b
+Teacher;;;;;;Sudha;7845464100;;;periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual;tamil:1-a,tamil:1-b,tamil:2-a,tamil:2-b
+Teacher;;;;;;Anitha;7845464101;;;periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual;english:1-a,english:1-b,english:2-a,english:2-b
+Teacher;;;;;;Rajesh;7845464102;;;periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual;hindi:1-a,hindi:1-b,hindi:2-a,hindi:2-b
+Teacher;;;;;;Divya;7845464104;;;periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual;math:1-a,math:1-b,math:2-a,math:2-b
+Teacher;;;;;;Sameera;7845464105;;;periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual;history:3-a,history:3-b,history:4-a,history:4-b,history:5-a,history:5-b
+Teacher;;;;;;Shyji;7845464103;;;periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual;science:3-a,science:3-b,science:4-a,science:4-b,science:5-a,science:5-b
+Teacher;;;;;;Justin;8978341219;;;periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual;math:3-a,math:3-b,math:4-a,math:4-b,math:5-a,math:5-b
+Teacher;;;;;;Ramesh;8786755511;;;periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual;hindi:3-a,hindi:3-b,hindi:4-a,hindi:4-b,hindi:5-a,hindi:5-b
+Teacher;;;;;;Sunitha M;7890003311;;;periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual;english:3-a,english:3-b,english:4-a,english:4-b,english:5-a,english:5-b
+Teacher;;;;;;Meera J;7890089011;;;periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual;tamil:3-a,tamil:3-b,tamil:4-a,tamil:4-b,tamil:5-a,tamil:5-b
+Teacher; ;;;;;Sahay;8787822464;;;periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual;malayalam:1-a,malayalam:1-b,malayalam:2-a,malayalam:2-b
+Teacher; ;;;;;Sahaya;8787333464;;;periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual;malayalam:3-a,malayalam:3-b,malayalam:4-a,malayalam:4-b,malayalam:5-a,malayalam:5-b
 Adarsh A;200101;1;a;male;no: 32, ranganathan street, marthandam;Sudha;7845464100;Aravind D;9944046100;periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual;malayalam:Sahay,english:Anitha,hindi:Rajesh,math:Divya,science:Abhi,history:Rajavijin
 Anthony D;200102;1;a;male;22/12, port street, colachel;Sudha;7845464100;Dason C;9871456111;periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual;tamil:Sudha,english:Anitha,hindi:Rajesh,math:Divya,science:Abhi,history:Rajavijin
 Anitha C;200103;1;a;female;12/11, shanthi bhavan, nagercoil;Sudha;7845464100;Cindrella S;9846812670;periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual;tamil:Sudha,english:Anitha,hindi:Rajesh,math:Divya,science:Abhi,history:Rajavijin
@@ -79,17 +93,3 @@ Bavithra S;200507;5;b;female;25/12, dream home, nithravilai;Meera J;7890089011;S
 Hema H;200508;5;b;female;33, davy bhavan, marthandam;Meera J;7890089011;Harshal L;8879900341;periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual;tamil:Meera J,english:Sunitha M,hindi:Ramesh,math:Justin,science:Shyji,history:Sameera
 Viji S;200509;5;b;female;42, sherin bhavan, nadaikkavu;Meera J;7890089011;Sourav K;9898790909;periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual;tamil:Meera J,english:Sunitha M,hindi:Ramesh,math:Justin,science:Shyji,history:Sameera
 Thaman B;200510;5;b;male;99, sydni seldon, muttom;Meera J;7890089011;Bijoj B;8900908990;periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual;tamil:Meera J,english:Sunitha M,hindi:Ramesh,math:Justin,science:Shyji,history:Sameera
-Teacher; ;;;;;Abhi;8787876464;;;periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual;science:1-a,science:1-b,science:2-a,science:2-b
-Teacher; ;;;;;Rajavijin;8787871464;;;periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual;history:1-a,history:1-b,history:2-a,history:2-b
-Teacher;;;;;;Sudha;7845464100;;;periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual;tamil:1-a,tamil:1-b,tamil:2-a,tamil:2-b
-Teacher;;;;;;Anitha;7845464101;;;periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual;english:1-a,english:1-b,english:2-a,english:2-b
-Teacher;;;;;;Rajesh;7845464102;;;periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual;hindi:1-a,hindi:1-b,hindi:2-a,hindi:2-b
-Teacher;;;;;;Divya;7845464104;;;periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual;math:1-a,math:1-b,math:2-a,math:2-b
-Teacher;;;;;;Sameera;7845464105;;;periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual;history:3-a,history:3-b,history:4-a,history:4-b,history:5-a,history:5-b
-Teacher;;;;;;Shyji;7845464103;;;periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual;science:3-a,science:3-b,science:4-a,science:4-b,science:5-a,science:5-b
-Teacher;;;;;;Justin;8978341219;;;periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual;math:3-a,math:3-b,math:4-a,math:4-b,math:5-a,math:5-b
-Teacher;;;;;;Ramesh;8786755511;;;periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual;hindi:3-a,hindi:3-b,hindi:4-a,hindi:4-b,hindi:5-a,hindi:5-b
-Teacher;;;;;;Sunitha M;7890003311;;;periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual;english:3-a,english:3-b,english:4-a,english:4-b,english:5-a,english:5-b
-Teacher;;;;;;Meera J;7890089011;;;periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual;tamil:3-a,tamil:3-b,tamil:4-a,tamil:4-b,tamil:5-a,tamil:5-b
-Teacher; ;;;;;Sahay;8787822464;;;periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual;malayalam:1-a,malayalam:1-b,malayalam:2-a,malayalam:2-b
-Teacher; ;;;;;Sahaya;8787333464;;;periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual;malayalam:3-a,malayalam:3-b,malayalam:4-a,malayalam:4-b,malayalam:5-a,malayalam:5-b

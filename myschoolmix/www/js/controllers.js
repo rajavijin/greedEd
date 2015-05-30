@@ -1141,10 +1141,10 @@ angular.module('starter.controllers', ['starter.services'])
   var filtersData = JSON.parse(localStorage.getItem('filtersData'));
   $scope.filtersData = filtersData;
   $scope.getTeacherData = function() {
-    $scope.loading = true;
     if(user.role == 'teacher') {
       $scope.user = user;
     } else {
+      $scope.loading = true;
       var params = {};
       params.sex = params.status = 'all';
       params.schoolid = user.schoolid;
@@ -1561,7 +1561,7 @@ angular.module('starter.controllers', ['starter.services'])
   //teacher
    $scope.user = {
     email: '8978341219',
-    password: '5px5stt9'
+    password: 'l9yx8ncdi'
   };
   $scope.login = function() {
     if(($scope.user.email == null) || ($scope.user.password == null)) {

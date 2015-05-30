@@ -236,6 +236,15 @@ angular.module('starter', ['ionic', 'ngCordova', 'underscore', 'starter.controll
       }
     }
   })   
+  .state('app.teacherProf', {
+    url: "/teacherprofile",
+    views: {
+      'menuContent' :{
+        templateUrl: "templates/teacherprofile.html",
+        controller: 'TeacherProfileCtrl'
+      }
+    }
+  })
   .state('app.classProfile', {
     url: "/classprofile/:standard/:division",
     views: {
