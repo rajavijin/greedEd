@@ -815,6 +815,7 @@ angular.module('starter.controllers', ['starter.services'])
   var subjectMarks = [];
   var subjectLabels = [];
   $scope.getMarksData = function() {
+    console.log("user", user);
     $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner>'});
     var params = filtersData;
     params.schoolid = user.schoolid;
@@ -1283,7 +1284,7 @@ angular.module('starter.controllers', ['starter.services'])
   }
 })
 .controller('WallCtrl', function($scope, $state, $ionicModal, MyService, myConfig) {
-  if((user.role == 'parent') || ((user.role == 'teacher') && !user.standard)) {
+  if(user.role == 'parent') {
     $scope.add = false;
   } else {
     $scope.add = true;
@@ -1296,7 +1297,19 @@ angular.module('starter.controllers', ['starter.services'])
     $scope.base = myConfig.server;
     if(MyService.online()) {
       var params = {};
-      params.to = "1-a";
+      params.to = "all";
+      if(user.role == "hm") {
+        params.to = "hm";
+      }
+      else if(user.role == "teacher") {
+        for (var s = 0; s < user.subjects.length; s++) {
+          params.to += ","+user.subjects[s].class;
+        };  
+      } else if (user.role == "parent") {
+        for (var ss = 0; ss < user.students.length; ss++) {
+          params.to += ","+user.students[ss].class;
+        }
+      }
       params.schoolid = user.schoolid;
       MyService.getWall(params).then(function(wall) {
         if(wall) {
@@ -1382,11 +1395,19 @@ angular.module('starter.controllers', ['starter.services'])
     }
   }
 })
-.controller('AddPostCtrl', function($scope, $state, $cordovaCamera, $cordovaFileTransfer, $ionicLoading, MyService) {
+.controller('AddPostCtrl', function($scope, $state, $cordovaCamera, $cordovaFileTransfer, $ionicLoading, MyService, myConfig) {
   console.log("Add Post");
   $scope.post = {};
+  $scope.recievers = {};
   $scope.pictures = [];
-  $scope.data = { "ImageURI" :  "Select Image" };
+  $scope.classes = user.subjects;
+  $scope.role = user.role;
+  $scope.recieverToggle = true;
+  $scope.toggleClasses = function(status) {
+    for (var i = 0; i < user.subjects.length; i++) {
+      $scope.recievers[user.subjects[i].class] = status;
+    };
+  }
     $scope.takePicture = function() {
      var options = {
       quality: 50,
@@ -1438,12 +1459,12 @@ angular.module('starter.controllers', ['starter.services'])
       params.date = Date.now();
       if(user.role == 'hm') {
         params.to.push("all");
-      } else if (user.role == 'teacher') {
-        if(user.standard) {
-          params.to.push(user.standard+':'+user.division);
-        } else {
-          for (var i = 0; i < user.subjects.length; i++) {
-            params.to.push(user.subjects[i].class);
+      } else {
+        var allrecievers = $scope.recievers;
+        for (var reciever in allrecievers) {
+          if(allrecievers[reciever]) {
+            console.log("rec", reciever);
+            params.to.push(reciever);
           }
         }
       }
@@ -1456,31 +1477,38 @@ angular.module('starter.controllers', ['starter.services'])
       params.pictures = [];
       var pictures = $scope.pictures;
       console.log("params", params);
-      for (var i = 0; i < pictures.length; i++) {
-        $cordovaFileTransfer.upload("http://192.168.1.3:9000/api/wall/upload", pictures[i], options).then(function (result) {
-          console.log("i", i);
-          console.log("total", pictures.length);
-          console.log("SUCCESS: " + JSON.stringify(result.response));
-          console.log("SUCCESS: " + result.response);
-          params.pictures.push(result.response.replace(/"/g, ''));
-          if(i == pictures.length) {
-            console.log("creating wall");
-            MyService.createWall(params).then(function(wall) {
-              console.log('Wall', wall);
-              if(wall) {
-                $state.go("app.wall", {}, {reload:true});
-              }
-            })
+      if(pictures.length > 0) {
+        for (var i = 0; i < pictures.length; i++) {
+          $cordovaFileTransfer.upload(myConfig.server+"/api/wall/upload", pictures[i], options).then(function (result) {
+            console.log("i", i);
+            console.log("total", pictures.length);
+            console.log("SUCCESS: " + JSON.stringify(result.response));
+            console.log("SUCCESS: " + result.response);
+            params.pictures.push(result.response.replace(/"/g, ''));
+            if(i == pictures.length) {
+              console.log("creating wall");
+              MyService.createWall(params).then(function(wall) {
+                console.log('Wall', wall);
+                if(wall) {
+                  $state.go("app.wall", {}, {reload:true});
+                }
+              })
+            }
+          }, function (err) {
+              console.log("ERROR: " + JSON.stringify(err));
+          }, function (progress) {
+            console.log("PROGRESS: "+JSON.stringify(progress));
+              // constant progress updates
+          });
+        };
+      } else {
+        MyService.createWall(params).then(function(wall) {
+          console.log('Wall', wall);
+          if(wall) {
+            $state.go("app.wall", {}, {reload:true});
           }
-        }, function (err) {
-            console.log("ERROR: " + JSON.stringify(err));
-        }, function (progress) {
-          console.log("PROGRESS: "+JSON.stringify(progress));
-            // constant progress updates
         });
-      };
-    } else {
-      
+      }
     }
   }
 
@@ -1510,11 +1538,6 @@ angular.module('starter.controllers', ['starter.services'])
       }
     }
   }
-  //teacher
-   $scope.user = {
-    email: '7890003311@school-a.com',
-    password: 'lgbzc9pb9'
-  };  
   //parent with multiple student
   $scope.user = {
     email: '9944046100@school-a.com',
@@ -1528,12 +1551,17 @@ angular.module('starter.controllers', ['starter.services'])
   //hm
   $scope.user = {
     email: "8951572125",
-    password: 'm1dtovranFLQ1mpgaCuL+w=='
+    password: 'ZBqSp0lN/9hPkS123qkyHw=='
   };
   //parent with single student
   $scope.user = {
     email: '8879900341',
-    password: 'bnh4cxr'
+    password: '8589f6r'
+  };
+  //teacher
+   $scope.user = {
+    email: '8978341219',
+    password: '5px5stt9'
   };
   $scope.login = function() {
     if(($scope.user.email == null) || ($scope.user.password == null)) {

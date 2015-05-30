@@ -27,7 +27,7 @@ var createParent = function(res, request, student) {
     if(parentData) {
       parentData.name = request.parent;
       if(student._id) {
-        parentData.students.push({id:student._id,name:student.name,subjects:student.subjects});
+        parentData.students.push({id:student._id,name:student.name,class:student.standard+'-'+student.division,subjects:student.subjects});
       }
       parentData.phone = request.parentphone;
       parentData.pepper = Math.random().toString(36).substring(9);
@@ -46,7 +46,7 @@ var createParent = function(res, request, student) {
       parentData.school = 
       parentData.role = "parent";
       if(student._id) {
-        parentData.students = [{id:student._id,name:student.name, subjects:student.subjects}];
+        parentData.students = [{id:student._id,name:student.name,class:student.standard+'-'+student.division,subjects:student.subjects}];
       }
       parentData.phone = request.parentphone;
       parentData.pepper = Math.random().toString(36).substring(9);
@@ -77,8 +77,9 @@ var createTeacher = function(res, request, student) {
       teacherData.password = teacherData.pepper;
       teacherData.provider = request.provider;
       if(student) {
-        teacherData.students.push({id:student._id,name:student.name,subjects:student.subjects});
+        teacherData.students.push({id:student._id,name:student.name,class:student.standard+'-'+student.division,subjects:student.subjects});
       }
+      if(request.classes) teacherData.subjects = request.classes;
       teacherData.typeofexams = request.typeofexams;
       teacherData.school = request.school;
       teacherData.schoolid = request.schoolid;
@@ -94,7 +95,7 @@ var createTeacher = function(res, request, student) {
       teacherData.name = request.teacher.toLowerCase();
       teacherData.email = teacherEmail;
       teacherData.role = "teacher";
-      if(student) teacherData.students = [{id:student._id,name:student.name, subjects: student.subjects}];
+      if(student) teacherData.students = [{id:student._id,name:student.name,class:student.standard+'-'+student.division,subjects: student.subjects}];
       if(request.classes) teacherData.subjects = request.classes;
       teacherData.phone = request.teacherphone;
       teacherData.pepper = Math.random().toString(36).substring(9);

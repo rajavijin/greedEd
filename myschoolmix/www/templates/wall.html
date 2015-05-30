@@ -11,7 +11,7 @@
     <p>{{wall.date| date:'hh:mm a, MMM dd yyyy'}}</p>
   </div>
 
-  <div class="item item-image">
+  <div class="item item-image" ng-hide="wall.pictures.length == 0">
     <img ng-click="showImage('{{base}}{{pic}}')" class="full-image" src="{{base}}{{pic}}" ng-repeat="pic in wall.pictures">
   </div>
   <a class="item" href="#">

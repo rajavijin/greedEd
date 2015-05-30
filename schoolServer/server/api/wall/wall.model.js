@@ -11,7 +11,7 @@ var WallSchema = new Schema({
   userid: String,
   to: Array,
   likecount: { type:Number, default:0 },
-  likeuids: { type:Array, unique:true },
+  likeuids: { type:Array},
   date: Date,
 });
 

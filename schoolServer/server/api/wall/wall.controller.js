@@ -15,6 +15,12 @@ exports.index = function(req, res) {
 // Get list of walls
 exports.wall = function(req, res) {
   console.log("requested wall:", req.params);
+  if(req.params.to == "hm") {
+    delete req.params.to;
+  } else {
+    var classes = req.params.to.split(",");
+    req.params.to = {$in:classes};
+  }
   Wall.find(req.params,null, {sort:{date: -1}}, function (err, walls) {
     if(err) { return handleError(res, err); }
     return res.json(200, walls);
@@ -67,7 +73,6 @@ exports.update = function(req, res) {
   Wall.findById(req.params.id, function (err, wall) {
     if (err) { return handleError(res, err); }
     if(!wall) { return res.send(404); }
-    console.log("Requested", req.body);
     req.body.likecount = wall.likecount + req.body.like;
     if(req.body.like == 1) {
       wall.likeuids.push(req.body.likeuid);
@@ -80,7 +85,9 @@ exports.update = function(req, res) {
       };
     }
     var updated = _.merge(wall, req.body);
+    console.log("before save", updated);
     updated.save(function (err) {
+      console.log("err", err);
       if (err) { return handleError(res, err); }
       console.log("Wall after updated", wall);
       return res.json(200, wall);
