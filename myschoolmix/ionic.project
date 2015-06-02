@@ -4,7 +4,15 @@
   "proxies": [
     {
       "path": "/api",
-      "proxyUrl": "http://localhos:9000/api"
+      "proxyUrl": "http://localhost:9000/api"
     }
+  ],
+  "gulpStartupTasks": [
+    "sass",
+    "watch"
+  ],
+  "watchPatterns": [
+    "www/**/*",
+    "!www/lib/**/*"
   ]
 }

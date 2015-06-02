@@ -7,6 +7,7 @@
       <chart id="tpassfailstatus" config="tpassfailConfig" ng-if="dashboardStatus != 'empty'" class="noclick"></chart>
       <chart id="tsubjects" config="tsubjectsConfig" ng-if="dashboardStatus != 'empty'"></chart>
       <chart id="tgrades" config="tgradeConfig" ng-if="dashboardStatus != 'empty'" class="noclick"></chart>
+      <chart id="toppersubjects" config="topperSubjectsConfig" ng-if="dashboardStatus != 'empty'"></chart>
       <div class="list">
       <a listtodash id="{{v.studentid}}-{{v.student}}" class="item item-icon-left first" href="#/app/studentdashboard" ng-repeat="(k, v) in toppers | orderBy: 'standard'" ng-if="dashboardStatus != 'empty'">
       <i class="icon ion-trophy positive"></i> {{v.standard}}{{v.division}} : {{v.student}} : {{v.subject}} <span class="badge badge-positive">{{v.total}}</span></a> 

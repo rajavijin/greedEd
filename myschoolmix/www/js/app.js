@@ -97,7 +97,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'underscore', 'starter.controll
             var process = function () {
                 var defaultOptions = {
                     chart: {renderTo: element[0], animation:true},
-                    colors: ['#7cb5ec', '#f45b5b', '#90ed7d', '#f7a35c', '#8085e9', 
+                    colors: ['#23b7e5', '#ff6c60', '#90ed7d', '#f7a35c', '#8085e9', 
    '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1']
                 };
                 var config = angular.extend(defaultOptions, scope.config);
@@ -202,6 +202,15 @@ angular.module('starter', ['ionic', 'ngCordova', 'underscore', 'starter.controll
   })           
  .state('app.studentDashboard', {
     url: "/studentdashboard",
+    views: {
+      'menuContent' :{
+        templateUrl: "templates/studentdashboard.html",
+        controller: 'StudentDashboardCtrl'
+      }
+    }
+  })
+ .state('app.studentIdDashboard', {
+    url: "/studentdashboard/:studentid",
     views: {
       'menuContent' :{
         templateUrl: "templates/studentdashboard.html",
