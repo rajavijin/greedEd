@@ -1,17 +1,1 @@
-<ion-view ng-init="getStudentsData()">
-  <ion-nav-title>{{title}}</ion-nav-title>
-  <ion-content class="has-header">
-    <ion-list>
-      <div class="bar bar-header item-input-inset">
-      <ion-search placeholder="Search a user" filter="query.search"></ion-search>
-      </div>
-      <ion-item listtodash collection-repeat="user in users | filter:query.search.value" id="{{user._id}}-{{user.name}}" class="item item-icon-left positive" href="#/app/studentdashboard">
-      <i class="icon ion-person"></i>
-      <h2>{{user.name}}</h2>
-    </ion-item>
-    </ion-list>
-    <div class="list" ng-if="allStudentsStatus == false">
-      <a class="item" href="#"><p>No students found</p></a>
-    </div>
-  </ion-content>
-</ion-view>
+<ion-view ng-init="getStudentsData()"><ion-nav-title>{{title}}</ion-nav-title><ion-content class="has-header"><ion-list><div ng-hide="role == 'parent'" class="item-input-inset"><ion-search placeholder="Search" filter="query.search"></ion-search></div><ion-item ng-repeat="user in users | filter:query.search.value | orderBy:['standard','division','name']" class="item item-icon-left positive" href="#/app/studentdashboard/{{user._id}}/{{user.name}}"><i class="icon ion-person"></i><h2>{{user.standard}}{{user.division}} : {{user.name}}</h2></ion-item></ion-list><div class="list" ng-if="allStudentsStatus == false"><a class="item" href="#"><p>No students found</p></a></div></ion-content></ion-view>

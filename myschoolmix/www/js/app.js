@@ -120,13 +120,13 @@ angular.module('starter', ['ionic', 'ngCordova', 'underscore', 'starter.controll
         },
     };
 })
-.directive('listtodash', function() {
+/*.directive('listtodash', function() {
   return function(scope, element, attrs) {
     element.bind('click', function() {
       localStorage.setItem("DashParam", element.attr("id").toLowerCase());
     });
   }
-})
+})*/
 
 .config(function($stateProvider, $urlRouterProvider, $compileProvider) {
   $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|file|blob|cdvfile|content):|data:image\//);
@@ -155,6 +155,15 @@ angular.module('starter', ['ionic', 'ngCordova', 'underscore', 'starter.controll
       }
     }
   })
+  .state('app.dashboardId', {
+    url: "/dashboard/:standard/:division",
+    views: {
+      'menuContent' :{
+        templateUrl: "templates/dashboard.html",
+        controller: 'DashboardCtrl'
+      }
+    }
+  })
  .state('app.teacherdashboard', {
     url: "/teacherdashboard",
     views: {
@@ -164,6 +173,51 @@ angular.module('starter', ['ionic', 'ngCordova', 'underscore', 'starter.controll
       }
     }
   })
+ .state('app.teacherdashboardId', {
+    url: "/teacherdashboard/:teacher",
+    views: {
+      'menuContent' :{
+        templateUrl: "templates/teacherdashboard.html",
+        controller: 'TeacherDashboardCtrl'
+      }
+    }
+  })
+ .state('app.studentDashboard', {
+    url: "/studentdashboard",
+    views: {
+      'menuContent' :{
+        templateUrl: "templates/studentdashboard.html",
+        controller: 'StudentDashboardCtrl'
+      }
+    }
+  })
+ .state('app.studentDashboardId', {
+    url: "/studentdashboard/:studentid/:studentname",
+    views: {
+      'menuContent' :{
+        templateUrl: "templates/studentdashboard.html",
+        controller: 'StudentDashboardCtrl'
+      }
+    }
+  })
+  .state('app.studentOverallDashboard', {
+    url: "/studentoveralldashboard",
+    views: {
+      'menuContent' :{
+        templateUrl: "templates/studentoverall.html",
+        controller: 'StudentOverallDashboardCtrl'
+      }
+    }
+  })
+  .state('app.studentOverallDashboardId', {
+    url: "/studentoveralldashboard/:studentid/:studentname",
+    views: {
+      'menuContent' :{
+        templateUrl: "templates/studentoverall.html",
+        controller: 'StudentOverallDashboardCtrl'
+      }
+    }
+  })  
   .state('app.allclasses', {
     url: "/allclasses",
     views: {
@@ -200,33 +254,6 @@ angular.module('starter', ['ionic', 'ngCordova', 'underscore', 'starter.controll
       }
     }
   })           
- .state('app.studentDashboard', {
-    url: "/studentdashboard",
-    views: {
-      'menuContent' :{
-        templateUrl: "templates/studentdashboard.html",
-        controller: 'StudentDashboardCtrl'
-      }
-    }
-  })
- .state('app.studentIdDashboard', {
-    url: "/studentdashboard/:studentid",
-    views: {
-      'menuContent' :{
-        templateUrl: "templates/studentdashboard.html",
-        controller: 'StudentDashboardCtrl'
-      }
-    }
-  })
-  .state('app.studentOverallDashboard', {
-    url: "/studentoveralldashboard",
-    views: {
-      'menuContent' :{
-        templateUrl: "templates/studentoverall.html",
-        controller: 'StudentOverallDashboardCtrl'
-      }
-    }
-  })
   .state('app.classProf', {
     url: "/classprofile",
     views: {
@@ -296,6 +323,24 @@ angular.module('starter', ['ionic', 'ngCordova', 'underscore', 'starter.controll
       'menuContent' :{
         templateUrl: "templates/addpost.html",
         controller: 'AddPostCtrl'
+      }
+    }
+  })
+  .state('app.timetable', {
+    url: "/timetable",
+    views: {
+      'menuContent' :{
+        templateUrl: "templates/timetable.html",
+        controller: 'TimeTableCtrl'
+      }
+    }
+  })
+  .state('app.ttable', {
+    url: "/timetable/:class/:subject",
+    views: {
+      'menuContent' :{
+        templateUrl: "templates/timetable.html",
+        controller: 'TimeTableCtrl'
       }
     }
   }) 

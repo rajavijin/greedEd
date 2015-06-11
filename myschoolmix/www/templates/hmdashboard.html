@@ -12,7 +12,7 @@
       <chart id="grades" config="gradeConfig" ng-if="dashboardStatus != 'empty'" class="noclick"></chart>
       <ion-list ng-if="dashboardStatus != 'empty'">
          <div class="collection-repeat-container"><ion-item class="item-icon-left" href="#"><i class="icon ion-trophy positive"></i> <span style="color:#aaa;font-weight:bold">Class - Topper</span> <span class="badge">Total</span></ion-item></div>
-         <ion-item class="item-icon-left" listtodash id="{{v.studentid}}-{{v.student}}" collection-repeat="v in toppers" href="#/app/studentdashboard"><i class="icon ion-person positive"></i> {{v.standard}}:{{v.division}} - {{v.student}} <span class="badge badge-positive">{{v.total}}</span></ion-item>
+         <ion-item class="item-icon-left" collection-repeat="v in toppers" href="#/app/studentdashboard/{{v.studentid}}/{{v.student}}"><i class="icon ion-person positive"></i> {{v.standard}}:{{v.division}} - {{v.student}} <span class="badge badge-positive">{{v.total}}</span></ion-item>
       </ion-list>
    </ion-content>
 </ion-view>

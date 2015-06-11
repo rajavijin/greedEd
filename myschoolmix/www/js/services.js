@@ -24,7 +24,6 @@ angular.module('starter.services', [])
           });
         } else {
           $http.defaults.headers.common.Authorization = "Bearer "+data.token;
-          console.log("UserData from server:", data);
           user = data;
           localStorage.setItem('token', data.token);
           delete data.token;
@@ -59,7 +58,18 @@ angular.module('starter.services', [])
         defer.reject(data);
       });
       return defer.promise;     
-    },  
+    },
+    getTimetable: function(params) {
+      console.log("Timetable Params:", params);
+      var defer = $q.defer();
+      $http.get(baseUrl+'/timetable/'+params.schoolid+'/'+params.class+'/'+params.subject)
+      .success(function(data, status, headers, config){
+        defer.resolve(data);
+      }).error(function(data, status, headers, config){
+        defer.reject(data);
+      }); 
+      return defer.promise;
+    },
     saveMarks: function(marks) {
       console.log("Marks", marks);
       var defer = $q.defer();
@@ -148,6 +158,7 @@ angular.module('starter.services', [])
       return defer.promise;
     },            
     online: function() {
+      return true;
       if(navigator.platform == "Linux x86_64") {
         return true;
       }

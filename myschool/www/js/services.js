@@ -1,30 +1,29 @@
 angular.module('starter.services', [])
-.factory('MyService', function($rootScope, $ionicPopup, $state, $http, $q) {
-  var baseUrl = 'http://myschool-bridgeserver.rhcloud.com';
-  var baseUrl = 'http://localhost\:9000';
-  var baseUrl = 'http://192.168.1.3\:9000';
-  var loginEndpoint       = baseUrl +'/api/users/verify';
-  var logoutEndpoint       = baseUrl +'/api/users/';
+.factory('MyService', function($rootScope, $ionicLoading, $ionicPopup, $state, $http, $q, myConfig) {
+  console.log("base in service", myConfig.base);
+  var baseUrl = myConfig.base+':8100/api';
+  var loginEndpoint       = baseUrl +'/users/verify';
+  var logoutEndpoint       = baseUrl +'/users/';
   var token = localStorage.getItem('token') || '';
   if(token) {
     $http.defaults.headers.common.Authorization = "Bearer "+token;
   }
   
   var service = {
-    login: function(user) {
+    login: function(userData) {
       var defer = $q.defer();
       $http
-      .post(loginEndpoint, user)
+      .post(loginEndpoint, userData)
       .success(function (data, status, headers, config) {
         console.log("status:", status);
         if(data.status == "password not matching") {
-          var alertPopup = $ionicPopup.alert({
+          $ionicLoading.hide();
+          $ionicPopup.alert({
               title: 'Login failed!',
               template: 'Password not matching'
           });
         } else {
           $http.defaults.headers.common.Authorization = "Bearer "+data.token;
-          console.log("UserData from server:", data);
           user = data;
           localStorage.setItem('token', data.token);
           delete data.token;
@@ -58,12 +57,23 @@ angular.module('starter.services', [])
       .error(function(data, status, headers, config) {
         defer.reject(data);
       });
-      return defer.promise;			
-    },	
+      return defer.promise;     
+    },
+    getTimetable: function(params) {
+      console.log("Timetable Params:", params);
+      var defer = $q.defer();
+      $http.get(baseUrl+'/timetable/'+params.schoolid+'/'+params.class+'/'+params.subject)
+      .success(function(data, status, headers, config){
+        defer.resolve(data);
+      }).error(function(data, status, headers, config){
+        defer.reject(data);
+      }); 
+      return defer.promise;
+    },
     saveMarks: function(marks) {
       console.log("Marks", marks);
       var defer = $q.defer();
-      $http.post(baseUrl+'/api/marks', marks)
+      $http.post(baseUrl+'/marks', marks)
       .success(function(data, status, headers, config){
         defer.resolve(data);
       }).error(function(data, status, headers, config){
@@ -74,7 +84,7 @@ angular.module('starter.services', [])
     updateMarks: function(marks) {
       console.log("update marks:", marks);
       var defer = $q.defer();
-      $http.post(baseUrl+'/api/marks/'+marks._id, marks)
+      $http.post(baseUrl+'/marks/'+marks._id, marks)
       .success(function(data, status, headers, config){
         defer.resolve(data);
       }).error(function(data, status, headers, config){
@@ -86,10 +96,23 @@ angular.module('starter.services', [])
       var defer = $q.defer();
       var type = student.typeofexam;
       if(student.typeofexam % 1 === 0) {
-        type = user.typeofexams[student.typeofexam];
+        type = student.typeofexams[student.typeofexam];
       }
-      console.log("Mark url:", '/api/marks/'+student.schoolid+'/'+student.year+'/'+type+'/'+student.studentid+'/'+student.standard+'/'+student.division);
-      $http.get(baseUrl+'/api/marks/'+student.schoolid+'/'+student.year+'/'+type+'/'+student.studentid+'/'+student.standard+'/'+student.division)
+      console.log("user typeofexams", user.typeofexams);
+      console.log('Mark url: ', '/marks/'+student.schoolid+'/'+student.year+'/'+type+'/'+student.studentid+'/'+student.standard+'/'+student.division);
+      $http.get(baseUrl+'/marks/'+student.schoolid+'/'+student.year+'/'+type+'/'+student.studentid+'/'+student.standard+'/'+student.division)
+      .success(function(data, status, headers, config){
+        defer.resolve(data);
+      }).error(function(data, status, headers, config){
+        defer.reject(data);
+      }); 
+      return defer.promise;
+    },
+    listUsers: function(params) {
+      console.log("list Params", params);
+      var defer = $q.defer();
+      if(!params.grade) params.grade = "all"; 
+      $http.get(baseUrl+'/marks/'+params.schoolid+'/'+params.year+'/'+params.typeofexam+'/'+params.standard+'/'+params.division+'/'+params.status+'/'+params.subject+'/'+params.mark+'/'+params.grade)
       .success(function(data, status, headers, config){
         defer.resolve(data);
       }).error(function(data, status, headers, config){
@@ -99,14 +122,46 @@ angular.module('starter.services', [])
     },
     getUsers: function(userdata) {
       var defer = $q.defer();
-      if(!userdata.standard)
-        userdata.standard = "all";
-      if(!userdata.division)
-        userdata.division = "all";
-      if(!userdata._id) {
-        userdata._id = 'all';
-      }
-      $http.get(baseUrl+'/api/users/'+userdata.schoolid+'/'+userdata.standard+'/'+userdata.division+'/'+userdata.sex+'/'+userdata.status+'/'+userdata._id)
+      if(!userdata.standard) userdata.standard = "all";
+      if(!userdata.division) userdata.division = "all";
+      if(!userdata._id) userdata._id = 'all';
+      if(!userdata.name) userdata.name = "all";
+      if(!userdata.role) userdata.role = 'student';
+      console.log("url", '/users/'+userdata.schoolid+'/'+userdata.standard+'/'+userdata.division+'/'+userdata.sex+'/'+userdata.status+'/'+userdata._id+'/'+userdata.role+'/'+userdata.name);
+      $http.get(baseUrl+'/users/'+userdata.schoolid+'/'+userdata.standard+'/'+userdata.division+'/'+userdata.sex+'/'+userdata.status+'/'+userdata._id+'/'+userdata.role+'/'+userdata.name)
+      .success(function(data, status, headers, config){
+        defer.resolve(data);
+      }).error(function(data, status, headers, config){
+        defer.reject(data);
+      }); 
+      return defer.promise;
+    },
+    createWall: function(wall) {
+      console.log("Wall data:", JSON.stringify(wall));
+      var defer = $q.defer();
+      $http.post(baseUrl+'/wall', wall)
+      .success(function(data, status, headers, config){
+        defer.resolve(data);
+      }).error(function(data, status, headers, config){
+        defer.reject(data);
+      }); 
+      return defer.promise;
+    },
+    getWall: function(wall) {
+      console.log("Wall data:", wall);
+      var defer = $q.defer();
+      $http.get(baseUrl+'/wall/'+wall.schoolid+'/'+wall.to)
+      .success(function(data, status, headers, config){
+        defer.resolve(data);
+      }).error(function(data, status, headers, config){
+        defer.reject(data);
+      }); 
+      return defer.promise;
+    },
+    updateWall: function(wall) {
+      console.log("Wall update data:", wall);
+      var defer = $q.defer();
+      $http.post(baseUrl+'/wall/'+wall._id, wall)
       .success(function(data, status, headers, config){
         defer.resolve(data);
       }).error(function(data, status, headers, config){
@@ -115,6 +170,7 @@ angular.module('starter.services', [])
       return defer.promise;
     },            
     online: function() {
+      return true;
       if(navigator.platform == "Linux x86_64") {
         return true;
       }

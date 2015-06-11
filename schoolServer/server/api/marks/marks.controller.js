@@ -43,6 +43,38 @@ exports.getMark = function(req, res) {
     return res.json(marks);
   });
 };
+// Get a single mark
+exports.listUsers = function(req, res) {
+  var params = req.params;
+  _.each(req.params, function(p, pkey) {
+    if((p.toLowerCase() == 'all') || (p.toLowerCase() == 'undefined')) {
+      delete params[pkey];
+    }
+  })
+  console.log("requested", params);
+  if(params.subject) {
+    if(params.status == "Pass") params.marks = {$elemMatch:{subject:params.subject,mark:{$gte:parseInt(params.mark)}}};
+    else params.marks = {$elemMatch:{subject:params.subject,mark:{$lt:parseInt(params.mark)}}};
+    delete params.subject;
+    delete params.status;
+  }
+  delete params.mark;
+  if(params.standard == "teacher") {
+    params.marks = {$elemMatch:{teacher:params.division}};
+    delete params.standard;
+    delete params.division;
+  }
+  console.log("before fetch", params);
+  Marks.distinct('studentid', params, function (err, allusers) {
+    if(allusers.length > 0) {
+      User.find({_id:{$in:allusers}}, null, {sort:{_id: 1}}, function (err, users) {
+        if(err) { return handleError(res, err); }
+        if(!users) { return res.send(404); }
+        return res.json(users);
+      });
+    }
+  });
+};
 
 // Get a single mark
 exports.getAllMarks = function(req, res) {

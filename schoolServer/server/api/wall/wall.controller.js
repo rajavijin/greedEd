@@ -50,7 +50,8 @@ exports.create = function(req, res) {
 
 // Upload files to the server.
 exports.upload = function(req, res) {
-  var fstream;
+        var fstream;
+        console.log("requested", req.busboy);
         req.pipe(req.busboy);
         req.busboy.on('file', function (fieldname, file, filename) {
             console.log("Uploading: " + filename);

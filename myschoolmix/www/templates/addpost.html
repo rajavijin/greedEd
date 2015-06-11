@@ -34,13 +34,15 @@
           <i class="icon ion-image"></i>
           <strong>Image</strong>
         </div>
+        <img id="myImage" />
         <div class="item item-image"  ng-repeat="v in pictures">
+          <input type="text" ng-model="v">
           <img src="{{v}}" class="full-image"/>
         </div>
       </div>
    </ion-content>
-   <ion-footer-bar class="row">
+   <div class="row bar bar-footer">
       <input type="text" class="col col-80 add-post-text" placeholder="What's on your mind ???" ng-model="post.message">
       <button class="col send-button button button-icon icon-center button-clean ion-android-send" ng-click="submit()"></button>
-</ion-footer-bar>
+</div>
 </ion-view>

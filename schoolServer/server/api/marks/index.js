@@ -8,6 +8,7 @@ var router = express.Router();
 router.get('/', controller.index);
 router.get('/:id', controller.show);
 router.get('/:schoolid/:educationyear/:typeofexam/:studentid/:standard/:division', controller.getMark);
+router.get('/:schoolid/:educationyear/:typeofexam/:standard/:division/:status/:subject/:mark/:grade', controller.listUsers);
 router.get('/:typeofexam', controller.getAllMarks);
 router.post('/', controller.create);
 router.put('/:id', controller.update);

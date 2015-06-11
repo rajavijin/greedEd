@@ -2,18 +2,17 @@ angular.module('starter.controllers', ['starter.services'])
 
 .constant("myConfig", 
   {
-    //"base": "http://192.168.1.2", 
-    //"server":"http://192.168.1.2:9000",
     "base": "http://localhost", 
     "server":"http://localhost:9000",
+    //"base": "http://localhost", 
+    //"server":"http://localhost:9000",
     "hmMenu": {"Links":[{"title":"Dashboard", "href":"app/hmdashboard", "class":"ion-stats-bars"}, {"title":"Classes", "href":"app/allclasses", "class": "ion-easel"}, {"title":"Students", "href":"app/allstudents", "class": "ion-person-stalker"},{"title":"Teachers", "href":"app/allteachers", "class": "ion-ios-body"},{"title":"Wall","href":"app/wall","class":"ion-ios-list"},{"title":"log-out", "href":"logout", "class":"ion-log-out"}]},
     "parentMenu": {"Links":[{"title":"Children", "href":"app/allstudents", "class": "ion-person-stalker"},{"title":"Wall","href":"app/wall","class":"ion-ios-list"},{"title":"log-out", "href":"logout", "class":"ion-log-out"}]},
-    "parentSingleMenu": {"Links":[{"title":"Dashboard", "href":"app/studentdashboard", "class":"ion-stats-bars"},{"title":"Profile", "href":"app/studentprofile", "class": "ion-person"},{"title":"Overall Dashboard", "href":"app/studentoveralldashboard", "class":"ion-ios-pulse-strong"},{"title":"Wall","href":"app/wall","class":"ion-ios-list"},{"title":"log-out", "href":"logout", "class":"ion-log-out"}]},
-    "teacherMenu": {"Links":[{"title":"Dashboard", "href":"app/teacherdashboard", "class":"ion-stats-bars"},{"title":"Classes Profile", "href":"app/classprofile", "class": "ion-person"},{"title":"Profile", "href":"app/teacherprofile", "class": "ion-person"},{"title":"Wall","href":"app/wall","class":"ion-ios-list"},{"title":"log-out", "href":"logout", "class":"ion-log-out"}]},
-    "classTeacherMenu": {"Links":[{"title":"Class Dashboard", "href":"app/dashboard", "class":"ion-stats-bars"},{"title":"Teacher Dashboard", "href":"app/teacherdashboard", "class":"ion-stats-bars"}, {"title":"Students", "href":"app/allstudents", "class": "ion-person-stalker"},{"title":"Class Profile", "href":"app/classprofile", "class": "ion-person"},{"title":"Profile", "href":"app/teacherprofile", "class": "ion-person"},{"title":"Wall","href":"app/wall","class":"ion-ios-list"},{"title":"log-out", "href":"logout", "class":"ion-log-out"}]},
+    "parentSingleMenu": {"Links":[{"title":"Dashboard", "href":"app/studentdashboard", "class":"ion-stats-bars"},{"title":"Overall Dashboard", "href":"app/studentoveralldashboard", "class":"ion-ios-pulse-strong"},{"title":"Class Dashboard", "href":"app/dashboard", "class":"ion-pie-graph"},{"title":"Wall","href":"app/wall","class":"ion-ios-list"},{"title":"TimeTable", "href":"app/timetable", "class":"ion-ios-time-outline"},{"title":"Profile", "href":"app/studentprofile", "class": "ion-person"},{"title":"log-out", "href":"logout", "class":"ion-log-out"}]},
+    "teacherMenu": {"Links":[{"title":"Dashboard", "href":"app/teacherdashboard", "class":"ion-stats-bars"},{"title":"Students", "href":"app/allstudents", "class": "ion-person-stalker"},{"title":"Profile", "href":"app/teacherprofile", "class": "ion-person"},{"title":"Wall","href":"app/wall","class":"ion-ios-list"},{"title":"log-out", "href":"logout", "class":"ion-log-out"}]},
+    "classTeacherMenu": {"Links":[{"title":"Class Dashboard", "href":"app/dashboard", "class":"ion-stats-bars"},{"title":"Teacher Dashboard", "href":"app/teacherdashboard", "class":"ion-ios-pulse-strong"},{"title":"Students", "href":"app/allstudents", "class": "ion-person-stalker"},{"title":"Class Profile", "href":"app/classprofile", "class": "ion-easel"},{"title":"Profile", "href":"app/teacherprofile", "class": "ion-person"},{"title":"Wall","href":"app/wall","class":"ion-ios-list"},{"title":"log-out", "href":"logout", "class":"ion-log-out"}]},
   })
 //.constant("myConfig", {"base": "http://52.25.97.15", "server":"http://52.25.97.15"})
-.constant("colors", {"red":"#ff6c60"})
 .controller('AppCtrl', function($scope, $stateParams, $cordovaSQLite, $rootScope, $state, $window, MyService, myConfig) {
   user = JSON.parse(localStorage.getItem('user')) || user;
   $scope.username = user.name;
@@ -23,7 +22,6 @@ angular.module('starter.controllers', ['starter.services'])
     if(user.role == "hm") {
       $scope.menuLinks = myConfig.hmMenu;
     } else if (user.role == "parent") {
-      console.log("students", user);
       if(user.students.length > 1) {
         $scope.menuLinks = myConfig.parentMenu;
       } else {
@@ -46,7 +44,6 @@ angular.module('starter.controllers', ['starter.services'])
     filtersData.years = user.years;
     filtersData.educationyear = user.years.indexOf(user.educationyear);
     if(user.typeofexams.length > 0) {
-      console.log("MY current page:", $state.current.name);
       user.typeofexams.unshift("All");
       filtersData.typeofexams = user.typeofexams;
       filtersData.typeofexam = user.typeofexams.indexOf(user.latesttypeofexam);
@@ -56,43 +53,39 @@ angular.module('starter.controllers', ['starter.services'])
   $rootScope.filtersData = filtersData;
   var filterStatus = function(page) {
     $rootScope.noexams = false;
-    $rootScope.page = page;
-    console.log("dashboard index:", page.indexOf('ashboard'));
-    console.log("Page:", page);
     if((page.indexOf('ashboard') > 0) && (filtersData.years.length > 0)) {
-        $rootScope.filters = true;
-    } else {
-        $rootScope.filters = false;
-    }     
-    if(filtersData.typeofexams) {
-      if(page == 'app.studentDashboard') {
-        filtersData.typeofexams[0] = "NoAll";
-        if(filtersData.typeofexam == 0) filtersData.typeofexam = user.typeofexams.indexOf(user.latesttypeofexam);
-      } else {
-        filtersData.typeofexams[0] = "All";
+      $rootScope.filters = true;
+      if(filtersData.typeofexams) {
+        if(page.indexOf('studentdashboard') >= 0) {
+          filtersData.typeofexams[0] = "NoAll";
+          if(filtersData.typeofexam == 0) filtersData.typeofexam = user.typeofexams.indexOf(user.latesttypeofexam);
+        } else {
+          filtersData.typeofexams[0] = "All";
+        }
+        localStorage.setItem('filtersData', JSON.stringify(filtersData));
+        $rootScope.filtersData = filtersData;
       }
-      console.log("filt data", filtersData);
-      localStorage.setItem('filtersData', JSON.stringify(filtersData));
-      $rootScope.filtersData = filtersData;
-    } 
+      $rootScope.page = page;
+    } else {
+      $rootScope.filters = false;
+    }     
   } 
   $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
     if(fromState.name == 'logout') {
       $window.location.reload(true);
     } 
     if(toState.name == 'logout') {
-      console.log("Logging out:");
       localStorage.removeItem('uid');
       localStorage.removeItem("DashParam");
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       $state.go("home", {}, {reload: true});      
     }
-    filterStatus(toState.name);
+    filterStatus(toState.url.split("/")[1]);
   })
-  filterStatus($state.current.name);
+  filterStatus($state.current.url.split("/")[1]);
 })
-.controller('HmDashboardCtrl', function($scope, $rootScope, $state, _, $cordovaSQLite, $ionicLoading, $ionicLoading, MyService, colors, $stateParams) {
+.controller('HmDashboardCtrl', function($scope, $rootScope, $state, _, $cordovaSQLite, $ionicLoading, $ionicLoading, MyService, $stateParams) {
   var allsubjects = subjectDataPass = subjectDataFail = [];
   var pass = fail = 0;   
   var gradeData = toppers = {};  
@@ -106,7 +99,7 @@ angular.module('starter.controllers', ['starter.services'])
     toppers = {};
   }
 
-  $rootScope.hmfilterResults = function(page) {
+  $rootScope.hmdashboardfilters = function() {
     filtersData = $rootScope.filtersData;
     $scope.getMarksData();
     localStorage.setItem('filtersData', JSON.stringify(filtersData));
@@ -259,35 +252,39 @@ angular.module('starter.controllers', ['starter.services'])
     gradeData = {};
   }
   var filtersData = JSON.parse(localStorage.getItem('filtersData'));
-  $rootScope.filterResults = function(page) {
+  $rootScope.dashboardfilters = function() {
     console.log("filter is called");
     filtersData = $rootScope.filtersData;
     localStorage.setItem('filtersData', JSON.stringify(filtersData));
     $scope.getMarksData();
   }
   $scope.getMarksData = function() {
+    $scope.access = true;
     resetData();
     $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner>'});
     var params = filtersData;
-    console.log("user", user);
     params.schoolid = user.schoolid;
     params.year = user.years[params.educationyear];
     params.studentid = params.standard = params.division = "all";
-    if(user.standard) {
-      params.standard = user.standard;
-      params.division = (user.division) ? user.division : "all";
-    }
-    var tdashparams = localStorage.getItem("DashParam") || '';
-    console.log("tdashparams", tdashparams);
-    if(tdashparams) {
-      var tdashp = tdashparams.split("|");
-      if(tdashp[1]){
-        params.standard = tdashp[0];
-        params.division = tdashp[1];
+    if($stateParams.standard) {
+      params.standard = $stateParams.standard;
+      params.division = $stateParams.division;
+    } else {
+      if(user.standard) {
+        params.standard = user.standard;
+        params.division = (user.division) ? user.division : "all";
+      } else if (user.role == "parent") {
+        if(user.students.length == 1) {
+          var pclass = user.students[0].class.split("-");
+          params.standard = pclass[0];
+          params.division = pclass[1];
+        }
+        $scope.access = false;
       }
     }
     $scope.standard = params.standard;
     $scope.division = params.division;
+      console.log("in", 0);
     if(!params.typeofexam || (params.typeofexam == 0)) {
       $scope.title = params.standard +'/'+params.division+' Overall Dashboard';
     } else {
@@ -455,10 +452,8 @@ angular.module('starter.controllers', ['starter.services'])
     topperSubjects = [];
     gradeData = {};
   }
-  var title = user.name;
   var filtersData = JSON.parse(localStorage.getItem('filtersData'));
-  $rootScope.teacherFilterResults = function(page) {
-    console.log("filter is called");
+  $rootScope.teacherdashboardfilters = function() {
     filtersData = $rootScope.filtersData;
     localStorage.setItem('filtersData', JSON.stringify(filtersData));
     $scope.getMarksData();
@@ -467,20 +462,19 @@ angular.module('starter.controllers', ['starter.services'])
     resetData();
     $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner>'});
     var params = filtersData;
-    console.log("user", user);
     params.schoolid = user.schoolid;
     params.year = user.years[params.educationyear];
     params.studentid = "all";
     params.standard = "teacher";
-    title = (localStorage.getItem("DashParam")) ? localStorage.getItem("DashParam") : title; 
-    params.division = title;
-    console.log("params", params);
-    $scope.username = title;
-    $scope.title = title +" Dashboard";
+    params.division = ($stateParams.teacher) ? $stateParams.teacher : user.name; 
+    $scope.username = params.division;
+    $scope.title = params.division +" Dashboard";
     if(params.typeofexam) {
       var dbkey = params.schoolid +'_'+params.year+'_'+params.typeofexams[params.typeofexam]+'_'+params.standard+'_'+params.division;
-      $scope.title = title+" "+params.typeofexams[params.typeofexam]+" Dashboard";
+      $scope.title = params.division+" "+params.typeofexams[params.typeofexam]+" Dashboard";
     }
+    $scope.teacher = params.division;
+    console.log("params", params);
     if(MyService.online()) {
       MyService.getMarks(params).then(function(studentMarks) {
         totalrecords = studentMarks.length;
@@ -526,8 +520,9 @@ angular.module('starter.controllers', ['starter.services'])
     if(v.status == "Pass") pass++;
     if(v.status == "Fail") fail++;
     var key = v.standard+v.division;
+    var teacher = $scope.teacher;
     for (var i = 0; i < v.marks.length; i++) {
-      if(v.marks[i].teacher == title) {
+      if(v.marks[i].teacher == teacher) {
         key += ':'+v.marks[i].subject;
       if(allsubjects.indexOf(key) == -1) {
         allsubjects.push(key);
@@ -555,28 +550,7 @@ angular.module('starter.controllers', ['starter.services'])
       }
       }
     };
-/*    v.marks.forEach(function(mv, mk) {
-        if(allsubjects.indexOf(key) == -1) {
-          allsubjects.push(key);
-        }
-        subjectDataPass[key] = (subjectDataPass[key]) ? subjectDataPass[key] : 0;
-        subjectDataFail[key] = (subjectDataFail[key]) ? subjectDataFail[key] : 0;   
-        if(mv.mark >= user.passmark) {
-          subjectDataPass[key]++;
-        } else {
-          subjectDataFail[key]++;
-        }
-        if(topperSubjects[key]) {
-          if(parseInt(mv.mark) > topperSubjects[key].total) {
-            topperSubjects[key] = {total: mv.mark, student:v.student, subject: mv.subject, classd: v.standard+v.division.toUpperCase()};              
-          } else if (parseInt(mv.mark) == topperSubjects[key].total) {
-            topperSubjects[key].student = topperSubjects[key].student + "," + v.student;
-          }
-        } else {
-          topperSubjects[key] = {total: mv.mark, student:v.student, subject: mv.subject, classd: v.standard+v.division.toUpperCase()};              
-        }
-      }
-    })*/
+
     if(gradeData[v.grade]) {
       gradeData[v.grade] = {name: v.grade, y: parseInt(gradeData[v.grade].y) + 1};
     } else {
@@ -719,13 +693,14 @@ angular.module('starter.controllers', ['starter.services'])
   }  
 })
 .controller('AllStudentsCtrl', function($scope, $stateParams, $rootScope, $cordovaSQLite, $ionicLoading, MyService) {
+  var title = '';
   $scope.currentuser = user;
   $scope.filtersData = filtersData;
   $scope.getStudentsData = function() {
     var dbkey = user.schoolid;
     var params = {};
     params.schoolid = user.schoolid;
-    params.sex = params.status = "all";
+    params.sex = params.status = params.standard = params.division = "all";
     if(user.role == 'parent') {
       title = user.name + ' Children';
       params._id = '';
@@ -737,19 +712,25 @@ angular.module('starter.controllers', ['starter.services'])
         }
       })
       dbkey += '_'+user.name;
-    } else {
-      params.standard = (user.standard) ? user.standard : 'all';
-      params.division = (user.division) ? user.division : 'all';
-      if($stateParams.standard) params.standard = $stateParams.standard;
-      if($stateParams.division) params.division = $stateParams.division;
-      title = params.standard+'/'+params.division;
+    } else if (user.role == 'teacher') {
+      params.standard = 'teacher';
+      params.division = user.name;
+      title = user.name + ' Students';
+      dbkey += "teacher_"+params.division;
+    } 
+    if($stateParams.standard) {
+      params.standard = $stateParams.standard;
+      params.division = $stateParams.division;
+      params._id = "all";
       if($stateParams.sex && $stateParams.sex != "all") {params.sex = $stateParams.sex; title += ' '+$stateParams.sex}
       if($stateParams.status && $stateParams.status != "all") {params.status = $stateParams.status; title += ' '+$stateParams.status}
-      dbkey += "_"+params.standard+'_'+params.division+'_'+params.sex+'_'+params.status;
-      title = (title == "all/all") ? "All Students" : title + ' Students';
     }
+    title = params.standard+'/'+params.division + " Students";
+    dbkey += "_"+params.standard+'_'+params.division+'_'+params.sex+'_'+params.status;
+    title = (title == "all/all Students") ? "All Students" : title;
     console.log("Users Param", params);
     $scope.title = title;
+    $scope.role = user.role;
     if(MyService.online()) {
       $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner>'});
       MyService.getUsers(params).then(function(users) {
@@ -865,7 +846,7 @@ angular.module('starter.controllers', ['starter.services'])
   var title = '';
   var filtersData = JSON.parse(localStorage.getItem('filtersData')) || {};
   $rootScope.filtersData = filtersData;
-  $rootScope.studentFilterResults = function(page) {
+  $rootScope.studentdashboardfilters = function() {
     filtersData = $rootScope.filtersData;
     localStorage.setItem('filtersData', JSON.stringify(filtersData));
     $scope.getMarksData();
@@ -877,22 +858,21 @@ angular.module('starter.controllers', ['starter.services'])
     var params = filtersData;
     params.schoolid = user.schoolid;
     params.year = user.years[params.educationyear];
-    var sdashparams = localStorage.getItem("DashParam") || '';
-    if(sdashparams) {
-      console.log("Came from list: ", sdashparams);
-      var sdash = sdashparams.split("-");
-      params.studentid = sdash[0];
-      params.standard = "all";
-      params.division = "all";
-      title =  sdash[1];
-    }
+    params.standard = "all";
+    params.division = "all";
     $scope.single = false;
+    $scope.noaccess = false;
+    if($stateParams.studentid) {
+      params.studentid = $stateParams.studentid;
+      title = $stateParams.studentname;
+    } else {
+      params.studentid = user.students[0].id;
+      title = user.students[0].name;
+      $scope.single = true;
+    }
     if(user.role == 'parent') {
-      if(user.students.length == 1) {
-        params.studentid = user.students[0].id;
-        title = user.students[0].name;
-        $scope.single = true;
-      }
+      if(user.students.length > 1) $scope.noaccess = false;
+      else $scope.noaccess = true;
     }
     $scope.studentid = params.studentid;
     console.log("params", params);
@@ -906,6 +886,7 @@ angular.module('starter.controllers', ['starter.services'])
       }
     }
     $scope.title = title;
+    console.log("StateParams:", $stateParams);
     if(MyService.online()) {
       MyService.getMarks(params).then(function(studentMarks) {
         totalrecords = studentMarks.length;
@@ -960,7 +941,7 @@ angular.module('starter.controllers', ['starter.services'])
       title: {text:"Subject Marks"},plotOptions: {column: {depth: 25,showInLegend: false, dataLabels: {enabled: true,format: '{point.y}'}, events: {legendItemClick: function () {return false;}}}},
       xAxis: {categories: subjectLabels},
       yAxis: {title: {text: null}},
-      series: [{name: 'Marks',data: subjectMarks}]
+      series: [{name: 'Mark',data: subjectMarks}]
     };
     if(v.attendance) {
       var att = v.attendance.split("/");
@@ -992,7 +973,7 @@ angular.module('starter.controllers', ['starter.services'])
     allMarks = [];
   }
   $rootScope.noexams = true;
-  $rootScope.overallFilterResults = function(page) {
+  $rootScope.studentoveralldashboardfilters = function() {
     console.log("Filtersdata", $rootScope.filtersData);
     filtersData = $rootScope.filtersData;
     localStorage.setItem('filtersData', JSON.stringify(filtersData));
@@ -1004,29 +985,17 @@ angular.module('starter.controllers', ['starter.services'])
     var params = filtersData;
     params.schoolid = user.schoolid;
     params.year = user.years[params.educationyear];
-    params.standard = user.standard;
-    params.division = (user.division) ? user.division : "all";
-    var dbkey = params.schoolid +'_'+params.year+'_'+user.typeofexams[params.typeofexam];
-    if($stateParams.standard) {
-      params.standard = $stateParams.standard;
-      dbkey += '_'+$stateParams.standard;
-    }
-    if($stateParams.division) {
-      params.division = $stateParams.division;
-      dbkey += '_'+$stateParams.division;
-    }    
-    var dashparam = localStorage.getItem("DashParam") || '';
-    console.log("dashparam", dashparam);
-    if(dashparam) {
-      var dashp = dashparam.split("-");
-      params.studentid = dashp[0];
+    params.standard = "all";
+    params.division = "all";
+    if($stateParams.studentid) {
+      params.studentid = $stateParams.studentid;
+      title = $stateParams.studentname;
     } else {
-      params.studentid = user._id;
-    }    
-    if(!params.studentid) {
-      params.studentid = "all";
+      params.studentid = user.students[0].id;
+      title = user.students[0].name;
     }
     params.typeofexam = 0;
+    $scope.title = title;
     console.log("params", params);
     if(MyService.online()) {
       MyService.getMarks(params).then(function(studentMarks) {
@@ -1110,7 +1079,7 @@ angular.module('starter.controllers', ['starter.services'])
     };    
     $scope.sosubjectsConfig = {
       chart: {renderTo: 'sosubjects',type: 'spline', options3d: {enabled: true,alpha: 10,beta: 20,depth: 50}},
-      title: {text:"Subjects"},plotOptions: {spline: {depth: 25}},
+      title: {text:"Subjects"},tooltip:{pointFormat:'{point.y}'},plotOptions: {spline: {depth: 25,dataLabels: {enabled: true,format: '{point.y}'}}},
       xAxis: {categories: examLabels},
       yAxis: {title: {text: null}},
       series: allsubjectData
@@ -1143,21 +1112,12 @@ angular.module('starter.controllers', ['starter.services'])
   $scope.getStudentsData = function() {
     $scope.loading = true;
     var params = {};
-    params.sex = params.status = 'all';
     params.schoolid = user.schoolid;
-    if($stateParams.standard) {
-      params.standard = $stateParams.standard;
-      dbkey += "_"+$stateParams.standard;
-    }
-    if($stateParams.division) {
-      params.division = $stateParams.division;
-      dbkey += "_"+$stateParams.division;
-    }
+    params.sex = params.status = params.standard = params.division = 'all';
     if($stateParams.studentid) {
       params._id = $stateParams.studentid;
       dbkey += "_"+$stateParams.studentid;
-    }
-    if(user.students.length == 1) {
+    } else {
       params._id = user.students[0].id;
     }
     var dbkey = params.schoolid+'_'+params._id;
@@ -1201,9 +1161,24 @@ angular.module('starter.controllers', ['starter.services'])
 .controller('TeacherProfileCtrl', function($scope, $rootScope, $cordovaSQLite, $ionicLoading, MyService, $stateParams) {
   var filtersData = JSON.parse(localStorage.getItem('filtersData'));
   $scope.filtersData = filtersData;
+  var teacherSubjects = function(user) {
+    var allsubjects = [];
+    var allclasses = [];
+    for (var i = 0; i < user.subjects.length; i++) {
+      if(allclasses.indexOf(user.subjects[i].class) == -1) {
+        allclasses.push(user.subjects[i].class);
+      }
+      if(allsubjects.indexOf(user.subjects[i].subject) == -1) {
+        allsubjects.push(user.subjects[i].subject);
+      }
+    }
+    $scope.class = allclasses.join();
+    $scope.subject = allsubjects.join();
+  }
   $scope.getTeacherData = function() {
     if(user.role == 'teacher') {
       $scope.user = user;
+      teacherSubjects(user);
     } else {
       $scope.loading = true;
       var params = {};
@@ -1222,6 +1197,7 @@ angular.module('starter.controllers', ['starter.services'])
           if(users.length > 0) {
             $scope.allStudents = true;
             $scope.user = users[0];
+            teacherSubjects(users[0]);
             var query = "INSERT into users (key, value) VALUES (?, ?)";
             var selectq = 'SELECT key from users where key = "'+dbkey+'"';
             $cordovaSQLite.execute(db, selectq).then(function(sres) {
@@ -1244,6 +1220,7 @@ angular.module('starter.controllers', ['starter.services'])
             var allusers = JSON.parse(res.rows.item(0).value);
             $scope.allStudents = true;
             $scope.user = allusers[0];
+            teacherSubjects(allusers[0]);
           } else {
             $scope.allStudents = false;
           }
@@ -1573,7 +1550,102 @@ angular.module('starter.controllers', ['starter.services'])
       }
     }
   }
+})
+.controller('TimeTableCtrl', function($scope, _, $rootScope, $stateParams, $ionicSideMenuDelegate, $state, $ionicSlideBoxDelegate, MyService) {
+  $ionicSideMenuDelegate.$getByHandle('right-menu').canDragContent(false);
+  console.log("filters", $rootScope.filters);
+  // Called to navigate to the main app
+  $scope.startApp = function() {
+    $state.go('main');
+  };
+  $scope.next = function() {
+    $ionicSlideBoxDelegate.next();
+  };
+  $scope.previous = function() {
+    $ionicSlideBoxDelegate.previous();
+  };
+  
+  // Called each time the slide changes
+  $scope.slideChanged = function(index) {
+    $scope.data.slideIndex = index;
+    $scope.title = $scope.data.slides[index].day;
+  };
 
+  $scope.getTimeTable = function() {
+    console.log("State params:", $stateParams);
+    if($stateParams) {
+      var params = $stateParams;
+    } else {
+      var params = {};
+    }
+    if(!params.subject) params.subject = 'all';
+    params.schoolid = user.schoolid;
+    if(user.role == 'parent') {
+      if(user.students.length == 1) {
+        params.class = user.students[0].class;
+      }
+    } else if(user.role == 'teacher') {
+      for (var i = 0; i < user.subjects.length; i++) {
+        params.class += (i == user.subjects.length - 1) ? user.subjects[i].class : user.subjects[i].class + ",";
+      };
+    }
+    if(params.subject == "all") {
+      $scope.classStatus = false;
+    } else {
+      $scope.classStatus = true;
+    }
+    if(MyService.online()) {
+      MyService.getTimetable(params).then(function(timetables) {
+        if(timetables.length > 0) {
+          var totaldays = [];
+          var timedata = {};
+          var daycontainer = {};
+          var j = 0;
+          console.log("timetable:", timetables);
+          for (var i = 0; i < timetables.length; i++) {
+            var available = false;
+            for (var td = 0; td < totaldays.length; td++) {
+              if(totaldays[td].day == timetables[i].day) available = true;
+            };
+            console.log("totaldays", totaldays);
+            console.log("available", available);
+            if(!available) {
+              totaldays.push({day: timetables[i].day});
+              daycontainer[timetables[i].day] = (daycontainer[timetables[i].day]) ? daycontainer[timetables[i].day] : j;
+              console.log("daycontainer", daycontainer);
+              console.log("timetables i", timetables[i]);
+              if(params.subject == "all") {
+                totaldays[daycontainer[timetables[i].day]].timetable = timetables[i].timetable;
+              } else {
+                totaldays[daycontainer[timetables[i].day]].timetable = [];
+              }
+              j++;
+            }
+            if(params.subject) {
+              console.log("i", i);
+              for (var k = 0; k < timetables[i].timetable.length; k++) {
+                if(params.subject.indexOf(timetables[i].timetable[k].subject) >= 0) {
+                  timetables[i].timetable[k].class = timetables[i].class;
+                  totaldays[daycontainer[timetables[i].day]].timetable.push(timetables[i].timetable[k]);
+                }
+              }
+            }
+          }
+          $scope.data = {
+            numViewableSlides : totaldays.length,
+            slideIndex : 0,
+            initialInstruction : true,
+            secondInstruction : false,
+            slides : totaldays
+          };
+          console.log("Data", $scope.data.slides);
+          $scope.title = totaldays[0].day;
+        }
+      })
+    } else {
+
+    }
+  }
 })
 .controller('LoginCtrl', function($scope, $rootScope, $http, $state, $ionicPopup, $ionicHistory, $ionicLoading, MyService, myConfig) {
   $scope.uid = localStorage.getItem('uid') || '';
@@ -1600,10 +1672,20 @@ angular.module('starter.controllers', ['starter.services'])
       }
     }
   }
+  //parent with multiple student
+  $scope.user = {
+    email: '9944046100',
+    password: 'hsqddkj4i'
+  };
   //teacher single
   $scope.user = {
     email: '8787876464',
     password: 'c7rjm7vi'
+  }
+  //parent with single student
+  $scope.user = {
+    email: '8879900341',
+    password: '1l8zolxr'
   }
   //teacher
    $scope.user = {
@@ -1615,16 +1697,6 @@ angular.module('starter.controllers', ['starter.services'])
     email: "8951572125",
     password: 'ZBqSp0lN/9hPkS123qkyHw=='
   };
-  //parent with multiple student
-  $scope.user = {
-    email: '9944046100',
-    password: 'hsqddkj4i'
-  };
-  //parent with single student
-  $scope.user = {
-    email: '8879900341',
-    password: '1l8zolxr'
-  }
   $scope.login = function() {
     if(($scope.user.email == null) || ($scope.user.password == null)) {
       alert('Please fill the fields');

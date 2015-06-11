@@ -1,18 +1,1 @@
-<ion-view cache-view="false" ng-init="getMarksData()">
-  <ion-nav-title>{{title}} Overall</ion-nav-title>
-  <ion-header-bar class="bar-positive">
-    <h1 class="title">Pull to Refresh!</h1>
-  </ion-header-bar>
-  <ion-content class="has-header">
-    <ion-refresher pulling-text="Pull to refresh" on-refresh="getMarksData()"></ion-refresher>
-    <div class="row" ng-if="dashboardStatus == 'empty'">
-      <div class="col">Dashboard is empty</div>
-    </div>
-    <chart id="somarks" config="somarksConfig" ng-if="dashboardStatus != 'empty'"></chart>
-    <chart id="allmarks" config="allmarksConfig" ng-if="dashboardStatus != 'empty'"></chart>
-    <chart id="sosubjects" config="sosubjectsConfig" ng-if="dashboardStatus != 'empty'"></chart>
-    <chart id="ranks" config="ranksConfig" ng-if="dashboardStatus != 'empty'"></chart>
-    <chart id="soattendance" config="soattendanceConfig" ng-if="dashboardStatus != 'empty'"></chart>
-    <chart id="opassfail" config="opassfailConfig" ng-if="dashboardStatus != 'empty'" class="noclick"></chart>
-  </ion-content>
-</ion-view>
+<ion-view cache-view="false" ng-init="getMarksData()"><ion-nav-title>{{title}} Overall Dashboard</ion-nav-title><ion-header-bar class="bar-positive"><h1 class="title">Pull to Refresh!</h1></ion-header-bar><ion-content class="has-header"><ion-refresher pulling-text="Pull to refresh" on-refresh="getMarksData()"></ion-refresher><div class="row" ng-if="dashboardStatus == 'empty'"><div class="col">Dashboard is empty</div></div><chart id="somarks" config="somarksConfig" ng-if="dashboardStatus != 'empty'"></chart><chart id="allmarks" config="allmarksConfig" ng-if="dashboardStatus != 'empty'"></chart><chart id="sosubjects" config="sosubjectsConfig" ng-if="dashboardStatus != 'empty'"></chart><chart id="ranks" config="ranksConfig" ng-if="dashboardStatus != 'empty'"></chart><chart id="soattendance" config="soattendanceConfig" ng-if="dashboardStatus != 'empty'"></chart><chart id="opassfail" config="opassfailConfig" ng-if="dashboardStatus != 'empty'" class="noclick"></chart></ion-content></ion-view>
