@@ -33,14 +33,14 @@ angular.module('starter', ['ionic', 'ngCordova', 'underscore', 'starter.controll
       StatusBar.styleDefault();
     }
   });
-  $ionicPlatform.registerBackButtonAction(function (event) {
+/*  $ionicPlatform.registerBackButtonAction(function (event) {
     if($state.current.name=="home"){
       navigator.app.exitApp();
     }
     else {
       navigator.app.backHistory();
     }
-  }, 100);
+  }, 100);*/
 })
 
 .directive('ionSearch', function() {
@@ -57,20 +57,20 @@ angular.module('starter', ['ionic', 'ngCordova', 'underscore', 'starter.controll
             scope.placeholder = attrs.placeholder || '';
             scope.search = {value: ''};
             if (attrs.class)
-                element.addClass(attrs.class);
+              element.addClass(attrs.class);
 
             if (attrs.source) {
-                scope.$watch('search.value', function (newValue, oldValue) {
-                  console.log('newValue', newValue);
-                  console.log('oldValue', oldValue);
-                    if (newValue.length > attrs.minLength) {
-                        scope.getData({str: newValue}).then(function (results) {
-                            scope.model = results;
-                        });
-                    } else {
-                        scope.model = [];
-                    }
-                });
+              scope.$watch('search.value', function (newValue, oldValue) {
+                console.log('newValue', newValue);
+                console.log('oldValue', oldValue);
+                  if (newValue.length > attrs.minLength) {
+                    scope.getData({str: newValue}).then(function (results) {
+                      scope.model = results;
+                    });
+                  } else {
+                    scope.model = [];
+                  }
+              });
             }
 
             scope.clearSearch = function() {
@@ -120,13 +120,6 @@ angular.module('starter', ['ionic', 'ngCordova', 'underscore', 'starter.controll
         },
     };
 })
-/*.directive('listtodash', function() {
-  return function(scope, element, attrs) {
-    element.bind('click', function() {
-      localStorage.setItem("DashParam", element.attr("id").toLowerCase());
-    });
-  }
-})*/
 
 .config(function($stateProvider, $urlRouterProvider, $compileProvider) {
   $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|file|blob|cdvfile|content):|data:image\//);
@@ -335,6 +328,33 @@ angular.module('starter', ['ionic', 'ngCordova', 'underscore', 'starter.controll
       }
     }
   })
+  .state('app.messages', {
+    url: "/messages",
+    views: {
+      'menuContent' :{
+        templateUrl: "templates/messages.html",
+        controller: 'MessagesCtrl'
+      }
+    }
+  })  
+  .state('app.messagesId', {
+    url: "/messages/:userId",
+    views: {
+      'menuContent' :{
+        templateUrl: "templates/messages.html",
+        controller: 'MessagesCtrl'
+      }
+    }
+  })    
+  .state('app.messagebox', {
+    url: "/messages/:chatname/:toId/:toName/:userId/:name/:type",
+    views: {
+      'menuContent' :{
+        templateUrl: "templates/messagebox.html",
+        controller: 'MessageBoxCtrl'
+      }
+    }
+  })
   .state('app.timetable', {
     url: "/timetable",
     views: {
@@ -365,59 +385,3 @@ angular.module('starter', ['ionic', 'ngCordova', 'underscore', 'starter.controll
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/home');
 })
-
-.directive('searchBar', [function () {
-  return {
-    scope: {
-      ngModel: '='
-    },
-    require: ['^ionNavBar', '?ngModel'],
-    restrict: 'E',
-    replace: true,
-    template: '<ion-nav-buttons side="right">'+
-            '<div class="searchBar">'+
-              '<div class="searchTxt" ng-show="ngModel.show">'+
-                  '<div class="bgdiv"></div>'+
-                  '<div class="bgtxt">'+
-                    '<input type="text" placeholder="Procurar..." ng-model="ngModel.txt">'+
-                  '</div>'+
-                '</div>'+
-                '<i class="icon placeholder-icon" ng-click="ngModel.txt=\'\';ngModel.show=!ngModel.show"></i>'+
-            '</div>'+
-          '</ion-nav-buttons>',
-    
-    compile: function (element, attrs) {
-      var icon=attrs.icon
-          || (ionic.Platform.isAndroid() && 'ion-android-search')
-          || (ionic.Platform.isIOS()     && 'ion-ios7-search')
-          || 'ion-search';
-      angular.element(element[0].querySelector('.icon')).addClass(icon);
-      
-      return function($scope, $element, $attrs, ctrls) {
-        var navBarCtrl = ctrls[0];
-        $scope.navElement = $attrs.side === 'right' ? navBarCtrl.rightButtonsElement : navBarCtrl.leftButtonsElement;
-        
-      };
-    },
-    controller: ['$scope','$ionicNavBarDelegate', function($scope,$ionicNavBarDelegate){
-      var title, definedClass;
-      $scope.$watch('ngModel.show', function(showing, oldVal, scope) {
-        if(showing!==oldVal) {
-          if(showing) {
-            if(!definedClass) {
-              var numicons=$scope.navElement.children().length;
-              angular.element($scope.navElement[0].querySelector('.searchBar')).addClass('numicons'+numicons);
-            }
-            
-            title = $ionicNavBarDelegate.getTitle();
-            $ionicNavBarDelegate.setTitle('');
-          } else {
-            $ionicNavBarDelegate.setTitle(title);
-          }
-        } else if (!title) {
-          title = $ionicNavBarDelegate.getTitle();
-        }
-      });
-    }]
-  };
-}])

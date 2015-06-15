@@ -29,6 +29,7 @@ angular.module('starter.services', [])
           delete data.token;
           localStorage.setItem('uid', data._id);
           localStorage.setItem('user', JSON.stringify(data));
+          console.log("CURRENT LOGGED IN USER:", data);
           /*$ionicUser.identify({user_id: data._id, name: data.name, message: data.role +' of '+data.school}).then(function(identity) {
             console.log("user identified in ionic", identity);
           }, function(err) {
@@ -70,10 +71,43 @@ angular.module('starter.services', [])
       }); 
       return defer.promise;
     },
-    saveMarks: function(marks) {
-      console.log("Marks", marks);
+    getMessages: function(params) {
+      console.log("Get messages Params:", params);
       var defer = $q.defer();
-      $http.post(baseUrl+'/marks', marks)
+      $http.get(baseUrl+'/messages/'+params.schoolid+'/'+params.userId+'/'+params.classes)
+      .success(function(data, status, headers, config){
+        defer.resolve(data);
+      }).error(function(data, status, headers, config){
+        defer.reject(data);
+      }); 
+      return defer.promise;
+    },
+    getConversation: function(params) {
+      console.log("Get messages Params:", params);
+      var defer = $q.defer();
+      $http.get(baseUrl+'/messages/'+params.schoolid+'/'+params.chatname)
+      .success(function(data, status, headers, config){
+        defer.resolve(data);
+      }).error(function(data, status, headers, config){
+        defer.reject(data);
+      }); 
+      return defer.promise;
+    },
+    sendMessage: function(message) {
+      console.log("Message", message);
+      var defer = $q.defer();
+      $http.post(baseUrl+'/messages', message)
+      .success(function(data, status, headers, config){
+        defer.resolve(data);
+      }).error(function(data, status, headers, config){
+        defer.reject(data);
+      }); 
+      return defer.promise;
+    },
+    updateMessages: function(message) {
+      console.log("Message", message);
+      var defer = $q.defer();
+      $http.post(baseUrl+'/messages/update', message)
       .success(function(data, status, headers, config){
         defer.resolve(data);
       }).error(function(data, status, headers, config){
@@ -122,13 +156,20 @@ angular.module('starter.services', [])
     },
     getUsers: function(userdata) {
       var defer = $q.defer();
-      if(!userdata.standard) userdata.standard = "all";
-      if(!userdata.division) userdata.division = "all";
-      if(!userdata._id) userdata._id = 'all';
-      if(!userdata.name) userdata.name = "all";
       if(!userdata.role) userdata.role = 'student';
+      if(userdata.role == "hm") userdata.role = "all";
       console.log("url", '/users/'+userdata.schoolid+'/'+userdata.standard+'/'+userdata.division+'/'+userdata.sex+'/'+userdata.status+'/'+userdata._id+'/'+userdata.role+'/'+userdata.name);
       $http.get(baseUrl+'/users/'+userdata.schoolid+'/'+userdata.standard+'/'+userdata.division+'/'+userdata.sex+'/'+userdata.status+'/'+userdata._id+'/'+userdata.role+'/'+userdata.name)
+      .success(function(data, status, headers, config){
+        defer.resolve(data);
+      }).error(function(data, status, headers, config){
+        defer.reject(data);
+      }); 
+      return defer.promise;
+    },
+    getProfile: function(userdata) {
+      var defer = $q.defer();
+      $http.get(baseUrl+'/users/'+userdata._id)
       .success(function(data, status, headers, config){
         defer.resolve(data);
       }).error(function(data, status, headers, config){

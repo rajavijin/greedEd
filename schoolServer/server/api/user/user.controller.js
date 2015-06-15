@@ -211,7 +211,7 @@ exports.show = function (req, res, next) {
  */
 exports.users = function (req, res, next) {
   _.each(req.params, function(p, pk) {
-    if(p == 'all') {
+    if((p == 'all') || (p == 'undefined')) {
       delete req.params[pk];
     }
   })
@@ -223,6 +223,9 @@ exports.users = function (req, res, next) {
     delete req.params.standard;
     delete req.params.division;
   }
+  if(req.params.name) req.params.name = {$in:req.params.name.split(",")};
+  //var roles = (req.params.indexOf(",") == -1) req.params.role : req.params.
+  req.params.role = {$in:req.params.role.split(",")};
   console.log("requested users", req.params);
   User.find(req.params).sort({stardard: -1}).exec(function(err, user) {
     if (err) return next(err);
