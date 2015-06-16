@@ -1,0 +1,12 @@
+ <div class="modal">
+        <header class="bar bar-header bar-positive">
+          <h1 class="title">Select a user to Login</h1>
+          <div class="button button-clear" ng-click="modal.hide()"><span class="icon ion-close"></span></div>
+        </header>
+        <br/><br/>
+        <content has-header="true" padding="true">
+			<div class="list">
+			<a ng-click="fillUser(modal, user.email,user.password)" class="item item-icon-left positive" ng-repeat="user in users"><i class="icon ion-person"></i><h2>{{user.title}}</h2></a>
+			</div>
+        </content>
+      </div>

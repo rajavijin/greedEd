@@ -2118,7 +2118,7 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
     });
  
 })
-.controller('LoginCtrl', function($scope, $rootScope, $http, $state, $ionicPopup, $ionicHistory, $ionicLoading, MyService, myConfig) {
+.controller('LoginCtrl', function($scope, $rootScope, $http, $state, $ionicPopup, $ionicModal, $ionicHistory, $ionicLoading, MyService, myConfig) {
   $scope.uid = localStorage.getItem('uid') || '';
   user = (localStorage.getItem('user')) ? JSON.parse(localStorage.getItem('user')) : {};
   if($scope.uid) {
@@ -2144,6 +2144,73 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
     }
   }
 
+  $scope.users = [{
+    title: 'Amulya Parent',
+    email: "9876901256",
+    password: "gqp6kzkt9"
+  },
+  {
+    title: '1-A Ashwini Parent',
+    email: "9894321256",
+    password: "59tnvcxr"
+  },
+  {
+    title: "1-A Anitha S parent",
+    email: "9846812670",
+    password: "9dm5i2j4i"
+  },
+  {
+    title: 'Head Master',
+    email: "8951572125",
+    password: 'ZBqSp0lN/9hPkS123qkyHw=='
+  },
+  {
+    title: 'Class Teacher',
+    email: '8978341219',
+    password: 'l9yx8ncdi'
+  },
+  {
+    title: 'Teacher Abhi',
+    email: '8787876464',
+    password: 'c7rjm7vi'
+  },
+  {
+    title: "Teacher Rajavijin",
+    email: '8787871464',
+    password: 'a7om9529'
+  },
+  {
+    title: "aarthi S Parent",
+    email: "9843812677",
+    password: "ybv8wipb9"
+  },
+  {
+    title: 'parent with multiple students',
+    email: '9944046100',
+    password: 'hsqddkj4i'
+  },
+  {
+    title: 'parent with single student',
+    email: '8879900341',
+    password: '1l8zolxr'
+  }];
+  $scope.fillUser = function(modal, email, password) {
+    modal.hide();
+    $scope.user = {
+      email: email,
+      password: password
+    }
+    $scope.login();
+  }
+  $scope.showUsers = function() {
+    $ionicModal.fromTemplateUrl('templates/selectusers.html', {
+      scope: $scope,
+      animation: 'slide-in-up'
+    }).then(function(modal) {
+      $scope.modal = modal;
+      $scope.modal.show();
+    });
+  }
   //parent with multiple student
   $scope.user = {
     email: '9944046100',
@@ -2155,47 +2222,6 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
     password: '1l8zolxr'
   }
 
-  //Amulya parent
-  $scope.user = {
-    email: "9876901256",
-    password: "gqp6kzkt9"
-  }    
-  //1-a Ashwini parent
-  $scope.user = {
-    email: "9894321256",
-    password: "59tnvcxr"
-  }
-  //1-a Anitha S parent
-  $scope.user = {
-    email: "9846812670",
-    password: "9dm5i2j4i"
-  }
-  //hm
-  $scope.user = {
-    email: "8951572125",
-    password: 'ZBqSp0lN/9hPkS123qkyHw=='
-  };
-  //teacher
-   $scope.user = {
-    email: '8978341219',
-    password: 'l9yx8ncdi'
-  };
-  //teacher single
-  $scope.user = {
-    email: '8787876464',
-    password: 'c7rjm7vi'
-  }
-  
-  //teacher rajavijin
-  $scope.user = {
-    email: '8787871464',
-    password: 'a7om9529'
-  }
-  //aarthi S parent
-  $scope.user = {
-    email: "9843812677",
-    password: "ybv8wipb9"
-  }
   $scope.login = function() {
     if(($scope.user.email == null) || ($scope.user.password == null)) {
       alert('Please fill the fields');
