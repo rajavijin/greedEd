@@ -74,6 +74,7 @@ angular.module('starter.services', [])
     getMessages: function(params) {
       console.log("Get messages Params:", params);
       var defer = $q.defer();
+      if(!params.classes) params.classes = "undefined";
       $http.get(baseUrl+'/messages/'+params.schoolid+'/'+params.userId+'/'+params.classes)
       .success(function(data, status, headers, config){
         defer.resolve(data);
