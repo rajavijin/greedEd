@@ -1161,7 +1161,7 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
         var selectq = 'SELECT key from users where key = "'+id+'"';
         $cordovaSQLite.execute(db, selectq).then(function(sres) {
           if(sres.rows.length == 0) {
-            var values = [dbkey, JSON.stringify(userprofile)];
+            var values = [id, JSON.stringify(userprofile)];
             $cordovaSQLite.execute(db, query, values).then(function(res) {
               console.log("insertId: " + res.insertId);
             })
