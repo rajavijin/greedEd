@@ -8,9 +8,13 @@
    </ion-side-menu-content>
    <ion-side-menu side="left">
       <ion-content>
-         <ion-list>
+         <ion-list ng-init="linkItem = {}">
             <ion-item nav-clear class="center menu-logo"><h2><i class="icon ion-person positive" style="font-size:60px"></i></h2><h2>Welcome {{username}}</h2></ion-item>
-            <ion-item nav-clear menu-close class="item-icon-left" ng-repeat="link in menuLinks.Links" href="#/{{link.href}}"><i class="icon {{link.class}} positive"></i> {{link.title}}</ion-item>
+            <div ng-repeat="link in menuLinks.Links">
+               <ion-item ng-click="linkItem[link.index] = !linkItem[link.index]" ng-init="linkItem[link.index] = true" ng-class="link.expand ? 'show': 'hide'" ng-if="link.header == 'header'" nav-clear class="menu-header item-icon-right item-icon-left" href="#{{link.href}}"><i class="icon {{link.class}} positive"></i> <b>{{link.title}}</b><i ng-class="linkItem[link.index] ? 'ion-ios-minus': 'ion-ios-plus'" class="icon positive"></i></ion-item>
+<ion-item ng-show="linkItem[link.index]" ng-if="link.header == 'submenu'" nav-clear menu-close class="item-icon-left sub" href="#{{link.href}}"><i class="icon {{link.class}} positive"></i> {{link.title}}</ion-item>
+               <ion-item ng-if="!link.header" nav-clear menu-close class="item-icon-left" href="#{{link.href}}"><i class="icon {{link.class}} positive"></i>{{linkItem[link.index]}} {{link.title}}</ion-item>
+            </div>
          </ion-list>
       </ion-content>
    </ion-side-menu>

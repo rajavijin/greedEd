@@ -1,10 +1,16 @@
-<ion-view cache-view="false" ng-init="getWall()">
+<ion-view ng-init="getWall()" ng-cloak="true">
    <ion-nav-title>{{title}}</ion-nav-title>
    <ion-nav-buttons side="right"><button ng-show="add" class="button button-icon button-clear ion-ios-plus-outline" ng-click="addpost()"></button></ion-nav-buttons>
    <ion-content>
    <ion-refresher pulling-text="Pull to refresh" on-refresh="getWall()"></ion-refresher>
-   <div class="list card" ng-repeat="(wk,wall) in walls">
-
+   <div ng-hide="walls" class="list">
+    <a class="item item-icon-left" href="#">
+    <i class="icon ion-ios-list positive"></i>
+    No wall item found
+  </a>
+   </div>
+   
+  <div class="list card" ng-repeat="wall in walls">
   <div class="item item-avatar">
     <i class="icon ion-person wall-title positive"></i>
     <h2>{{wall.user}}</h2>
@@ -12,7 +18,7 @@
   </div>
 
   <div class="item item-image" ng-hide="wall.pictures.length == 0">
-    <img ng-click="showImage('{{base}}{{pic}}')" class="full-image" src="{{base}}{{pic}}" ng-repeat="pic in wall.pictures">
+    <img ng-click="showImage('{{pic}}')" class="full-image" src="{{pic}}" ng-repeat="pic in wall.pictures">
   </div>
   <a class="item" href="#">
     {{wall.message}}

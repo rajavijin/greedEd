@@ -2,46 +2,22 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
 
 .constant("myConfig", 
   {
-/*    "base": "http://192.168.1.3", 
-    "server":"http://192.168.1.3:9000",*/
-    "base": "http://localhost", 
-    "server":"http://localhost:9000",
-    "hmMenu": {"Links":[{"title":"Dashboard", "href":"app/hmdashboard", "class":"ion-stats-bars"}, {"title":"Classes", "href":"app/allclasses", "class": "ion-easel"}, {"title":"Students", "href":"app/allstudents", "class": "ion-person-stalker"},{"title":"Teachers", "href":"app/allteachers", "class": "ion-ios-body"},{"title":"Wall","href":"app/wall","class":"ion-ios-list"},{"title":"Messages", "href":"app/messages", "class":"ion-chatboxes"},{"title":"log-out", "href":"logout", "class":"ion-log-out"}]},
-    "parentMenu": {"Links":[{"title":"Children", "href":"app/allstudents", "class": "ion-person-stalker"},{"title":"Wall","href":"app/wall","class":"ion-ios-list"},{"title":"log-out", "href":"logout", "class":"ion-log-out"}]},
-    "parentSingleMenu": {"Links":[{"title":"Dashboard", "href":"app/studentdashboard", "class":"ion-stats-bars"},{"title":"Overall Dashboard", "href":"app/studentoveralldashboard", "class":"ion-ios-pulse-strong"},{"title":"Class Dashboard", "href":"app/dashboard", "class":"ion-pie-graph"},{"title":"Wall","href":"app/wall","class":"ion-ios-list"},{"title":"Messages", "href":"app/messages", "class":"ion-chatboxes"},{"title":"TimeTable", "href":"app/timetable", "class":"ion-ios-time-outline"},{"title":"Profile", "href":"app/studentprofile", "class": "ion-person"},{"title":"log-out", "href":"logout", "class":"ion-log-out"}]},
-    "teacherMenu": {"Links":[{"title":"Dashboard", "href":"app/teacherdashboard", "class":"ion-stats-bars"},{"title":"Students", "href":"app/allstudents", "class": "ion-person-stalker"},{"title":"Profile", "href":"app/teacherprofile", "class": "ion-person"},{"title":"Wall","href":"app/wall","class":"ion-ios-list"},{"title":"Messages", "href":"app/messages", "class":"ion-chatboxes"},{"title":"log-out", "href":"logout", "class":"ion-log-out"}]},
-    "classTeacherMenu": {"Links":[{"title":"Class Dashboard", "href":"app/dashboard", "class":"ion-stats-bars"},{"title":"Teacher Dashboard", "href":"app/teacherdashboard", "class":"ion-ios-pulse-strong"},{"title":"Students", "href":"app/allstudents", "class": "ion-person-stalker"},{"title":"Messages", "href":"app/messages", "class":"ion-chatboxes"},{"title":"Class Profile", "href":"app/classprofile", "class": "ion-easel"},{"title":"Profile", "href":"app/teacherprofile", "class": "ion-person"},{"title":"Wall","href":"app/wall","class":"ion-ios-list"},{"title":"log-out", "href":"logout", "class":"ion-log-out"}]},
-  })
+    "base": "http://192.168.1.3", 
+    "server":"http://192.168.1.3:9000",
+/*    "base": "http://localhost", 
+    "server":"http://localhost:9000",*/
+ })
 //.constant("myConfig", {"base": "http://52.25.97.15", "server":"http://52.25.97.15"})
-.controller('AppCtrl', function($scope, $stateParams, $cordovaSQLite, $rootScope, $state, $window, MyService, myConfig) {
+.controller('AppCtrl', function($scope, $rootScope, $state, $window, MyService) {
   user = JSON.parse(localStorage.getItem('user')) || user;
   $scope.username = user.name;
   $scope.uid = localStorage.getItem('uid') || '';
   if($scope.uid) {
     $scope.authorized = true;
-    if(user.role == "hm") {
-      $scope.menuLinks = myConfig.hmMenu;
-    } else if (user.role == "parent") {
-      console.log("students", user.students.length);
-      if(user.students.length > 1) {
-        $scope.menuLinks = myConfig.parentMenu;
-        $rootScope.role = "parent";
-      } else {
-        $scope.menuLinks = myConfig.parentSingleMenu;
-        $rootScope.role = "parentSingle";
-      }
-    } else {
-      if(user.standard) {
-        $scope.menuLinks = myConfig.classTeacherMenu;
-        $rootScope.role = "teacherClass";
-      } else {
-        $scope.menuLinks = myConfig.teacherMenu;
-        $rootScope.role = "teacher";
-      }
-    }
+    $scope.menuLinks = MyService.getMenus();   
   } else {
     $scope.authorized = false;
-    $scope.menuLinks = {"Links":[{"title":"log-in", "href":"app.home", "class": "ion-log-in"}]};
+    $scope.menuLinks = {"Links":[{}]};
   }
   if(localStorage.getItem('filterdata')) {
     filtersData = JSON.parse(localStorage.getItem('filterdata'));
@@ -263,6 +239,7 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
     localStorage.setItem('filtersData', JSON.stringify(filtersData));
     $scope.getMarksData();
   }
+  $scope.cache = true;
   $scope.getMarksData = function() {
     $scope.access = true;
     resetData();
@@ -630,6 +607,7 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
   }
 })
 .controller('AllClassesCtrl', function($scope, $rootScope, $cordovaSQLite, $ionicLoading, MyService) {
+  $scope.filterToggle = function() {$scope.filterStatus = !$scope.filterStatus;}
   var processUsers = function(users) {
     $scope.allClasses = true;
     var classes = [];
@@ -697,10 +675,11 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
     }
   }  
 })
-.controller('AllStudentsCtrl', function($scope, $stateParams, $rootScope, $cordovaSQLite, $ionicLoading, MyService) {
+.controller('AllStudentsCtrl', function($scope, $stateParams, $rootScope, $cordovaSQLite, MyService) {
   var title = '';
   $scope.currentuser = user;
   $scope.filtersData = filtersData;
+  $scope.filterToggle = function() {$scope.filterStatus = !$scope.filterStatus;}
   $scope.getStudentsData = function() {
     var dbkey = user.schoolid;
     var params = {};
@@ -737,7 +716,6 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
     $scope.title = title;
     $scope.role = user.role;
     if(MyService.online()) {
-      $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner>'});
       MyService.getUsers(params).then(function(users) {
         if(users.length > 0) {
           console.log("Got all users:", users.length);
@@ -756,7 +734,7 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
         } else {
           $scope.allStudents = false;
         }    
-      }).finally(function() {$ionicLoading.hide();});
+      });
     } else {
       var query = 'SELECT * from users where key = "'+dbkey+'"';
       $cordovaSQLite.execute(db, query).then(function(res) {
@@ -774,7 +752,7 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
     }
   }
 })
-.controller('StudentsFilteredCtrl', function($scope, $stateParams, $rootScope, $cordovaSQLite, $ionicLoading, MyService) {
+.controller('StudentsFilteredCtrl', function($scope, $stateParams, $rootScope, $cordovaSQLite, MyService) {
   var title = '';
   $scope.currentuser = user;
   $scope.filtersData = filtersData;
@@ -792,7 +770,6 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
     var dbkey = params.schoolid+"_"+params.year+"_"+params.typeofexam+"_"+params.standard+'_'+params.division+'_'+params.status+'_'+params.subject+'_'+params.grade;
     console.log("Params", params);
     if(MyService.online()) {
-      $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner>'});
       MyService.listUsers(params).then(function(users) {
         if(users.length > 0) {
           console.log("Got all users:", users.length);
@@ -812,7 +789,7 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
         } else {
           $scope.allStudents = false;
         }    
-      }).finally(function() {$ionicLoading.hide();});
+      });
     } else {
       var query = 'SELECT * from users where key = "'+dbkey+'"';
       $cordovaSQLite.execute(db, query).then(function(res) {
@@ -830,9 +807,10 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
     }
   }
 })
-.controller('AllTeachersCtrl', function($scope, $stateParams, $rootScope, $cordovaSQLite, $ionicLoading, MyService) {
+.controller('AllTeachersCtrl', function($scope, $stateParams, $rootScope, $cordovaSQLite, MyService) {
   $scope.currentuser = user;
   $scope.filtersData = filtersData;
+  $scope.filterToggle = function() {$scope.filterStatus = !$scope.filterStatus;}
   $scope.getTeachersData = function() {
     var dbkey = user.schoolid;
     var params = {};
@@ -864,7 +842,6 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
     console.log("Users Param", params);
     $scope.title = title;
     if(MyService.online()) {
-      $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner>'});
       MyService.getUsers(params).then(function(users) {
         if(users.length > 0) {
           console.log("Got all users:", users.length);
@@ -883,7 +860,7 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
         } else {
           $scope.allStudents = false;
         }    
-      }).finally(function(){$ionicLoading.hide();});
+      });
     } else {
       var query = 'SELECT * from users where key = "'+dbkey+'"';
       $cordovaSQLite.execute(db, query).then(function(res) {
@@ -907,6 +884,7 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
   var title = '';
   var filtersData = JSON.parse(localStorage.getItem('filtersData')) || {};
   $rootScope.filtersData = filtersData;
+  $scope.cache = true;
   $rootScope.studentdashboardfilters = function() {
     filtersData = $rootScope.filtersData;
     localStorage.setItem('filtersData', JSON.stringify(filtersData));
@@ -1034,6 +1012,7 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
     allMarks = [];
   }
   $rootScope.noexams = true;
+  $scope.cache = true;
   $rootScope.studentoveralldashboardfilters = function() {
     console.log("Filtersdata", $rootScope.filtersData);
     filtersData = $rootScope.filtersData;
@@ -1167,52 +1146,29 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
   }
 })
 .controller('StudentProfileCtrl', function($scope, $rootScope, $cordovaSQLite, $ionicLoading, MyService, $stateParams) {
-  var filtersData = JSON.parse(localStorage.getItem('filtersData'));
-  $scope.currentuser = user;
-  $scope.filtersData = filtersData;
   $scope.getStudentsData = function() {
-    $scope.loading = true;
-    var params = {};
-    params.schoolid = user.schoolid;
-    params.sex = params.status = params.standard = params.division = 'all';
-    if($stateParams.studentid) {
-      params._id = $stateParams.studentid;
-      dbkey += "_"+$stateParams.studentid;
-    } else {
-      params._id = user.students[0].id;
-    }
-    var dbkey = params.schoolid+'_'+params._id;
+    var id = ($stateParams.studentid) ? $stateParams.studentid : user.students[0].id;
     if(MyService.online()) {
-      $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner>'});
-      MyService.getUsers(params).then(function(users) {
-        if(users.length > 0) {
-          $scope.allStudents = true;
-          $scope.user = users[0];
-          var query = "INSERT into users (key, value) VALUES (?, ?)";
-          var selectq = 'SELECT key from users where key = "'+dbkey+'"';
-          $cordovaSQLite.execute(db, selectq).then(function(sres) {
-            if(sres.rows.length == 0) {
-              var values = [dbkey, JSON.stringify(users)];
-              $cordovaSQLite.execute(db, query, values).then(function(res) {
-                console.log("insertId: " + res.insertId);
-              })
-            }
-          })
-        } else {
-          $scope.allStudents = false;
-        }    
-      }).finally(function(){$ionicLoading.hide();$scope.loading = false;});
+      MyService.getProfile({_id: id}).then(function(userprofile) {
+        console.log("Profile user", userprofile);
+        $scope.user = userprofile;
+        var query = "INSERT into users (key, value) VALUES (?, ?)";
+        var selectq = 'SELECT key from users where key = "'+id+'"';
+        $cordovaSQLite.execute(db, selectq).then(function(sres) {
+          if(sres.rows.length == 0) {
+            var values = [dbkey, JSON.stringify(userprofile)];
+            $cordovaSQLite.execute(db, query, values).then(function(res) {
+              console.log("insertId: " + res.insertId);
+            })
+          }
+        })
+      });
     } else {
-      var query = 'SELECT * from users where key = "'+dbkey+'"';
+      var query = 'SELECT * from users where key = "'+id+'"';
       $cordovaSQLite.execute(db, query).then(function(res) {
         totalrecords = res.rows.length;
-        if(totalrecords > 0) {
-          var allusers = JSON.parse(res.rows.item(0).value);
-          $scope.allStudents = true;
-          $scope.user = allusers[0];
-        } else {
-          $scope.allStudents = false;
-        }
+        var allusers = JSON.parse(res.rows.item(0).value);
+        $scope.userprofile = allusers[0];
       }, function(err) {
         console.log("offline all users error", err);
       });
@@ -1253,9 +1209,9 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
       var dbkey = params.schoolid+'_'+params.name;
       console.log("Profile params:", params);
       if(MyService.online()) {
-        $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner>'});
         MyService.getUsers(params).then(function(users) {
-          if(users.length > 0) {
+          console.log("teacher", users);
+          if(Object.keys(users).length > 0) {
             $scope.allStudents = true;
             $scope.user = users[0];
             teacherSubjects(users[0]);
@@ -1272,7 +1228,7 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
           } else {
             $scope.allStudents = false;
           }    
-        }).finally(function(){$ionicLoading.hide();$scope.loading = false;});
+        });
       } else {
         var query = 'SELECT * from users where key = "'+dbkey+'"';
         $cordovaSQLite.execute(db, query).then(function(res) {
@@ -1499,7 +1455,7 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
   console.log("Add Post");
   $scope.post = {};
   $scope.recievers = {};
-  $scope.pictures = [];
+  $scope.post.pictures = [];
   $scope.classes = user.subjects;
   $scope.role = user.role;
   $scope.recieverToggle = true;
@@ -1508,70 +1464,96 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
       $scope.recievers[user.subjects[i].class] = status;
     };
   }
-    $scope.takePicture = function() {
-     var options = {
-      quality: 50,
-      destinationType: Camera.DestinationType.DATA_URL,
-      sourceType: Camera.PictureSourceType.CAMERA,
-      allowEdit: false,
-      encodingType: Camera.EncodingType.JPEG,
-      targetWidth: 320,
-      targetHeight: 240,
-      popoverOptions: CameraPopoverOptions,
-      saveToPhotoAlbum: false
-    };
-    $cordovaCamera.getPicture(options).then(
-    function(imageURI) {
-      $scope.pictures.push("data:image/jpeg;base64," + imageURI);
-      $ionicLoading.show({template: '<ion-spinner icon="lines" class="spinner-calm">Success</ion-spinner>', duration:500});
-    },
-    function(err){
-      $ionicLoading.show({template: '<ion-spinner icon="lines" class="spinner-calm">Error</ion-spinner>', duration:500});
-      })
+  var upload = function(imageURI) {
+    var ft = new FileTransfer(),
+        options = new FileUploadOptions();
+    options.fileKey = "file";
+    options.fileName = user._id +'_'+ Date.now() + ".jpg"; // We will use the name auto-generated by Node at the server side.
+    options.mimeType = "image/jpeg";
+    options.chunkedMode = false;
+    options.enctype="multipart/form-data";
+    ft.upload(imageURI, myConfig.server+"/api/wall/upload",
+      function (e) {
+        $scope.post.pictures.push(myConfig.server+e.response.replace(/"/g, ''));  
+        $ionicLoading.hide();
+      },
+      function (e) {
+        $ionicLoading.hide();
+        alert("uploaded failed");
+      }, options);    
+  }
+  $scope.takePicture = function(type) {
+    if(type == 'browse') {
+      var options = {
+        quality: 45,
+        destinationType: Camera.DestinationType.FILE_URI,
+        encodingType: Camera.EncodingType.JPEG,
+        sourceType: Camera.PictureSourceType.PHOTOLIBRARY
+      };
+    } else {
+      var options = {
+        quality: 45,
+        destinationType: Camera.DestinationType.DATA_URL,
+        encodingType: Camera.EncodingType.JPEG,
+        sourceType: Camera.PictureSourceType.CAMERA
+      };
     }
-
-  $scope.selectPicture = function() { 
+    navigator.camera.getPicture(
+      function (imageURI) {
+          console.log(imageURI);
+          if(type == 'click') imageURI = "data:image/jpeg;base64," + imageURI;
+          $ionicLoading.show({template: '<ion-spinner icon="lines" class="spinner-calm"></ion-spinner>'});
+          upload(imageURI);
+      },
+      function (message) {
+          $ionicLoading.hide();
+          // We typically get here because the use canceled the photo operation. Fail silently.
+      }, options);
+  }
+ /* $scope.selectPicture = function() { 
     var options = {
-      quality: 50,
-      destinationType: Camera.DestinationType.DATA_URL,
-      sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
-      allowEdit: false,
-      encodingType: Camera.EncodingType.JPEG,
-      targetWidth: 320,
-      targetHeight: 240,
-      popoverOptions: CameraPopoverOptions,
-      saveToPhotoAlbum: false
+        quality: 60,
+        destinationType: Camera.DestinationType.FILE_URI,
+        encodingType: Camera.EncodingType.JPEG,
     };
-    $cordovaCamera.getPicture(options).then(
-    function(imageURI) {
-      $scope.pictures.push("data:image/jpeg;base64," + imageURI);
-      $ionicLoading.show({template: '<ion-spinner icon="lines" class="spinner-calm">Success</ion-spinner>', duration:500});
-    },
-    function(err){
-      $ionicLoading.show({template: '<ion-spinner icon="lines" class="spinner-calm">Error</ion-spinner>', duration:500});
-    })
+    navigator.camera.getPicture(
+      function (imageURI) {
+          console.log(imageURI);
+          $ionicLoading.show({template: '<ion-spinner icon="lines" class="spinner-calm"></ion-spinner>'});
+          upload(imageURI);
+      },
+      function (message) {
+          $ionicLoading.hide();
+          // We typically get here because the use canceled the photo operation. Fail silently.
+      }, options);
   };
-
+*/
   $scope.submit = function() {
-    if(MyService.online()) {
-      var params = $scope.post;
-      params.userid = user._id;
-      params.user = user.name;
-      params.schoolid = user.schoolid;
-      params.to = [];
-      params.date = Date.now();
-      if(user.role == 'hm') {
-        params.to.push("all");
-      } else {
-        var allrecievers = $scope.recievers;
-        for (var reciever in allrecievers) {
-          if(allrecievers[reciever]) {
-            console.log("rec", reciever);
-            params.to.push(reciever);
-          }
+    var params = $scope.post;
+    params.userid = user._id;
+    params.user = user.name;
+    params.schoolid = user.schoolid;
+    params.to = [];
+    params.date = Date.now();
+    if(user.role == 'hm') {
+      params.to.push("all");
+    } else {
+      var allrecievers = $scope.recievers;
+      for (var reciever in allrecievers) {
+        if(allrecievers[reciever]) {
+          console.log("rec", reciever);
+          params.to.push(reciever);
         }
       }
-      var options = {
+    }
+    if(MyService.online()) {
+      MyService.createWall(params).then(function(wall) {
+        console.log('Wall', wall);
+        if(wall) {
+          $state.go("app.wall", {}, {reload:true});
+        }
+      });      
+/*      var options = {
         fileKey: "file",
         fileName: user._id +'_'+ params.date + ".jpg",
         chunkedMode: false,
@@ -1611,7 +1593,7 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
             $state.go("app.wall", {}, {reload:true});
           }
         });
-      }
+      }*/
     }
   }
 })
@@ -1733,11 +1715,15 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
       params.classes = user.students[0].class;
       params.subjects = user.students[0].subjects;
     } else {
-      params.userId = $stateParams.userId;
-      var index = user.students.indexOf(params.userId);
-      params.classes = user.students[index].class;
-      params.name = user.students[index].name;
-      params.subjects = user.students[index].subjects;
+      console.log("students", user.students);
+      for (var index = 0; index < user.students.length; index++) {
+        if(user.students[index].id == $stateParams.userId) {
+          params.userId = user.students[index].id
+          params.classes = user.students[index].class;
+          params.name = user.students[index].name;
+          params.subjects = user.students[index].subjects;
+        }
+      };
     }
   }
   else if (user.role == "teacher") {
@@ -1751,9 +1737,7 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
   $scope.to = {};
   $scope.tab = "messages";
   $scope.params = params;
-  $scope.filterToggle = function() {
-    $scope.filterStatus = !$scope.filterStatus;
-  }
+  $scope.filterToggle = function() {$scope.filterStatus = !$scope.filterStatus;}
   $scope.allowEdit = function() {
     $scope.group = !$scope.group;
   }
@@ -1896,10 +1880,10 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
 
     }
   }
-  var processMessages = function(messages) {
+/*  var processMessages = function(messages) {
     for (var i = 0; i < messages.length; i++) {
     };
-  }
+  }*/
   $scope.toMessageBox = function(msg) {
     //href="#/app/messages/{{contact.id}}/{{contact.toId}}/{{contact.toName}}/{{params.userId}}/{{params.name}}/{{contact.type}}"
     console.log("Messages", mesgroupVal);
@@ -1929,23 +1913,6 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
     params.userId = user.students[0].id;
     params.name = "Parent of "+user.students[0].name;
   }
-/*  params.chatname = $stateParams.chatname;
-  params.type = $stateParams.type;
-  params.chatname = ($stateParams.type == "group") ? $stateParams.to : $stateParams.from +'-'+$stateParams.to;
-  if($stateParams.from == 'chatname') {
-    if($stateParams.type == 'group') {
-      params.to = $stateParams.to;
-    } else {
-      var chatu = $stateParams.to.split("-");
-      if(params.userId == chatu[1]) params.to = chatu[0];
-      else params.to = chatu[1];
-    }
-  } else {
-    params.from = $stateParams.from;
-    params.to = $stateParams.to;
-  }
-
-*/
     $scope.params = params;
     $scope.input = {
       message: localStorage['userMessage-' + params.toId] || ''
@@ -2123,76 +2090,80 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
   user = (localStorage.getItem('user')) ? JSON.parse(localStorage.getItem('user')) : {};
   if($scope.uid) {
     if(user.role == "hm") {
-      $scope.menuLinks = myConfig.hmMenu;
+  //    $scope.menuLinks = myConfig.hmMenu;
       $state.go('app.hmdashboard', {}, {reload: true});
     } else if (user.role == "parent") {
       if(user.students.length > 1) {
-        $scope.menuLinks = myConfig.parentMenu;
-        $state.go('app.allstudents', {}, {reload: true});
+    //    $scope.menuLinks = myConfig.parentMenu;
+        $state.go('app.wall', {}, {reload: true});
       } else {
-        $scope.menuLinks = myConfig.parentSingleMenu;
+      //  $scope.menuLinks = myConfig.parentSingleMenu;
         $state.go('app.studentDashboard', {}, {reload: true});
       }
     } else {
       if(user.standard) {
-        $scope.menuLinks = myConfig.classTeacherMenu;
+        //$scope.menuLinks = myConfig.classTeacherMenu;
         $state.go('app.dashboard', {}, {reload: true});
       } else {
-        $scope.menuLinks = myConfig.teacherMenu;                            
+        //$scope.menuLinks = myConfig.teacherMenu;                            
         $state.go('app.teacherdashboard', {}, {reload: true});
       }
     }
   }
-
-  $scope.users = [{
-    title: 'Amulya Parent',
+  $scope.user = {
+    email: '',
+    password: '',
+  }
+  $scope.users = [
+  {
+    title: 'Head Master',
+    email: "8951572125",
+    password: 'Gh7WO8g5Cns5VLpR3PzbQA=='
+  },
+  {
+    title: '3-A Amulya Parent',
     email: "9876901256",
-    password: "gqp6kzkt9"
+    password: "5529pmn29"
   },
   {
     title: '1-A Ashwini Parent',
     email: "9894321256",
-    password: "59tnvcxr"
+    password: "xg6re8kt9"
   },
   {
     title: "1-A Anitha S parent",
     email: "9846812670",
-    password: "9dm5i2j4i"
+    password: "s2hqnz5mi"
   },
   {
-    title: 'Head Master',
-    email: "8951572125",
-    password: 'ZBqSp0lN/9hPkS123qkyHw=='
-  },
-  {
-    title: 'Class Teacher',
+    title: '4-A Class Teacher Justin',
     email: '8978341219',
-    password: 'l9yx8ncdi'
+    password: '0vayk3xr'
   },
   {
-    title: 'Teacher Abhi',
+    title: 'Subject teacher Abhi',
     email: '8787876464',
-    password: 'c7rjm7vi'
+    password: 'kun0fi529'
   },
   {
-    title: "Teacher Rajavijin",
+    title: "Subject teacher Rajavijin",
     email: '8787871464',
-    password: 'a7om9529'
+    password: 'g8tfn7b9'
   },
   {
-    title: "aarthi S Parent",
+    title: "2-B aarthi S Parent",
     email: "9843812677",
-    password: "ybv8wipb9"
+    password: "ph73w61or"
   },
   {
-    title: 'parent with multiple students',
+    title: 'Adarsh A/Anil A parent',
     email: '9944046100',
-    password: 'hsqddkj4i'
+    password: 'r2rhn0zfr'
   },
   {
-    title: 'parent with single student',
+    title: '5-B Hema H parent',
     email: '8879900341',
-    password: '1l8zolxr'
+    password: 'scus7nwmi'
   }];
   $scope.fillUser = function(modal, email, password) {
     modal.hide();
@@ -2212,16 +2183,7 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
     });
   }
   //parent with multiple student
-  $scope.user = {
-    email: '9944046100',
-    password: 'hsqddkj4i'
-  };
-    //parent with single student
-  $scope.user = {
-    email: '8879900341',
-    password: '1l8zolxr'
-  }
-
+//  $scope.user = $scope.users[0];
   $scope.login = function() {
     if(($scope.user.email == null) || ($scope.user.password == null)) {
       alert('Please fill the fields');
@@ -2232,14 +2194,13 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
           $scope.email = null;
           $scope.password = null;
           $scope.authorized = true;
-          $ionicLoading.hide();
           if(data.role == "hm") {
             $state.go("app.hmdashboard", {}, {'reload': true});
           } else if (data.role == "parent") {
             if(data.students.length == 1) {
               $state.go("app.studentDashboard", {}, {'reload': true});
             } else {
-              $state.go("app.allstudents", {}, {'reload': true});            
+              $state.go("app.wall", {}, {'reload': true});            
             }
           } else {
             if(data.standard) {

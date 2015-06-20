@@ -15,6 +15,7 @@ var errorHandler = require('errorhandler');
 var path = require('path');
 var config = require('./environment');
 var passport = require('passport');
+var fs = require('fs');
 var busboy = require('connect-busboy'); //middleware for form/file upload
 module.exports = function(app) {
   var env = app.get('env');

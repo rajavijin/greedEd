@@ -1,8 +1,8 @@
 <ion-view cache-view="false">
    <ion-nav-title>Add Post</ion-nav-title>
     <ion-nav-buttons side="right">
-      <button class="button button-icon button-clear ion-camera" ng-click="takePicture()"></button>
-      <button class="button button-icon button-clear ion-image" ng-click="selectPicture()"></button>
+      <button class="button button-icon button-clear ion-camera" ng-click="takePicture('click')"></button>
+      <button class="button button-icon button-clear ion-image" ng-click="takePicture('browse')"></button>
     </ion-nav-buttons>
    <ion-content>
     <ul class="list" ng-if="role != 'hm'">
@@ -29,14 +29,14 @@
        </label>
       </li>
     </ul>
-      <div class="list" ng-hide="pictures.length == 0">
+      <div class="list" ng-hide="post.pictures.length == 0">
         <div class="item-icon-left positive item">
           <i class="icon ion-image"></i>
           <strong>Image</strong>
         </div>
         <img id="myImage" />
         <img src="content://media/external/images/media/8216" />
-        <div class="item item-image"  ng-repeat="v in pictures">
+        <div class="item item-image"  ng-repeat="v in post.pictures">{{v}}
           <input type="text" ng-model="v">
           <img src="{{v}}" class="full-image"/>
         </div>

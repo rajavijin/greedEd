@@ -199,10 +199,11 @@ exports.create = function (req, res, next) {
 exports.show = function (req, res, next) {
   var userId = req.params.id;
 
-  User.findById(userId, function (err, user) {
+  User.findById(userId, '-pepper -hashedPassword -provider -salt', function (err, user) {
     if (err) return next(err);
     if (!user) return res.send(401);
-    res.json(user.profile);
+    console.log("user", user);
+    res.json(user);
   });
 };
 
@@ -210,6 +211,7 @@ exports.show = function (req, res, next) {
  * Get multiple users
  */
 exports.users = function (req, res, next) {
+  var fields = {_id:1, name:1, standard:1, division:1, role:1};
   _.each(req.params, function(p, pk) {
     if((p == 'all') || (p == 'undefined')) {
       delete req.params[pk];
@@ -225,9 +227,12 @@ exports.users = function (req, res, next) {
   }
   if(req.params.name) req.params.name = {$in:req.params.name.split(",")};
   //var roles = (req.params.indexOf(",") == -1) req.params.role : req.params.
+  if(req.params.role.indexOf('teacher') >= 0) {fields.subjects = 1;}
+  console.log("fields", fields);
+  console.log("role", req.params.role);
   req.params.role = {$in:req.params.role.split(",")};
   console.log("requested users", req.params);
-  User.find(req.params).sort({stardard: -1}).exec(function(err, user) {
+  User.find(req.params, fields).sort({stardard: -1}).exec(function(err, user) {
     if (err) return next(err);
     if (!user) return res.send(401);
     res.json(user);

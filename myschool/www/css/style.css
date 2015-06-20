@@ -2,11 +2,11 @@
 .list .item, .title, .list .item .col {
     text-transform: capitalize;
     white-space: normal;
+    border-color: #f6f6f6;
 }
-.list .item {
+/*.list .item {
     margin: 0 10px;
     border-width: 1px 0px 0px 0;
-    border-color: #f6f6f6;
 }
 .list.card .item {
   border: 1px 0;
@@ -15,6 +15,12 @@
 .list .item:first-child {
 	border-width: 1px 0 0px;
 }
+body .list .item.first {
+  border-width: 1px 0 0;
+}
+.list .item:last-child, .list .item.last {
+  border-width: 1px 0;
+}*/
 .list .item .wall-title {
   position: absolute;
   top: 16px;
@@ -25,11 +31,8 @@
   height: 100%;
   font-size: 40px;
 }
-body .list .item.first {
-	border-width: 1px 0 0;
-}
-.list .item:last-child, .list .item.last {
-	border-width: 1px 0;
+.list .item.sub {
+  padding-left: 10px;
 }
 .item-icon-left .icon {
  left: 5px;
@@ -185,7 +188,7 @@ input[type="search"] {width: 100%;}
 }
 #logo h1 {font-size: 70px;}
 #logo h4 {margin: 0;}
-.pane.tab-content {top: 82px;}
+.pane.tab-content {top: 92px;}
 .tabs-striped .tab-item.tab-item-active, .tabs-striped .tab-item.active, .tabs-striped .tab-item.activated {border-color: #23b7e5;}
 .header-search .item-input-wrapper {margin: 0 0 0 6px;}
 /* allows the bar-footer to be elastic /*
