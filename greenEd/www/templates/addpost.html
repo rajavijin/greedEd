@@ -1,0 +1,46 @@
+<ion-view cache-view="false">
+   <ion-nav-title>Add Post</ion-nav-title>
+    <ion-nav-buttons side="right">
+      <button class="button button-icon button-clear ion-camera" ng-click="takePicture('click')"></button>
+      <button class="button button-icon button-clear ion-image" ng-click="takePicture('browse')"></button>
+    </ion-nav-buttons>
+   <ion-content>
+    <ul class="list" ng-if="role != 'hm'">
+    <li class="item-icon-left positive item item-toggle">
+      <i class="icon ion-android-contacts"></i>
+      <strong>To</strong>
+    </li>
+    <li class="item item-toggle">
+      All
+      <label class="toggle toggle-positive">
+         <input type="checkbox" ng-model="recieverToggle" ng-init="toggleClasses(recieverToggle)" ng-change="toggleClasses(recieverToggle)">
+         <div class="track">
+           <div class="handle"></div>
+         </div>
+       </label>
+    </li>
+      <li ng-hide="recieverToggle" class="item item-toggle" ng-repeat="class in classes">
+      {{class.class}} {{class.subject}}
+       <label class="toggle toggle-positive">
+         <input type="checkbox" ng-model="recievers[class.class]">
+         <div class="track">
+           <div class="handle"></div>
+         </div>
+       </label>
+      </li>
+    </ul>
+      <div class="list" ng-hide="post.pictures.length == 0">
+        <div class="item-icon-left positive item">
+          <i class="icon ion-image"></i>
+          <strong>Image</strong>
+        </div>
+        <div class="item item-image"  ng-repeat="v in post.pictures">
+          <img src="{{v}}" class="full-image"/>
+        </div>
+      </div>
+   </ion-content>
+   <div class="row bar bar-footer">
+      <input type="text" class="col col-80 add-post-text" placeholder="What's on your mind ???" ng-model="post.message">
+      <button class="col send-button button button-icon icon-center button-clean ion-android-send" ng-click="submit()"></button>
+</div>
+</ion-view>
