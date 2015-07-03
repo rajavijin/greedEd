@@ -131,7 +131,7 @@ angular.module('starter.services', [])
       var defer = $q.defer();
       var type = student.typeofexam;
       if(student.typeofexam % 1 === 0) {
-        type = student.typeofexams[student.typeofexam];
+        type = (student.typeofexams) ? student.typeofexams[student.typeofexam] : 'all';
       }
       console.log("user typeofexams", user.typeofexams);
       console.log('Mark url: ', '/marks/'+student.schoolid+'/'+student.year+'/'+type+'/'+student.studentid+'/'+student.standard+'/'+student.division);

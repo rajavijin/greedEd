@@ -2,10 +2,10 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
 
 .constant("myConfig", 
   {
-    "base": "http://192.168.1.3", 
-    "server":"http://192.168.1.3:9000",
-/*    "base": "http://localhost", 
-    "server":"http://localhost:9000",*/
+    /*"base": "http://192.168.1.2", 
+    "server":"http://192.168.1.2:9000",*/
+    "base": "http://localhost", 
+    "server":"http://localhost:9000",
  })
 //.constant("myConfig", {"base": "http://52.25.97.15", "server":"http://52.25.97.15"})
 .controller('AppCtrl', function($scope, $rootScope, $state, $window, MyService) {
