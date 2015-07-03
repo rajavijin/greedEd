@@ -18,5 +18,9 @@
             </ion-list>
           </ion-slide>
       </ion-slide-box>
-  
+      <ion-content>
+      <ion-list ng-if="!data.slides">
+            <ion-item class="item item-icon-left positive" href="#"><i class="icon ion-ios-book"></i><h2>No Timetable Available</h2></ion-item>
+            </ion-list>
+      </ion-content>
     </ion-view>

@@ -1340,6 +1340,7 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
     }
   }
   var processMarksVal = function(v, k, status) {
+    console.log("user", v);
     classData.teacher = v.teacher;
     if(!classData.male) classData.male = 0;
     classData.male = (v.sex.toLowerCase() == "male") ? classData.male + 1 : classData.male;

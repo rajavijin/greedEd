@@ -211,7 +211,7 @@ exports.show = function (req, res, next) {
  * Get multiple users
  */
 exports.users = function (req, res, next) {
-  var fields = {_id:1, name:1, standard:1, division:1, role:1};
+  var fields = {_id:1, name:1, standard:1, division:1, role:1, sex:1, teacher:1};
   _.each(req.params, function(p, pk) {
     if((p == 'all') || (p == 'undefined')) {
       delete req.params[pk];
