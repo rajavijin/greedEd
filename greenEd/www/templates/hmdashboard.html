@@ -4,7 +4,9 @@
    </ion-header-bar>
    <ion-content class="has-header" >
       <ion-refresher pulling-text="Pull to refresh" on-refresh="getMarksData()"></ion-refresher>
-      <a class="item item-icon-left" href="#" ng-if="dashboardStatus == 'empty'"><i class="icon ion-compose positive"></i>Dashboard is empty</a>
+      <ion-list ng-if="dashboardStatus == 'empty'">
+         <ion-item class="item item-icon-left"><i class="icon ion-ios-list"></i>Dashboard is empty</ion-item>
+      </ion-list>
       <chart id="passfailstatus" config="passfailConfig" ng-if="dashboardStatus != 'empty'" class="noclick"></chart>
       <chart id="subjects" config="subjectsConfig" ng-if="dashboardStatus != 'empty'"></chart>
       <chart id="grades" config="gradeConfig" ng-if="dashboardStatus != 'empty'" class="noclick"></chart>
