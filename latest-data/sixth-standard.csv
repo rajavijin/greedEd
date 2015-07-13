@@ -1,5 +1,5 @@
 Standard,Teacher,TeacherPhone,TypeOfExams,CommonSubjects,,
-6,Prashanth,9496255106,"periodical1,periodical2,quarterly,periodical3,periodical4,halfyearly,periodical5,annual","english:Anitha,math:Prashanth,science:Jothi,social:Rajesh,hindi:Divya",,
+6,Prashanth,9496255106,"periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual","english:Anitha,math:Prashanth,science:Jothi,social:Rajesh,hindi:Divya",,
 ,,,,,,
 Student,StudentID,Sex,Address,Parent,ParentPhone,SecondLanguage
 R.S.Abhilash,600001,Male,"Bhavani Nivas, Nithravilai Post",A.Ramachandran,9944711000,malayalam:Stephen

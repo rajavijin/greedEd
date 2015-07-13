@@ -1,44 +1,47 @@
-Student,StudentID,Standard,Division,Sex,Address,Teacher,TeacherPhone,Parent,ParentPhone,TypeOfExams,Subjects
-,,7,,,,Anitha,9496255107,,,"periodical1,periodical2,quarterly,periodical3,periodical4,halfyearly,periodical5,annual","english:Sahaya,math:Sathish,science:Raja,social:Sajeev,hindi:Bhavana"
-A.Athira,700001,,,Female,"Athira Nivas, Nithravilai Post",,,S.Arvind Krishnan,9944611000,,malayalam:Rakesh
-S.N.Adarsh,700002,,,Male,"Santhosh Bhavan, Marthandam",,,A.Santhosh,9944611001,,tamil:Sindhu
-B.Anitha,700003,,,Female,"Bindhu Bhavan, Kanjampuram",,,A.N.Baiju,9944611002,,tamil:Sindhu
-S.Arjun,700004,,,Male,"Athul Bhavan, Kaliyikavilai",,,D.Subash,9944611003,,tamil:Sindhu
-S.S.Apoorva,700005,,,Female,"Sangeetha Nivas, Kannanakam, Kollemcode",,,N.Sudhagar,9944611004,,malayalam:Rakesh
-R.S.Baiju,700006,,,Male,"Ragam Bhavan, Colachel",,,A.Rahul Raj,9944611005,,tamil:Sindhu
-S.Bagyaraj,700007,,,Male,"Sugam Bhavan, Kuzhithurai",,,N.B.Sundar Raj,9944611006,,tamil:Sindhu
-D.Balaji,700008,,,Male,"Bindhu Bhavan, Marthandam",,,A.Dhandapani,9944611007,,tamil:Sindhu
-M.S.Bhavani,700009,,,Female,"Bhavani Villa, Virivilai",,,S.Madhu,9944611008,,tamil:Sindhu
-A.Bhuvaneshwari,700010,,,Female,"Bagyam Nivas, Kaliyikavilai",,,S.Moorthy,9944611009,,malayalam:Rakesh
-S.Chinmayi,700011,,,Female,"Chandhini Bhavan, Nithravilai",,,S.Santhosh,9944611010,,malayalam:Rakesh
-D.Divya,700012,,,Female,"Divya Vilas, Parashala",,,A.Diwakar,9944611011,,tamil:Sindhu
-M.D.Dharshan,700013,,,Male,"Darshan Bhavan, Oorambu",,,S.S.Murali,9944611012,,tamil:Sindhu
-S.Deepa,700014,,,Female,"Deepa Bhavan, Choozhal",,,S.Sajeev,9944611013,,tamil:Sindhu
-V.S.Dhanu,700015,,,Female,"Deepthi Nivas, Nithravilai",,,M.Vijayan,9944611014,,tamil:Sindhu
-S.Elangovan,700016,,,Male,"Sindhu Bhavan, Kollemcode",,,A.Suman,9944611015,,malayalam:Rakesh
-D.Elizabeth,700017,,,Female,"Das Villa, Poothurai",,,D.Dickson,9944611016,,tamil:Sindhu
-G.Fathima,700018,,,Female,"Fathima Nivas, Chinnathurai",,,N.Gibiri,9944611017,,malayalam:Rakesh
-A.Fazil,700019,,,Male,"Faizi Manzil, Nambali",,,A.Abdul Hassan,9944611018,,tamil:Sindhu
-R.Freeda,700020,,,Female,"Pinky Villa, Kollemcode",,,M.Roy,9944611019,,tamil:Sindhu
-J.Ganga,700021,,,Female,"Gayathri, Parashala",,,S.Jawahar,9944611020,,tamil:Sindhu
-A.GiriKumar,700022,,,Male,"Giri Nivas, Kaliyikavilai",,,D.Anoop Kumar,9944611021,,malayalam:Rakesh
-N.Hima,700023,,,Female,"Hima Bhavan, Karungal",,,M.Narayanan,9944611022,,malayalam:Rakesh
-D.Irvine,700024,,,Male,"Davy Villa, Kirathoor",,,A.Das,9944611023,,tamil:Sindhu
-S.S.Indulekha,700025,,,Female,"Sai Bhavan, Vaikaloor",,,S.Sunil,9944611024,,tamil:Sindhu
-A.Jalaja,700026,,,Female,"Anu Bhavan, Nadaikkavu",,,P.Anu Kumar,9944611025,,tamil:Sindhu
-K.Kanimozhi,700027,,,Female,"Kavitha Bhavan, Karungal",,,G.Krishna Kumar,9944611026,,malayalam:Rakesh
-K.Kumar,700028,,,Male,"Kumar Bhavan, Kollemcode",,,A.karunakaran,9944611027,,malayalam:Rakesh
-S.Livingston,700029,,,Male,"Sanjay Nivas, Thoothoor",,,A.Soosai Anto,9944611028,,tamil:Sindhu
-A.Mohan,700030,,,Male,"Arjun Home, Kaliyikavilai",,,D.Anil Kumar,9944611029,,tamil:Sindhu
-S.Madhavi,700031,,,Female,"Radha Bhavan, Atoor",,,S.Sudheep,9944611030,,tamil:Sindhu
-B.Michael,700032,,,Male,"Michael Villa, Nithravilai",,,A.Binu,9944611031,,malayalam:Rakesh
-G.Pradeep,700033,,,Male,"Pradeep Agam, Viricode",,,S.Ganesh Kumar,9944611032,,malayalam:Rakesh
-H.Rajan,700034,,,Male,"Ragam, Kollemcode",,,S.Hari,9944611033,,malayalam:Rakesh
-V.Retheesh,700035,,,Male,"Ramesh Bhavan, Medavilakom",,,A.Viswambaran,9944611034,,tamil:Sindhu
-H.Renuga,700036,,,Female,"Happy Home, Thoothoor",,,G.Harilal,9944611035,,tamil:Sindhu
-J.Sudheer,700037,,,Male,"Subash Villa, Karungal",,,R.Jagadeesh,9944611036,,malayalam:Rakesh
-P.Subash,700038,,,Male,"Subash Bhavan, Kirathoor",,,S.Prasad,9944611037,,tamil:Sindhu
-P.Tushar,700039,,,Male,"Pushpa Nivas, Kollemcode",,,S.Prem Kumar,9944611038,,tamil:Sindhu
-H.Unnimaya,700040,,,Female,"Maya Bhavan, Kuzhithurai",,,H.Hemant,9944611039,,malayalam:Rakesh
-K.Vinay,700041,,,Male,"Vinay Villa, Arumana",,,A.Kanishka,9944611040,,malayalam:Rakesh
-S.Vijil,700042,,,Male,"Vijil Villa, Kollemcode",,,S.Sudheer Lal,9944611041,,tamil:Sindhu
+Standard,Teacher,TeacherPhone,TypeOfExams,CommonSubjects,,
+7,Anitha,9496255107,"periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual","english:Sahaya,math:Sathish,science:Raja,social:Sajeev,hindi:Bhavana",,
+,,,,,,
+Student,StudentID,Sex,Address,Parent,ParentPhone,SecondLanguage
+,,,,,,
+A.Athira,700001,Female,"Athira Nivas, Nithravilai Post",S.Arvind Krishnan,9944611000,malayalam:Rakesh
+S.N.Adarsh,700002,Male,"Santhosh Bhavan, Marthandam",A.Santhosh,9944611001,tamil:Sindhu
+B.Anitha,700003,Female,"Bindhu Bhavan, Kanjampuram",A.N.Baiju,9944611002,tamil:Sindhu
+S.Arjun,700004,Male,"Athul Bhavan, Kaliyikavilai",D.Subash,9944611003,tamil:Sindhu
+S.S.Apoorva,700005,Female,"Sangeetha Nivas, Kannanakam, Kollemcode",N.Sudhagar,9944611004,malayalam:Rakesh
+R.S.Baiju,700006,Male,"Ragam Bhavan, Colachel",A.Rahul Raj,9944611005,tamil:Sindhu
+S.Bagyaraj,700007,Male,"Sugam Bhavan, Kuzhithurai",N.B.Sundar Raj,9944611006,tamil:Sindhu
+D.Balaji,700008,Male,"Bindhu Bhavan, Marthandam",A.Dhandapani,9944611007,tamil:Sindhu
+M.S.Bhavani,700009,Female,"Bhavani Villa, Virivilai",S.Madhu,9944611008,tamil:Sindhu
+A.Bhuvaneshwari,700010,Female,"Bagyam Nivas, Kaliyikavilai",S.Moorthy,9944611009,malayalam:Rakesh
+S.Chinmayi,700011,Female,"Chandhini Bhavan, Nithravilai",S.Santhosh,9944611010,malayalam:Rakesh
+D.Divya,700012,Female,"Divya Vilas, Parashala",A.Diwakar,9944611011,tamil:Sindhu
+M.D.Dharshan,700013,Male,"Darshan Bhavan, Oorambu",S.S.Murali,9944611012,tamil:Sindhu
+S.Deepa,700014,Female,"Deepa Bhavan, Choozhal",S.Sajeev,9944611013,tamil:Sindhu
+V.S.Dhanu,700015,Female,"Deepthi Nivas, Nithravilai",M.Vijayan,9944611014,tamil:Sindhu
+S.Elangovan,700016,Male,"Sindhu Bhavan, Kollemcode",A.Suman,9944611015,malayalam:Rakesh
+D.Elizabeth,700017,Female,"Das Villa, Poothurai",D.Dickson,9944611016,tamil:Sindhu
+G.Fathima,700018,Female,"Fathima Nivas, Chinnathurai",N.Gibiri,9944611017,malayalam:Rakesh
+A.Fazil,700019,Male,"Faizi Manzil, Nambali",A.Abdul Hassan,9944611018,tamil:Sindhu
+R.Freeda,700020,Female,"Pinky Villa, Kollemcode",M.Roy,9944611019,tamil:Sindhu
+J.Ganga,700021,Female,"Gayathri, Parashala",S.Jawahar,9944611020,tamil:Sindhu
+A.GiriKumar,700022,Male,"Giri Nivas, Kaliyikavilai",D.Anoop Kumar,9944611021,malayalam:Rakesh
+N.Hima,700023,Female,"Hima Bhavan, Karungal",M.Narayanan,9944611022,malayalam:Rakesh
+D.Irvine,700024,Male,"Davy Villa, Kirathoor",A.Das,9944611023,tamil:Sindhu
+S.S.Indulekha,700025,Female,"Sai Bhavan, Vaikaloor",S.Sunil,9944611024,tamil:Sindhu
+A.Jalaja,700026,Female,"Anu Bhavan, Nadaikkavu",P.Anu Kumar,9944611025,tamil:Sindhu
+K.Kanimozhi,700027,Female,"Kavitha Bhavan, Karungal",G.Krishna Kumar,9944611026,malayalam:Rakesh
+K.Kumar,700028,Male,"Kumar Bhavan, Kollemcode",A.karunakaran,9944611027,malayalam:Rakesh
+S.Livingston,700029,Male,"Sanjay Nivas, Thoothoor",A.Soosai Anto,9944611028,tamil:Sindhu
+A.Mohan,700030,Male,"Arjun Home, Kaliyikavilai",D.Anil Kumar,9944611029,tamil:Sindhu
+S.Madhavi,700031,Female,"Radha Bhavan, Atoor",S.Sudheep,9944611030,tamil:Sindhu
+B.Michael,700032,Male,"Michael Villa, Nithravilai",A.Binu,9944611031,malayalam:Rakesh
+G.Pradeep,700033,Male,"Pradeep Agam, Viricode",S.Ganesh Kumar,9944611032,malayalam:Rakesh
+H.Rajan,700034,Male,"Ragam, Kollemcode",S.Hari,9944611033,malayalam:Rakesh
+V.Retheesh,700035,Male,"Ramesh Bhavan, Medavilakom",A.Viswambaran,9944611034,tamil:Sindhu
+H.Renuga,700036,Female,"Happy Home, Thoothoor",G.Harilal,9944611035,tamil:Sindhu
+J.Sudheer,700037,Male,"Subash Villa, Karungal",R.Jagadeesh,9944611036,malayalam:Rakesh
+P.Subash,700038,Male,"Subash Bhavan, Kirathoor",S.Prasad,9944611037,tamil:Sindhu
+P.Tushar,700039,Male,"Pushpa Nivas, Kollemcode",S.Prem Kumar,9944611038,tamil:Sindhu
+H.Unnimaya,700040,Female,"Maya Bhavan, Kuzhithurai",H.Hemant,9944611039,malayalam:Rakesh
+K.Vinay,700041,Male,"Vinay Villa, Arumana",A.Kanishka,9944611040,malayalam:Rakesh
+S.Vijil,700042,Male,"Vijil Villa, Kollemcode",S.Sudheer Lal,9944611041,tamil:Sindhu
