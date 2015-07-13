@@ -2,10 +2,10 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
 
 .constant("myConfig", 
   {
-/*    "base": "http://192.168.1.5", 
-    "server":"http://192.168.1.5:9000",*/
-    "base": "http://localhost", 
-    "server":"http://localhost:9000",
+    "base": "http://192.168.1.2", 
+    "server":"http://192.168.1.2:9000",
+/*    "base": "http://localhost", 
+    "server":"http://localhost:9000",*/
  })
 //.constant("myConfig", {"base": "http://52.25.97.15", "server":"http://52.25.97.15"})
 .controller('AppCtrl', function($scope, $rootScope, $state, $window, $ionicAnalytics, MyService) {
@@ -1487,6 +1487,7 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
     options.enctype="multipart/form-data";
     ft.upload(imageURI, myConfig.server+"/api/wall/upload",
       function (e) {
+        console.log("response", e.response);
         $scope.post.pictures.push(myConfig.server+e.response.replace(/"/g, ''));  
         $ionicLoading.hide();
       },
@@ -2133,7 +2134,7 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
   {
     title: 'Head Master',
     email: "8951572125",
-    password: 'Gh7WO8g5Cns5VLpR3PzbQA=='
+    password: 'soJX84lLbVEAhTsGwgX1TA=='
   },
   {
     title: '3-A Amulya Parent',

@@ -4,7 +4,7 @@
   "proxies": [
     {
       "path": "/api",
-      "proxyUrl": "http://localhost:9000/api"
+      "proxyUrl": "http://192.168.1.2:9000/api"
     }
   ],
   "gulpStartupTasks": [
@@ -14,5 +14,12 @@
   "watchPatterns": [
     "www/**/*",
     "!www/lib/**/*"
+  ],
+  "browsers": [
+    {
+      "platform": "android",
+      "browser": "crosswalk",
+      "version": "12.41.296.5"
+    }
   ]
 }

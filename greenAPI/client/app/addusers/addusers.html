@@ -1,0 +1,16 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div class="container">
+	<div class="list-group" ng-show="listSchool">
+	    <a ng-click="addUsers(schoolitem)" class="list-group-item" ng-repeat="(k, schoolitem) in schools | orderBy: 'school'">
+	        <span class="glyphicon glyphicon-home"></span> {{schoolitem.school}}
+	    </a>
+	</div>
+	<form ng-hide="listSchool" role="form" ng-submit="csvImport(csv.result)">   	   
+	   <div class="form-group">
+	      <label for="inputfile">Import Users for {{school.school}}</label>
+	      	<ng-csv-import content="csv.content" header="true" separator=";" result="csv.result"></ng-csv-import>
+	   </div>
+	   <button type="submit" class="btn btn-default">Submit</button>
+	</form>	
+</div>
