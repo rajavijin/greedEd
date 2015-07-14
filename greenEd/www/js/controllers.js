@@ -2,8 +2,8 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
 
 .constant("myConfig", 
   {
-    "base": "http://192.168.1.2", 
-    "server":"http://192.168.1.2:9000",
+    "base": "http://192.168.1.4", 
+    "server":"http://192.168.1.4:9000",
 /*    "base": "http://localhost", 
     "server":"http://localhost:9000",*/
  })
@@ -70,6 +70,21 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
   // Handles incoming device tokens
   $rootScope.$on('$cordovaPush:tokenReceived', function(event, data) {
     console.log('Ionic Push: Got token ', data.token, data.platform);
+    if(MyService.online()) {
+      var tparams = {schoolid: user.schoolid, tokens:data.token,uid:user._id}
+      if(user.role == "parent") {
+
+      } else if (user.role == "teacher") {
+
+      } else {
+        tparams.class = "all";
+      }
+      MyService.saveToken(tparams).then(function(stored) {
+        console.log("Stored token", stored);
+      }, function(err) {
+        console.log("Storing token failed", err);
+      });
+    }
   });
   
 })
