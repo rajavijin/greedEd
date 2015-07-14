@@ -1,0 +1,46 @@
+Standard,Teacher,TeacherPhone,TypeOfExams,CommonSubjects,,
+12,Subash,9496255123,"periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual","english:Sangeeth,math:Shalini,biology:Lekha,physics:Subash,chemistry:Meena",,
+,,,,,,
+Student,StudentID,Sex,Address,Parent,ParentPhone,SecondLanguage
+,,,,,,
+A.Akshay,120001,Male,"Adithya Bhavan, Kanjampuram",A.Ashwin,9922711000,malayalam:Diwakar
+S.Ajith,110002,Male,"Anil Bhavan, Kuzhithurai",S.N.Subash,9922711001,tamil:Mukesh
+A.Arunraj,110003,Male,"Anjali Bhavan, Kollemcode",W.S.Anurenj,9922711002,malayalam:Diwakar
+C.Anusha,110004,Female,"Ajay Villa, Puthukadai",S.K.Chandran,9922711003,tamil:Mukesh
+S.Asha,110005,Female,"Anu Bhavan, Choozhal",M.Sreenivas,9922711004,tamil:Mukesh
+A.Blessing,110006,Male,"Babu Bhavan, Marthandam",A.Aldo,9922711005,tamil:Mukesh
+R.Beula,110007,Female,"Bindhu Bhavan, Kollemcode",S.R.Ruben,9922711006,malayalam:Diwakar
+A.Britto,110008,Male,"Binu Bhavan, Puthukadai",M.N.Antoraj,9922711007,malayalam:Diwakar
+R.Benson,110009,Male,"Baiju Villa, Kaliyikavilai",S.F.Reegan,9922711008,tamil:Mukesh
+J.Beena,110010,Female,"Bavithra Bhavan, Kollemcode",M.Jerin,9922711009,tamil:Mukesh
+A.Christy,110011,Female,"Sindhu Bhavan, Parashala",S.Ashley,9922711010,tamil:Mukesh
+S.Christobher,110012,Male,"Cibi Bhavan, Thoothoor",A.Stephen,9922711011,malayalam:Diwakar
+M.Dhanapal,110013,Male,"Arjun Bhavan, Kollemcode",A.Mohanraj,9922711012,malayalam:Diwakar
+S.Devayani,110014,Female,"Dhanya Bhavan, Marthandam",A.E.Santosh Kumar,9922711013,tamil:Mukesh
+A.Darshitha,110015,Female,"Devi Bhavan, Kollemcode",S.Akash,9944711014,tamil:Mukesh
+S.Edwin,110016,Male,"Elango Villa, Nagercoil",D.Solomon,9922711015,tamil:Mukesh
+A.Emily,110017,Female,"Eesha Bhavan, Marthandam",M.Andrew,9922711016,malayalam:Diwakar
+A.Franco,110018,Male,"Shajan Manzil, Nambali",S.Aniston,9922711017,tamil:Mukesh
+M.Fiaz,110019,Male,"Feroz Manzil, Nambali",J.Mohammed,9922711018,tamil:Mukesh
+S.Fathima,110020,Female,"Febi Villa, Thoothoor",S.Sahul Jamal,9922711019,malayalam:Diwakar
+M.Gini,110021,Female,"Girija Bhavan, Puthukadai",S.Martin,9922711020,tamil:Mukesh
+N.Girish,110022,Male,"Arun Bhavan, Kollemcode",A.Nandagopal,9922711021,tamil:Mukesh
+M.Honeyrose,110023,Female,"Hema Bhavan, Karungal",S.Mervin,9922711022,tamil:Mukesh
+A.Iswaryan,110024,Male,"Isha Manzil, Puthukadai",S.M.Abraham,9922711023,tamil:Mukesh
+B.Issac,110025,Male,"Imran Manzil, Nambali",N.Babu Raj,9922711024,tamil:Mukesh
+M.Jackson,110026,Female,"Jebin Villa, Puthukadai",S.Mathew,9922711025,malayalam:Diwakar
+N.Karthika,110027,Female,"Kani Nivas, Kollemcode",M.Nadhan,9922711026,tamil:Mukesh
+S.Kevin,110028,Male,"Karthik Bhavan, Puthukadai",A.Sabu,9922711027,malayalam:Diwakar
+M.Leo,110029,Male,"Libin Villa, Nithravilai",S.Martha,9922711028,malayalam:Diwakar
+S.Manuel,110030,Male,"Murali Bhavan, Kollemcode",S.Sherly,9922711029,tamil:Mukesh
+A.Maria,110031,Female,"Madhu Bhavan, Marthandam",A.Ashley,9922711030,tamil:Mukesh
+R.Pratheebha,110032,Female,"Praveena Bhavan, Nithravilai",S.Raghavan,9922711031,tamil:Mukesh
+M.Parvathy,110033,Female,"Pranaya Bhavan, Kollemcode",S.Manish,9922711032,malayalam:Diwakar
+S.Prabhi,110034,Male,"Preetha Bhavan, Kollemcode",A.Sujith,9922711033,malayalam:Diwakar
+S.Rojan,110035,Male,"Ramesh Bhavan, Nithravilai",A.Selvin,9922711034,tamil:Mukesh
+J.Redin,110036,Male,"Rakesh Bhavan, Kirathoor",S.Jacob,9922711035,tamil:Mukesh
+A.Soni,110037,Male,"Shijin Villa, Nithravilai",S.Anwar,9922711036,malayalam:Diwakar
+M.Sabin,110038,Male,"Sujith Bhavan, Puthukadai",M.Melbin,9922711037,tamil:Mukesh
+S.Titus,110039,Female,"Tinu Villa, Nithravilai",M.Selvaraj,9922711038,malayalam:Diwakar
+S.Ullas,110040,Male,"Umesh Bhavan, Marthandam",S.Sathish,9922711039,tamil:Mukesh
+V.Visanth,110041,Male,"Vikram Bhavan, Kaliyikavilai",A.Vijayan,9922711040,tamil:Mukesh
