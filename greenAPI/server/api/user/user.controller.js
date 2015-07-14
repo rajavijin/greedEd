@@ -135,6 +135,7 @@ exports.create = function (req, res, next) {
     req.body.classes = [];
     _.each(req.body.subjects.split(","), function(cv, ck) {
       var cdata = cv.split(":");
+      if(cdata[1].indexOf("-") == -1) cdata[1] = cdata[1] + "-all";
       req.body.classes.push({subject: cdata[0], class:cdata[1]});
     })
     console.log("requested", req.body);

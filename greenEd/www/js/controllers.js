@@ -67,23 +67,28 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
     filterStatus(toState.url.split("/")[1]);
   })
   filterStatus($state.current.url.split("/")[1]);
-  if(MyService.online()) {
-    var test = Math.random();
-    console.log("random", test);
-    var tparams = {schoolid: user.schoolid, tokens:test, uid:user._id};
-    if(user.role == "parent") {
-
-    } else if (user.role == "teacher") {
-
-    } else {
-      tparams.class = "all";
+    if(MyService.online()) {
+      var tparams = {schoolid: user.schoolid, tokens:Math.random(), uid:user._id, role:user.role};
+      tparams.class = [];  
+      if(user.role == "parent") {
+        tparams.uids = [];
+        for (var i = 0; i < user.students.length; i++) {
+          tparams.uids.push(user.students[i].id);
+          tparams.class.push(user.students[i].class);
+        };
+      } else if (user.role == "teacher") {
+        for (var i = 0; i < user.subjects.length; i++) {
+          tparams.class.push(user.subjects[i].class);
+        }
+      } else {
+        tparams.class.push("all");
+      }
+      MyService.saveToken(tparams).then(function(stored) {
+        console.log("Stored token", stored);
+      }, function(err) {
+        console.log("Storing token failed", err);
+      });
     }
-    MyService.saveToken(tparams).then(function(stored) {
-      console.log("Stored token", stored);
-    }, function(err) {
-      console.log("Storing token failed", err);
-    });
-  }
   // Handles incoming device tokens
   $rootScope.$on('$cordovaPush:tokenReceived', function(event, data) {
     console.log('Ionic Push: Got token ', data.token, data.platform);
@@ -2155,9 +2160,9 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
     password: 'soJX84lLbVEAhTsGwgX1TA=='
   },
   {
-    title: '3-A Amulya Parent',
-    email: "9876901256",
-    password: "5529pmn29"
+    title: 'M Vijay Parent',
+    email: "9944711040",
+    password: "he49m5cdi"
   },
   {
     title: '1-A Ashwini Parent',

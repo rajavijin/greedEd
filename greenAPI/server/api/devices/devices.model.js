@@ -7,7 +7,7 @@ var DevicesSchema = new Schema({
   schoolid: String,
   uid: {type:String,unique:true},
   class: Array,
-  tokens: {type:Array,unique:true},
+  tokens: Array,
   active: {type: Boolean, default:true}
 });
 

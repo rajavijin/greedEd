@@ -23,21 +23,35 @@ exports.show = function(req, res) {
 // Creates a new devices in the DB.
 exports.create = function(req, res) {
   console.log("requested", req.body);
-  Devices.findOne({uid:req.body.uid}, function(err, devices) {
+  var uids = [req.body.uid];
+  if(req.body.role == "parent") {
+    uids = req.body.uids;
+  }
+  Devices.find({uid:{$in:uids}}, function(err, devices) {
     if(err) { return handleError(res, err); }
-    console.log("devices", devices);
     if(devices) {
-      var updated = _.merge(devices, req.body);
-      console.log("updated", updated);
-      updated.save(function (err) {
-        if (err) { return handleError(res, err); }
-        return res.json(200, devices);
-      });
+      for (var i = 0; i < devices.length; i++) {
+        var updated = devices[i];
+        updated.tokens.push(req.body.tokens);
+        updated.tokens = _.uniq(updated.tokens);
+        updated.class.push(req.body.class);
+        updated.class = _.uniq(updated.class);      
+        console.log("updated", updated);
+        updated.save(function (err) {
+          if (err) { return handleError(res, err); }
+          if(i == (devices.length - 1))
+            return res.json(200, devices);
+        });
+      };
     } else {
-      Devices.create(req.body, function(er, devices) {
-        if(er) { return handleError(res, er); }
-        return res.json(201, devices);
-      });
+      for (var i = 0; i < uids.length; i++) {
+        var create = {schoolid:req.body.schoolid, uid:uids[i], class:req.body.class[i], tokens:req.body.tokens};
+        Devices.create(create, function(er, devices) {
+          if(er) { return handleError(res, er); }
+          if(i == (uids.length - 1))
+            return res.json(201, devices);
+        });
+      };
     }
   })
 };

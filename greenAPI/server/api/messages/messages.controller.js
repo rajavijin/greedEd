@@ -2,7 +2,7 @@
 
 var _ = require('lodash');
 var Messages = require('./messages.model');
-
+var devices = require('../devices/devices.model');
 // Get list of messagess
 exports.index = function(req, res) {
   Messages.find(function (err, messagess) {
@@ -55,9 +55,25 @@ exports.create = function(req, res) {
       IonicApplicationID : "e6a31325",
       IonicApplicationAPIsecret : "7c5dcd3ddd0d723e35d291e7ad8b678c417733be0adc193f"
   };
-
+  var tokens = [];
+  if(req.body.type == "group") {
+    Devices.find({class:req.body.to[0].id}, 'tokens', function(err, device) {
+      if(device) {
+        for (var i = 0; i < device.length; i++) {
+          tokens = _.merge(tokens, device[i].tokens);
+        };
+      }
+    });
+  } else {
+    Devices.findOne({uid:req.body.to[0].id}, 'tokens', function(err, device) {
+      if(device) {
+        tokens = device.tokens;
+      }
+    });
+  }
+  console.log("Push notification sent to:", tokens);
   var notification = {
-    "tokens":[req.body.devicetoken],
+    "tokens":tokens,
     "notification":{
       "alert":req.body.text,
       "ios":{
@@ -83,10 +99,10 @@ exports.create = function(req, res) {
     } 
   };
 
-  ionicPushServer(credentials, notification);
 
   Messages.create(req.body, function(err, messages) {
     if(err) { return handleError(res, err); }
+    ionicPushServer(credentials, notification);
     return res.json(201, messages);
   });
   
