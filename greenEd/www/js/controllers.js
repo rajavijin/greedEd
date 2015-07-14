@@ -2,10 +2,10 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
 
 .constant("myConfig", 
   {
-    "base": "http://192.168.1.4", 
-    "server":"http://192.168.1.4:9000",
-/*    "base": "http://localhost", 
-    "server":"http://localhost:9000",*/
+/*    "base": "http://192.168.1.2", 
+    "server":"http://192.168.1.2:9000",*/
+    "base": "http://localhost", 
+    "server":"http://localhost:9000",
  })
 //.constant("myConfig", {"base": "http://52.25.97.15", "server":"http://52.25.97.15"})
 .controller('AppCtrl', function($scope, $rootScope, $state, $window, $ionicAnalytics, MyService) {
@@ -67,24 +67,27 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
     filterStatus(toState.url.split("/")[1]);
   })
   filterStatus($state.current.url.split("/")[1]);
+  if(MyService.online()) {
+    var test = Math.random();
+    console.log("random", test);
+    var tparams = {schoolid: user.schoolid, tokens:test, uid:user._id};
+    if(user.role == "parent") {
+
+    } else if (user.role == "teacher") {
+
+    } else {
+      tparams.class = "all";
+    }
+    MyService.saveToken(tparams).then(function(stored) {
+      console.log("Stored token", stored);
+    }, function(err) {
+      console.log("Storing token failed", err);
+    });
+  }
   // Handles incoming device tokens
   $rootScope.$on('$cordovaPush:tokenReceived', function(event, data) {
     console.log('Ionic Push: Got token ', data.token, data.platform);
-    if(MyService.online()) {
-      var tparams = {schoolid: user.schoolid, tokens:data.token,uid:user._id}
-      if(user.role == "parent") {
-
-      } else if (user.role == "teacher") {
-
-      } else {
-        tparams.class = "all";
-      }
-      MyService.saveToken(tparams).then(function(stored) {
-        console.log("Stored token", stored);
-      }, function(err) {
-        console.log("Storing token failed", err);
-      });
-    }
+    localStorage.setItem("devicetoken", data.token);
   });
   
 })
@@ -2248,6 +2251,7 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
             }
           },iuser);
           $ionicAnalytics.register();
+
           if(data.role == "hm") {
             $state.go("app.hmdashboard", {}, {'reload': true});
           } else if (data.role == "parent") {

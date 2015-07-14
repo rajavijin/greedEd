@@ -22,10 +22,24 @@ exports.show = function(req, res) {
 
 // Creates a new devices in the DB.
 exports.create = function(req, res) {
-  Devices.create(req.body, function(err, devices) {
+  console.log("requested", req.body);
+  Devices.findOne({uid:req.body.uid}, function(err, devices) {
     if(err) { return handleError(res, err); }
-    return res.json(201, devices);
-  });
+    console.log("devices", devices);
+    if(devices) {
+      var updated = _.merge(devices, req.body);
+      console.log("updated", updated);
+      updated.save(function (err) {
+        if (err) { return handleError(res, err); }
+        return res.json(200, devices);
+      });
+    } else {
+      Devices.create(req.body, function(er, devices) {
+        if(er) { return handleError(res, er); }
+        return res.json(201, devices);
+      });
+    }
+  })
 };
 
 // Updates an existing devices in the DB.

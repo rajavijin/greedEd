@@ -49,10 +49,47 @@ exports.getConversation = function(req, res) {
 
 // Creates a new messages in the DB.
 exports.create = function(req, res) {
+  var ionicPushServer = require('ionic-push-server');
+
+  var credentials = {
+      IonicApplicationID : "e6a31325",
+      IonicApplicationAPIsecret : "7c5dcd3ddd0d723e35d291e7ad8b678c417733be0adc193f"
+  };
+
+  var notification = {
+    "tokens":[req.body.devicetoken],
+    "notification":{
+      "alert":req.body.text,
+      "ios":{
+        "badge":1,
+        "sound":"chime.aiff",
+        "expiry": 1423238641,
+        "priority": 10,
+        "contentAvailable": true,
+        "payload":{
+          "key1":"value",
+          "key2":"value"
+        }
+      },
+      "android":{
+        "collapseKey":"foo",
+        "delayWhileIdle":true,
+        "timeToLive":300,
+        "payload":{
+          "key1":"value",
+          "key2":"value"
+        }
+      }
+    } 
+  };
+
+  ionicPushServer(credentials, notification);
+
   Messages.create(req.body, function(err, messages) {
     if(err) { return handleError(res, err); }
     return res.json(201, messages);
   });
+  
 };
 
 // Updates an existing messages in the DB.
