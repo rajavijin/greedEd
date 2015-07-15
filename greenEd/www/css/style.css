@@ -1,19 +1,38 @@
 /* Empty. Add your own CSS if you like */
-.list .item, .title, .list .item .col {
-    text-transform: capitalize;
-    white-space: normal;
+.list .item, .title {
+  text-transform:capitalize;
+  white-space: normal;
 }
-.list .item {
-    margin: 0 10px;
-    border-width: 1px 0px 0px 0;
-    border-color: #f6f6f6;
+.menu-list .item {
+  font-size: 15px;
+}
+.filters .submit {
+  padding: 0px;
+  width: 92%;
+  margin: 10px auto 0;
+  border: 0;
+}
+.home .list .item {
+  border-color: #7cb5ec;
+  margin: 0 2px;
+  border-width: 1px 1px 0;
+}
+.home .list .item.last {
+  border-width: 1px;
+}
+.center {
+    text-align: center;
+}
+.home .item-input .icon {
+  padding: 0 10px 0 0;
+  font-size: 20px;
 }
 /*.list.card .item {
   border: 1px 0;
   margin: 0;
 }
 .list .item:first-child {
-	border-width: 1px 0 0px;
+  border-width: 1px 0 0px;
 }
 body .list .item.first {
   border-width: 1px 0 0;
@@ -45,23 +64,6 @@ body .list .item.first {
 }
 .item-radio input:checked ~ .item-content {
   background: #fcfcfc;
-}
-.home .list .item {
-	margin: 0 2px;
-  border: 1px solid #7cb5ec
-}
-.home .list .item.last {
-  border-top: 0px;
-}
-.noclick {
-	/*pointer-events: none;*/
-}
-.center {
-    text-align: center;
-}
-.home .item-input .icon {
-  padding: 0 10px 0 0;
-  font-size: 20px;
 }
 text {
   font-family: serif;

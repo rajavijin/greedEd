@@ -15,14 +15,13 @@
 <ion-item ng-show="linkItem[link.index]" ng-if="link.header == 'submenu'" nav-clear menu-close class="item-icon-left sub" href="#{{link.href}}"><i class="icon {{link.class}} positive"></i> {{link.title}}</ion-item>
                <ion-item ng-if="!link.header" nav-clear menu-close class="item-icon-left" href="#{{link.href}}"><i class="icon {{link.class}} positive"></i>{{linkItem[link.index]}} {{link.title}}</ion-item>
             </div>
-            <ion-item></ion-item>
          </ion-list>
       </ion-content>
    </ion-side-menu>
    <ion-side-menu ng-if="filters" side="right">
       <ion-content drag-content="false">
          <form>
-            <ion-list class="filters">
+            <ion-list class="menu-list filters">
                <ion-item class="item-icon-left positive"><i class="icon ion-clock"></i><strong>EducationYear</strong></ion-item>
                <ion-radio class="item item-complex" name="year" ng-model="filtersData.educationyear" ng-repeat="(k,v) in filtersData.years" ng-value="{{k}}">{{v}}</ion-radio>
                <ion-item class="item-icon-left positive" ng-hide="noexams"><i class="icon ion-clipboard"></i><strong>Exams</strong></ion-item>
