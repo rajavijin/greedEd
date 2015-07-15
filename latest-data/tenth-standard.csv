@@ -1,5 +1,6 @@
 "Standard";"Teacher";"TeacherPhone";"TypeOfExams";"CommonSubjects";;
 10;"Jothi";9496255108;"periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual";"english:Sahaya,math:Prashanth,biology:Jothi,physics:Raja,chemistry:Raja,social:Rajesh,hindi:Divya";;
+;;;;;;
 "Student";"StudentID";"Sex";"Address";"Parent";"ParentPhone";"SecondLanguage"
 "R.S.Arun";100001;"Male";"Bhavani Nivas, Nithravilai Post";"A.Ramachandran";9944711000;"malayalam:Rakesh"
 "S.Arshad";100002;"Male";"Arshad Manzil, Nambali";"A.Salman";9944911001;"tamil:Sindhu"

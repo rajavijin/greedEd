@@ -1,45 +1,46 @@
-Standard,Teacher,TeacherPhone,TypeOfExams,CommonSubjects,,
-8,Sathish,9496255113,"periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual","english:Anitha,math:Sathish,science:Jothi,social:Sajeev,hindi:Bhavana",,
-Student,StudentID,Sex,Address,Parent,ParentPhone,SecondLanguage
-S.Anish,800001,Male,"Anish Nivas, Nithravilai Post",A.S.Sudheer,9944511000,tamil:Sindhu
-A.Ashwin,800002,Male,"Ashwin Bhavan, Kaliyikavilai",S.Akash Kumar,9944511001,malayalam:Rakesh
-M.Anjali,800003,Female,"Anjali Bhavan, Kollemcode","M,Manikandan",9944511002,malayalam:Rakesh
-S.Athulya,800004,Female,"Athulya Bhavan, Karakonam",A.Sajeesh,9944511003,tamil:Sindhu
-M.Anandhi,800005,Female,"Madhu Nivas, Kannanakam, Kollemcode",S.S.Manoharan,9944511004,tamil:Sindhu
-A.Aarthi,800006,Female,"Aarthi Bhavan, Kirathoor",D.Aji Kumar,9944511005,tamil:Sindhu
-N.Baskar,800007,Male,"Nandhini Bhavan, Karungal",G.Nathan,9944511006,malayalam:Rakesh
-D.Benny,800008,Male,"Davy Bhavan, Virivilai",S.D.Davy,9944511007,tamil:Sindhu
-S.Bharathi,800009,Female,"Bharathi Villa, Vaikaloor",S.Sukumaran,9944511008,malayalam:Rakesh
-S.Benson,800010,Male,"Stylus Nivas, Poothanthoorai",A.Stylus,9944511009,tamil:Sindhu
-C.Charmi,800011,Female,"Charmi Bhavan, Kirathoor",S.Cibi Raj,9944511010,tamil:Sindhu
-S.Dhanya,800012,Female,"Shibu Vilas, Pozhiyoor",R.Sreenivas,9944511011,tamil:Sindhu
-M.Dhanesh,800013,Male,"Manesh Bhavan, Karungal",H.Manesh Kumar,9944511012,tamil:Sindhu
-N.Dhanush,800014,Male,"Nandhu Bhavan, Colachel",H.Nandhu,9944511013,tamil:Sindhu
-V.Deepthi,800015,Female,"Dhanya Nivas, Kaliyikavilai",S.Venu,9944511014,tamil:Sindhu
-A.Elan,800016,Male,"Elan Bhavan, Puthukadai",V.Anto Joseph,9944511015,tamil:Sindhu
-D.Elena,800017,Female,"Das Villa, Poothurai",D.Dickson,9944611016,malayalam:Rakesh
-A.Feroz,800018,Male,"Sahul Nivas, Nambali",A.Abdul Kather,9944511017,malayalam:Rakesh
-S.Finil,800019,Male,"Finil Villa, Azhagiyamandapam",D.Sampath,9944511018,malayalam:Rakesh
-R.Fiaz,800020,Male,"Rask Villa, Vallavilai",S.Ranbir,9944511019,tamil:Sindhu
-R.Girija,800021,Female,"Girija Bhavan, Pozhiyoor",B.Rahul,9944511020,tamil:Sindhu
-S.Gaurav,800022,Male,"Saurav Nivas, Oorambu",S.Saurav,9944511021,tamil:Sindhu
-N.Harshid,800023,Male,"Nisanth Bhavan, Kollemcode",A.Nithin Prasad,9944511022,tamil:Sindhu
-S.Indhu,800024,Female,"Suni Nivas, Kollemcode",S.Sivaram,9944511023,tamil:Sindhu
-A.Inba Shalini,800025,Female,"Inba Villa, Virivilai",S.Antony,9944511024,malayalam:Rakesh
-G.Jayanth,800026,Male,"Jayanth Bhavan, Nithravilai",P.Guna,9944511025,malayalam:Rakesh
-S.Kathir,800027,Male,"Sudha Bhavan, Puthukadai",V.Suresh Kumar,9944511026,tamil:Sindhu
-V.Kani,800028,Female,"Vanitha Bhavan, Karungal",M.Vijil Kumar,9944511027,tamil:Sindhu
-A.Lijin,800029,Male,"Lijin Nivas, Pozhiyoor",A.Abraham,9944511028,tamil:Sindhu
-S.Manohar,800030,Male,"Subash Bhavan, Thuckalay",S.Subash Krishana,9944511029,malayalam:Rakesh
-A.Martha,800031,Female,"Andrew Bhavan, Azhagiyamandapam",A.Arockia Das,9944511030,tamil:Sindhu
-S.Munish Kumar,800032,Male,"Munish Bhavan, Kollemcode",S.Sai Moorthy,9944511031,tamil:Sindhu
-V.Murali,800033,Male,"Murali Nivas, Kollemcode",V.Vijesh,9944511032,tamil:Sindhu
-S.Ramesh,800034,Male,"Ramesh Bhavan, Karungal",S.Sunil Kumar,9944511033,tamil:Sindhu
-R.Raghavan,800035,Male,"Ragam, Uchakada",R.Radha Krishnan,9944511034,tamil:Sindhu
-S.Renuga Devi,800036,Female,"Renu Nivas, Marthandam",S.Sangeeth Shivan,9944511035,malayalam:Rakesh
-S.Sindhu,800037,Female,"Subham, Pozhiyoor",S.Santhosh Kumar,9944511036,malayalam:Rakesh
-S.Santosh,800038,Male,"Santosh Bhavan, Nithravilai",A.Selva,9944511037,tamil:Sindhu
-M.Teena,800039,Female,"Teena Nivas, Puthukadai",M.Michael,9944511038,tamil:Sindhu
-M.Umesh,800040,Male,"Umesh Bhavan, Karungal",M.Mahesh Kumar,9944511039,tamil:Sindhu
-A.Vijay Kumar,800041,Male,"Vijay Villa, Nithravilai",A.Arjun Ram,9944511040,malayalam:Rakesh
-M.Viji,800042,Female,"Vijil Villa, Kollemcode",A.Munish Kumar,9944511041,malayalam:Rakesh
+"Standard";"Teacher";"TeacherPhone";"TypeOfExams";"CommonSubjects";;
+8;"Sathish";9496255113;"periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual";"english:Anitha,math:Sathish,science:Jothi,social:Sajeev,hindi:Bhavana";;
+;;;;;;
+"Student";"StudentID";"Sex";"Address";"Parent";"ParentPhone";"SecondLanguage"
+"S.Anish";800001;"Male";"Anish Nivas, Nithravilai Post";"A.S.Sudheer";9944511000;"tamil:Sindhu"
+"A.Ashwin";800002;"Male";"Ashwin Bhavan, Kaliyikavilai";"S.Akash Kumar";9944511001;"malayalam:Rakesh"
+"M.Anjali";800003;"Female";"Anjali Bhavan, Kollemcode";"M,Manikandan";9944511002;"malayalam:Rakesh"
+"S.Athulya";800004;"Female";"Athulya Bhavan, Karakonam";"A.Sajeesh";9944511003;"tamil:Sindhu"
+"M.Anandhi";800005;"Female";"Madhu Nivas, Kannanakam, Kollemcode";"S.S.Manoharan";9944511004;"tamil:Sindhu"
+"A.Aarthi";800006;"Female";"Aarthi Bhavan, Kirathoor";"D.Aji Kumar";9944511005;"tamil:Sindhu"
+"N.Baskar";800007;"Male";"Nandhini Bhavan, Karungal";"G.Nathan";9944511006;"malayalam:Rakesh"
+"D.Benny";800008;"Male";"Davy Bhavan, Virivilai";"S.D.Davy";9944511007;"tamil:Sindhu"
+"S.Bharathi";800009;"Female";"Bharathi Villa, Vaikaloor";"S.Sukumaran";9944511008;"malayalam:Rakesh"
+"S.Benson";800010;"Male";"Stylus Nivas, Poothanthoorai";"A.Stylus";9944511009;"tamil:Sindhu"
+"C.Charmi";800011;"Female";"Charmi Bhavan, Kirathoor";"S.Cibi Raj";9944511010;"tamil:Sindhu"
+"S.Dhanya";800012;"Female";"Shibu Vilas, Pozhiyoor";"R.Sreenivas";9944511011;"tamil:Sindhu"
+"M.Dhanesh";800013;"Male";"Manesh Bhavan, Karungal";"H.Manesh Kumar";9944511012;"tamil:Sindhu"
+"N.Dhanush";800014;"Male";"Nandhu Bhavan, Colachel";"H.Nandhu";9944511013;"tamil:Sindhu"
+"V.Deepthi";800015;"Female";"Dhanya Nivas, Kaliyikavilai";"S.Venu";9944511014;"tamil:Sindhu"
+"A.Elan";800016;"Male";"Elan Bhavan, Puthukadai";"V.Anto Joseph";9944511015;"tamil:Sindhu"
+"D.Elena";800017;"Female";"Das Villa, Poothurai";"D.Dickson";9944611016;"malayalam:Rakesh"
+"A.Feroz";800018;"Male";"Sahul Nivas, Nambali";"A.Abdul Kather";9944511017;"malayalam:Rakesh"
+"S.Finil";800019;"Male";"Finil Villa, Azhagiyamandapam";"D.Sampath";9944511018;"malayalam:Rakesh"
+"R.Fiaz";800020;"Male";"Rask Villa, Vallavilai";"S.Ranbir";9944511019;"tamil:Sindhu"
+"R.Girija";800021;"Female";"Girija Bhavan, Pozhiyoor";"B.Rahul";9944511020;"tamil:Sindhu"
+"S.Gaurav";800022;"Male";"Saurav Nivas, Oorambu";"S.Saurav";9944511021;"tamil:Sindhu"
+"N.Harshid";800023;"Male";"Nisanth Bhavan, Kollemcode";"A.Nithin Prasad";9944511022;"tamil:Sindhu"
+"S.Indhu";800024;"Female";"Suni Nivas, Kollemcode";"S.Sivaram";9944511023;"tamil:Sindhu"
+"A.Inba Shalini";800025;"Female";"Inba Villa, Virivilai";"S.Antony";9944511024;"malayalam:Rakesh"
+"G.Jayanth";800026;"Male";"Jayanth Bhavan, Nithravilai";"P.Guna";9944511025;"malayalam:Rakesh"
+"S.Kathir";800027;"Male";"Sudha Bhavan, Puthukadai";"V.Suresh Kumar";9944511026;"tamil:Sindhu"
+"V.Kani";800028;"Female";"Vanitha Bhavan, Karungal";"M.Vijil Kumar";9944511027;"tamil:Sindhu"
+"A.Lijin";800029;"Male";"Lijin Nivas, Pozhiyoor";"A.Abraham";9944511028;"tamil:Sindhu"
+"S.Manohar";800030;"Male";"Subash Bhavan, Thuckalay";"S.Subash Krishana";9944511029;"malayalam:Rakesh"
+"A.Martha";800031;"Female";"Andrew Bhavan, Azhagiyamandapam";"A.Arockia Das";9944511030;"tamil:Sindhu"
+"S.Munish Kumar";800032;"Male";"Munish Bhavan, Kollemcode";"S.Sai Moorthy";9944511031;"tamil:Sindhu"
+"V.Murali";800033;"Male";"Murali Nivas, Kollemcode";"V.Vijesh";9944511032;"tamil:Sindhu"
+"S.Ramesh";800034;"Male";"Ramesh Bhavan, Karungal";"S.Sunil Kumar";9944511033;"tamil:Sindhu"
+"R.Raghavan";800035;"Male";"Ragam, Uchakada";"R.Radha Krishnan";9944511034;"tamil:Sindhu"
+"S.Renuga Devi";800036;"Female";"Renu Nivas, Marthandam";"S.Sangeeth Shivan";9944511035;"malayalam:Rakesh"
+"S.Sindhu";800037;"Female";"Subham, Pozhiyoor";"S.Santhosh Kumar";9944511036;"malayalam:Rakesh"
+"S.Santosh";800038;"Male";"Santosh Bhavan, Nithravilai";"A.Selva";9944511037;"tamil:Sindhu"
+"M.Teena";800039;"Female";"Teena Nivas, Puthukadai";"M.Michael";9944511038;"tamil:Sindhu"
+"M.Umesh";800040;"Male";"Umesh Bhavan, Karungal";"M.Mahesh Kumar";9944511039;"tamil:Sindhu"
+"A.Vijay Kumar";800041;"Male";"Vijay Villa, Nithravilai";"A.Arjun Ram";9944511040;"malayalam:Rakesh"
+"M.Viji";800042;"Female";"Vijil Villa, Kollemcode";"A.Munish Kumar";9944511041;"malayalam:Rakesh"

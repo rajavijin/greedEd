@@ -8,5 +8,5 @@ module.exports = {
     uri: 'mongodb://localhost/greenapi-dev'
   },
 
-  seedDB: true
+  seedDB: false
 };
