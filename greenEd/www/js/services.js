@@ -1,7 +1,7 @@
 angular.module('starter.services', [])
 .factory('MyService', function($rootScope, $ionicLoading, $ionicPopup, $state, $http, $q, myConfig) {
   console.log("base in service", myConfig.base);
-  var baseUrl = myConfig.base+':8100/api';
+  var baseUrl = myConfig.server+'/api';
   var loginEndpoint       = baseUrl +'/users/verify';
   var logoutEndpoint       = baseUrl +'/users/';
   var token = localStorage.getItem('token') || '';
