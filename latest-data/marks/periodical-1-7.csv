@@ -1,5 +1,5 @@
 EducationYear,TypeOfExam,Division,,,,,,,,,
-2015-2016,Periodical1,,,,,,,,,,
+2015-2016,Periodical1,all,,,,,,,,,
 Student,StudentID,Standard,Malayalam,Tamil,English,Hindi,Math,Science,Social,Attendence,Remarks
 Ananya S,700001,7,78,,78,65,61,80,78,28/30,Good
 Ajantha B,700002,7,,56,60,36,45,56,57,30/30,Poor

@@ -1,48 +1,48 @@
-"Standard";"Teacher";"TeacherPhone";"TypeOfExams";"CommonSubjects";;
-9;"Raja";9496255115;"periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual";"english:Sahaya,math:Sathish,science1:Raja,science2:Jothi,social:Sajeev,hindi:Bhavana";;
-"Student";"StudentID";"Sex";"Address";"Parent";"ParentPhone";"SecondLanguage"
-"S.Anu Priya";900001;"Female";"Anu Nivas, Kattathurai";"A.Suganth Kumar";9944411000;"malayalam:Stephen"
-"B.Anugraha";900002;"Female";"Sai Bhavan, Kollemcode";"S.Biju Arvind";9944411001;"tamil:Sudha"
-"A.Albert Raj";900003;"Male";"Nesa Bhavan, Nithravilai";"N.Abraham";9944411002;"tamil:Sudha"
-"N.Akshay";900004;"Male";"Akshay Villa, Kaliyikavilai";"C.Neelakandan";9944411003;"tamil:Sudha"
-"H.Athul Krishnan";900005;"Male";"Jalaja Bhavan, Virivilai";"S.Hari Kumar";9944411004;"tamil:Sudha"
-"L.Babu";900006;"Male";"Babu Bhavan, Nithravilai";"Lohithadoss";9944411005;"malayalam:Stephen"
-"M,Bhuvana";900007;"Female";"Bhuvana Bhavan, Kollemcode";"D.Manohar";9944411006;"tamil:Sudha"
-"D.Benito";900008;"Male";"Ben Villa, Thoothoor";"S.Daniel";9944411007;"tamil:Sudha"
-"A.Bharath";900009;"Male";"Bharath Nivas, Kanjampuram";"A.Arun";9944411008;"malayalam:Stephen"
-"S.Chinmayi";900010;"Female";"Chinmayi Bhavan, Puthukadai";"A.Sangeeth Shivan";9944411009;"tamil:Sudha"
-"R.Chinnu";900011;"Female";"Ru Bhavan, Nithravilai";"A.Ravi";9944411010;"malayalam:Stephen"
-"M.Charu Latha";900012;"Female";"Latha Bhavan, Karungal";"C.Mohan";9944411011;"tamil:Sudha"
-"S.Dileep";900013;"Male";"Subash Bhavan, Vaikaloor";"B.Subash Lal";9944411012;"tamil:Sudha"
-"V.Divya Sri";900014;"Female";"Dhanya Bhavan, Puthukadai";"A.Vijaya Raj";9944411013;"tamil:Sudha"
-"S.Dhana Lekshmi";900015;"Female";"Lekshmi Vilas, Karungal";"A.Sangeeth";9944411014;"malayalam:Stephen"
-"V.Ezhil";900016;"Male";"Ezhil Villa, Poothurai";"A.Vincent";9944411015;"malayalam:Stephen"
-"L.Elizabeth";900017;"Female";"Lijin Villa, Thoothoor";"A.Lijin";9944411016;"tamil:Sudha"
-"G.Felix";900018;"Male";"Felix Villa, Chinnathurai";"A.Gerald";9944411017;"malayalam:Stephen"
-"F.Febian";900019;"Male";"Feb Villa, Marthandam";"S.Ferdinand";9944411018;"tamil:Sudha"
-"S.Faizal";900020;"Male";"Suhair Manzil, Nambali";"A.Suhair Khan";9944411019;"tamil:Sudha"
-"A.Ganga";900021;"Female";"Ganga Bhavan, Parashala";"S.Anurenj";9944411020;"malayalam:Stephen"
-"D.Godwin";900022;"Male";"Godwin Villa, Marthandam";"D.Donald";9944411021;"tamil:Sudha"
-"S.Hima";900023;"Female";"Hema Bhavan, Karungal";"A.Sanil Kumar";9944411022;"malayalam:Stephen"
-"V.Indran";900024;"Male";"Vimal Bhavan, Kanjampuram";"S.Vimal Kumar";9944411023;"tamil:Sudha"
-"I.Imran";900025;"Male";"Issac Villa, Thoothoor";"S.Issac";9944411024;"malayalam:Stephen"
-"M.Jessie";900026;"Female";"Jessi Villa, Marthandam";"M.Martin";9944411025;"tamil:Sudha"
-"A.Kingston";900027;"Male";"Kings Villa, Colachel";"A.Anto Merjin";9944411026;"tamil:Sudha"
-"S.Kumar";900028;"Male";"Kumar Bhavan, Kollemcode";"A.Sukumaran";9944411027;"malayalam:Stephen"
-"N.Livingston";900029;"Male";"Luther villa, Colachel";"A.Nixon Das";9944411028;"tamil:Sudha"
-"R.Murali";900030;"Male";"Manoj Bhavan, Karungal";"A.Reghu";9944411029;"tamil:Sudha"
-"S.Manju";900031;"Female";"Manju Bhavan, Kanjampuram";"S.Shanker";9944411030;"malayalam:Stephen"
-"S.Merlin";900032;"Male";"Merlin Villa, Thoothoor";"M.Soosai Anto";9944411031;"tamil:Sudha"
-"M.Pradeep";900033;"Male";"Prasad Bhavan, Kollemcode";"A.Mohan Lal";9944411032;"tamil:Sudha"
-"R.Raju";900034;"Male";"Rajesh Bhavan, Nithravilai";"S.Rajesh";9944411033;"tamil:Sudha"
-"T.Retheesh";900035;"Male";"Thiru Bhavan, Puthukadai";"A,Thiru";9944411034;"tamil:Sudha"
-"A.Rinu";900036;"Female";"Rinu Villa, Marthandam";"A.Ashley";9944411035;"malayalam:Stephen"
-"D.Sindhu";900037;"Female";"Divya Bhavan, Kollemcode";"A.Dinu";9944411036;"tamil:Sudha"
-"N.Smrithi";900038;"Female";"Smrithi Bhavan, Palukal";"N.Nandhu";9944411037;"malayalam:Stephen"
-"A.Thamim";900039;"Male";"Thaman Manzil, Nambali";"S.Anwar";9944411038;"tamil:Sudha"
-"M.Ullas";900040;"Male";"Ullas Bhavan, Kollemcode";"S.Mukund";9944411039;"tamil:Sudha"
-"A.Unni";900041;"Male";"Unni Villa, Nadaikkavu";"A.Ashok";9944411040;"malayalam:Stephen"
-"S.Usha";900042;"Female";"Usha Bhavan, Puthukadai";"A.Sunil Kumar";9944411041;"tamil:Sudha"
-"N.Vinil";900043;"Male";"Viji Bhavan, Marthandam";"S.Nikhil";9944411042;"malayalam:Stephen"
-"M.Vinay";900044;"Male";"Vinay Bhavan, Kollemcode";"A.Mani";9944411043;"malayalam:Stephen"
-"S.Vijay";900045;"Male";"Vijay Bhavan, Puthukadai";"M.Santhosh";9944411044;"tamil:Sudha"
+Standard,Teacher,TeacherPhone,TypeOfExams,CommonSubjects,,
+9,Raja,9496255115,"periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual","english:Sahaya,math:Sathish,science1:Raja,science2:Jothi,social:Sajeev,hindi:Bhavana",,
+Student,StudentID,Sex,Address,Parent,ParentPhone,SecondLanguage
+S.Anu Priya,900001,Female,"Anu Nivas, Kattathurai",A.Suganth Kumar,9944411000,malayalam:Stephen
+B.Anugraha,900002,Female,"Sai Bhavan, Kollemcode",S.Biju Arvind,9944411001,tamil:Sudha
+A.Albert Raj,900003,Male,"Nesa Bhavan, Nithravilai",N.Abraham,9944411002,tamil:Sudha
+N.Akshay,900004,Male,"Akshay Villa, Kaliyikavilai",C.Neelakandan,9944411003,tamil:Sudha
+H.Athul Krishnan,900005,Male,"Jalaja Bhavan, Virivilai",S.Hari Kumar,9944411004,tamil:Sudha
+L.Babu,900006,Male,"Babu Bhavan, Nithravilai",Lohithadoss,9944411005,malayalam:Stephen
+"M,Bhuvana",900007,Female,"Bhuvana Bhavan, Kollemcode",D.Manohar,9944411006,tamil:Sudha
+D.Benito,900008,Male,"Ben Villa, Thoothoor",S.Daniel,9944411007,tamil:Sudha
+A.Bharath,900009,Male,"Bharath Nivas, Kanjampuram",A.Arun,9944411008,malayalam:Stephen
+S.Chinmayi,900010,Female,"Chinmayi Bhavan, Puthukadai",A.Sangeeth Shivan,9944411009,tamil:Sudha
+R.Chinnu,900011,Female,"Ru Bhavan, Nithravilai",A.Ravi,9944411010,malayalam:Stephen
+M.Charu Latha,900012,Female,"Latha Bhavan, Karungal",C.Mohan,9944411011,tamil:Sudha
+S.Dileep,900013,Male,"Subash Bhavan, Vaikaloor",B.Subash Lal,9944411012,tamil:Sudha
+V.Divya Sri,900014,Female,"Dhanya Bhavan, Puthukadai",A.Vijaya Raj,9944411013,tamil:Sudha
+S.Dhana Lekshmi,900015,Female,"Lekshmi Vilas, Karungal",A.Sangeeth,9944411014,malayalam:Stephen
+V.Ezhil,900016,Male,"Ezhil Villa, Poothurai",A.Vincent,9944411015,malayalam:Stephen
+L.Elizabeth,900017,Female,"Lijin Villa, Thoothoor",A.Lijin,9944411016,tamil:Sudha
+G.Felix,900018,Male,"Felix Villa, Chinnathurai",A.Gerald,9944411017,malayalam:Stephen
+F.Febian,900019,Male,"Feb Villa, Marthandam",S.Ferdinand,9944411018,tamil:Sudha
+S.Faizal,900020,Male,"Suhair Manzil, Nambali",A.Suhair Khan,9944411019,tamil:Sudha
+A.Ganga,900021,Female,"Ganga Bhavan, Parashala",S.Anurenj,9944411020,malayalam:Stephen
+D.Godwin,900022,Male,"Godwin Villa, Marthandam",D.Donald,9944411021,tamil:Sudha
+S.Hima,900023,Female,"Hema Bhavan, Karungal",A.Sanil Kumar,9944411022,malayalam:Stephen
+V.Indran,900024,Male,"Vimal Bhavan, Kanjampuram",S.Vimal Kumar,9944411023,tamil:Sudha
+I.Imran,900025,Male,"Issac Villa, Thoothoor",S.Issac,9944411024,malayalam:Stephen
+M.Jessie,900026,Female,"Jessi Villa, Marthandam",M.Martin,9944411025,tamil:Sudha
+A.Kingston,900027,Male,"Kings Villa, Colachel",A.Anto Merjin,9944411026,tamil:Sudha
+S.Kumar,900028,Male,"Kumar Bhavan, Kollemcode",A.Sukumaran,9944411027,malayalam:Stephen
+N.Livingston,900029,Male,"Luther villa, Colachel",A.Nixon Das,9944411028,tamil:Sudha
+R.Murali,900030,Male,"Manoj Bhavan, Karungal",A.Reghu,9944411029,tamil:Sudha
+S.Manju,900031,Female,"Manju Bhavan, Kanjampuram",S.Shanker,9944411030,malayalam:Stephen
+S.Merlin,900032,Male,"Merlin Villa, Thoothoor",M.Soosai Anto,9944411031,tamil:Sudha
+M.Pradeep,900033,Male,"Prasad Bhavan, Kollemcode",A.Mohan Lal,9944411032,tamil:Sudha
+R.Raju,900034,Male,"Rajesh Bhavan, Nithravilai",S.Rajesh,9944411033,tamil:Sudha
+T.Retheesh,900035,Male,"Thiru Bhavan, Puthukadai","A,Thiru",9944411034,tamil:Sudha
+A.Rinu,900036,Female,"Rinu Villa, Marthandam",A.Ashley,9944411035,malayalam:Stephen
+D.Sindhu,900037,Female,"Divya Bhavan, Kollemcode",A.Dinu,9944411036,tamil:Sudha
+N.Smrithi,900038,Female,"Smrithi Bhavan, Palukal",N.Nandhu,9944411037,malayalam:Stephen
+A.Thamim,900039,Male,"Thaman Manzil, Nambali",S.Anwar,9944411038,tamil:Sudha
+M.Ullas,900040,Male,"Ullas Bhavan, Kollemcode",S.Mukund,9944411039,tamil:Sudha
+A.Unni,900041,Male,"Unni Villa, Nadaikkavu",A.Ashok,9944411040,malayalam:Stephen
+S.Usha,900042,Female,"Usha Bhavan, Puthukadai",A.Sunil Kumar,9944411041,tamil:Sudha
+N.Vinil,900043,Male,"Viji Bhavan, Marthandam",S.Nikhil,9944411042,malayalam:Stephen
+M.Vinay,900044,Male,"Vinay Bhavan, Kollemcode",A.Mani,9944411043,malayalam:Stephen
+S.Vijay,900045,Male,"Vijay Bhavan, Puthukadai",M.Santhosh,9944411044,tamil:Sudha

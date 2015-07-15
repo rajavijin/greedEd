@@ -97,6 +97,7 @@ angular.module('starter.services', [])
     sendMessage: function(message) {
       console.log("Message", message);
       var defer = $q.defer();
+      message.devicetoken = localStorage.getItem("devicetoken") || "";
       $http.post(baseUrl+'/messages', message)
       .success(function(data, status, headers, config){
         defer.resolve(data);
@@ -211,6 +212,17 @@ angular.module('starter.services', [])
       }); 
       return defer.promise;
     },
+    saveToken: function(token) {
+      console.log("Message", token);
+      var defer = $q.defer();
+      $http.post(baseUrl+'/devices', token)
+      .success(function(data, status, headers, config){
+        defer.resolve(data);
+      }).error(function(data, status, headers, config){
+        defer.reject(data);
+      }); 
+      return defer.promise;
+    },    
     getMenus: function() {
       var menus = {
         "hmMenu": {"Links":[{"title":"Dashboard", "href":"/app/hmdashboard", "class":"ion-stats-bars"}, {"title":"Classes", "href":"/app/allclasses", "class": "ion-easel"}, {"title":"Students", "href":"/app/allstudents", "class": "ion-person-stalker"},{"title":"Teachers", "href":"/app/allteachers", "class": "ion-ios-body"},{"title":"Wall","href":"/app/wall","class":"ion-ios-list"},{"title":"Messages", "href":"/app/messages", "class":"ion-chatboxes"},{"title":"log-out", "href":"logout", "class":"ion-log-out"}]},

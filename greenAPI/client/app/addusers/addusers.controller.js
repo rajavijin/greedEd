@@ -39,13 +39,13 @@ angular.module('greenApiApp')
 		var allusers = [];
 		var newdata = csvdata;
     	console.log("csvdata", csvdata);
-		var type = Object.keys(csvdata[0])[0].split(/[,;]/)[0];
+		var type = Object.keys(csvdata[0])[0].split(/[,;]/)[0].replace(/"/g, "");
 		console.log("type", type);
 		if(type == "Teacher") {
 			for (var i = 0; i < newdata.length; i++) {
 				var userdata = {};
 				for(var dkey in newdata[i]) {
-					var head = dkey.toLowerCase().split(/[;]/);
+					var head = dkey.toLowerCase().replace(/"/g, "").split(/[;]/);
 			  		var row = newdata[i][dkey].split(/[;]/);
 			    	if(row.length > 1) {
 			    		for (var ri = 0; ri < row.length; ri++) {
@@ -81,7 +81,9 @@ angular.module('greenApiApp')
 				    			userdata[head[ri].replace(/"/g, "")] = row[ri].replace(/"/g, "");
 				    		};
 							console.log("userdata", userdata);
-							allusers.push(userdata);
+							if(!userdata.division) userdata.division = "all";
+							if(userdata.student && (userdata.student != "Student"))
+								allusers.push(userdata);
 				    	}	
 					}
 				}
@@ -133,10 +135,10 @@ angular.module('greenApiApp')
 			}
 		});
 	}
-	if(allusers[0].accounttype == "Teacher") {
 		alluserSubmit(0);
+/*	if(allusers[0].accounttype == "Teacher") {
 	} else {
 		alluserSubmit(1);		
-	}
+	}*/
   }
 });

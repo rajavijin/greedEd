@@ -2,10 +2,10 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
 
 .constant("myConfig", 
   {
-    "base": "http://192.168.1.2", 
-    "server":"http://192.168.1.2:9000",
-/*    "base": "http://localhost", 
-    "server":"http://localhost:9000",*/
+/*    "base": "http://192.168.1.2", 
+    "server":"http://192.168.1.2:9000",*/
+    "base": "http://localhost", 
+    "server":"http://localhost:9000",
  })
 //.constant("myConfig", {"base": "http://52.25.97.15", "server":"http://52.25.97.15"})
 .controller('AppCtrl', function($scope, $rootScope, $state, $window, $ionicAnalytics, MyService) {
@@ -67,9 +67,32 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
     filterStatus(toState.url.split("/")[1]);
   })
   filterStatus($state.current.url.split("/")[1]);
+    if(MyService.online()) {
+      var tparams = {schoolid: user.schoolid, tokens:Math.random(), uid:user._id, role:user.role};
+      tparams.class = [];  
+      if(user.role == "parent") {
+        tparams.uids = [];
+        for (var i = 0; i < user.students.length; i++) {
+          tparams.uids.push(user.students[i].id);
+          tparams.class.push(user.students[i].class);
+        };
+      } else if (user.role == "teacher") {
+        for (var i = 0; i < user.subjects.length; i++) {
+          tparams.class.push(user.subjects[i].class);
+        }
+      } else {
+        tparams.class.push("all");
+      }
+      MyService.saveToken(tparams).then(function(stored) {
+        console.log("Stored token", stored);
+      }, function(err) {
+        console.log("Storing token failed", err);
+      });
+    }
   // Handles incoming device tokens
   $rootScope.$on('$cordovaPush:tokenReceived', function(event, data) {
     console.log('Ionic Push: Got token ', data.token, data.platform);
+    localStorage.setItem("devicetoken", data.token);
   });
   
 })
@@ -2137,9 +2160,9 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
     password: 'soJX84lLbVEAhTsGwgX1TA=='
   },
   {
-    title: '3-A Amulya Parent',
-    email: "9876901256",
-    password: "5529pmn29"
+    title: 'M Vijay Parent',
+    email: "9944711040",
+    password: "he49m5cdi"
   },
   {
     title: '1-A Ashwini Parent',
@@ -2233,6 +2256,7 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
             }
           },iuser);
           $ionicAnalytics.register();
+
           if(data.role == "hm") {
             $state.go("app.hmdashboard", {}, {'reload': true});
           } else if (data.role == "parent") {

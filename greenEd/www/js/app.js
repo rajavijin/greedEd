@@ -15,7 +15,8 @@ angular.module('starter', ['ionic', 'ngCordova', 'ionic.service.core', 'ionic.se
     // The public API key all services will use for this app
     api_key: '1ae10240baf86725717f8d4117a1e7a1d28444a36dac62f5',
     // Set the app to use development pushes
-    dev_push: true
+    dev_push: true,
+    gcm_id:'15680569383'
   });  
 })
 .run(function($ionicPlatform, $cordovaSQLite) {

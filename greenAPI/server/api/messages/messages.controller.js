@@ -2,7 +2,7 @@
 
 var _ = require('lodash');
 var Messages = require('./messages.model');
-
+var devices = require('../devices/devices.model');
 // Get list of messagess
 exports.index = function(req, res) {
   Messages.find(function (err, messagess) {
@@ -49,10 +49,63 @@ exports.getConversation = function(req, res) {
 
 // Creates a new messages in the DB.
 exports.create = function(req, res) {
+  var ionicPushServer = require('ionic-push-server');
+
+  var credentials = {
+      IonicApplicationID : "e6a31325",
+      IonicApplicationAPIsecret : "7c5dcd3ddd0d723e35d291e7ad8b678c417733be0adc193f"
+  };
+  var tokens = [];
+  if(req.body.type == "group") {
+    Devices.find({class:req.body.to[0].id}, 'tokens', function(err, device) {
+      if(device) {
+        for (var i = 0; i < device.length; i++) {
+          tokens = _.merge(tokens, device[i].tokens);
+        };
+      }
+    });
+  } else {
+    Devices.findOne({uid:req.body.to[0].id}, 'tokens', function(err, device) {
+      if(device) {
+        tokens = device.tokens;
+      }
+    });
+  }
+  console.log("Push notification sent to:", tokens);
+  var notification = {
+    "tokens":tokens,
+    "notification":{
+      "alert":req.body.text,
+      "ios":{
+        "badge":1,
+        "sound":"chime.aiff",
+        "expiry": 1423238641,
+        "priority": 10,
+        "contentAvailable": true,
+        "payload":{
+          "key1":"value",
+          "key2":"value"
+        }
+      },
+      "android":{
+        "collapseKey":"foo",
+        "delayWhileIdle":true,
+        "timeToLive":300,
+        "payload":{
+          "key1":"value",
+          "key2":"value"
+        }
+      }
+    } 
+  };
+
+
   Messages.create(req.body, function(err, messages) {
     if(err) { return handleError(res, err); }
+    ionicPushServer(credentials, notification);
     return res.json(201, messages);
   });
+  
 };
 
 // Updates an existing messages in the DB.
