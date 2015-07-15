@@ -22,7 +22,7 @@ var UserSchema = new Schema({
   sex: String,
   phone: String,
   address: String,
-  students: { type: Array, unique: true},
+  students: Array,
   parent: String,
   teacher: String,
   pepper: String,

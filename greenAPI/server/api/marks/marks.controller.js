@@ -102,6 +102,7 @@ exports.getAllMarks = function(req, res) {
 // Creates a new marks in the DB.
 exports.create = function(req, res) {
   if(req.body.import) {
+    console.log("requested", {schoolid: req.body.schoolid, name: req.body.student, studentid: req.body.studentid, role: "student"});
     User.findOne({schoolid: req.body.schoolid, name: req.body.student, studentid: req.body.studentid, role: "student"}, function (err, student) {
       if (err) return next(err);
       if (!student) return res.send(401);
