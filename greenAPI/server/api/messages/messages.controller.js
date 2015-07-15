@@ -2,7 +2,7 @@
 
 var _ = require('lodash');
 var Messages = require('./messages.model');
-var devices = require('../devices/devices.model');
+var Devices = require('../devices/devices.model');
 // Get list of messagess
 exports.index = function(req, res) {
   Messages.find(function (err, messagess) {
@@ -98,11 +98,11 @@ exports.create = function(req, res) {
       }
     } 
   };
+  ionicPushServer(credentials, notification);
 
 
   Messages.create(req.body, function(err, messages) {
     if(err) { return handleError(res, err); }
-    ionicPushServer(credentials, notification);
     return res.json(201, messages);
   });
   

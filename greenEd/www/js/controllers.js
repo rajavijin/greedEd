@@ -2,10 +2,10 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
 
 .constant("myConfig", 
   {
-/*    "base": "http://192.168.1.2", 
-    "server":"http://192.168.1.2:9000",*/
     "base": "http://localhost", 
-    "server":"http://localhost:9000",
+    "server":"http://localhost:8100",
+/*    "base": "http://52.27.236.42", 
+    "server":"http://52.27.236.42",*/
  })
 //.constant("myConfig", {"base": "http://52.25.97.15", "server":"http://52.25.97.15"})
 .controller('AppCtrl', function($scope, $rootScope, $state, $window, $ionicAnalytics, MyService) {
@@ -67,8 +67,15 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
     filterStatus(toState.url.split("/")[1]);
   })
   filterStatus($state.current.url.split("/")[1]);
+  // Handles incoming device tokens
+  $rootScope.$on('$cordovaPush:notificationReceived', function(event, notification) {
+    $state.go('app.messages', {}, {reload:true});
+  });
+  $rootScope.$on('$cordovaPush:tokenReceived', function(event, data) {
+    console.log('Ionic Push: Got token ', data.token, data.platform);
+    localStorage.setItem("devicetoken", data.token);
     if(MyService.online()) {
-      var tparams = {schoolid: user.schoolid, tokens:Math.random(), uid:user._id, role:user.role};
+      var tparams = {schoolid: user.schoolid, tokens:data.token, uid:user._id, role:user.role};
       tparams.class = [];  
       if(user.role == "parent") {
         tparams.uids = [];
@@ -89,10 +96,6 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
         console.log("Storing token failed", err);
       });
     }
-  // Handles incoming device tokens
-  $rootScope.$on('$cordovaPush:tokenReceived', function(event, data) {
-    console.log('Ionic Push: Got token ', data.token, data.platform);
-    localStorage.setItem("devicetoken", data.token);
   });
   
 })
@@ -661,6 +664,7 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
           all.push({standard:uv.standard, d: "all", division: "", classd: skey});
           standard.push(uv.standard);
         }
+        if(uv.division != "all")
         all.push({standard:uv.standard, d:uv.division, division: uv.division.toUpperCase(), classd: sdkey});
       }
     });
@@ -2157,7 +2161,7 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
   {
     title: 'Head Master',
     email: "8951572125",
-    password: 'soJX84lLbVEAhTsGwgX1TA=='
+    password: 'diFkRypVqRcQtmkfRLUgww=='
   },
   {
     title: 'M Vijay Parent',
@@ -2240,22 +2244,23 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
             school:data.school
           }
           // Identify your user with the Ionic User Service
-          $ionicUser.identify(iuser).then(function(){
+          $ionicUser.identify(iuser).then(function(tok){
+            console.log("got something", tok);
             console.log('Identified user ' + iuser.name + '\n ID ' + iuser.user_id);
+            $ionicAnalytics.register();
+            // Register with the Ionic Push service.  All parameters are optional.
+            $ionicPush.register({
+              canShowAlert: true, //Can pushes show an alert on your screen?
+              canSetBadge: true, //Can pushes update app icon badges?
+              canPlaySound: true, //Can notifications play a sound?
+              canRunActionsOnWake: true, //Can run actions outside the app,
+              onNotification: function(notification) {
+                //Handle new push notifications here
+                console.log("This is where i handle notifications", notification);
+                return true;
+              }
+            },iuser);
           })
-          // Register with the Ionic Push service.  All parameters are optional.
-          $ionicPush.register({
-            canShowAlert: true, //Can pushes show an alert on your screen?
-            canSetBadge: true, //Can pushes update app icon badges?
-            canPlaySound: true, //Can notifications play a sound?
-            canRunActionsOnWake: true, //Can run actions outside the app,
-            onNotification: function(notification) {
-              //Handle new push notifications here
-              console.log(notification);
-              return true;
-            }
-          },iuser);
-          $ionicAnalytics.register();
 
           if(data.role == "hm") {
             $state.go("app.hmdashboard", {}, {'reload': true});
