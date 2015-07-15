@@ -1,46 +1,45 @@
-Standard,Teacher,TeacherPhone,TypeOfExams,CommonSubjects,,
-11,Shalini,9496255121,"periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual","english:Sangeeth,math:Shalini,biology:Lekha,physics:Subash,chemistry:Meena",,
-,,,,,,
-Student,StudentID,Sex,Address,Parent,ParentPhone,SecondLanguage
-,,,,,,
-A.Adithya,110001,Male,"Adithya Bhavan, Kanjampuram",S.Ashokan,9922711000,malayalam:Diwakar
-S.Anil,110002,Male,"Anil Bhavan, Kuzhithurai",S.Santhosh,9922711001,tamil:Mukesh
-A.Anjali,110003,Female,"Anjali Bhavan, Kollemcode",R.Adarsh,9922711002,malayalam:Diwakar
-B.Ajay,110004,Male,"Ajay Villa, Puthukadai",A.Binu Raj,9922711003,tamil:Mukesh
-S.Anusree,110005,Female,"Anu Bhavan, Choozhal",A.Sangeeth,9922711004,tamil:Mukesh
-J.Babu,110006,Male,"Babu Bhavan, Marthandam",A.Jeevaraj,9922711005,tamil:Mukesh
-R.Bindhu,110007,Female,"Bindhu Bhavan, Kollemcode",A.Raghavan nair,9922711006,malayalam:Diwakar
-R.Binu,110008,Male,"Binu Bhavan, Puthukadai",S.Rajan,9922711007,malayalam:Diwakar
-A.Baiju,110009,Male,"Baiju Villa, Kaliyikavilai",M.Antony,9922711008,tamil:Mukesh
-R.Bavithra,110010,Female,"Bavithra Bhavan, Kollemcode",R.Rajaraman,9922711009,tamil:Mukesh
-S.Chinmayi,110011,Female,"Sindhu Bhavan, Parashala",A.Subash,9922711010,tamil:Mukesh
-A.Cleetus,110012,Male,"Cibi Bhavan, Thoothoor",S.Anto Das,9922711011,malayalam:Diwakar
-A.Deepak,110013,Male,"Arjun Bhavan, Kollemcode",S.Arjunan,9922711012,malayalam:Diwakar
-R.Deepika,110014,Female,"Dhanya Bhavan, Marthandam",S.Rahul Raj,9922711013,tamil:Mukesh
-S.Dhanya,110015,Female,"Devi Bhavan, Kollemcode",A.R.Sudheer,9944711014,tamil:Mukesh
-S.Elango,110016,Male,"Elango Villa, Nagercoil",A.Sampath,9922711015,tamil:Mukesh
-S.Eesha,110017,Female,"Eesha Bhavan, Marthandam",A.Sathya,9922711016,malayalam:Diwakar
-S.Fatha Shajan,110018,Male,"Shajan Manzil, Nambali",A.Sameer,9922711017,tamil:Mukesh
-S.Feroz Shah,110019,Male,"Feroz Manzil, Nambali",S.Shafath,9922711018,tamil:Mukesh
-A.Febina,110020,Female,"Febi Villa, Thoothoor",S.Arul Das,9922711019,malayalam:Diwakar
-S.Gauri,110021,Female,"Girija Bhavan, Puthukadai",S.Sumesh,9922711020,tamil:Mukesh
-R.Gopi Krishnan,110022,Male,"Arun Bhavan, Kollemcode",A.Rameshan,9922711021,tamil:Mukesh
-A.Hemanika,110023,Female,"Hema Bhavan, Karungal",A.Aravindhan,9922711022,tamil:Mukesh
-S.Ishran,110024,Male,"Isha Manzil, Puthukadai",S.Shah,9922711023,tamil:Mukesh
-A.Imran,110025,Male,"Imran Manzil, Nambali",M.Abdul Waheed,9922711024,tamil:Mukesh
-S.Jebin,110026,Female,"Jebin Villa, Puthukadai",S.A.Samuel,9922711025,malayalam:Diwakar
-A.Kanika,110027,Female,"Kani Nivas, Kollemcode",S.Aadhi,9922711026,tamil:Mukesh
-R.Karthik,110028,Male,"Karthik Bhavan, Puthukadai",A.Rakesh,9922711027,malayalam:Diwakar
-K.Libin,110029,Male,"Libin Villa, Nithravilai",T.Kumar,9922711028,malayalam:Diwakar
-A.M.Murali,110030,Male,"Murali Bhavan, Kollemcode",S.Anurenjith,9922711029,tamil:Mukesh
-S.Madhu,110031,Female,"Madhu Bhavan, Marthandam",S.Sumith,9922711030,tamil:Mukesh
-R.Praveena,110032,Female,"Praveena Bhavan, Nithravilai",A.Raveendran,9922711031,tamil:Mukesh
-P.Pranaya,110033,Female,"Pranaya Bhavan, Kollemcode",B.Pranesh Kumar,9922711032,malayalam:Diwakar
-M.Preethi,110034,Female,"Preetha Bhavan, Kollemcode",N.Mani,9922711033,malayalam:Diwakar
-V.Retheesh,110035,Male,"Ramesh Bhavan, Nithravilai",A.Viswambaran,9922711034,tamil:Mukesh
-S.Ramesh,110036,Male,"Rakesh Bhavan, Kirathoor",A.Sunil lal,9922711035,tamil:Mukesh
-A.Shijin,110037,Male,"Shijin Villa, Nithravilai",S.Abraham,9922711036,malayalam:Diwakar
-S.Sujith,110038,Male,"Sujith Bhavan, Puthukadai",S.Sivan,9922711037,tamil:Mukesh
-A.Tinu,110039,Female,"Tinu Villa, Nithravilai",A.Austin,9922711038,malayalam:Diwakar
-N.Umesh,110040,Male,"Umesh Bhavan, Marthandam",M.Navaneeth,9922711039,tamil:Mukesh
-M.Vikram,110041,Male,"Vikram Bhavan, Kaliyikavilai",A.Muneesh,9922711040,tamil:Mukesh
+"Standard";"Teacher";"TeacherPhone";"TypeOfExams";"CommonSubjects";;
+11;"Shalini";9496255121;"periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual";"english:Sangeeth,math:Shalini,biology:Lekha,physics:Subash,chemistry:Meena";;
+;;;;;;
+"Student";"StudentID";"Sex";"Address";"Parent";"ParentPhone";"SecondLanguage"
+"A.Adithya";110001;"Male";"Adithya Bhavan, Kanjampuram";"S.Ashokan";9922711000;"malayalam:Diwakar"
+"S.Anil";110002;"Male";"Anil Bhavan, Kuzhithurai";"S.Santhosh";9922711001;"tamil:Mukesh"
+"A.Anjali";110003;"Female";"Anjali Bhavan, Kollemcode";"R.Adarsh";9922711002;"malayalam:Diwakar"
+"B.Ajay";110004;"Male";"Ajay Villa, Puthukadai";"A.Binu Raj";9922711003;"tamil:Mukesh"
+"S.Anusree";110005;"Female";"Anu Bhavan, Choozhal";"A.Sangeeth";9922711004;"tamil:Mukesh"
+"J.Babu";110006;"Male";"Babu Bhavan, Marthandam";"A.Jeevaraj";9922711005;"tamil:Mukesh"
+"R.Bindhu";110007;"Female";"Bindhu Bhavan, Kollemcode";"A.Raghavan nair";9922711006;"malayalam:Diwakar"
+"R.Binu";110008;"Male";"Binu Bhavan, Puthukadai";"S.Rajan";9922711007;"malayalam:Diwakar"
+"A.Baiju";110009;"Male";"Baiju Villa, Kaliyikavilai";"M.Antony";9922711008;"tamil:Mukesh"
+"R.Bavithra";110010;"Female";"Bavithra Bhavan, Kollemcode";"R.Rajaraman";9922711009;"tamil:Mukesh"
+"S.Chinmayi";110011;"Female";"Sindhu Bhavan, Parashala";"A.Subash";9922711010;"tamil:Mukesh"
+"A.Cleetus";110012;"Male";"Cibi Bhavan, Thoothoor";"S.Anto Das";9922711011;"malayalam:Diwakar"
+"A.Deepak";110013;"Male";"Arjun Bhavan, Kollemcode";"S.Arjunan";9922711012;"malayalam:Diwakar"
+"R.Deepika";110014;"Female";"Dhanya Bhavan, Marthandam";"S.Rahul Raj";9922711013;"tamil:Mukesh"
+"S.Dhanya";110015;"Female";"Devi Bhavan, Kollemcode";"A.R.Sudheer";9922711014;"tamil:Mukesh"
+"S.Elango";110016;"Male";"Elango Villa, Nagercoil";"A.Sampath";9922711015;"tamil:Mukesh"
+"S.Eesha";110017;"Female";"Eesha Bhavan, Marthandam";"A.Sathya";9922711016;"malayalam:Diwakar"
+"S.Fatha Shajan";110018;"Male";"Shajan Manzil, Nambali";"A.Sameer";9922711017;"tamil:Mukesh"
+"S.Feroz Shah";110019;"Male";"Feroz Manzil, Nambali";"S.Shafath";9922711018;"tamil:Mukesh"
+"A.Febina";110020;"Female";"Febi Villa, Thoothoor";"S.Arul Das";9922711019;"malayalam:Diwakar"
+"S.Gauri";110021;"Female";"Girija Bhavan, Puthukadai";"S.Sumesh";9922711020;"tamil:Mukesh"
+"R.Gopi Krishnan";110022;"Male";"Arun Bhavan, Kollemcode";"A.Rameshan";9922711021;"tamil:Mukesh"
+"A.Hemanika";110023;"Female";"Hema Bhavan, Karungal";"A.Aravindhan";9922711022;"tamil:Mukesh"
+"S.Ishran";110024;"Male";"Isha Manzil, Puthukadai";"S.Shah";9922711023;"tamil:Mukesh"
+"A.Imran";110025;"Male";"Imran Manzil, Nambali";"M.Abdul Waheed";9922711024;"tamil:Mukesh"
+"S.Jebin";110026;"Female";"Jebin Villa, Puthukadai";"S.A.Samuel";9922711025;"malayalam:Diwakar"
+"A.Kanika";110027;"Female";"Kani Nivas, Kollemcode";"S.Aadhi";9922711026;"tamil:Mukesh"
+"R.Karthik";110028;"Male";"Karthik Bhavan, Puthukadai";"A.Rakesh";9922711027;"malayalam:Diwakar"
+"K.Libin";110029;"Male";"Libin Villa, Nithravilai";"T.Kumar";9922711028;"malayalam:Diwakar"
+"A.M.Murali";110030;"Male";"Murali Bhavan, Kollemcode";"S.Anurenjith";9922711029;"tamil:Mukesh"
+"S.Madhu";110031;"Female";"Madhu Bhavan, Marthandam";"S.Sumith";9922711030;"tamil:Mukesh"
+"R.Praveena";110032;"Female";"Praveena Bhavan, Nithravilai";"A.Raveendran";9922711031;"tamil:Mukesh"
+"P.Pranaya";110033;"Female";"Pranaya Bhavan, Kollemcode";"B.Pranesh Kumar";9922711032;"malayalam:Diwakar"
+"M.Preethi";110034;"Female";"Preetha Bhavan, Kollemcode";"N.Mani";9922711033;"malayalam:Diwakar"
+"V.Retheesh";110035;"Male";"Ramesh Bhavan, Nithravilai";"A.Viswambaran";9922711034;"tamil:Mukesh"
+"S.Ramesh";110036;"Male";"Rakesh Bhavan, Kirathoor";"A.Sunil lal";9922711035;"tamil:Mukesh"
+"A.Shijin";110037;"Male";"Shijin Villa, Nithravilai";"S.Abraham";9922711036;"malayalam:Diwakar"
+"S.Sujith";110038;"Male";"Sujith Bhavan, Puthukadai";"S.Sivan";9922711037;"tamil:Mukesh"
+"A.Tinu";110039;"Female";"Tinu Villa, Nithravilai";"A.Austin";9922711038;"malayalam:Diwakar"
+"N.Umesh";110040;"Male";"Umesh Bhavan, Marthandam";"M.Navaneeth";9922711039;"tamil:Mukesh"
+"M.Vikram";110041;"Male";"Vikram Bhavan, Kaliyikavilai";"A.Muneesh";9922711040;"tamil:Mukesh"

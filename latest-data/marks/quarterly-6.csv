@@ -1,7 +1,7 @@
 "EducationYear";"TypeOfExam";"Division";;;;;;;;;
-"2015-2016";"quarterly";"all";;;;;;;;;
+"2015-2016";"Quarterly";"all";;;;;;;;;
 ;;;;;;;;;;;
-"Student";"StudentID";"Standard";"Malayalam";"Tamil";"English";"Hindi";"Math";"Science";"Social";"Attendence";"Remarks"
+"Student";"StudentID";"Standard";"Malayalam";"Tamil";"English";"Hindi";"Math";"Science";"Social";"Attendance";"Remarks"
 "R.S.Abhilash";600001;6;77;;72;80;72;90;87;"28/30";"Good"
 "A.R.Anil";600002;6;;61;45;34;47;34;47;"26/30";"Poor"
 "S.C.Anjali";600003;6;;90;87;80;93;92;86;"30/30";"Very Good"

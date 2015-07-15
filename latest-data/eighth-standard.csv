@@ -2,7 +2,6 @@
 8;"Sathish";9496255113;"periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual";"english:Anitha,math:Sathish,science:Jothi,social:Sajeev,hindi:Bhavana";;
 ;;;;;;
 "Student";"StudentID";"Sex";"Address";"Parent";"ParentPhone";"SecondLanguage"
-;;;;;;
 "S.Anish";800001;"Male";"Anish Nivas, Nithravilai Post";"A.S.Sudheer";9944511000;"tamil:Sindhu"
 "A.Ashwin";800002;"Male";"Ashwin Bhavan, Kaliyikavilai";"S.Akash Kumar";9944511001;"malayalam:Rakesh"
 "M.Anjali";800003;"Female";"Anjali Bhavan, Kollemcode";"M,Manikandan";9944511002;"malayalam:Rakesh"

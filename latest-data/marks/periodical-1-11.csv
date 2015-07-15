@@ -1,7 +1,7 @@
 "EducationYear";"TypeOfExam";"Division";;;;;;;;;
-"2015-2016";"periodical1";"all";;;;;;;;;
+"2015-2016";"Periodical1";"all";;;;;;;;;
 ;;;;;;;;;;;
-"Student";"StudentID";"Standard";"Malayalam";"Tamil";"English";"Math";"Physics";"Chemistry";"Biology";"Attendence";"Remarks"
+"Student";"StudentID";"Standard";"Malayalam";"Tamil";"English";"Math";"Physics";"Chemistry";"Biology";"Attendance";"Remarks"
 "A.Adithya";110001;11;160;;156;172;164;139;171;"30/30";"Need Improvement"
 "S.Anil";110002;11;;106;97;67;111;69;93;"27/30";"Poor"
 "A.Anjali";110003;11;180;;167;193;186;190;187;"30/30";"Very Good"
