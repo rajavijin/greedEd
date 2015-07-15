@@ -44,85 +44,94 @@ angular.module('greenApiApp')
       $scope.processing = true;
       var newdata = csvdata;
       console.log("total", csvdata.length);
-      angular.forEach(newdata, function(data, index) {
-        angular.forEach(data, function(d, i) {
-        var mark = {};
-        mark.school = school.school;
-        mark.schoolid = school._id;
-        mark.passmark = school.passmark;
-        mark.grades = school.grades;
-        mark.period = school.period;
-          var head = i.toLowerCase().split(/[,;]/);
-          var row = d.split(/[,;]/);
-          if(row.length > 1) {
-            angular.forEach(row, function(r, k) {
-            mark[head[k]] = r;
-            })
-            console.log("mark student", mark.student);
-            mark.import = true;
-            $http.post('/api/marks', mark).success(function(created) {
-              if (created.status == "Pass") {
-                if(!allexams[created.educationyear+'_'+ created.typeofexam+'_'+created.standard+'_'+created.division])
-                  allexams[created.educationyear+'_'+ created.typeofexam+'_'+created.standard+'_'+created.division] = [];                
-                allexams[created.educationyear+'_'+ created.typeofexam+'_'+created.standard+'_'+created.division].push({_id: created._id, total: created.total});
-              }
-              sentcount++;
-              console.log("i", sentcount);
-            	if(sentcount == csvdata.length - 1) {
-                console.log("Ranks", allexams);
-            		console.log("Ranks length", allexams.length);
-                angular.forEach(allexams, function(yv, yk) {
-                    console.log("educationYear", yk);
-                    console.log("educationval", yv);
-                    var ri = 1;
-                    var ric = 0;
-                  var rankcount = yv.length;
-                  yv.sort(function(a,b) { return parseInt(a.total) - parseInt(b.total) } );
-                  for (var mk = yv.length - 1; mk >= 0; mk--) {
-                    yv[mk].rank = ri;
-                    if(mk > 0) {
-                      if(yv[mk].total == yv[mk-1].total) {
-                        ric++;
-                      } else {
-                        if(school.ranktype == "dynamic") {
-                          ri = ri + ric + 1;
-                          ric = 0;
-                        } else {
-                          ri++;                          
-                        }
-                      }
-                    }
-                    console.log("current val:", yv[mk]);
-                    $http.post('/api/marks/'+yv[mk]._id, {rank: yv[mk].rank, import: true}).success(function(rankupdated) {
-                      console.log("rank updated successfully", rankupdated);
-                    }).error(function(err) {
-                      console.log("rank not updated", err);
-                    });
-                  };
-/*                  angular.forEach(yv, function(ev, ek) {
-                    yv[rev]
-                    ev.rank = rankcount;
-                    console.log("rankcount", rankcount);
-                    console.log("ri", ri);
-                    console.log("currentval", yv[ek]);
-                    if(ek != yv.length - 1) {
-                      if(yv[ek+1].total == ev.total) {
-                        ri++;
-                      } else {
-                        rankcount = rankcount - ri - 1;
-                        ri = 0;
-                      }
-                    }
-                  })
-*/                })
-            	}
-              $scope.processing = false;
-            }).error(function(err) {
-               console.log('error', err);
-            });
+      for (var i = 0; i < newdata.length; i++) {
+        var userdata = {};
+        if(i > 2) {
+          for(var dkey in newdata[i]) {
+            var head = newdata[2][dkey].toLowerCase().split(/[;]/);
+            var row = newdata[i][dkey].split(/[;]/);
+            if(row.length > 1) {
+              for (var ri = 0; ri < row.length; ri++) {
+                userdata[head[ri].replace(/"/g, "")] = row[ri].replace(/"/g, "");
+              };
+              userdata.import = true;
+              console.log("mark", userdata);
+              allmarks.push(userdata);              
+            }
           }
-        });
-      })
+        };
+      };
     }
-  }  	
+    console.log("USERDATA:", allmarks);
+    var allmarkSubmit = function(mi) {
+      allmarks[mi].school = school.school;
+      allmarks[mi].schoolid = school._id;
+      allmarks[mi].passmark = school.passmark;
+      allmarks[mi].grades = school.grades;
+      allmarks[mi].period = school.period;
+      var common = Object.keys(newdata[0]);
+      console.log("Common", common);
+      var commonHead = common[0].toLowerCase().split(";");
+      console.log("Common head", commonHead);
+      var commonVal = newdata[0][common[0]].toLowerCase().split(";");
+      console.log("commonVal", commonVal);
+      for (var c = 0; c < commonHead.length; c++) {
+        if(commonVal[c]) {
+          allmarks[mi][commonHead[c].replace(/"/g, "")] = commonVal[c].replace(/"/g, "");
+        }
+      };
+      console.log("iteration", allmarks[mi]);
+      $http.post('api/marks', allmarks[mi]).success(function(created) {
+        console.log("created", created);
+        if (created.status == "Pass") {
+          if(!allexams[created.educationyear+'_'+ created.typeofexam+'_'+created.standard+'_'+created.division])
+            allexams[created.educationyear+'_'+ created.typeofexam+'_'+created.standard+'_'+created.division] = [];                
+          allexams[created.educationyear+'_'+ created.typeofexam+'_'+created.standard+'_'+created.division].push({_id: created._id, total: created.total});
+        }
+        if(mi != (allmarks.length -1)) {
+          mi++;
+          allmarkSubmit(mi);
+        } else {
+          console.log("Ranks", allexams);
+          console.log("Ranks length", allexams.length);
+          angular.forEach(allexams, function(yv, yk) {
+            console.log("educationYear", yk);
+            console.log("educationval", yv);
+            var ri = 1;
+            var ric = 0;
+            var rankcount = yv.length;
+            yv.sort(function(a,b) { return parseInt(a.total) - parseInt(b.total) } );
+            for (var mk = yv.length - 1; mk >= 0; mk--) {
+              yv[mk].rank = ri;
+              if(mk > 0) {
+                if(yv[mk].total == yv[mk-1].total) {
+                  ric++;
+                } else {
+                  if(school.ranktype == "dynamic") {
+                    ri = ri + ric + 1;
+                    ric = 0;
+                  } else {
+                    ri++;                          
+                  }
+                }
+              }
+              console.log("current val:", yv[mk]);
+              $http.post('/api/marks/'+yv[mk]._id, {rank: yv[mk].rank, import: true}).success(function(rankupdated) {
+                console.log("rank updated successfully", rankupdated);
+              }).error(function(err) {
+                console.log("rank not updated", err);
+              });
+            };
+          })
+        }
+      }).error(function(err) {
+        console.log('error', err);
+        if(mi != (allmarks.length -1)) {
+          mi++;
+          allmarkSubmit(mi);
+        }
+      });
+    }   
+    allmarkSubmit(0);
+  }
 });
