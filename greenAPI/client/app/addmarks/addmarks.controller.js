@@ -29,7 +29,7 @@ angular.module('greenApiApp')
 
     var schoolValues = function(schoolValues) {
       school = schoolValues;
-      console.log("Marks: ", marks);
+      console.log("Current School: ", school);
     }
 
   $scope.csvImport = function(csvdata) {
@@ -64,6 +64,7 @@ angular.module('greenApiApp')
     }
     console.log("USERDATA:", allmarks);
     var allmarkSubmit = function(mi) {
+      console.log("school", school);
       allmarks[mi].school = school.school;
       allmarks[mi].schoolid = school._id;
       allmarks[mi].passmark = school.passmark;

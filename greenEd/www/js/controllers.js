@@ -584,6 +584,8 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
     var failvals = [];
     var topperS = [];
     var toppersList = [];
+    console.log("Toppers", toppers);
+    console.log("Subject Toppers", topperS);
     for(var topv in toppers) {
       toppersList.push(toppers[topv]);
     }
