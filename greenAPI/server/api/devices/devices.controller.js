@@ -27,14 +27,16 @@ exports.create = function(req, res) {
   if(req.body.role == "parent") {
     uids = req.body.uids;
   }
+  console.log("uids", uids);
   Devices.find({uid:{$in:uids}}, function(err, devices) {
+    console.log("found devices", devices);
     if(err) { return handleError(res, err); }
-    if(devices) {
+    if(devices.length > 0) {
       for (var i = 0; i < devices.length; i++) {
         var updated = devices[i];
         updated.tokens.push(req.body.tokens);
         updated.tokens = _.uniq(updated.tokens);
-        updated.class.push(req.body.class);
+        updated.class = _.merge(updated.class, req.body.class);
         updated.class = _.uniq(updated.class);      
         console.log("updated", updated);
         updated.save(function (err) {
@@ -44,6 +46,7 @@ exports.create = function(req, res) {
         });
       };
     } else {
+      console.log("no device found so insert it");
       for (var i = 0; i < uids.length; i++) {
         var create = {schoolid:req.body.schoolid, uid:uids[i], class:req.body.class[i], tokens:req.body.tokens};
         Devices.create(create, function(er, devices) {

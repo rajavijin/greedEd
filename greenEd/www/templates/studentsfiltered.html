@@ -14,7 +14,7 @@
       <ion-list>
          <ion-item ng-repeat="user in users | filter:query.search.value | orderBy:['standard','division','name']" class="item item-icon-left positive" href="#/app/studentdashboard/{{user._id}}/{{user.name}}">
             <i class="icon ion-person"></i>
-            <h2>{{user.standard}}{{user.division}} : {{user.name}}</h2>
+            <h2>{{user.standard}}<span ng-hide="user.division == 'all'">{{user.division}}</span> : {{user.name}}</h2>
          </ion-item>
       </ion-list>
       <div class="list" ng-if="allStudentsStatus == false">

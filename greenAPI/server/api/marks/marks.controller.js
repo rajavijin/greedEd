@@ -32,7 +32,7 @@ exports.getMark = function(req, res) {
     }
   })
   if(params.standard == "teacher") {
-    params.marks = {$elemMatch:{teacher:params.division}};
+    params.marks = {$elemMatch:{teacherid:params.division}};
     delete params.standard;
     delete params.division;
   }
@@ -60,7 +60,7 @@ exports.listUsers = function(req, res) {
   }
   delete params.mark;
   if(params.standard == "teacher") {
-    params.marks = {$elemMatch:{teacher:params.division}};
+    params.marks = {$elemMatch:{teacherid:params.division}};
     delete params.standard;
     delete params.division;
   }
@@ -111,7 +111,7 @@ exports.create = function(req, res) {
       var studentMark = req.body;
       studentMark.marks = [];
       student.subjects.forEach(function(sub, si) {
-        studentMark.marks[si] = {subject: sub.subject, teacher: sub.teacher};
+        studentMark.marks[si] = {subject: sub.subject, teacher: sub.teacher, teacherid:sub.teacherid};
         if(studentMark[sub.subject] == "ab") {
           studentMark.marks[si]["status"] = "absent";
           studentMark.marks[si]["mark"] = 0;

@@ -49,31 +49,15 @@ exports.getConversation = function(req, res) {
 
 // Creates a new messages in the DB.
 exports.create = function(req, res) {
+  console.log("Requested message:", req.body);
   var ionicPushServer = require('ionic-push-server');
 
   var credentials = {
       IonicApplicationID : "e6a31325",
       IonicApplicationAPIsecret : "7c5dcd3ddd0d723e35d291e7ad8b678c417733be0adc193f"
   };
-  var tokens = [];
-  if(req.body.type == "group") {
-    Devices.find({class:req.body.to[0].id}, 'tokens', function(err, device) {
-      if(device) {
-        for (var i = 0; i < device.length; i++) {
-          tokens = _.merge(tokens, device[i].tokens);
-        };
-      }
-    });
-  } else {
-    Devices.findOne({uid:req.body.to[0].id}, 'tokens', function(err, device) {
-      if(device) {
-        tokens = device.tokens;
-      }
-    });
-  }
-  console.log("Push notification sent to:", tokens);
   var notification = {
-    "tokens":tokens,
+    "tokens":[],
     "notification":{
       "alert":req.body.text,
       "ios":{
@@ -92,20 +76,43 @@ exports.create = function(req, res) {
         "delayWhileIdle":true,
         "timeToLive":300,
         "payload":{
-          "key1":"value",
-          "key2":"value"
+          "chatname":req.body.chatname,
+          "toId":req.body.to[0].id,
+          "toName":req.body.to[0].name,
+          "userId":req.body.userId,
+          "name":req.body.name,
+          "type":req.body.type,
         }
       }
     } 
   };
-  ionicPushServer(credentials, notification);
-
-
-  Messages.create(req.body, function(err, messages) {
-    if(err) { return handleError(res, err); }
-    return res.json(201, messages);
-  });
-  
+  if(req.body.type == "group") {
+    Devices.find({class:req.body.to[0].id}, 'tokens', function(err, device) {
+      if(device) {
+        for (var i = 0; i < device.length; i++) {
+          notification.tokens = _.merge(tokens, device[i].tokens);
+        };
+        console.log("Push notification sent to:", notification.tokens);
+        Messages.create(req.body, function(err, messages) {
+          if(err) { return handleError(res, err); }
+          ionicPushServer(credentials, notification);
+          return res.json(201, messages);
+        });
+      }
+    });
+  } else {
+    console.log("single message");
+    Devices.findOne({uid:req.body.to[0].id}, 'tokens', function(err, device) {
+      console.log("device Status", device);
+      notification.tokens = device.tokens;
+      console.log("Push notification sent to:", notification.tokens);
+      Messages.create(req.body, function(err, messages) {
+        if(err) { return handleError(res, err); }
+        ionicPushServer(credentials, notification);
+        return res.json(201, messages);
+      });
+    });
+  }  
 };
 
 // Updates an existing messages in the DB.

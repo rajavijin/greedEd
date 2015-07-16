@@ -27,7 +27,7 @@ var createParent = function(res, request, student) {
     if(parentData) {
       parentData.name = request.parent;
       if(student._id) {
-        parentData.students.push({id:student._id,name:student.name,class:student.standard+'-'+student.division,subjects:student.subjects});
+        parentData.students.push({id:student.id,name:student.name,class:student.standard+'-'+student.division,subjects:student.subjects});
       }
       parentData.phone = request.parentphone;
       parentData.pepper = Math.random().toString(36).substring(9);
@@ -80,7 +80,7 @@ var createTeacher = function(res, request, student) {
       teacherData.password = teacherData.pepper;
       teacherData.provider = request.provider;
       if(Object.keys(student).length > 0) {
-        teacherData.students.push({id:student._id,name:student.name,class:student.standard+'-'+student.division,subjects:student.subjects});
+        teacherData.students.push({id:student.id,name:student.name,class:student.standard+'-'+student.division,subjects:student.subjects});
       }
       if(request.classes) teacherData.subjects = request.classes;
       if(request.typeofexams) teacherData.typeofexams = request.typeofexams;
@@ -153,32 +153,40 @@ exports.create = function (req, res, next) {
     var subjects = req.body.subjects.split(",");
     _.each(subjects, function(sv, sk) {
       var sub = sv.toLowerCase().split(":");
-      allsubjects.push({subject: sub[0], teacher: sub[1]});
-    })
-    userData.subjects = allsubjects;
-    userData.typeofexams = req.body.typeofexams.replace(/ /g,"").split(",");
-    console.log("Requested: ", userData);
-    User.findOne({
-      email:req.body.email,
-      role:"student",
-    }, '-salt -hashedPassword', function(err, studentData) {
-      if (err) return validationError(res, err);
-      if(studentData) {
-        var studentUpdated = _.merge(studentData, userData);
-        studentUpdated.save(function (err) {
-          if (err) { return validationError(res, err); }
-          console.log("Student Updated");
-          return createParent(res, req.body, studentData);        
-        });
-      } else {
-        var userStudent = new User(userData);
-        userStudent.save(function(err, student) {
-          if (err) return validationError(res, err);
-          console.log("Student Created");
-          return createParent(res, req.body, student);
-        });      
-      }
-    });      
+      console.log("subject", {role:"teacher",name:sub[1],subjects:{$elemMatch:{subject:sub[0],class:req.body.standard+"-"+req.body.division}}});
+      User.findOne({role:"teacher",name:sub[1],subjects:{$elemMatch:{subject:sub[0]}}}, 'id', function(terr, ateacher) {
+        console.log("ateacher", ateacher);
+        if(ateacher) {
+          allsubjects.push({subject: sub[0], teacher: sub[1],teacherid:ateacher.id});
+        }
+        if(sk == (subjects.length - 1)) {
+          userData.subjects = allsubjects;
+          userData.typeofexams = req.body.typeofexams.replace(/ /g,"").split(",");
+          console.log("Requested: ", userData);
+          User.findOne({
+            email:req.body.email,
+            role:"student",
+          }, '-salt -hashedPassword', function(err, studentData) {
+            if (err) return validationError(res, err);
+            if(studentData) {
+              var studentUpdated = _.merge(studentData, userData);
+              studentUpdated.save(function (err) {
+                if (err) { return validationError(res, err); }
+                console.log("Student Updated");
+                return createParent(res, req.body, studentData);        
+              });
+            } else {
+              var userStudent = new User(userData);
+              userStudent.save(function(err, student) {
+                if (err) return validationError(res, err);
+                console.log("Student Created");
+                return createParent(res, req.body, student);
+              });      
+            }
+          });
+        }
+      })
+    })          
   } else {    
     var newUser = new User(userData);
     newUser.provider = "local";
@@ -224,7 +232,7 @@ exports.users = function (req, res, next) {
     req.params._id = {$in: req.params._id.split("|")};
   }
   if(req.params.standard == 'teacher') {
-    req.params.subjects = {$elemMatch: {teacher: req.params.division}};
+    req.params.subjects = {$elemMatch: {teacherid: req.params.division}};
     delete req.params.standard;
     delete req.params.division;
   }

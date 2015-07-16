@@ -67,15 +67,11 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
     filterStatus(toState.url.split("/")[1]);
   })
   filterStatus($state.current.url.split("/")[1]);
-  // Handles incoming device tokens
-  $rootScope.$on('$cordovaPush:notificationReceived', function(event, notification) {
-    $state.go('app.messages', {}, {reload:true});
-  });
   $rootScope.$on('$cordovaPush:tokenReceived', function(event, data) {
     console.log('Ionic Push: Got token ', data.token, data.platform);
     localStorage.setItem("devicetoken", data.token);
     if(MyService.online()) {
-      var tparams = {schoolid: user.schoolid, tokens:data.token, uid:user._id, role:user.role};
+      var tparams = {schoolid: user.schoolid, tokens:data.token, uid:user._id, role:user.role, platform:data.platform};
       tparams.class = [];  
       if(user.role == "parent") {
         tparams.uids = [];
@@ -482,12 +478,12 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
     params.year = user.years[params.educationyear];
     params.studentid = "all";
     params.standard = "teacher";
-    params.division = ($stateParams.teacher) ? $stateParams.teacher : user.name; 
+    params.division = ($stateParams.teacherid) ? $stateParams.teacherid : user.name; 
     $scope.username = params.division;
-    $scope.title = params.division +" Dashboard";
+    $scope.title = $stateParams.teacher +" Dashboard";
     if(params.typeofexam) {
       var dbkey = params.schoolid +'_'+params.year+'_'+params.typeofexams[params.typeofexam]+'_'+params.standard+'_'+params.division;
-      $scope.title = params.division+" "+params.typeofexams[params.typeofexam]+" Dashboard";
+      $scope.title = $stateParams.teacher+" "+params.typeofexams[params.typeofexam]+" Dashboard";
     }
     teacher = params.division;
     console.log("params", params);
@@ -1240,9 +1236,9 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
       params.sex = params.status = 'all';
       params.schoolid = user.schoolid;
       params.role = "teacher";
-      if($stateParams.teacher) {
-        params.name = $stateParams.teacher;
-        dbkey += "_"+$stateParams.teacher;
+      if($stateParams.teacherid) {
+        params.name = $stateParams.teacherid;
+        dbkey += "_"+$stateParams.teacherid;
       }
       var dbkey = params.schoolid+'_'+params.name;
       console.log("Profile params:", params);
@@ -2164,49 +2160,24 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
     password: 'diFkRypVqRcQtmkfRLUgww=='
   },
   {
-    title: 'M Vijay Parent',
+    title: 'Class Teacher',
     email: "9944711040",
     password: "he49m5cdi"
   },
   {
-    title: '1-A Ashwini Parent',
+    title: 'Subject Teacher',
     email: "9894321256",
     password: "xg6re8kt9"
   },
   {
-    title: "1-A Anitha S parent",
-    email: "9846812670",
-    password: "s2hqnz5mi"
+    title: "Parent with single Student",
+    email: "9944711001",
+    password: "kmx6r"
   },
   {
-    title: '5-B Class Teacher Meera J',
+    title: 'Parent with multiple student',
     email: '7890089011',
     password: 'l7k2ihpvi'
-  },
-  {
-    title: 'Subject teacher Abhi',
-    email: '8787876464',
-    password: 'kun0fi529'
-  },
-  {
-    title: "Subject teacher Rajavijin",
-    email: '8787871464',
-    password: 'g8tfn7b9'
-  },
-  {
-    title: "2-B aarthi S Parent",
-    email: "9843812677",
-    password: "ph73w61or"
-  },
-  {
-    title: 'Adarsh A/Anil A parent',
-    email: '9944046100',
-    password: 'r2rhn0zfr'
-  },
-  {
-    title: '5-B Hema H parent',
-    email: '8879900341',
-    password: 'scus7nwmi'
   }];
   $scope.fillUser = function(modal, email, password) {
     modal.hide();
@@ -2257,7 +2228,8 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
               onNotification: function(notification) {
                 //Handle new push notifications here
                 console.log("This is where i handle notifications", notification);
-                return true;
+                //$state.go('app.messagebox', {chatname:notification.chatname,name:notification.name,userId:notification.userId,toName:notification.toName,toId:notification.toId,type:notification.type}, {reload:true});
+                $state.go('app.messages', {}, {reload:true});
               }
             },iuser);
           })
