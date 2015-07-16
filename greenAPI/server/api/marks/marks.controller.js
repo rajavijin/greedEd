@@ -53,8 +53,9 @@ exports.listUsers = function(req, res) {
   })
   console.log("requested", params);
   if(params.subject) {
-    if(params.status == "Pass") params.marks = {$elemMatch:{subject:params.subject,mark:{$gte:parseInt(params.mark)}}};
-    else params.marks = {$elemMatch:{subject:params.subject,mark:{$lt:parseInt(params.mark)}}};
+    params.marks = {$elemMatch:{subject:params.subject,level:params.status}};
+/*    if(params.status == "Pass") params.marks = {$elemMatch:{subject:params.subject,level:{$gte:parseInt(params.mark)}}};
+    else params.marks = {$elemMatch:{subject:params.subject,mark:{$lt:parseInt(params.mark)}}};*/
     delete params.subject;
     delete params.status;
   }
@@ -65,7 +66,7 @@ exports.listUsers = function(req, res) {
     delete params.division;
   }
   console.log("before fetch", params);
-  Marks.distinct('studentid', params, function (err, allusers) {
+/*  Marks.distinct('studentid', params, function (err, allusers) {
     if(allusers.length > 0) {
       User.find({_id:{$in:allusers}}, null, {sort:{_id: 1}}, function (err, users) {
         if(err) { return handleError(res, err); }
@@ -73,7 +74,12 @@ exports.listUsers = function(req, res) {
         return res.json(users);
       });
     }
-  });
+  });*/
+  Marks.find(params, 'student studentid standard division grade rank percentage total', function(err, allmarks) {
+    if(err) {return handleError(res, err);}
+    if(!allmarks) { return res.send(404); }
+    return res.json(allmarks);
+  })
 };
 
 // Get a single mark
@@ -132,6 +138,9 @@ exports.create = function(req, res) {
         }
         if(studentMark.marks[si]["mark"] < passmark) {
           status = "Fail";
+          studentMark.marks[si]["level"] = "Fail";
+        } else {
+          studentMark.marks[si]["level"] = "Pass";
         }
         total = parseInt(total) + studentMark.marks[si]["mark"];
       })

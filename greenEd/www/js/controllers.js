@@ -794,7 +794,7 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
     var params = $stateParams;
     params.schoolid = user.schoolid;
     params.typeofexam = filtersData.typeofexams[params.typeofexam];
-    params.mark = user.passmark;
+    params.mark = "all";
     if(params.standard != "all") title = params.standard +'/'+params.division;
     title += " "+params.typeofexam;
     if(params.subject != "all") title += " "+params.subject;
@@ -1008,11 +1008,16 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
   var processMarksVal = function(v, k, status) {
     for (var i = 0; i < v.marks.length; i++) {
       subjectLabels.push(v.marks[i].subject);
-      subjectMarks.push(v.marks[i].mark);
+      var smark = {name:v.marks[i].subject, y:v.marks[i].mark, tip:v.marks[i].mark}
+      if(v.marks[i].level == "Fail") {
+        smark.color = '#ff6c60';
+      }
+      if(v.marks[i].status == "absent") {smark.tip = "Ab"; smark.name += " Absent"}
+      subjectMarks.push(smark);
     };
     $scope.ssubjectsConfig = {
       chart: {renderTo: 'ssubjects',type: 'column', options3d: {enabled: true,alpha: 10,beta: 20,depth: 50}},
-      title: {text:"Subject Marks"},plotOptions: {column: {depth: 25,showInLegend: false, dataLabels: {enabled: true,format: '{point.y}'}, events: {legendItemClick: function () {return false;}}}},
+      title: {text:"Subject Marks"},plotOptions: {column: {depth: 25,showInLegend: false, dataLabels: {enabled: true,format: '{point.tip}'}, events: {legendItemClick: function () {return false;}}}},
       xAxis: {categories: subjectLabels},
       yAxis: {title: {text: null}},
       series: [{name: 'Mark',data: subjectMarks}]
@@ -2159,7 +2164,7 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
   {
     title: 'Head Master',
     email: "8951572125",
-    password: 'RYO9f1P47qaDuMrj36+doA=='
+    password: '5+2aKHVCyvk1mJT9G2wjOA=='
   },
   {
     title: 'Class Teacher',
