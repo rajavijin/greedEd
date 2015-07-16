@@ -87,10 +87,13 @@ exports.create = function(req, res) {
     } 
   };
   if(req.body.type == "group") {
+    console.log("its a group message");
     Devices.find({class:req.body.to[0].id}, 'tokens', function(err, device) {
+      console.log("devices", device);
       if(device) {
         for (var i = 0; i < device.length; i++) {
-          notification.tokens = _.merge(tokens, device[i].tokens);
+          console.log("notification token", notification.tokens);
+          notification.tokens = notification.tokens.concat(device[i].tokens);
         };
         console.log("Push notification sent to:", notification.tokens);
         Messages.create(req.body, function(err, messages) {
@@ -104,11 +107,12 @@ exports.create = function(req, res) {
     console.log("single message");
     Devices.findOne({uid:req.body.to[0].id}, 'tokens', function(err, device) {
       console.log("device Status", device);
-      notification.tokens = device.tokens;
+      if(device) notification.tokens = device.tokens;
       console.log("Push notification sent to:", notification.tokens);
       Messages.create(req.body, function(err, messages) {
         if(err) { return handleError(res, err); }
-        ionicPushServer(credentials, notification);
+        if(notification.tokens)
+          ionicPushServer(credentials, notification);
         return res.json(201, messages);
       });
     });

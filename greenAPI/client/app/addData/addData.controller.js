@@ -7,9 +7,10 @@ angular.module('greenApiApp')
     $scope.school = {};
     $scope.school.school = "St Mary's Hr Sec School";
     $scope.school.schoolphone = "8951572125";
-    $scope.school.grades = "Grade A:60-100,Grade B:50-59,Grade C:40-49,Grade F:0-39";
+    $scope.school.allgrades = "Grade A:60-100,Grade B:50-59,Grade C:40-49,Grade F:0-39";
     $scope.school.ranking = "grade";
-    $scope.school.passmark = 40;
+    $scope.school.allpassmark = "default:40,11:70,12:70";
+    $scope.school.maximum = "default:100,11:200,12:200";
     $scope.school.period = "June-April";
 	$scope.processing = false;
     $scope.csvImport = function(csvdata) {
@@ -38,7 +39,19 @@ angular.module('greenApiApp')
             })        
         }*/
         var schoolData = $scope.school;
-        var allGrades = schoolData.grades.split(",");
+        var max = schoolData.maximum.split(",");
+        schoolData.maxmark = [];
+        for (var i = 0; i < max.length; i++) {
+            var maxval = max[i].split(":");
+            schoolData.maxmark.push({standard:maxval[0],max:maxval[1]});
+        };
+        var allpassmark = schoolData.allpassmark.split(",");
+        schoolData.passmark = [];
+        for (var i = 0; i < allpassmark.length; i++) {
+            var maxval = allpassmark[i].split(":");
+            schoolData.passmark.push({standard:maxval[0],passmark:maxval[1]});
+        };
+        var allGrades = schoolData.allgrades.split(",");
         var grades = [];
         console.log("rank", schoolData.ranking);
         if(schoolData.ranking == 'grade') {

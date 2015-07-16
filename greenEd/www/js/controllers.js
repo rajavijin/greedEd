@@ -180,7 +180,7 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
       }
       subjectDataPass[v.marks[i].subject] = (subjectDataPass[v.marks[i].subject]) ? subjectDataPass[v.marks[i].subject] : 0;
       subjectDataFail[v.marks[i].subject] = (subjectDataFail[v.marks[i].subject]) ? subjectDataFail[v.marks[i].subject] : 0;   
-      if(v.marks[i].mark >= user.passmark) {
+      if(v.marks[i].mark >= v.marks[i].passmark) {
         subjectDataPass[v.marks[i].subject]++;
       } else {
         subjectDataFail[v.marks[i].subject]++;
@@ -355,7 +355,7 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
       }
       subjectDataPass[v.marks[i].subject] = (subjectDataPass[v.marks[i].subject]) ? subjectDataPass[v.marks[i].subject] : 0;
       subjectDataFail[v.marks[i].subject] = (subjectDataFail[v.marks[i].subject]) ? subjectDataFail[v.marks[i].subject] : 0;   
-      if(v.marks[i].mark >= user.passmark) {
+      if(v.marks[i].mark >= v.marks[i].passmark) {
         subjectDataPass[v.marks[i].subject]++;
       } else {
         subjectDataFail[v.marks[i].subject]++;
@@ -541,7 +541,7 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
       }
       subjectDataPass[key] = (subjectDataPass[key]) ? subjectDataPass[key] : 0;
       subjectDataFail[key] = (subjectDataFail[key]) ? subjectDataFail[key] : 0;   
-      if(v.marks[i].mark >= user.passmark) {
+      if(v.marks[i].mark >= v.marks[i].passmark) {
         subjectDataPass[key]++;
       } else {
         subjectDataFail[key]++;
@@ -1148,7 +1148,7 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
       chart: {renderTo: 'allmarks',type: 'line', options3d: {enabled: true,alpha: 10,beta: 20,depth: 50}},
       title: {text:"Total Mark"},plotOptions: {line: {dataLabels: {enabled: true},showInLegend: false,enableMouseTracking: false,events: {legendItemClick: function () {return false;}}}},
       xAxis: {categories: examLabels},
-      yAxis: {title: {text: null}, max:allsubjects.length*100},
+      yAxis: {title: {text: null}},
       series: [{name: 'Total',data: allMarks}]
     };    
     $scope.sosubjectsConfig = {
@@ -2157,7 +2157,7 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
   {
     title: 'Head Master',
     email: "8951572125",
-    password: 'diFkRypVqRcQtmkfRLUgww=='
+    password: 'RYO9f1P47qaDuMrj36+doA=='
   },
   {
     title: 'Class Teacher',

@@ -69,6 +69,7 @@ angular.module('greenApiApp')
       allmarks[mi].passmark = school.passmark;
       allmarks[mi].grades = school.grades;
       allmarks[mi].period = school.period;
+      allmarks[mi].maxmark = school.maxmark;
       var common = Object.keys(newdata[0]);
       console.log("Common", common);
       var commonHead = common[0].toLowerCase().split(";");

@@ -38,13 +38,13 @@
 	   </div>	
 	   <div class="form-group" ng-if="school.ranking == 'grade'">
 	      <label for="grades">Grades</label>
-	      <input required="true" type="textarea" class="form-control" ng-model="school.grades" 
+	      <input required="true" type="textarea" class="form-control" ng-model="school.allgrades" 
 	         placeholder="Enter grade and mark">
 	      <p class="help-block">Example "Grade A:60-100,Grade B:50-59,Grade C:40-49,Grade F:0-39"</p>
 	   </div>
-	   	<div class="form-group" ng-if="school.ranking == 'rank'" ng-init="school.grades = '0-39,40-49,50-59,60-100'">
+	   	<div class="form-group" ng-if="school.ranking == 'rank'" ng-init="school.allgrades = '0-39,40-49,50-59,60-100'">
 	      <label for="grades">Mark range</label>
-	      <input required="true" type="textarea" class="form-control" ng-model="school.grades" 
+	      <input required="true" type="textarea" class="form-control" ng-model="school.allgrades" 
 	         placeholder="Enter grade and mark">
 	      <p class="help-block">Example "0-39,40-49,50-59,60-100"</p>
 	   </div>
@@ -59,9 +59,16 @@
 	   </div>
 	   <div class="form-group required">
 	      <label for="passmark">Pass Mark</label>
-	      <input required="true" type="integer" class="form-control" ng-model="school.passmark" 
+	      <input required="true" type="textarea" class="form-control" ng-model="school.allpassmark" 
 	         placeholder="Enter Pass Mark">
-	   </div>	   
+	         <p class="help-block">Example "default:40,11:70,12:70"</p>
+	   </div>
+	   	<div class="form-group">
+	      <label for="grades">Maximum Mark</label>
+	      <input required="true" type="textarea" class="form-control" ng-model="school.maximum" 
+	         placeholder="Enter maximum mark">
+	      <p class="help-block">Example "default:100,11:200,12:200"</p>
+	   </div>	   	   
 	   <div class="form-group required">
 	      <label for="passmark">Academic Period</label>
 	      <input required="true" type="textarea" class="form-control" ng-model="school.period" 

@@ -261,6 +261,7 @@ var senduserdata = function(res, user, data, marksparam) {
         data.schoolid = school._id;
         data.school = user.school;
         data.period = school.period;
+        data.maxmark = school.maxmark;
         console.log("marksparam", marksparam);
         Marks.find(marksparam).sort({_id: 1}).populate('*').exec(function(err, allmarks) {
           var totalmarks = allmarks.length;

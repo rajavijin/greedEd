@@ -109,9 +109,19 @@ exports.create = function(req, res) {
       var total = 0;
       var status = "Pass";
       var studentMark = req.body;
+      var maxmark = studentMark.maxmark[0].max;
+      for (var mm = 0; mm < studentMark.maxmark.length; mm++) {
+        if(studentMark.maxmark[mm].standard == student.standard) maxmark = studentMark.maxmark[mm].max;
+      };
+      var passmark = studentMark.passmark[0].passmark;
+      for (var pm = 0; pm < studentMark.passmark.length; pm++) {
+        if(studentMark.passmark[pm].standard == student.standard) passmark = studentMark.passmark[pm].passmark;
+      };
+      console.log("Passmark", passmark);
+      console.log("maxmark", maxmark);
       studentMark.marks = [];
       student.subjects.forEach(function(sub, si) {
-        studentMark.marks[si] = {subject: sub.subject, teacher: sub.teacher, teacherid:sub.teacherid};
+        studentMark.marks[si] = {subject: sub.subject, teacher: sub.teacher, teacherid:sub.teacherid, maxmark:maxmark, passmark:passmark};
         if(studentMark[sub.subject] == "ab") {
           studentMark.marks[si]["status"] = "absent";
           studentMark.marks[si]["mark"] = 0;
@@ -120,17 +130,17 @@ exports.create = function(req, res) {
           studentMark.marks[si]["status"] = "present";
           studentMark.marks[si]["mark"] = parseInt(studentMark[sub.subject]);
         }
-        total = parseInt(total) + studentMark.marks[si]["mark"];
-        if(studentMark[sub.subject] < studentMark.passmark) {
+        if(studentMark.marks[si]["mark"] < passmark) {
           status = "Fail";
         }
+        total = parseInt(total) + studentMark.marks[si]["mark"];
       })
       studentMark.studentid = student._id;
       studentMark.typeofexam = studentMark.typeofexam.toLowerCase();
       studentMark.subjects = student.subjects;
       studentMark.status = status;
       studentMark.total = total;
-      studentMark.percentage = (total * (100/(student.subjects.length*100))).toPrecision(4);
+      studentMark.percentage = (total * (100/(student.subjects.length*maxmark))).toPrecision(4);
       studentMark.grades.forEach(function(gv, gk) {
         if((studentMark.percentage >= gv.lesser) && ((studentMark.percentage <= gv.greater))) {
           studentMark.grade = (status == "Fail") ? "Grade F" : gv.grade;
