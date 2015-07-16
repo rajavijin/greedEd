@@ -533,8 +533,10 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
     if(v.status == "Pass") pass++;
     if(v.status == "Fail") fail++;
     var key = v.standard+'-'+v.division;
+    console.log("mark", v.marks.length);
     for (var i = 0; i < v.marks.length; i++) {
-      if(v.marks[i].teacher == teacher) {
+      console.log("key", key);
+      if(v.marks[i].teacherid == $stateParams.teacherid) {
         key += ':'+v.marks[i].subject;
       if(allsubjects.indexOf(key) == -1) {
         allsubjects.push(key);
@@ -585,7 +587,8 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
     var topperS = [];
     var toppersList = [];
     console.log("Toppers", toppers);
-    console.log("Subject Toppers", topperS);
+    console.log("Subject Data Pass", subjectDataPass);
+    console.log("Subject Data Fail", subjectDataFail);
     for(var topv in toppers) {
       toppersList.push(toppers[topv]);
     }
@@ -2164,7 +2167,7 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
   {
     title: 'Head Master',
     email: "8951572125",
-    password: '5+2aKHVCyvk1mJT9G2wjOA=='
+    password: 'AlPp/kgFOwUdBUhuga39Ig=='
   },
   {
     title: 'Class Teacher',

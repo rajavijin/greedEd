@@ -12,7 +12,7 @@
    <ion-content class="has-header">
       <div ng-if="filterStatus" style="height:44px;"></div>
       <ion-list>
-         <ion-item ng-repeat="user in users | filter:query.search.value | orderBy:['rank','total']" class="item item-icon-left positive" href="#/app/studentdashboard/{{user.studentid}}/{{user.student}}">
+         <ion-item ng-repeat="user in users | filter:query.search.value | orderBy:['rank','total','standard']" class="item item-icon-left positive" href="#/app/studentdashboard/{{user.studentid}}/{{user.student}}">
             <i class="icon ion-person"></i>
             <h2>{{user.standard}}<span ng-hide="user.division == 'all'">{{user.division}}</span> : {{user.student}}</h2>
          </ion-item>

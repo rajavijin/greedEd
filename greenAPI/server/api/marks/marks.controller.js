@@ -149,9 +149,10 @@ exports.create = function(req, res) {
       studentMark.subjects = student.subjects;
       studentMark.status = status;
       studentMark.total = total;
-      studentMark.percentage = (total * (100/(student.subjects.length*maxmark))).toPrecision(4);
+      studentMark.percentage = (total * (100/(student.subjects.length*maxmark))).toPrecision(2);
       studentMark.grades.forEach(function(gv, gk) {
-        if((studentMark.percentage >= gv.lesser) && ((studentMark.percentage <= gv.greater))) {
+        var mpercentage = Math.floor(studentMark.percentage);
+        if((mpercentage >= gv.lesser) && ((mpercentage <= gv.greater))) {
           studentMark.grade = (status == "Fail") ? "Grade F" : gv.grade;
         }
       })
