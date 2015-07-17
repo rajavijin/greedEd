@@ -15,8 +15,8 @@
                 <div class="list">
 <a class="item item-icon-left" href="#/app/messages/{{message.chatname}}/{{message.to[0].id}}/{{message.to[0].name}}/{{message.userId}}/{{message.name}}/{{message.type}}" ng-repeat="message in messages | filter:query.search.value">
     <i class="icon ion-chatbubble-working"></i>
-    {{message.to[0].name}}
-    <span ng-if="message.seencount > 0" class="badge badge-assertive">{{message.seencount}}</span>
+    <h2>{{message.to[0].name}}
+    <span ng-if="message.seencount > 0" class="badge badge-assertive">{{message.seencount}}</span></h2>
   </a>
 </div>
                 </ion-content>
@@ -28,7 +28,7 @@
                 <div class="list">
   <a ng-click="toMessageBox(contact)" ng-class="group ? 'item-toggle': ''" class="item item-icon-left" ng-repeat="contact in contacts | filter:query.search.value | orderBy:['role','toName']">
   <i class="icon positive" ng-class="{'ion-easel' : contact.role == 'class', 'ion-person' : contact.role == 'student', 'ion-ios-body' : contact.role == 'teacher', 'ion-android-person' : contact.role == 'hm'}"></i>
-     {{contact.toName}}
+     <h2>{{contact.toName}}</h2>
 <!--      <label class="toggle toggle-positive" ng-show="group">
        <input type="checkbox" ng-model="to[class.name]">
        <div class="track">

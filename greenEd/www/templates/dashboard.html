@@ -10,7 +10,7 @@
       <chart id="toppersubjects" config="topperSubjectsConfig" ng-if="dashboardStatus != 'empty'"></chart>
       <div class="list">
       <a class="item item-icon-left first" href="#/app/studentdashboard/{{v.studentid}}/{{v.student}}" ng-repeat="(k, v) in toppers | orderBy: 'total':'reverse'" ng-if="dashboardStatus != 'empty'">
-      <i class="icon ion-trophy positive"></i> {{v.student}} <span class="badge badge-positive">{{v.total}}</span></a>
-      <a class="item item-icon-left" href="#" ng-if="dashboardStatus == 'empty'"><i class="icon ion-compose positive"></i> No marks added yet</a> <a class="item item-icon-left" href="#/app/allstudents/{{standard}}/{{division}}/all/all"><i class="icon ion-person positive"></i> View all students</a> <a ng-show="access" class="item item-icon-left" href="#/app/classprofile/{{standard}}/{{division}}"><i class="icon ion-easel positive"></i> View class profile</a></div>
+      <i class="icon ion-trophy positive"></i> <h2>{{v.student}}</h2> <span class="badge badge-positive">{{v.total}}</span></a>
+      <a class="item item-icon-left" href="#" ng-if="dashboardStatus == 'empty'"><i class="icon ion-compose positive"></i> <h2>No marks added yet</h2></a> <a class="item item-icon-left" href="#/app/allstudents/{{standard}}/{{division}}/all/all"><i class="icon ion-person positive"></i> <h2>View all students</h2></a> <a ng-show="access" class="item item-icon-left" href="#/app/classprofile/{{standard}}/{{division}}"><i class="icon ion-easel positive"></i> <h2>View class profile</h2></a></div>
    </ion-content>
 </ion-view>

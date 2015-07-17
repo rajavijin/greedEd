@@ -56,15 +56,16 @@ exports.listUsers = function(req, res) {
     params.marks = {$elemMatch:{subject:params.subject,level:params.status}};
 /*    if(params.status == "Pass") params.marks = {$elemMatch:{subject:params.subject,level:{$gte:parseInt(params.mark)}}};
     else params.marks = {$elemMatch:{subject:params.subject,mark:{$lt:parseInt(params.mark)}}};*/
-    delete params.subject;
-    delete params.status;
   }
-  delete params.mark;
   if(params.standard == "teacher") {
     params.marks = {$elemMatch:{teacherid:params.division}};
+    if(params.status) params.marks = {$elemMatch:{teacherid:params.division, level:params.status}};
     delete params.standard;
     delete params.division;
   }
+  delete params.subject;
+  delete params.status;
+  delete params.mark;
   console.log("before fetch", params);
 /*  Marks.distinct('studentid', params, function (err, allusers) {
     if(allusers.length > 0) {

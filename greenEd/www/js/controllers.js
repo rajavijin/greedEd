@@ -2,8 +2,8 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
 
 .constant("myConfig", 
   {
-    "base": "http://localhost", 
-    "server":"http://localhost:8100",
+    "base": "http://192.168.1.4:8100", 
+    "server":"http://192.168.1.4:9000",
 /*    "base": "http://52.27.236.42", 
     "server":"http://52.27.236.42",*/
  })
@@ -22,6 +22,8 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
   if(localStorage.getItem('filterdata')) {
     filtersData = JSON.parse(localStorage.getItem('filterdata'));
   } else {
+    if(!user.years) user.years = [];
+    if(!user.typeofexams) user.typeofexams = [];
     filtersData.years = user.years;
     filtersData.educationyear = user.years.indexOf(user.educationyear);
     if(user.typeofexams.length > 0) {
@@ -530,8 +532,8 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
     }
   }
   var processMarksVal = function(v, k, status) {
-    if(v.status == "Pass") pass++;
-    if(v.status == "Fail") fail++;
+    /*if(v.status == "Pass") pass++;
+    if(v.status == "Fail") fail++;*/
     var key = v.standard+'-'+v.division;
     console.log("mark", v.marks.length);
     for (var i = 0; i < v.marks.length; i++) {
@@ -545,8 +547,10 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
       subjectDataFail[key] = (subjectDataFail[key]) ? subjectDataFail[key] : 0;   
       if(v.marks[i].mark >= v.marks[i].passmark) {
         subjectDataPass[key]++;
+        pass++;
       } else {
         subjectDataFail[key]++;
+        fail++;
       }
       if(subjectDataMarks[key]) {
         subjectDataMarks[key] = parseInt(v.marks[i].mark) + subjectDataMarks[key];
@@ -616,17 +620,17 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
     };
     $scope.tpassfailConfig = {
       chart: {renderTo: 'tpassfailstatus',type: 'pie',height:200,options3d:{enabled: true,alpha: 45,beta: 0},},
-      title: {text:"Pass/Fail"},plotOptions: {series:{cursor:'pointer',events:{click:function(event){$state.go("app.studentsfiltered", {year:params.year,typeofexam:params.typeofexam,standard:"teacher",division:teacher,status:event.point.name,subject:"all"});}}},pie: {innerSize: 50,depth: 35,dataLabels:{enabled: true,format: '{point.name}: <b>{point.y}</b>'}}},
+      title: {text:"Pass/Fail"},plotOptions: {series:{cursor:'pointer',events:{click:function(event){$state.go("app.studentsfiltered", {year:params.year,typeofexam:params.typeofexam,standard:"teacher",division:teacher+'_'+$stateParams.teacher+'_teacherlist',status:event.point.name,subject:"all"});}}},pie: {innerSize: 50,depth: 35,dataLabels:{enabled: true,format: '{point.name}: <b>{point.y}</b>'}}},
       series: [{type: 'pie',name: 'Total',data: [["Pass", pass],["Fail", fail]]}]
     };
     $scope.tgradeConfig = {
       chart: {renderTo: 'tgrades',type: 'pie',height: 200,options3d:{enabled: true,alpha: 45,beta: 0}},
-      title: {text:"Grades"},plotOptions: {series:{cursor:'pointer',events:{click:function(event){$state.go("app.studentsfiltered", {year:params.year,typeofexam:params.typeofexam,standard:"teacher",division:teacher,status:"all",subject:"all",grade:event.point.name});}}},pie: {innerSize: 0,depth: 35,dataLabels:{enabled: true,format: '{point.name}: <b>{point.y}</b>'}}},
+      title: {text:"Grades"},plotOptions: {series:{cursor:'pointer',events:{click:function(event){$state.go("app.studentsfiltered", {year:params.year,typeofexam:params.typeofexam,standard:"teacher",division:teacher+'_'+$stateParams.teacher+'_teacherlist',status:"all",subject:"all",grade:event.point.name});}}},pie: {innerSize: 0,depth: 35,dataLabels:{enabled: true,format: '{point.name}: <b>{point.y}</b>'}}},
       series: [{type: 'pie',name: 'Total',data: gradeVal}]
     };
     $scope.tsubjectsConfig = {
       chart: {renderTo: 'tsubjects',type: 'column', options3d: {enabled: true,alpha: 10,beta: 20,depth: 50}},
-      title: {text:"Subjects Pass/Fail"},plotOptions: {series:{cursor:'pointer',events:{click:function(event){var cat = event.point.category.split(':'); var cla = cat[0].split("-");$state.go("app.studentsfiltered", {year:params.year,typeofexam:params.typeofexam,standard:cla[0],division:cla[1],status:event.point.name,subject:cat[1]});}}},column: {depth: 25,dataLabels: {enabled: true,format: '{point.y}'}}},
+      title: {text:"Subjects Pass/Fail"},plotOptions: {series:{cursor:'pointer',events:{click:function(event){var cat = event.point.category.split(':'); var cla = cat[0].split("-");$state.go("app.studentsfiltered", {year:params.year,typeofexam:params.typeofexam,standard:cla[0],division:cla[1]+'_'+$stateParams.teacher+'_teacherlist',status:event.point.name,subject:cat[1]});}}},column: {depth: 25,dataLabels: {enabled: true,format: '{point.y}'}}},
       xAxis: {categories: allsubjects},
       yAxis: {title: {text: null}},
       series: [{name: 'Pass',data: passvals},{name: 'Fail',data: failvals}]
@@ -794,11 +798,17 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
   $scope.filtersData = filtersData;
   $scope.filterToggle = function() {$scope.filterStatus = !$scope.filterStatus;}
   $scope.getStudentsData = function() {
+    console.log("state Params", $stateParams);
     var params = $stateParams;
     params.schoolid = user.schoolid;
     params.typeofexam = filtersData.typeofexams[params.typeofexam];
     params.mark = "all";
     if(params.standard != "all") title = params.standard +'/'+params.division;
+    if(params.division.indexOf("teacherlist") >= 0) {
+      var tt = params.division.split("_");
+      params.division = tt[0];
+      title = (params.standard == "teacher") ? tt[1] : params.standard +'/'+params.division;
+    }
     title += " "+params.typeofexam;
     if(params.subject != "all") title += " "+params.subject;
     if(params.status != "all") title += " "+params.status;
@@ -1867,7 +1877,8 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
       if(users[i].role == 'student') {
         if(indexes.indexOf(users[i].standard+'-'+users[i].division) == -1) {
           indexes.push(users[i].standard+'-'+users[i].division);
-          AllContacts.push({id:users[i].standard+"-"+users[i].division,toName:users[i].standard+'-'+users[i].division,toId:users[i].standard+'-'+users[i].division,role:"class",type:"group",userId:params.userId,name:params.name});
+          var toname = (users[i].division == 'all') ? users[i].standard : users[i].standard+'-'+users[i].division;
+          AllContacts.push({id:users[i].standard+"-"+users[i].division,toName:toname,toId:users[i].standard+'-'+users[i].division,role:"class",type:"group",userId:params.userId,name:params.name});
         }
         AllContacts.push({id:params.userId+"-"+users[i]._id,toName:"Parent of "+users[i].name,toId:users[i]._id,role:users[i].role,type:"single",userId:params.userId,name:params.name});
       } else if (users[i].role == 'hm') {
