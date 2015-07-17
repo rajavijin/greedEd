@@ -1,7 +1,7 @@
 "EducationYear","TypeOfExam","Division","Standard",,,,,,,
 "2015-2016","Periodical1","All",7,,,,,,,
 ,,,,,,,,,,
-"Student","StudentID","Malayalam","Tamil","English","Hindi","Math","Science","Social","Attendence","Remarks"
+"Student","StudentID","Malayalam","Tamil","English","Hindi","Math","Science","Social","Attendance","Remarks"
 "A.Athira",700001,81,,88,77,91,86,90,"30/30","Very Good"
 "S.N.Adarsh",700002,,62,60,59,61,56,57,"30/30","Need Improvement"
 "B.Anitha",700003,,89,88,90,94,95,96,"30/30","Very Good"
