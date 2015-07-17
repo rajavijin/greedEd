@@ -1,5 +1,5 @@
 "EducationYear";"TypeOfExam";"Division";"Standard";;;;;;;
-"2015-2016";"Periodical1";"All";8;;;;;;;
+"2015-2016";"Periodical2";"All";8;;;;;;;
 ;;;;;;;;;;
 "Student";"StudentID";"Malayalam";"Tamil";"English";"Hindi";"Math";"Science";"Social";"Attendance";"Remarks"
 "S.Anish";800001;;71;72;78;81;79;80;"29/30";"Good"
@@ -40,7 +40,7 @@
 "S.Renuga Devi";800036;90;;92;93;96;98;90;"29/30";"Very Good"
 "S.Sindhu";800037;71;;77;78;89;76;81;"29/30";"Good"
 "S.Santosh";800038;;61;44;37;45;56;54;"28/30";"Poor"
-"M.Teena";800039;;61;66;56;"ab";78;71;"26/30";"Dont take leaves"
+"M.Teena";800039;;61;66;56;"ab";78;71;"26/30";"Dont take leave"
 "M.Umesh";800040;;78;80;78;77;81;84;"29/30";"Good"
 "A.Vijay Kumar";800041;66;;56;67;54;51;57;"30/30";"Need Improvement"
 "M.Viji";800042;77;;72;76;69;78;81;"29/30";"Good"
