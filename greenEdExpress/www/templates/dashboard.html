@@ -1,0 +1,16 @@
+<ion-view cache-view="false" title="{{title}}" ng-init="getMarksData()">
+   <ion-header-bar class="bar-positive">
+      <h1 class="title">Pull to Refresh!</h1>
+   </ion-header-bar>
+   <ion-content class="has-header">
+      <ion-refresher pulling-text="Pull to refresh" on-refresh="getMarksData()"></ion-refresher>
+      <chart id="tpassfailstatus" config="tpassfailConfig" ng-if="dashboardStatus != 'empty'" class="noclick"></chart>
+      <chart id="tsubjects" config="tsubjectsConfig" ng-if="dashboardStatus != 'empty'"></chart>
+      <chart id="tgrades" config="tgradeConfig" ng-if="dashboardStatus != 'empty'" class="noclick"></chart>
+      <chart id="toppersubjects" config="topperSubjectsConfig" ng-if="dashboardStatus != 'empty'"></chart>
+      <div class="list">
+      <a class="item item-icon-left first" href="#/app/studentdashboard/{{v.studentid}}/{{v.student}}" ng-repeat="(k, v) in toppers | orderBy: 'total':'reverse'" ng-if="dashboardStatus != 'empty'">
+      <i class="icon ion-trophy positive"></i> <h2>{{v.student}}</h2> <span class="badge badge-positive">{{v.total}}</span></a>
+      <a class="item item-icon-left" href="#" ng-if="dashboardStatus == 'empty'"><i class="icon ion-compose positive"></i> <h2>No marks added yet</h2></a> <a class="item item-icon-left" href="#/app/allstudents/{{standard}}/{{division}}/all/all"><i class="icon ion-person positive"></i> <h2>View all students</h2></a> <a ng-show="access" class="item item-icon-left" href="#/app/classprofile/{{standard}}/{{division}}"><i class="icon ion-easel positive"></i> <h2>View class profile</h2></a></div>
+   </ion-content>
+</ion-view>

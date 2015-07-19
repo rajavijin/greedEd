@@ -1,45 +1,43 @@
-"Standard";"Teacher";"TeacherPhone";"TypeOfExams";"CommonSubjects";;
-6;"Prashanth";9496255106;"periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual";"english:Anitha,math:Prashanth,science:Jothi,social:Rajesh,hindi:Divya";;
+Standard;Teacher;TeacherPhone;TypeOfExams;CommonSubjects;;
+6;Prashanth;9496255106;periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual;english:Anitha,math:Prashanth,science:Jothi,social:Rajesh,hindi:Divya;;
 ;;;;;;
-"Student";"StudentID";"Sex";"Address";"Parent";"ParentPhone";"SecondLanguage"
-"R.S.Abhilash";600001;"Male";"Bhavani Nivas, Nithravilai Post";"A.Ramachandran";9944711000;"malayalam:Stephen"
-"A.R.Anil";600002;"Male";"Anil Villa, Kollemcode";"S.Arvind";9944711001;"tamil:Sudha"
-"S.C.Anjali";600003;"Female";"Chaithanya, Kanjampuram";"R.Sudheesh";9944711002;"tamil:Sudha"
-"C.V.Athira";600004;"Female";"Ananya Bhavan, Attinkara";"D.Chandran";9944711003;"tamil:Sudha"
-"S.S.Athulya";600005;"Female";"Anjali Nivas, Kannanakam, Kollemcode";"A.Suresh";9944711004;"tamil:Sudha"
-"B.N.Biju";600006;"Male";"Bijoj Bhavan, Medavilakom";"A.N.Bijoj";9944711005;"malayalam:Stephen"
-"N.A.Bindhu";600007;"Female";"Bindhu Bhavan, Kanjampuram";"S.V.Niranjan";9944711006;"tamil:Sudha"
-"D.V.Binu";600008;"Male";"Vidhya Bhavan, Marthandam";"V.S.Dhanesh";9944711007;"tamil:Sudha"
-"C.S.Bhavana";600009;"Female";"Bhavana, Neerodi";"V.A.Cibi";9944711008;"malayalam:Stephen"
-"A.N.Brindha";600010;"Female";"Brindha Nivas, Kaliyikavilai";"S.S.Ajay";9944711009;"tamil:Sudha"
-"C.S.Chandhini";600011;"Female";"Latha Bhavan, Kollemcode";"A.S.Sudheer";9944711010;"malayalam:Stephen"
-"A.L.Chandrika";600012;"Female";"Chandra Vilas, Marthandam";"B.L.Arjun";9944711011;"tamil:Sudha"
-"V.A.Daniel";600013;"Male";"Varghese Bhavan, Vallavilai";"A.D.Varghese";9944711012;"tamil:Sudha"
-"S.S.Dhanya";600014;"Female";"Dhanya Bhavan, Nagercoil";"A.S.Subhash";9944711013;"tamil:Sudha"
-"B.S.Deepthi";600015;"Female";"Deepthi Nivas, Kollemcode";"A.A.Binu";9944711014;"malayalam:Stephen"
-"A.Eugene";600016;"Male";"Eugene Bhavan, Kannanakam";"S.Antony";9944711015;"tamil:Sudha"
-"S.Esther";600017;"Female";"Stephen Villa, Thoothoor";"A.Sahaya";9944711016;"tamil:Sudha"
-"A.Ferdinand";600018;"Male";"Freddy Nivas, Chinnathurai";"S.Anto";9944711017;"malayalam:Stephen"
-"S.Franklin";600019;"Male";"Anto Bhavan, Marthandam";"N.Sebastain";9944711018;"tamil:Sudha"
-"N.Freddy";600020;"Male";"Freddy Villa, Vallavilai";"S.Nixon";9944711019;"tamil:Sudha"
-"R.S.Gayathri";600021;"Female";"Gaya, Kollemcode";"S.Rajesh";9944711020;"malayalam:Stephen"
-"S.S.Ganesh Kumar";600022;"Male";"Kailasam, Nithravilai";"A.Sundaran Nair";9944711021;"tamil:Sudha"
-"A.Hema";600023;"Female";"Hema Bhavan, Kollemcode";"S.Arjunan";9944711022;"malayalam:Stephen"
-"S.S.Indrajith";600024;"Male";"Gayathri, Marthandam";"A.Surendran";9944711023;"tamil:Sudha"
-"R.Indira";600025;"Female";"Vasantha Bhavan, Vaikaloor";"B.S.Rajendran";9944711024;"tamil:Sudha"
-"S.Jeni";600026;"Female";"Jeni Villa, Chinnathurai";"S.Shinto";9944711025;"tamil:Sudha"
-"M.Kavitha";600027;"Female";"Kavitha Bhavan, Kollemcode";"S.Manoj";9944711026;"tamil:Sudha"
-"K.Kiran";600028;"Male";"Kavitha, Parashala";"K.Krishnan";9944711027;"malayalam:Stephen"
-"D.Lingston";600029;"Male";"Lingston Villa, Chinnathurai";"A.Dason";9944711028;"tamil:Sudha"
-"S.Manoj";600030;"Male";"Manoj Bhavan, Kuzhithurai";"A.Shabu";9944711029;"tamil:Sudha"
-"A.Mridhula";600031;"Female";"Mridhula Bhavan, Kollemcode";"R.Akash";9944711030;"malayalam:Stephen"
-"F.Mejo";600032;"Male";"Mejo Villa, Poothurai";"A.Freddy";9944711031;"tamil:Sudha"
-"S.Prakash";600033;"Male";"Praveen Bhavan, Kollemcode";"S.Sudhagar";9944711032;"tamil:Sudha"
-"A.Rahman";600034;"Male";"Rahman Manzil, Nambaly";"M.Abdul";9944711033;"tamil:Sudha"
-"V.A.Rajesh";600035;"Male";"Rajesh Bhavan, Nithravilai";"S.Vijayan";9944711034;"tamil:Sudha"
-"C.S.Reshmi";600036;"Female";"Resmi Bhavan, Kannanakam";"S.S.Chandra Lekha";9944711035;"malayalam:Stephen"
-"A.Suresh";600037;"Male";"Arjun Villa, Kollemcode";"V.Anu";9944711036;"tamil:Sudha"
-"S.N.Suresh";600038;"Male";"Suresh Bhavan, Nithravilai";"A.Sangeeth";9944711037;"malayalam:Stephen"
-"A.Tushara";600039;"Female";"Harshid Nivas, Kirathoor";"S.Adarsh";9944711038;"tamil:Sudha"
-"N.Ujin";600040;"Male";"Ujin Bhavan, Marthandam";"M.Nikhil";9944711039;"tamil:Sudha"
-"M.Vijay";600041;"Male";"Vijay Villa, Nadaikkavu";"S.Mahesh";9944711040;"malayalam:Stephen"
+Student;StudentID;Sex;Address;Parent;ParentPhone;SecondLanguage
+S.C.Anjali;600003;Female;Chaithanya, Kanjampuram;R.Sudheesh;9944711002;tamil:Sudha
+C.V.Athira;600004;Female;Ananya Bhavan, Attinkara;D.Chandran;9944711003;tamil:Sudha
+S.S.Athulya;600005;Female;Anjali Nivas, Kannanakam, Kollemcode;A.Suresh;9944711004;tamil:Sudha
+B.N.Biju;600006;Male;Bijoj Bhavan, Medavilakom;A.N.Bijoj;9944711005;malayalam:Stephen
+N.A.Bindhu;600007;Female;Bindhu Bhavan, Kanjampuram;S.V.Niranjan;9944711006;tamil:Sudha
+D.V.Binu;600008;Male;Vidhya Bhavan, Marthandam;V.S.Dhanesh;9944711007;tamil:Sudha
+C.S.Bhavana;600009;Female;Bhavana, Neerodi;V.A.Cibi;9944711008;malayalam:Stephen
+A.N.Brindha;600010;Female;Brindha Nivas, Kaliyikavilai;S.S.Ajay;9944711009;tamil:Sudha
+C.S.Chandhini;600011;Female;Latha Bhavan, Kollemcode;A.S.Sudheer;9944711010;malayalam:Stephen
+A.L.Chandrika;600012;Female;Chandra Vilas, Marthandam;B.L.Arjun;9944711011;tamil:Sudha
+V.A.Daniel;600013;Male;Varghese Bhavan, Vallavilai;A.D.Varghese;9944711012;tamil:Sudha
+S.S.Dhanya;600014;Female;Dhanya Bhavan, Nagercoil;A.S.Subhash;9944711013;tamil:Sudha
+B.S.Deepthi;600015;Female;Deepthi Nivas, Kollemcode;A.A.Binu;9944711014;malayalam:Stephen
+A.Eugene;600016;Male;Eugene Bhavan, Kannanakam;S.Antony;9944711015;tamil:Sudha
+S.Esther;600017;Female;Stephen Villa, Thoothoor;A.Sahaya;9944711016;tamil:Sudha
+A.Ferdinand;600018;Male;Freddy Nivas, Chinnathurai;S.Anto;9944711017;malayalam:Stephen
+S.Franklin;600019;Male;Anto Bhavan, Marthandam;N.Sebastain;9944711018;tamil:Sudha
+N.Freddy;600020;Male;Freddy Villa, Vallavilai;S.Nixon;9944711019;tamil:Sudha
+R.S.Gayathri;600021;Female;Gaya, Kollemcode;S.Rajesh;9944711020;malayalam:Stephen
+S.S.Ganesh Kumar;600022;Male;Kailasam, Nithravilai;A.Sundaran Nair;9944711021;tamil:Sudha
+A.Hema;600023;Female;Hema Bhavan, Kollemcode;S.Arjunan;9944711022;malayalam:Stephen
+S.S.Indrajith;600024;Male;Gayathri, Marthandam;A.Surendran;9944711023;tamil:Sudha
+R.Indira;600025;Female;Vasantha Bhavan, Vaikaloor;B.S.Rajendran;9944711024;tamil:Sudha
+S.Jeni;600026;Female;Jeni Villa, Chinnathurai;S.Shinto;9944711025;tamil:Sudha
+M.Kavitha;600027;Female;Kavitha Bhavan, Kollemcode;S.Manoj;9944711026;tamil:Sudha
+K.Kiran;600028;Male;Kavitha, Parashala;K.Krishnan;9944711027;malayalam:Stephen
+D.Lingston;600029;Male;Lingston Villa, Chinnathurai;A.Dason;9944711028;tamil:Sudha
+S.Manoj;600030;Male;Manoj Bhavan, Kuzhithurai;A.Shabu;9944711029;tamil:Sudha
+A.Mridhula;600031;Female;Mridhula Bhavan, Kollemcode;R.Akash;9944711030;malayalam:Stephen
+F.Mejo;600032;Male;Mejo Villa, Poothurai;A.Freddy;9944711031;tamil:Sudha
+S.Prakash;600033;Male;Praveen Bhavan, Kollemcode;S.Sudhagar;9944711032;tamil:Sudha
+A.Rahman;600034;Male;Rahman Manzil, Nambaly;M.Abdul;9944711033;tamil:Sudha
+V.A.Rajesh;600035;Male;Rajesh Bhavan, Nithravilai;S.Vijayan;9944711034;tamil:Sudha
+C.S.Reshmi;600036;Female;Resmi Bhavan, Kannanakam;S.S.Chandra Lekha;9944711035;malayalam:Stephen
+A.Suresh;600037;Male;Arjun Villa, Kollemcode;V.Anu;9944711036;tamil:Sudha
+S.N.Suresh;600038;Male;Suresh Bhavan, Nithravilai;A.Sangeeth;9944711037;malayalam:Stephen
+A.Tushara;600039;Female;Harshid Nivas, Kirathoor;S.Adarsh;9944711038;tamil:Sudha
+N.Ujin;600040;Male;Ujin Bhavan, Marthandam;M.Nikhil;9944711039;tamil:Sudha
+M.Vijay;600041;Male;Vijay Villa, Nadaikkavu;S.Mahesh;9944711040;malayalam:Stephen

@@ -1,25 +1,4 @@
 {
   "name": "greenEd",
-  "app_id": "e6a31325",
-  "proxies": [
-    {
-      "path": "/api",
-      "proxyUrl": "http://192.168.1.4:9000/api"
-    }
-  ],
-  "gulpStartupTasks": [
-    "sass",
-    "watch"
-  ],
-  "watchPatterns": [
-    "www/**/*",
-    "!www/lib/**/*"
-  ],
-  "browsers": [
-    {
-      "platform": "android",
-      "browser": "crosswalk",
-      "version": "12.41.296.5"
-    }
-  ]
+  "app_id": ""
 }
