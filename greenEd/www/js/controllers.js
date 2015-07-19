@@ -37,15 +37,36 @@ angular.module('starter.controllers', ['starter.services'])
 })
 
 .controller("AllClassesCtrl", function($scope) {
-
+  console.log("Classes", allusers["classes"]);
+  $scope.filterToggle = function() {$scope.filterStatus = !$scope.filterStatus;}
+  if(allusers["classes"]) {
+    $scope.allClasses = true;
+    $scope.classes = allusers["classes"];
+  } else {
+    $scope.allClasses = false;
+  }
 })
 
 .controller("AllStudentsCtrl", function($scope) {
-
+  console.log("Students", allusers["students"]);
+  $scope.filterToggle = function() {$scope.filterStatus = !$scope.filterStatus;}
+  if(allusers["students"]) {
+    $scope.allStudentsStatus = true;
+    $scope.users = allusers["students"];
+  } else {
+    $scope.allStudentsStatus = false;
+  }
 })
 
 .controller("AllTeachersCtrl", function($scope) {
-
+  console.log("Teachers", allusers["teachers"])
+  $scope.filterToggle = function() {$scope.filterStatus = !$scope.filterStatus;}
+  if(allusers["teachers"]) {
+    $scope.allStudentsStatus = true;
+    $scope.users = allusers["teachers"];
+  } else {
+    $scope.allStudentsStatus = false;
+  }
 })
 
 .controller('SignInCtrl', function($scope, $rootScope, $firebaseAuth, $firebaseObject, $state, $ionicLoading, $ionicPopup) {

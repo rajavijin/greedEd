@@ -1,6 +1,6 @@
 // Ionic Starter App
 var user = {};
-var allusers = {};
+var allusers = {classes:{},students:{},teachers:{}};
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
@@ -91,15 +91,24 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers'])
         $rootScope.updateMenu = true;
         authRef.child('users/'+userdetails.uid).once("value", function(snapshot) {
           user = snapshot.val();
+
           console.log("CURRENT USER:", user);
           authRef.child('users').orderByChild("schoolid").equalTo(user.schoolid)
           .once('value', function(snap) { 
               var fbusers = snap.val();
               for(var fbuser in fbusers) {
-                
+                if(fbusers[fbuser].role == "student") {
+                  allusers["students"][fbuser] = fbusers[fbuser];
+                  allusers["classes"][fbusers[fbuser].standard+'-'+fbusers[fbuser].division] = {standard:fbusers[fbuser].standard, division:fbusers[fbuser].division};
+                  if(fbusers[fbuser].division != "all") {
+                    allusers["classes"][fbusers[fbuser].standard] = {standard:fbusers[fbuser].standard, division:fbusers[fbuser].division};
+                  }
+                } else if (fbusers[fbuser].role == "teacher") {
+                  allusers["teachers"][fbuser] = fbusers[fbuser];
+                }
               }
-              console.log("all students", snap.val()); 
           });
+              console.log("ALL USERS", allusers); 
           $ionicLoading.hide();
           if(user.role == "hm") {
             $state.go("app.hmdashboard", {}, {'reload': true});

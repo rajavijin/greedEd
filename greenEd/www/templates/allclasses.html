@@ -1,4 +1,4 @@
-<ion-view title="Classes" ng-init="getClassesData()" hide-nav-bar="filterStatus">
+<ion-view title="Classes" hide-nav-bar="filterStatus">
 <div class="bar bar-header item-input-inset header-search bar-positive padding" ng-show="filterStatus">
   	<ion-search placeholder="Search" filter="query.search"></ion-search>
   	<div class="buttons buttons-right header-item"><span class="right-buttons">
@@ -15,9 +15,9 @@
             <ion-search placeholder="Search" filter="query.search"></ion-search>
          </div> -->
       <div class="list" ng-if="allClasses == true">
-         <a class="item item-icon-left positive" alt="teacher" collection-repeat="user in users | filter:query.search.value | orderBy:'classd'" href="#/app/dashboard/{{user.standard}}/{{user.d}}">
+         <a class="item item-icon-left positive" alt="teacher" ng-repeat="class in classes" href="#/app/dashboard/{{class.standard}}/{{class.d}}">
             <i class="icon ion-easel"></i>
-            <h2>{{user.standard}}{{user.division}}</h2>
+            <h2>{{class.standard}}<span ng-hide="class.division == 'all'">{{class.division}}</span></h2>
          </a>
       </div>
       <div class="list" ng-if="allClasses == false">
