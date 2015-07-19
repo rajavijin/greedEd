@@ -1,7 +1,7 @@
 "EducationYear";"TypeOfExam";"Division";"Standard";;;;;;;
-"2015-2016";"Periodical1";"All";7;;;;;;;
+"2015-2016";"Periodical2";"All";7;;;;;;;
 ;;;;;;;;;;
-"Student";"StudentID";"Malayalam";"Tamil";"English";"Hindi";"Math";"Science";"Social";"Attendence";"Remarks"
+"Student";"StudentID";"Malayalam";"Tamil";"English";"Hindi";"Math";"Science";"Social";"Attendance";"Remarks"
 "A.Athira";700001;77;;82;80;94;92;83;"29/30";"Very Good"
 "S.N.Adarsh";700002;;71;72;67;81;76;80;"29/30";"Good"
 "B.Anitha";700003;;90;91;87;100;93;90;"29/30";"Very Good"
