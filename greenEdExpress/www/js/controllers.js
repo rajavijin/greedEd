@@ -2,10 +2,10 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
 
 .constant("myConfig", 
   {
-/*    "base": "http://192.168.1.4:8100", 
-    "server":"http://192.168.1.4:9000",*/
-    "base": "http://52.27.236.42", 
-    "server":"http://52.27.236.42",
+    "base": "http://10.42.0.85:8100", 
+    "server":"http://10.42.0.85:9000",
+/*    "base": "http://52.27.236.42", 
+    "server":"http://52.27.236.42",*/
  })
 //.constant("myConfig", {"base": "http://52.25.97.15", "server":"http://52.25.97.15"})
 .controller('AppCtrl', function($scope, $rootScope, $state, $window, $ionicAnalytics, MyService) {

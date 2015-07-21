@@ -1,13 +1,16 @@
 angular.module('starter.controllers', ['starter.services'])
 
 .controller('AppCtrl', function($scope, $rootScope, MyService) {
-  console.log("user", user);
+  if(!user && localStorage.getItem("uid")) {
+    $rootScope.login({uid:localStorage.getItem("uid")});
+  }
   if(user && $rootScope.updateMenu) {
     console.log("updating menu");
     $scope.menuLinks = MyService.getMenus();
     console.log("menu items", $scope.menuLinks);
     $rootScope.updateMenu = false;
   }
+
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
   // To listen for when this page is active (for example, to refresh data),
@@ -16,8 +19,146 @@ angular.module('starter.controllers', ['starter.services'])
   //});
 })
 
-.controller("HmDashboardCtrl", function($scope) {
+.controller("HmDashboardCtrl", function($scope, $firebaseArray, $rootScope, myCache, $ionicModal) {
+  var count = 0;
+  $scope.filters = {};
+  $scope.dashboardFilters = function() {
+    console.log("Filters", $scope.filters);
+    key = $scope.filters.educationyear +'_'+ $scope.filters.typeofexam;
+    $scope.getMarksData(true);
+    $scope.closeModal();
+  }
 
+  $ionicModal.fromTemplateUrl('templates/dashboardFilters.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
+
+  $scope.openModal = function() {
+    $scope.modal.show();
+  };
+
+  $scope.closeModal = function() {
+    $scope.modal.hide();
+  };
+
+/*  //Cleanup the modal when we're done with it!
+  $scope.$on('$destroy', function() {
+    $scope.modal.remove();
+  });
+  // Execute action on hide modal
+  $scope.$on('modal.hide', function() {
+    // Execute action
+  });
+  // Execute action on remove modal
+  $scope.$on('modal.removed', function() {
+    // Execute action
+  });
+  $scope.$on('modal.shown', function() {
+    console.log('Modal is shown!');
+  });  */
+
+  $scope.filterData = function() {
+    $scope.openModal();
+  }
+
+  $scope.getMarksData = function(cache) {
+
+    if(lastmark.educationyear)
+      var key = lastmark.educationyear+'_'+lastmark.typeofexam;
+    else var key = false;
+
+    if(key) {
+      $scope.dashboardStatus = true;
+      var dcache = myCache.get(key);
+      console.log("dcache", dcache);
+      console.log("key", key);
+      if(cache && dcache) {
+        applyMarks(dcache);
+      } else {
+        console.log("fetching from firebase", $rootScope.baseUrl+'/'+user.schoolid+'/marks/'+key);
+        var ref = new Firebase($rootScope.baseUrl+'/'+user.schoolid+'/marks/'+key);
+        ref.once("value", function(snapshot) {
+          var dmarks = {pass:0,fail:0,allSubjects:[],subjectPass:[], subjectFail:[], gradeData:[], toppers:[], filters:{educationyears:[],typeofexams:[]}};
+          var grades = [];
+          var alldata = snapshot.val();
+          var totalrecords = Object.keys(alldata).length;
+          for(var snapmark in alldata) {
+            count++;
+            var mark = alldata[snapmark];
+            if(mark.status == "Pass") dmarks.pass++;
+            if(mark.status == "Fail") dmarks.fail++;
+            for(var mm in mark.marks) {
+              if(dmarks.allSubjects.indexOf(mm) == -1) {
+                dmarks.allSubjects.push(mm);
+                if(mark.marks[mm].status == "Pass") {
+                  dmarks.subjectPass.push({name:mm, y:1});
+                  dmarks.subjectFail.push({name:mm, y:0});
+                } else {
+                  dmarks.subjectPass.push({name:mm, y:0});
+                  dmarks.subjectFail.push({name:mm, y:1});
+                }
+              } else {
+                if(mark.marks[mm].status == "Pass") {
+                  dmarks.subjectPass[dmarks.allSubjects.indexOf(mm)].y++;
+                } else {
+                  dmarks.subjectFail[dmarks.allSubjects.indexOf(mm)].y++;
+                }
+              }
+            }
+            if(grades.indexOf(mark.grade) == -1) {
+              grades.push(mark.grade);
+              dmarks.gradeData.push({name: mark.grade, y:1});
+            } else {
+              dmarks.gradeData[grades.indexOf(mark.grade)].y++;
+            }
+            if(mark.rank == 1) {
+              dmarks.toppers.push({student: mark.student, standard: mark.standard, class: mark.class, total: mark.total, studentid: mark.studentid});
+            }
+            if(dmarks.filters.educationyears.indexOf(mark.educationyear) == -1)
+              dmarks.filters.educationyears.push(mark.educationyear);
+            if(dmarks.filters.typeofexams.indexOf(mark.typeofexam) == -1)
+              dmarks.filters.typeofexams.push(mark.typeofexam);
+            if(count == totalrecords) {
+              if(!$scope.filters.educationyear) dmarks.filters.educationyear = dmarks.filters.educationyears.length - 1;
+              if(!$scope.filters.typeofexam) dmarks.filters.typeofexam = dmarks.filters.typeofexams.length - 1;
+              console.log("Final");
+              myCache.put(key, dmarks);
+              $scope.$broadcast('scroll.refreshComplete');
+              applyMarks(dmarks);
+            }
+          };
+        });      
+      }
+    } else {
+      $scope.dashboardStatus = false;
+    }
+  }
+
+  var applyMarks = function(marks) {
+    console.log("Marks", marks);
+    $scope.filters = marks.filters;
+    $scope.toppers = marks.toppers;
+    $scope.passfailConfig = {
+      chart: {renderTo: 'passfailstatus',type: 'pie',height:200,options3d:{enabled: true,alpha: 45,beta: 0},},
+      title: {text:"Pass/Fail"},plotOptions: {series:{cursor:'pointer',events:{click:function(event){$state.go("app.studentsfiltered", {year:params.year,typeofexam:params.typeofexam,standard:"all",division:"all",status:event.point.name,subject:"all"});}}},pie: {innerSize: 50,depth: 35,dataLabels:{enabled: true,format: '{point.name}: <b>{point.y}</b>'}}},
+      series: [{type: 'pie',name: 'Total',data: [{name:"Pass", y:marks.pass},{name:"Fail", y:marks.fail}]}]
+    };
+    $scope.subjectsConfig = {
+      chart: {renderTo: 'subjects',type: 'column', options3d: {enabled: true,alpha: 10,beta: 20,depth: 50}},
+      title: {text:"Subjects Pass/Fail"},tooltip:{pointFormat:'<span style="color:{point.color}">\u25CF</span> {point.category}: <b>{point.y}</b>'},plotOptions: {series:{cursor:'pointer',events:{click:function(event){$state.go("app.studentsfiltered", {year:params.year,typeofexam:params.typeofexam,standard:"all",division:"all",status:event.point.name,subject:event.point.category});}}},column: {depth: 25,dataLabels: {enabled: true,format: '{point.y}'}}},
+      xAxis: {categories: marks.allSubjects},
+      yAxis: {title: {text: null}},
+      series: [{name: 'Pass',data: marks.subjectPass},{name: 'Fail',data: marks.subjectFail}]
+    }; 
+    $scope.gradeConfig = {
+      chart: {renderTo: 'grades',type: 'pie',height: 200,options3d:{enabled: true,alpha: 45,beta: 0}},
+      title: {text:"Grades"},plotOptions: {series:{cursor:'pointer',events:{click:function(event){$state.go("app.studentsfiltered", {year:params.year,typeofexam:params.typeofexam,standard:"all",division:"all",status:"all",subject:"all",grade:event.point.name});}}},pie: {innerSize: 0,depth: 35,dataLabels:{enabled: true,format: '{point.name}: <b>{point.y}</b>'}}},
+      series: [{type: 'pie',name: 'Total',data: marks.gradeData}]
+    };
+  }
 })
 
 .controller("DashboardCtrl", function($scope) {
@@ -37,39 +178,50 @@ angular.module('starter.controllers', ['starter.services'])
 })
 
 .controller("AllClassesCtrl", function($scope) {
-  console.log("Classes", allusers["classes"]);
+  console.log("Classes", allusers["allclasses"]);
   $scope.filterToggle = function() {$scope.filterStatus = !$scope.filterStatus;}
-  if(allusers["classes"]) {
+  if(allusers["allclasses"]) {
     $scope.allClasses = true;
-    $scope.classes = allusers["classes"];
+    $scope.classes = allusers["allclasses"];
   } else {
     $scope.allClasses = false;
   }
 })
 
 .controller("AllStudentsCtrl", function($scope) {
-  console.log("Students", allusers["students"]);
+  $scope.title = "All Students";
+  console.log("Students", allusers["allstudents"].length);
   $scope.filterToggle = function() {$scope.filterStatus = !$scope.filterStatus;}
-  if(allusers["students"]) {
+  if(allusers["allstudents"]) {
     $scope.allStudentsStatus = true;
-    $scope.users = allusers["students"];
+    $scope.users = allusers["allstudents"];
   } else {
     $scope.allStudentsStatus = false;
   }
 })
 
 .controller("AllTeachersCtrl", function($scope) {
-  console.log("Teachers", allusers["teachers"])
+  console.log("Teachers", allusers["allteachers"])
   $scope.filterToggle = function() {$scope.filterStatus = !$scope.filterStatus;}
-  if(allusers["teachers"]) {
+  if(allusers["allteachers"]) {
     $scope.allStudentsStatus = true;
-    $scope.users = allusers["teachers"];
+    $scope.users = allusers["allteachers"];
+  } else {
+    $scope.allStudentsStatus = false;
+  }
+})
+
+.controller("MarkStudentsCtrl", function($scope, $stateParams) {
+  if(allmarks[$stateParams.key]) {
+    $scope.allStudentsStatus = true;
+    $scope.users = allmarks[$stateParams.key];
   } else {
     $scope.allStudentsStatus = false;
   }
 })
 
 .controller('SignInCtrl', function($scope, $rootScope, $firebaseAuth, $firebaseObject, $state, $ionicLoading, $ionicPopup) {
+  
   // check session
   $rootScope.checkSession();
 

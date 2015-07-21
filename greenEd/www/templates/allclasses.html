@@ -15,7 +15,7 @@
             <ion-search placeholder="Search" filter="query.search"></ion-search>
          </div> -->
       <div class="list" ng-if="allClasses == true">
-         <a class="item item-icon-left positive" alt="teacher" ng-repeat="class in classes" href="#/app/dashboard/{{class.standard}}/{{class.d}}">
+         <a class="item item-icon-left positive" alt="teacher" collection-repeat="class in classes | filter:query.search.value" href="#/app/dashboard/{{class.standard}}/{{class.d}}">
             <i class="icon ion-easel"></i>
             <h2>{{class.standard}}<span ng-hide="class.division == 'all'">{{class.division}}</span></h2>
          </a>

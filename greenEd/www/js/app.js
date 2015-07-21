@@ -1,6 +1,8 @@
 // Ionic Starter App
 var user = {};
-var allusers = {classes:{},students:{},teachers:{}};
+var allusers = {allclasses:[],classes:{},allstudents:[],students:{},allteachers:[], teachers:{}};
+var allmarks = {};
+var lastmark = {};
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
@@ -20,20 +22,22 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers'])
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
-    // Create a callback which logs the current auth state
-    function authDataCallback(authData) {
-      if (authData) {
-        console.log("User " + authData.uid + " is logged in with " + authData.provider);
-      } else {
-        console.log("User is logged out on auth");
-      }
-    }
+
 
     $rootScope.userEmail = null;
     $rootScope.baseUrl = 'https://vivid-inferno-3813.firebaseio.com';
     var authRef = new Firebase($rootScope.baseUrl);
     $rootScope.auth = $firebaseAuth(authRef);
 
+    $rootScope.checkSession = function() {
+      var authData = authRef.getAuth();
+      if (authData) {
+        $rootScope.login(authData);
+      } else {
+        localStorage.removeItem("uid");
+        $state.go('home', {}, {reload:true});
+      }
+    } 
     authRef.onAuth(authDataCallback);
 
     $rootScope.show = function(text) {
@@ -49,66 +53,75 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers'])
     $rootScope.hide = function() {
         $ionicLoading.hide();
     };
-
     $rootScope.notify = function(text) {
         $rootScope.show(text);
         $window.setTimeout(function() {
             $rootScope.hide();
         }, 1999);
     };
-
-    $rootScope.logout = function() {
-        authRef.unauth();
-        $rootScope.checkSession();
-    };
-
-    $rootScope.checkSession = function() {
-      console.log("checking session");
-      console.log("user", user);
-      var authData = authRef.getAuth();
-      if (authData) {
-        console.log("User " + authData.uid + " is logged in with " + authData.provider);
-        $rootScope.login(authData);
-      } else {
-        console.log("User is logged out");
-        $state.go('home', {}, {reload:true});
-      }
-/*      var auth = new FirebaseSimpleLogin(authRef, function(error, user) {
-          if (error) {
-              // no action yet.. redirect to default route
-              $rootScope.userEmail = null;
-              $window.location.href = '#/home';
-          } else if (user) {
-              // user authenticated with Firebase
-              $rootScope.userEmail = user.email;
-          } else {
-              // user is logged out
-              $rootScope.userEmail = null;
-          }
-      });
-*/    } 
-      $rootScope.login = function(userdetails) {
-        $rootScope.updateMenu = true;
-        authRef.child('users/'+userdetails.uid).once("value", function(snapshot) {
-          user = snapshot.val();
-
-          console.log("CURRENT USER:", user);
-          authRef.child('users').orderByChild("schoolid").equalTo(user.schoolid)
-          .once('value', function(snap) { 
-              var fbusers = snap.val();
-              for(var fbuser in fbusers) {
-                if(fbusers[fbuser].role == "student") {
-                  allusers["students"][fbuser] = fbusers[fbuser];
-                  allusers["classes"][fbusers[fbuser].standard+'-'+fbusers[fbuser].division] = {standard:fbusers[fbuser].standard, division:fbusers[fbuser].division};
-                  if(fbusers[fbuser].division != "all") {
-                    allusers["classes"][fbusers[fbuser].standard] = {standard:fbusers[fbuser].standard, division:fbusers[fbuser].division};
+    
+    $rootScope.login = function(userdetails) {
+      $rootScope.updateMenu = true;
+      localStorage.setItem("uid", userdetails.uid);
+      authRef.child('users/'+userdetails.uid).once("value", function(snapshot) {
+        user = snapshot.val();
+        user.uid = userdetails.uid;
+        loginSuccess(user);
+      }, function(error) {
+        console.log("Profile loading error", error);
+      })       
+    }
+    
+    function loginSuccess(user) {
+      authRef.child('users').orderByChild("schoolid").equalTo(user.schoolid)
+        .once('value', function(snap) { 
+            console.log("total users", Object.keys(snap.val()).length);
+            snap.forEach(function(fbusers) {
+              var fbuser = fbusers.key();
+              var fbusers = fbusers.val();
+              if(user.role == "hm") {
+                if(fbusers.role == "student") {
+                  allusers["students"][fbuser] = fbusers;
+                  allusers["allstudents"].push({name:fbusers.name, standard:fbusers.standard, division:fbusers.division, uid:fbuser});
+                  if(!allusers["classes"][fbusers.standard+'-'+fbusers.division]) {
+                    allusers["classes"][fbusers.standard+'-'+fbusers.division] = {standard:fbusers.standard, division:fbusers.division};
+                    allusers["allclasses"].push({standard:fbusers.standard, division:fbusers.division});
                   }
-                } else if (fbusers[fbuser].role == "teacher") {
-                  allusers["teachers"][fbuser] = fbusers[fbuser];
+                  if(fbusers.division != "all") {
+                    if(!allusers["classes"][fbusers.standard]) {
+                      allusers["classes"][fbusers.standard] = {standard:fbusers.standard, division:fbusers.division};
+                      allusers["allclasses"].push({standard:fbusers.standard, division:"all"});
+                    }
+                  }
+                } else if (fbusers.role == "teacher") {
+                  allusers["allteachers"].push(fbusers);
+                }
+              } else if (user.role == "parent") {
+                if(fbusers.role == "student") {
+                  if(fbusers.parentid == user.uid) {
+                    allusers["students"][fbuser] = fbusers;
+                  }
+                }
+              } else {
+                if(fbusers.role == "student") {
+                  for (var si = 0; si < user.subjects.length; si++) {
+                    var tkey = user.uid +'_'+user.name;
+                    console.log("subject", fbusers[user.subjects[si].subject]);
+                    console.log("tkey", user.uid +'_'+user.name);
+                    if(fbusers[user.subjects[si].subject] == tkey) {
+                      if(!allusers["students"][fbuser]) {
+                        allusers["students"][fbuser] = fbusers;
+                        allusers["allstudents"].push({name:fbusers.name, standard:fbusers.standard, division:fbusers.division, uid:fbuser});
+                      }
+                    }
+                  };
                 }
               }
-          });
-              console.log("ALL USERS", allusers); 
+            });
+        });
+        authRef.child(user.schoolid+'/lastmark').on('value', function(lsnap) {
+          console.log("ALL USERS", allusers); 
+          lastmark = lsnap.val();
           $ionicLoading.hide();
           if(user.role == "hm") {
             $state.go("app.hmdashboard", {}, {'reload': true});
@@ -125,11 +138,105 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers'])
               $state.go("app.teacherdashboard", {}, {'reload': true});              
             }
           }
-        }, function(error) {
-          console.log("Profile loading error", error);
-        })       
+        });      
+    }
+    // Create a callback which logs the current auth state
+    function authDataCallback(authData) {
+      if (authData) {
+        console.log("Auth Data callback User " + authData.uid + " is logged in with " + authData.provider);
+      } else {
+        console.log("User is logged out");
+        localStorage.removeItem("uid");
+        $state.go('home', {}, {reload:true});
       }
+    }
+
+
+    $rootScope.logout = function() {
+        authRef.unauth();
+        $rootScope.checkSession();
+    };
+
   });
+})
+
+.directive('chart', function() {
+    return {
+        restrict: 'E',
+        template: '<div></div>',
+        replace: true,
+        scope: {
+            config: '='
+        },
+        link: function (scope, element, attrs) {
+            var chart; 
+            var process = function () {
+                var defaultOptions = {
+                    chart: {renderTo: element[0], animation:true},
+                    colors: ['#23b7e5', '#ff6c60', '#90ed7d', '#f7a35c', '#8085e9', 
+   '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1']
+                };
+                var config = angular.extend(defaultOptions, scope.config);
+                chart = new Highcharts.Chart(config);
+            };
+            process();
+            scope.$watch("config.series", function (loading) {
+                process();
+            });
+            scope.$watch("config.loading", function (loading) {
+                if (!chart) {
+                    return;
+                } 
+                if (loading) {
+                    chart.showLoading();
+                } else {
+                    chart.hideLoading();
+                }
+            });
+        },
+    };
+})
+
+.directive('ionSearch', function() {
+    return {
+        restrict: 'E',
+        replace: true,
+        scope: {
+            getData: '&source',
+            model: '=?',
+            search: '=?filter'
+        },
+        link: function(scope, element, attrs) {
+            attrs.minLength = attrs.minLength || 0;
+            scope.placeholder = attrs.placeholder || '';
+            scope.search = {value: ''};
+            if (attrs.class)
+              element.addClass(attrs.class);
+
+            if (attrs.source) {
+              scope.$watch('search.value', function (newValue, oldValue) {
+                console.log('newValue', newValue);
+                console.log('oldValue', oldValue);
+                  if (newValue.length > attrs.minLength) {
+                    scope.getData({str: newValue}).then(function (results) {
+                      scope.model = results;
+                    });
+                  } else {
+                    scope.model = [];
+                  }
+              });
+            }
+
+            scope.clearSearch = function() {
+                scope.search.value = '';
+            };
+        },
+        template: '<div class="item-input-wrapper">' +
+                    '<i class="icon ion-android-search"></i>' +
+                    '<input type="search" placeholder="{{placeholder}}" ng-model="search.value">' +
+                    '<i ng-if="search.value.length > 0" ng-click="clearSearch()" class="icon ion-close"></i>' +
+                  '</div>'
+    };
 })
 
 .config(function($stateProvider, $urlRouterProvider) {
@@ -208,6 +315,15 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers'])
       }
     }
   })
+  .state('app.markstudents', {
+    url: "/markstudents/:key",
+    views: {
+      'menuContent' :{
+        templateUrl: "templates/markstudents.html",
+        controller: 'MarkStudentsCtrl'
+      }
+    }
+  })  
   .state('app.allteachers', {
     url: "/allteachers",
     views: {
