@@ -1,5 +1,9 @@
 angular.module('starter.services', [])
 
+/*.service('dataService', function($q, $rootScope, firebase) {
+  var root = 'https://vivid-inferno-3813.firebaseio.com';
+})*/
+
 .factory('myCache', function($cacheFactory) {
   return $cacheFactory('myCache');
 })

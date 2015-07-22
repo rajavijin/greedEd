@@ -73,72 +73,76 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers'])
     }
     
     function loginSuccess(user) {
-      authRef.child('users').orderByChild("schoolid").equalTo(user.schoolid)
+      authRef.child(user.schoolid+'/filters').on('value', function(lsnap) {
+        $rootScope.filters = lsnap.val();
+        $rootScope.$apply();
+        $ionicLoading.hide();
+        if(user.role == "hm") {
+          $state.go("app.hmdashboard", {}, {'reload': true});
+        } else if (user.role == "parent") {
+          if(user.students.length == 1) {
+            $state.go("app.studentDashboard", {}, {'reload': true});
+          } else {
+            $state.go("app.wall", {}, {'reload': true});            
+          }
+        } else {
+          if(user.standard) {
+            $state.go("app.dashboard", {}, {'reload': true});
+          } else {
+            $state.go("app.teacherdashboard", {}, {'reload': true});              
+          }
+        }
+        console.log("Filter Data FB", $rootScope.filters);
+      }, function(error) {
+        console.log("Filters error", error);
+      });      
+      authRef.child('users').orderByChild("usertype").equalTo(user.schoolid+':student')
         .once('value', function(snap) { 
-            console.log("total users", Object.keys(snap.val()).length);
-            snap.forEach(function(fbusers) {
-              var fbuser = fbusers.key();
-              var fbusers = fbusers.val();
-              if(user.role == "hm") {
-                if(fbusers.role == "student") {
+          console.log("total users", Object.keys(snap.val()).length);
+          snap.forEach(function(fbusers) {
+            var fbuser = fbusers.key();
+            var fbusers = fbusers.val();
+            if(user.role == "hm") {
+              if(fbusers.role == "student") {
+                allusers["students"][fbuser] = fbusers;
+                allusers["allstudents"].push({name:fbusers.name, standard:fbusers.standard, division:fbusers.division, uid:fbuser});
+                if(!allusers["classes"][fbusers.standard+'-'+fbusers.division]) {
+                  allusers["classes"][fbusers.standard+'-'+fbusers.division] = {standard:fbusers.standard, division:fbusers.division};
+                  allusers["allclasses"].push({standard:fbusers.standard, division:fbusers.division});
+                }
+                if(fbusers.division != "all") {
+                  if(!allusers["classes"][fbusers.standard]) {
+                    allusers["classes"][fbusers.standard] = {standard:fbusers.standard, division:fbusers.division};
+                    allusers["allclasses"].push({standard:fbusers.standard, division:"all"});
+                  }
+                }
+              } else if (fbusers.role == "teacher") {
+                allusers["allteachers"].push(fbusers);
+              }
+            } else if (user.role == "parent") {
+              if(fbusers.role == "student") {
+                if(fbusers.parentid == user.uid) {
                   allusers["students"][fbuser] = fbusers;
-                  allusers["allstudents"].push({name:fbusers.name, standard:fbusers.standard, division:fbusers.division, uid:fbuser});
-                  if(!allusers["classes"][fbusers.standard+'-'+fbusers.division]) {
-                    allusers["classes"][fbusers.standard+'-'+fbusers.division] = {standard:fbusers.standard, division:fbusers.division};
-                    allusers["allclasses"].push({standard:fbusers.standard, division:fbusers.division});
-                  }
-                  if(fbusers.division != "all") {
-                    if(!allusers["classes"][fbusers.standard]) {
-                      allusers["classes"][fbusers.standard] = {standard:fbusers.standard, division:fbusers.division};
-                      allusers["allclasses"].push({standard:fbusers.standard, division:"all"});
-                    }
-                  }
-                } else if (fbusers.role == "teacher") {
-                  allusers["allteachers"].push(fbusers);
-                }
-              } else if (user.role == "parent") {
-                if(fbusers.role == "student") {
-                  if(fbusers.parentid == user.uid) {
-                    allusers["students"][fbuser] = fbusers;
-                  }
-                }
-              } else {
-                if(fbusers.role == "student") {
-                  for (var si = 0; si < user.subjects.length; si++) {
-                    var tkey = user.uid +'_'+user.name;
-                    console.log("subject", fbusers[user.subjects[si].subject]);
-                    console.log("tkey", user.uid +'_'+user.name);
-                    if(fbusers[user.subjects[si].subject] == tkey) {
-                      if(!allusers["students"][fbuser]) {
-                        allusers["students"][fbuser] = fbusers;
-                        allusers["allstudents"].push({name:fbusers.name, standard:fbusers.standard, division:fbusers.division, uid:fbuser});
-                      }
-                    }
-                  };
                 }
               }
-            });
-        });
-        authRef.child(user.schoolid+'/lastmark').on('value', function(lsnap) {
+            } else {
+              if(fbusers.role == "student") {
+                for (var si = 0; si < user.subjects.length; si++) {
+                  var tkey = user.uid +'_'+user.name;
+                  console.log("subject", fbusers[user.subjects[si].subject]);
+                  console.log("tkey", user.uid +'_'+user.name);
+                  if(fbusers[user.subjects[si].subject] == tkey) {
+                    if(!allusers["students"][fbuser]) {
+                      allusers["students"][fbuser] = fbusers;
+                      allusers["allstudents"].push({name:fbusers.name, standard:fbusers.standard, division:fbusers.division, uid:fbuser});
+                    }
+                  }
+                };
+              }
+            }
+          });
           console.log("ALL USERS", allusers); 
-          lastmark = lsnap.val();
-          $ionicLoading.hide();
-          if(user.role == "hm") {
-            $state.go("app.hmdashboard", {}, {'reload': true});
-          } else if (user.role == "parent") {
-            if(user.students.length == 1) {
-              $state.go("app.studentDashboard", {}, {'reload': true});
-            } else {
-              $state.go("app.wall", {}, {'reload': true});            
-            }
-          } else {
-            if(user.standard) {
-              $state.go("app.dashboard", {}, {'reload': true});
-            } else {
-              $state.go("app.teacherdashboard", {}, {'reload': true});              
-            }
-          }
-        });      
+        });
     }
     // Create a callback which logs the current auth state
     function authDataCallback(authData) {

@@ -86,6 +86,10 @@ angular.module('angularfireappApp')
         templateUrl: 'views/addmarks.html',
         controller: 'AddmarksCtrl'
       })
+      .when('/addtimetable', {
+        templateUrl: 'views/addtimetable.html',
+        controller: 'AddtimetableCtrl'
+      })
       .otherwise({redirectTo: '/'});
   }])
 

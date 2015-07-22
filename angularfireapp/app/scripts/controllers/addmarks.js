@@ -54,6 +54,31 @@ angular.module('angularfireappApp')
 	  	$scope.listSchool = false;
   		console.log("schoolitem", schoolItem);
   		$scope.school = schoolItem;
+  		    // synchronize a read-only, synchronized array of messages, limit to most recent 10
+    var filterRef = Ref.child('-JuWkw5o0Mgkiv8BXSJl/filters');
+    filterRef.on('value', function(fsnap) {
+    	var filters = fsnap.val();
+		console.log("Filters", filters);
+    	if(filters) {
+    	} else {
+    		var filters = {};
+    		filters.educationyear = "2015-2016";
+    		filters.typeofexam = "periodical1";
+    		filters.educationyears = ["2015-2016"];
+    		filters.typeofexams = ["periodical1"];
+    	}
+		filterRef.set(filters);	
+    });
+    
+ /*   // push a message to the end of the array
+    $scope.messages.set({text: newMessage})
+      // display any errors
+      .catch(alert);
+  		    var fredNameRef = Ref.child('-JuWkw5o0Mgkiv8BXSJl/lastmark');
+			fredNameRef.child('educationyear').set("2015-2016");
+			fredNameRef.child('typeofexam').set("periodical1");
+			fredNameRef.child('educationyears').push("2015-2016");
+			fredNameRef.child('typeofexams').push("periodical1");*/
   		schoolValues(schoolItem);
   	}
 
@@ -211,6 +236,17 @@ angular.module('angularfireappApp')
 			      // display any errors
 			      .catch(alert);
             };
+            var fredNameRef = Ref.child(school.$id+'/lastmark');
+			fredNameRef.child('educationyear').set(commondata.educationyear);
+			fredNameRef.child('typeofexam').set(commondata.typeofexam);
+/*            $scope.lastmark = $firebaseArray(Ref.child(school.$id+'/lastmark').limitToLast(1));
+        			    // display any errors
+		    $scope.lastmark.$loaded().catch(alert);
+		    // push a message to the end of the array
+		    $scope.lastmark.$add({educationyear: commondata.educationyear, typeofexam: commondata.typeofexam})
+		      // display any errors
+		      .catch(alert);*/
+
 			//$location.path('/');
 		}
 	}

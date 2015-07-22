@@ -20,17 +20,15 @@ angular.module('starter.controllers', ['starter.services'])
 })
 
 .controller("HmDashboardCtrl", function($scope, $firebaseArray, $rootScope, myCache, $ionicModal) {
-  var count = 0;
-  $scope.filters = {};
   $scope.dashboardFilters = function() {
     console.log("Filters", $scope.filters);
-    key = $scope.filters.educationyear +'_'+ $scope.filters.typeofexam;
+    key = $rootScope.filters.educationyears[$rootScope.filters.educationyear] +'_'+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam];
     $scope.getMarksData(true);
     $scope.closeModal();
   }
 
   $ionicModal.fromTemplateUrl('templates/dashboardFilters.html', {
-    scope: $scope,
+    scope: $rootScope,
     animation: 'slide-in-up'
   }).then(function(modal) {
     $scope.modal = modal;
@@ -66,10 +64,10 @@ angular.module('starter.controllers', ['starter.services'])
 
   $scope.getMarksData = function(cache) {
 
-    if(lastmark.educationyear)
-      var key = lastmark.educationyear+'_'+lastmark.typeofexam;
+    if($rootScope.filters)
+      var key = $rootScope.filters.educationyears[$rootScope.filters.educationyear] +'_'+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam];
     else var key = false;
-
+    
     if(key) {
       $scope.dashboardStatus = true;
       var dcache = myCache.get(key);
@@ -80,11 +78,16 @@ angular.module('starter.controllers', ['starter.services'])
       } else {
         console.log("fetching from firebase", $rootScope.baseUrl+'/'+user.schoolid+'/marks/'+key);
         var ref = new Firebase($rootScope.baseUrl+'/'+user.schoolid+'/marks/'+key);
-        ref.once("value", function(snapshot) {
+        ref.on("value", function(snapshot) {
+          var count = 0;
+          console.log("Marks updating....");
+          var alldata = snapshot.val();
+          console.log("alldata", alldata);
+          if(!alldata) return;
           var dmarks = {pass:0,fail:0,allSubjects:[],subjectPass:[], subjectFail:[], gradeData:[], toppers:[], filters:{educationyears:[],typeofexams:[]}};
           var grades = [];
-          var alldata = snapshot.val();
           var totalrecords = Object.keys(alldata).length;
+          console.log("total records", totalrecords);
           for(var snapmark in alldata) {
             count++;
             var mark = alldata[snapmark];
@@ -121,12 +124,15 @@ angular.module('starter.controllers', ['starter.services'])
               dmarks.filters.educationyears.push(mark.educationyear);
             if(dmarks.filters.typeofexams.indexOf(mark.typeofexam) == -1)
               dmarks.filters.typeofexams.push(mark.typeofexam);
+            console.log("each record");
             if(count == totalrecords) {
               if(!$scope.filters.educationyear) dmarks.filters.educationyear = dmarks.filters.educationyears.length - 1;
               if(!$scope.filters.typeofexam) dmarks.filters.typeofexam = dmarks.filters.typeofexams.length - 1;
               console.log("Final");
               myCache.put(key, dmarks);
-              $scope.$broadcast('scroll.refreshComplete');
+              if(cache)
+                $scope.$broadcast('scroll.refreshComplete');
+              console.log("applying marks");
               applyMarks(dmarks);
             }
           };
@@ -139,7 +145,6 @@ angular.module('starter.controllers', ['starter.services'])
 
   var applyMarks = function(marks) {
     console.log("Marks", marks);
-    $scope.filters = marks.filters;
     $scope.toppers = marks.toppers;
     $scope.passfailConfig = {
       chart: {renderTo: 'passfailstatus',type: 'pie',height:200,options3d:{enabled: true,alpha: 45,beta: 0},},
@@ -158,6 +163,7 @@ angular.module('starter.controllers', ['starter.services'])
       title: {text:"Grades"},plotOptions: {series:{cursor:'pointer',events:{click:function(event){$state.go("app.studentsfiltered", {year:params.year,typeofexam:params.typeofexam,standard:"all",division:"all",status:"all",subject:"all",grade:event.point.name});}}},pie: {innerSize: 0,depth: 35,dataLabels:{enabled: true,format: '{point.name}: <b>{point.y}</b>'}}},
       series: [{type: 'pie',name: 'Total',data: marks.gradeData}]
     };
+    $scope.$apply();
   }
 })
 

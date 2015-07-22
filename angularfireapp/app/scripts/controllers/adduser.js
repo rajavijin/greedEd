@@ -123,10 +123,10 @@ angular.module('angularfireappApp')
 	console.log("USERDATA:", allusers);
     var alluserSubmit = function(iteration) {
     	var userdata = {};
-		userdata.school = school.school;
-		userdata.schoolid = school.$id;
 		userdata.pepper = Math.random().toString(36).slice(-8);
 		if(allusers[iteration].accounttype == "Teacher") {
+			userdata.school = school.school;
+			userdata.schoolid = school.$id;
 			userdata.role = "teacher";
 			userdata.subjects = [];
     		userdata.students = [];
@@ -171,8 +171,7 @@ angular.module('angularfireappApp')
             	userdata.parentid = parentcreated.uid;
             	return createProfile(parentcreated, parent);
            })
-           .then(function() { 
-           		userdata.role = "student";
+           .then(function() {
 	           	userdata.subjects = [];
 				userdata.parent = allusers[iteration].parent;
 				userdata.name = allusers[iteration].student;
@@ -185,6 +184,7 @@ angular.module('angularfireappApp')
 				userdata.teacher = allusers[iteration].teacher;
 				userdata.studentid = allusers[iteration].studentid;
 				userdata.email = allusers[iteration].studentid+"@ge.com";
+				userdata.status = "active";
 				var alls = allusers[iteration].secondlanguage + "," + allusers[iteration].commonsubjects 
 				var allsubjects = alls.split(",");
 				var tidkey = '';
@@ -194,10 +194,15 @@ angular.module('angularfireappApp')
 	  				if(cdata[1] == userdata.teacher) {
 						tidkey = tkey;
 	  				}
-	  				userdata[cdata[0]] = teachers[tkey] +'_'+cdata[1]; 
+	  				if(!userdata["st_"+teachers[tkey]]) userdata["st_"+teachers[tkey]] = cdata[1]+','+cdata[0]
+	  				else userdata["st_"+teachers[tkey]] += "," + cdata[0]; 
 	  				//userdata.subjects.push({subject: cdata[0], teacher:cdata[1], teacherid:teachers[tkey]});
 			    };
 			    if(tidkey) userdata.teacherid = teachers[tidkey];
+           		userdata.usertype = school.$id+"|student";
+           		userdata.classteacher = userdata.usertype + '|'+ userdata.standard+'-'+userdata.division;
+           		userdata.parentkids = userdata.usertype + '|'+ userdata.parentid;
+           		delete userdata.parentid;
 			    console.log("Student", userdata);
 		        Auth.$createUser({email: userdata.email, password: userdata.pepper})
 	           .then(function (usercreated) {
