@@ -195,12 +195,11 @@ angular.module('angularfireappApp')
 						tidkey = tkey;
 	  				}
 	  				if(!userdata["st_"+teachers[tkey]]) userdata["st_"+teachers[tkey]] = cdata[1]+','+cdata[0]
-	  				else userdata["st_"+teachers[tkey]] += "," + cdata[0]; 
+	  				else userdata["st_"+teachers[tkey]] += "," + cdata[0];
 	  				//userdata.subjects.push({subject: cdata[0], teacher:cdata[1], teacherid:teachers[tkey]});
 			    };
 			    if(tidkey) userdata.teacherid = teachers[tidkey];
            		userdata.usertype = school.$id+"|student";
-           		userdata.classteacher = userdata.usertype + '|'+ userdata.standard+'-'+userdata.division;
            		userdata.parentkids = userdata.usertype + '|'+ userdata.parentid;
            		delete userdata.parentid;
 			    console.log("Student", userdata);

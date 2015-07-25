@@ -1,15 +1,18 @@
 // Ionic Starter App
-var user = {};
-var allusers = {allclasses:[],classes:{},allstudents:[],students:{},allteachers:[], teachers:{}};
-var allmarks = {};
-var lastmark = {};
-// angular.module is a global place for creating, registering and retrieving Angular modules
+var luser = localStorage.getItem('user');
+if(luser) {
+  var user = JSON.parse(luser);
+} else {
+  var user = {};
+}
+console.log("User on start", user);
+// angular.module is a global placef for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'firebase', 'starter.controllers'])
+angular.module('starter', ['ionic', 'starter.controllers','firebase'])
 
-.run(function($ionicPlatform, $rootScope, $firebaseAuth, $firebase, $firebaseObject, $state, $ionicLoading) {
+.run(function($ionicPlatform, $rootScope, Auth) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -22,147 +25,18 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers'])
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
-
-
-    $rootScope.userEmail = null;
-    $rootScope.baseUrl = 'https://vivid-inferno-3813.firebaseio.com';
-    var authRef = new Firebase($rootScope.baseUrl);
-    $rootScope.auth = $firebaseAuth(authRef);
-
-    $rootScope.checkSession = function() {
-      var authData = authRef.getAuth();
-      if (authData) {
-        $rootScope.login(authData);
-      } else {
-        localStorage.removeItem("uid");
-        $state.go('home', {}, {reload:true});
-      }
-    } 
-    authRef.onAuth(authDataCallback);
-
-    $rootScope.show = function(text) {
-        $rootScope.loading = $ionicLoading.show({
-            content: text ? text : 'Loading..',
-            animation: 'fade-in',
-            showBackdrop: true,
-            maxWidth: 200,
-            showDelay: 0
-        });
-    };
-
-    $rootScope.hide = function() {
-        $ionicLoading.hide();
-    };
-    $rootScope.notify = function(text) {
-        $rootScope.show(text);
-        $window.setTimeout(function() {
-            $rootScope.hide();
-        }, 1999);
-    };
-    
-    $rootScope.login = function(userdetails) {
-      $rootScope.updateMenu = true;
-      localStorage.setItem("uid", userdetails.uid);
-      authRef.child('users/'+userdetails.uid).once("value", function(snapshot) {
-        user = snapshot.val();
-        user.uid = userdetails.uid;
-        loginSuccess(user);
-      }, function(error) {
-        console.log("Profile loading error", error);
-      })       
+    if(user && !$rootScope.filters) {
+      var filters = Auth.filters(user.schoolid);
+      filters.$bindTo($rootScope, 'filters').then(function() {
+        console.log("Filters", $rootScope.filters);
+      });
     }
-    
-    function loginSuccess(user) {
-      authRef.child(user.schoolid+'/filters').on('value', function(lsnap) {
-        $rootScope.filters = lsnap.val();
-        $rootScope.$apply();
-        $ionicLoading.hide();
-        if(user.role == "hm") {
-          $state.go("app.hmdashboard", {}, {'reload': true});
-        } else if (user.role == "parent") {
-          if(user.students.length == 1) {
-            $state.go("app.studentDashboard", {}, {'reload': true});
-          } else {
-            $state.go("app.wall", {}, {'reload': true});            
-          }
-        } else {
-          if(user.standard) {
-            $state.go("app.dashboard", {}, {'reload': true});
-          } else {
-            $state.go("app.teacherdashboard", {}, {'reload': true});              
-          }
-        }
-        console.log("Filter Data FB", $rootScope.filters);
-      }, function(error) {
-        console.log("Filters error", error);
-      });      
-      authRef.child('users').orderByChild("usertype").equalTo(user.schoolid+':student')
-        .once('value', function(snap) { 
-          console.log("total users", Object.keys(snap.val()).length);
-          snap.forEach(function(fbusers) {
-            var fbuser = fbusers.key();
-            var fbusers = fbusers.val();
-            if(user.role == "hm") {
-              if(fbusers.role == "student") {
-                allusers["students"][fbuser] = fbusers;
-                allusers["allstudents"].push({name:fbusers.name, standard:fbusers.standard, division:fbusers.division, uid:fbuser});
-                if(!allusers["classes"][fbusers.standard+'-'+fbusers.division]) {
-                  allusers["classes"][fbusers.standard+'-'+fbusers.division] = {standard:fbusers.standard, division:fbusers.division};
-                  allusers["allclasses"].push({standard:fbusers.standard, division:fbusers.division});
-                }
-                if(fbusers.division != "all") {
-                  if(!allusers["classes"][fbusers.standard]) {
-                    allusers["classes"][fbusers.standard] = {standard:fbusers.standard, division:fbusers.division};
-                    allusers["allclasses"].push({standard:fbusers.standard, division:"all"});
-                  }
-                }
-              } else if (fbusers.role == "teacher") {
-                allusers["allteachers"].push(fbusers);
-              }
-            } else if (user.role == "parent") {
-              if(fbusers.role == "student") {
-                if(fbusers.parentid == user.uid) {
-                  allusers["students"][fbuser] = fbusers;
-                }
-              }
-            } else {
-              if(fbusers.role == "student") {
-                for (var si = 0; si < user.subjects.length; si++) {
-                  var tkey = user.uid +'_'+user.name;
-                  console.log("subject", fbusers[user.subjects[si].subject]);
-                  console.log("tkey", user.uid +'_'+user.name);
-                  if(fbusers[user.subjects[si].subject] == tkey) {
-                    if(!allusers["students"][fbuser]) {
-                      allusers["students"][fbuser] = fbusers;
-                      allusers["allstudents"].push({name:fbusers.name, standard:fbusers.standard, division:fbusers.division, uid:fbuser});
-                    }
-                  }
-                };
-              }
-            }
-          });
-          console.log("ALL USERS", allusers); 
-        });
-    }
-    // Create a callback which logs the current auth state
-    function authDataCallback(authData) {
-      if (authData) {
-        console.log("Auth Data callback User " + authData.uid + " is logged in with " + authData.provider);
-      } else {
-        console.log("User is logged out");
-        localStorage.removeItem("uid");
-        $state.go('home', {}, {reload:true});
-      }
-    }
-
-
-    $rootScope.logout = function() {
-        authRef.unauth();
-        $rootScope.checkSession();
-    };
-
+    console.log("On Ready Filters", $rootScope.filters);
   });
 })
+
+.constant('FIREBASE_URL', 'https://vivid-inferno-3813.firebaseio.com/')
+
 
 .directive('chart', function() {
     return {
@@ -245,10 +119,15 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers'])
 
 .config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
-  .state('home', {
-    url: '/home',
-    templateUrl: 'templates/home.html',
-    controller: 'SignInCtrl'
+    .state('login', {
+    url: '/login',
+    templateUrl: 'templates/login.html',
+    controller: 'AuthCtrl',
+    resolve: {
+      user: function(Auth) {
+        return Auth.resolveUser();
+      }
+    }
   })
   .state('app', {
     url: "/app",
@@ -256,6 +135,24 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers'])
     templateUrl: "templates/menu.html",
     controller: 'AppCtrl'
   })
+  .state('app.wall', {
+    url: "/wall",
+    views: {
+      'menuContent' :{
+        templateUrl: "templates/wall.html",
+        controller: 'WallCtrl'
+      }
+    }
+  })  
+  .state('app.addpost', {
+    url: "/addpost",
+    views: {
+      'menuContent' :{
+        templateUrl: "templates/addpost.html",
+        controller: 'AddPostCtrl'
+      }
+    }
+  })     
   .state('app.hmdashboard', {
     url: "/hmdashboard",
     views: {
@@ -265,26 +162,17 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers'])
       }
     }
   })
- .state('app.dashboard', {
-    url: "/dashboard",
+ .state('app.classdashboard', {
+    url: "/classdashboard/:class",
     views: {
       'menuContent' :{
-        templateUrl: "templates/dashboard.html",
-        controller: 'DashboardCtrl'
-      }
-    }
-  })
- .state('app.teacherdashboard', {
-    url: "/teacherdashboard",
-    views: {
-      'menuContent' :{
-        templateUrl: "templates/teacherdashboard.html",
-        controller: 'TeacherDashboardCtrl'
+        templateUrl: "templates/classdashboard.html",
+        controller: 'ClassDashboardCtrl'
       }
     }
   })
  .state('app.studentDashboard', {
-    url: "/studentdashboard",
+    url: "/studentdashboard/:uid",
     views: {
       'menuContent' :{
         templateUrl: "templates/studentdashboard.html",
@@ -292,8 +180,17 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers'])
       }
     }
   })
+ .state('app.teacherdashboard', {
+    url: "/teacherdashboard/:uid/:name",
+    views: {
+      'menuContent' :{
+        templateUrl: "templates/teacherdashboard.html",
+        controller: 'TeacherDashboardCtrl'
+      }
+    }
+  })
   .state('app.studentOverallDashboard', {
-    url: "/studentoveralldashboard",
+    url: "/studentoveralldashboard/:uid",
     views: {
       'menuContent' :{
         templateUrl: "templates/studentoverall.html",
@@ -319,15 +216,6 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers'])
       }
     }
   })
-  .state('app.markstudents', {
-    url: "/markstudents/:key",
-    views: {
-      'menuContent' :{
-        templateUrl: "templates/markstudents.html",
-        controller: 'MarkStudentsCtrl'
-      }
-    }
-  })  
   .state('app.allteachers', {
     url: "/allteachers",
     views: {
@@ -336,6 +224,16 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers'])
         controller: 'AllTeachersCtrl'
       }
     }
-  })    
-  $urlRouterProvider.otherwise('/home');
+  })
+  .state('app.markstudents', {
+    url: "/markstudents/:filter/:type/:key/:val",
+    views: {
+      'menuContent' :{
+        templateUrl: "templates/markstudents.html",
+        controller: 'MarkStudentsCtrl'
+      }
+    }
+  });
+  // if none of the above states are matched, use this as the fallback
+  $urlRouterProvider.otherwise('/login');
 });

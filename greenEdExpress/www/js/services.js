@@ -1,4 +1,5 @@
 angular.module('starter.services', [])
+
 .factory('MyService', function($rootScope, $ionicLoading, $ionicPopup, $state, $http, $q, myConfig) {
   console.log("base in service", myConfig.base);
   var baseUrl = myConfig.base+'/api';
