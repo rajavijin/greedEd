@@ -17,8 +17,20 @@ angular.module('angularfireappApp')
   })
   .controller('NavbarCtrl', function ($scope, $location, Auth) {
     $scope.menu = [{
-      'title': 'Home',
-      'link': '/'
+      'title': 'adddata',
+      'link': '/addData'
+    },
+    {
+      'title': 'addusers',
+      'link': '/adduser'
+    },
+    {
+      'title': 'Add Marks',
+      'link': '/addmarks'
+    },
+    {
+      'title': 'Add Timetable',
+      'link': '/addtimetable'
     }];
 
     $scope.isCollapsed = true;

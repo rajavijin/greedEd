@@ -172,7 +172,6 @@ angular.module('angularfireappApp')
             	return createProfile(parentcreated, parent);
            })
            .then(function() {
-	           	userdata.subjects = [];
 				userdata.parent = allusers[iteration].parent;
 				userdata.name = allusers[iteration].student;
 				userdata.standard = allusers[iteration].standard;
@@ -190,22 +189,23 @@ angular.module('angularfireappApp')
 				var tidkey = '';
 			    for (var si = 0; si < allsubjects.length; si++) {
 	  				var cdata = allsubjects[si].split(":");
-	  				var tkey = userdata.schoolid+'_'+cdata[1]+'_'+cdata[0]+'_'+userdata.standard+'-'+userdata.division;
+	  				var tkey = school.$id+'_'+cdata[1]+'_'+cdata[0]+'_'+userdata.standard+'-'+userdata.division;
+	  				if(!userdata[teachers[tkey]]) {
+	  					userdata[teachers[tkey]] = cdata[1] +'_'+cdata[0];
+	  				} else {
+	  					userdata[teachers[tkey]] += ':'+cdata[0];
+	  				}
 	  				if(cdata[1] == userdata.teacher) {
 						tidkey = tkey;
 	  				}
-	  				if(!userdata["st_"+teachers[tkey]]) userdata["st_"+teachers[tkey]] = cdata[1]+','+cdata[0]
-	  				else userdata["st_"+teachers[tkey]] += "," + cdata[0];
-	  				//userdata.subjects.push({subject: cdata[0], teacher:cdata[1], teacherid:teachers[tkey]});
 			    };
 			    if(tidkey) userdata.teacherid = teachers[tidkey];
            		userdata.usertype = school.$id+"|student";
            		userdata.parentkids = userdata.usertype + '|'+ userdata.parentid;
            		delete userdata.parentid;
-			    console.log("Student", userdata);
 		        Auth.$createUser({email: userdata.email, password: userdata.pepper})
 	           .then(function (usercreated) {
-	            	console.log("user created", usercreated);
+	            	console.log("student created", usercreated);
 	            	return createProfile(usercreated, userdata);
 	          	})
 	          	.then(function() { 

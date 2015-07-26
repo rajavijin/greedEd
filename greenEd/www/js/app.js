@@ -172,7 +172,7 @@ angular.module('starter', ['ionic', 'starter.controllers','firebase'])
     }
   })
  .state('app.studentDashboard', {
-    url: "/studentdashboard/:uid",
+    url: "/studentdashboard/:uid/:class",
     views: {
       'menuContent' :{
         templateUrl: "templates/studentdashboard.html",
@@ -190,7 +190,7 @@ angular.module('starter', ['ionic', 'starter.controllers','firebase'])
     }
   })
   .state('app.studentOverallDashboard', {
-    url: "/studentoveralldashboard/:uid",
+    url: "/studentoveralldashboard/:uid/:name",
     views: {
       'menuContent' :{
         templateUrl: "templates/studentoverall.html",

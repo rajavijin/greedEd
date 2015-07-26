@@ -28,75 +28,24 @@ angular.module('starter.controllers', ['starter.services'])
     if($rootScope.filters)
       key = $rootScope.filters.educationyears[$rootScope.filters.educationyear] +'_'+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam];
     else key = false;
-    console.log("Key:", key);
     if(key) {
       var mcache = myCache.get(key) || {};
       console.log("marks cache", mcache);
-      if(cache && mcache["pass"]) {
+      if(cache && mcache["hm"]) {
         $scope.dashboard = true;
         $scope.$broadcast('scroll.refreshComplete');
-        applyMarks(mcache);
+        applyMarks(mcache["hm"]);
       } else {
+        console.log("in again");
         $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner>'});
-        console.log("fetch from fb");
-        var ref = Auth.getMarks(key);
-        ref.on("value", function(snapshot) {
-          var alldata = snapshot.val();
-          var count = 0;
-          if(!alldata) { $scope.empty = true; return;}
-          var dmarks = {pass:0,fail:0,Pass:[],Fail:[],allSubjects:[],subjectPass:[], subjectFail:[],subjectPassUsers:{}, subjectFailUsers:{}, gradeData:[], gradeUsers:{}, toppers:[]};
-          var grades = [];
-          var totalrecords = Object.keys(alldata).length;
-          console.log("total records", totalrecords);
-          for(var snapmark in alldata) {
-            count++;
-            var mark = alldata[snapmark];
-            if(mark.status == "Pass") {dmarks.pass++; dmarks.Pass.push({class:mark.class,uid:mark.studentid,name:mark.student}); }
-            if(mark.status == "Fail") {dmarks.fail++; dmarks.Fail.push({class:mark.class,uid:mark.studentid,name:mark.student}); }
-            for(var mm in mark.marks) {
-              if(dmarks.allSubjects.indexOf(mm) == -1) {
-                dmarks.allSubjects.push(mm);
-                dmarks.subjectPassUsers[mm] = []; dmarks.subjectFailUsers[mm] = [];
-                if(mark.marks[mm].status == "Pass") {
-                  dmarks.subjectPass.push({name:"Pass", y:1});
-                  dmarks.subjectFail.push({name:"Fail", y:0});
-                  dmarks.subjectPassUsers[mm].push({class:mark.class,uid:mark.studentid, name:mark.student});
-                } else {
-                  dmarks.subjectPass.push({name:"Pass", y:0});
-                  dmarks.subjectFail.push({name:"Fail", y:1});
-                  dmarks.subjectFailUsers[mm].push({class:mark.class,uid:mark.studentid, name:mark.student});
-                }
-              } else {
-                if(mark.marks[mm].status == "Pass") {
-                  dmarks.subjectPass[dmarks.allSubjects.indexOf(mm)].y++;
-                  dmarks.subjectPassUsers[mm].push({class:mark.class,uid:mark.studentid, name:mark.student});
-                } else {
-                  dmarks.subjectFail[dmarks.allSubjects.indexOf(mm)].y++;
-                  dmarks.subjectFailUsers[mm].push({class:mark.class,uid:mark.studentid, name:mark.student});
-                }
-              }
-            }
-            if(grades.indexOf(mark.grade) == -1) {
-              grades.push(mark.grade);
-              dmarks.gradeData.push({name: mark.grade, y:1});
-              dmarks.gradeUsers[mark.grade] = [{class:mark.class,uid:mark.studentid, name:mark.student}];
-            } else {
-              dmarks.gradeData[grades.indexOf(mark.grade)].y++;
-              dmarks.gradeUsers[mark.grade].push({class:mark.class,uid:mark.studentid, name:mark.student});
-            }
-            if(mark.rank == 1) {
-              dmarks.toppers.push({student: mark.student, standard: mark.standard, class: mark.class, total: mark.total, studentid: mark.studentid});
-            }
-            dmarks[mark.studentid] = mark;
-            if(count == totalrecords) {
-              $scope.dashboard = true;
-              myCache.put(key, dmarks);
-              $scope.$broadcast('scroll.refreshComplete');
-              console.log("applying marks");
-              $ionicLoading.hide();
-              applyMarks(dmarks);
-            }
-          };
+        $scope.hmmarks = Auth.getMarks(key+"/hm");
+        $scope.$broadcast('scroll.refreshComplete');
+        $scope.dashboard = true;
+        $scope.hmmarks.$loaded().then(function(alldata) {
+          $ionicLoading.hide();
+          var hm = {hm:alldata};
+          myCache.put(key, hm);
+          applyMarks(alldata);
         })
       }
     } else {
@@ -162,9 +111,8 @@ angular.module('starter.controllers', ['starter.services'])
     if($rootScope.filters)
       key = $rootScope.filters.educationyears[$rootScope.filters.educationyear] +'_'+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam];
     else key = false;
-    console.log("Key:", key);
     if(key) {
-      var mcache = myCache.get(key);
+      var mcache = myCache.get(key) || {};
       console.log("marks cache", mcache);
       if(cache && mcache[$stateParams.class]) {
         $scope.dashboard = true;
@@ -172,90 +120,15 @@ angular.module('starter.controllers', ['starter.services'])
         applyMarks(mcache[$stateParams.class]);
       } else {
         $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner>'});
-        console.log("fetch from fb");
-        var ref = Auth.getFilteredMarks(key, "class", $stateParams.class);
-        ref.on("value", function(snapshot) {
-          var alldata = snapshot.val();
-          var count = 0;
-          if(!alldata) { $scope.empty = true; return;}
-          var dmarks = {pass:0,fail:0,Pass:[],Fail:[],allSubjects:[],subjectPass:[], subjectFail:[],subjectPassUsers:{}, subjectFailUsers:{}, gradeData:[], gradeUsers:{}, toppers:[]};
-          var grades = [];
-          var totalrecords = Object.keys(alldata).length;
-          console.log("total records", totalrecords);
-          for(var snapmark in alldata) {
-            count++;
-            var mark = alldata[snapmark];
-            if(!dmarks[mark.class]) dmarks[mark.class] = {pass:0,fail:0, Pass:[], Fail:[], allSubjects:[],subjectPass:[], subjectFail:[], subjectPassUsers:{}, subjectFailUsers:{}, gradeData:[], gradeUsers:{}, toppers:[]};
-            if(mark.status == "Pass") {dmarks.pass++; dmarks.Pass.push({class:mark.class,uid:mark.studentid,name:mark.student}); dmarks[mark.class].pass++; dmarks[mark.class].Pass.push({class:mark.class,uid:mark.studentid,name:mark.student});}
-            if(mark.status == "Fail") {dmarks.fail++; dmarks.Fail.push({class:mark.class,uid:mark.studentid,name:mark.student}); dmarks[mark.class].fail++; dmarks[mark.class].Fail.push({class:mark.class,uid:mark.studentid,name:mark.student});}
-            for(var mm in mark.marks) {
-              if(dmarks.allSubjects.indexOf(mm) == -1) {
-                dmarks.allSubjects.push(mm);
-                dmarks.subjectPassUsers[mm] = []; dmarks.subjectFailUsers[mm] = [];
-                if(mark.marks[mm].status == "Pass") {
-                  dmarks.subjectPass.push({name:"Pass", y:1});
-                  dmarks.subjectFail.push({name:"Fail", y:0});
-                  dmarks.subjectPassUsers[mm].push({class:mark.class,uid:mark.studentid, name:mark.student});
-                } else {
-                  dmarks.subjectPass.push({name:"Pass", y:0});
-                  dmarks.subjectFail.push({name:"Fail", y:1});
-                  dmarks.subjectFailUsers[mm].push({class:mark.class,uid:mark.studentid, name:mark.student});
-                }
-              } else {
-                if(mark.marks[mm].status == "Pass") {
-                  dmarks.subjectPass[dmarks.allSubjects.indexOf(mm)].y++;
-                  dmarks.subjectPassUsers[mm].push({class:mark.class,uid:mark.studentid, name:mark.student});
-                } else {
-                  dmarks.subjectFail[dmarks.allSubjects.indexOf(mm)].y++;
-                  dmarks.subjectFailUsers[mm].push({class:mark.class,uid:mark.studentid, name:mark.student});
-                }
-              }
-              if(dmarks[mark.class].allSubjects.indexOf(mm) == -1) {
-                dmarks[mark.class].allSubjects.push(mm);
-                dmarks[mark.class].subjectPassUsers[mm] = []; dmarks[mark.class].subjectFailUsers[mm] = [];
-                if(mark.marks[mm].status == "Pass") {
-                  dmarks[mark.class].subjectPass.push({name:mm, y:1});
-                  dmarks[mark.class].subjectPassUsers[mm].push({class:mark.class,uid:mark.studentid, name:mark.student});
-                  dmarks[mark.class].subjectFail.push({name:mm, y:0});
-                } else {
-                  dmarks[mark.class].subjectPass.push({name:mm, y:0});
-                  dmarks[mark.class].subjectFail.push({name:mm, y:1});
-                  dmarks[mark.class].subjectFailUsers[mm].push({class:mark.class,uid:mark.studentid, name:mark.student});
-                }
-              } else {
-                if(mark.marks[mm].status == "Pass") {
-                  dmarks[mark.class].subjectPass[dmarks[mark.class].allSubjects.indexOf(mm)].y++;
-                  dmarks[mark.class].subjectPassUsers[mm].push({class:mark.class,uid:mark.studentid, name:mark.student});
-                } else {
-                  dmarks[mark.class].subjectFail[dmarks[mark.class].allSubjects.indexOf(mm)].y++;
-                  dmarks[mark.class].subjectFailUsers[mm].push({class:mark.class,uid:mark.studentid, name:mark.student});
-                }
-              }              
-            }
-            if(grades.indexOf(mark.grade) == -1) {
-              grades.push(mark.grade);
-              dmarks.gradeData.push({name: mark.grade, y:1});
-              dmarks[mark.class].gradeData.push({name: mark.grade, y:1});
-              dmarks.gradeUsers[mark.grade] = [{class:mark.class,uid:mark.studentid, name:mark.student}];
-            } else {
-              dmarks.gradeData[grades.indexOf(mark.grade)].y++;
-              dmarks[mark.class].gradeData[grades.indexOf(mark.grade)].y++;
-              dmarks.gradeUsers[mark.grade].push({class:mark.class,uid:mark.studentid, name:mark.student});
-            }
-            if(mark.rank == 1) {
-              dmarks.toppers.push({student: mark.student, standard: mark.standard, class: mark.class, total: mark.total, studentid: mark.studentid});
-              dmarks[mark.class].toppers.push({student: mark.student, standard: mark.standard, class: mark.class, total: mark.total, studentid: mark.studentid});
-            }
-            if(count == totalrecords) {
-              $scope.dashboard = true;
-              mcache[$stateParams.class] = dmarks;
-              myCache.put(key, mcache);
-              $scope.$broadcast('scroll.refreshComplete');
-              console.log("applying marks");
-              $ionicLoading.hide();
-              applyMarks(dmarks);
-            }
-          };
+        $scope.marks = Auth.getMarks(key+"/"+$stateParams.class);
+        $scope.$broadcast('scroll.refreshComplete');
+        $scope.dashboard = true;
+        $scope.marks.$loaded().then(function(alldata) {
+          $ionicLoading.hide();
+          var dmark = {}
+          dmark[$stateParams.class] = alldata;
+          myCache.put(key, dmark);
+          applyMarks(alldata);
         })
       }
     } else {
@@ -263,7 +136,6 @@ angular.module('starter.controllers', ['starter.services'])
       $scope.empty = true;
     }
   }
-
   var applyMarks = function(marks) {
     console.log("Marks", marks);
     $scope.toppers = marks.toppers;
@@ -332,77 +204,15 @@ angular.module('starter.controllers', ['starter.services'])
         applyMarks(mcache[$stateParams.uid]);
       } else {
         $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner>'});
-        console.log("fetch from fb");
-        var ref = Auth.getMarks(key);
-        ref.on("value", function(snapshot) {
-          var alldata = snapshot.val();
-          var totalrecords = Object.keys(alldata).length;
-          console.log("total records", totalrecords);
-          if(!alldata) { $scope.empty = true; return;}
-          var dmarks = {pass:0,fail:0,Pass:[],Fail:[],allSubjects:[],subjectPass:[], subjectFail:[],subjectPassUsers:{}, subjectFailUsers:{}, gradeData:[], gradeUsers:{}, toppers:{}};
-          var grades = [];
-          var topmark = {};
-          var count = 0;
-          for(var snapmark in alldata) {
-            count++;
-            var mark = alldata[snapmark];
-            for(var smark in mark.marks) {
-              if(mark.marks[smark].teacherid == $stateParams.uid) {
-                if(mark.marks[smark].status == "Pass") {}
-                if(mark.marks[smark].status == "Fail") {}
-                if(dmarks.allSubjects.indexOf(smark) == -1) {
-                  dmarks.allSubjects.push(smark);
-                  dmarks.subjectPassUsers[smark] = []; dmarks.subjectFailUsers[smark] = [];
-                  if(mark.marks[smark].status == "Pass") {
-                    dmarks.subjectPass.push({name:"Pass", y:1});
-                    dmarks.subjectFail.push({name:"Fail", y:0});
-                    dmarks.subjectPassUsers[smark].push({class:mark.class,uid:mark.studentid, name:mark.student});
-                    dmarks.pass++; dmarks.Pass.push({class:mark.class,uid:mark.studentid,name:mark.student});
-                  } else {
-                    dmarks.subjectPass.push({name:"Pass", y:0});
-                    dmarks.subjectFail.push({name:"Fail", y:1});
-                    dmarks.subjectFailUsers[smark].push({class:mark.class,uid:mark.studentid, name:mark.student});
-                    dmarks.fail++; dmarks.Fail.push({class:mark.class,uid:mark.studentid,name:mark.student});
-                  }
-                } else {
-                  if(mark.marks[smark].status == "Pass") {
-                    dmarks.subjectPass[dmarks.allSubjects.indexOf(smark)].y++;
-                    dmarks.subjectPassUsers[smark].push({class:mark.class,uid:mark.studentid, name:mark.student});
-                    dmarks.pass++; dmarks.Pass.push({class:mark.class,uid:mark.studentid,name:mark.student});
-                  } else {
-                    dmarks.subjectFail[dmarks.allSubjects.indexOf(smark)].y++;
-                    dmarks.subjectFailUsers[smark].push({class:mark.class,uid:mark.studentid, name:mark.student});
-                    dmarks.fail++; dmarks.Fail.push({class:mark.class,uid:mark.studentid,name:mark.student});
-                  }
-                }
-/*                if(grades.indexOf(mark.marks[smark].grade) == -1) {
-                  grades.push(mark.marks[smark].grade);
-                  dmarks.gradeData.push({name: mark.marks[smark].grade, y:1});
-                  dmarks[mark.class].gradeData.push({name: mark.marks[smark].grade, y:1});
-                  dmarks.gradeUsers[mark.marks[smark].grade] = [{class:mark.class,uid:mark.studentid, name:mark.student}];
-                } else {
-                  dmarks.gradeData[grades.indexOf(mark.marks[smark].grade)].y++;
-                  dmarks[mark.class].gradeData[grades.indexOf(mark.marks[smark].grade)].y++;
-                  dmarks.gradeUsers[mark.marks[smark].grade].push({class:mark.class,uid:mark.studentid, name:mark.student});
-                }*/
-                if(!topmark[mark.class+'_'+smark]) {
-                  topmark[mark.class+'_'+smark] = mark.marks[smark].mark;
-                  dmarks.toppers[mark.class+'_'+smark] = {student: mark.student, standard: mark.standard, class: mark.class, total: mark.total, studentid: mark.studentid};
-                } else if (topmark[mark.class+'_'+smark] < mark.marks) {
-                  dmarks.toppers[mark.class+'_'+smark] = {student: mark.student, standard: mark.standard, class: mark.class, total: mark.total, studentid: mark.studentid};
-                }
-              }
-            }
-            if(count == totalrecords) {
-              $scope.dashboard = true;
-              mcache[$stateParams.uid] = dmarks;
-              myCache.put(key, mcache);
-              $scope.$broadcast('scroll.refreshComplete');
-              console.log("applying marks");
-              $ionicLoading.hide();
-              applyMarks(dmarks);
-            }
-          };
+        $scope.marks = Auth.getMarks(key+"/"+$stateParams.uid);
+        $scope.$broadcast('scroll.refreshComplete');
+        $scope.dashboard = true;
+        $scope.marks.$loaded().then(function(alldata) {
+          $ionicLoading.hide();
+          var dmark = {};
+          dmark[$stateParams.uid] = alldata;
+          myCache.put(key, dmark);
+          applyMarks(alldata);
         })
       }
     } else {
@@ -471,24 +281,22 @@ angular.module('starter.controllers', ['starter.services'])
     console.log("Key:", key);
     if(key) {
       var mcache = myCache.get(key) || {};
-      console.log("marks cache", mcache);
-      if(cache && mcache[$stateParams.uid]) {
+      if(cache && mcache[$stateParams.class]) {
         $scope.dashboard = true;
         $scope.$broadcast('scroll.refreshComplete');
-        applyMarks(mcache[$stateParams.uid]);
+        applyMarks(mcache[$stateParams.class][$stateParams.uid]);
       } else {
         $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner>'});
-        console.log("fetch from fb");
-        var ref = Auth.getFilteredMarks(key, "studentid", $stateParams.uid);
-        ref.on("value", function(snapshot) {
-          snapshot.forEach(function(markdata) {
-            $ionicLoading.hide();
-            var mark = markdata.val();
-            console.log("mark data", mark);
-            if(!mark) { $scope.empty = true; return;}
-            mcache[$stateParams.uid] = mark;
-            applyMarks(mark);
-          })
+        $scope.marks = Auth.getMarks(key+"/"+$stateParams.class+"/"+$stateParams.uid);
+        $scope.$broadcast('scroll.refreshComplete');
+        $scope.dashboard = true;
+        $scope.marks.$loaded().then(function(alldata) {
+          $ionicLoading.hide();
+          var dmark = {};
+          dmark[$stateParams.class] = {};
+          dmark[$stateParams.class][$stateParams.uid] = alldata;
+          myCache.put(key, dmark);
+          applyMarks(alldata);
         })
       }
     } else {
@@ -555,8 +363,120 @@ angular.module('starter.controllers', ['starter.services'])
   }
 })
 
-.controller("StudentOverallDashboardCtrl", function($scope) {
+.controller("StudentOverallDashboardCtrl", function($scope, $stateParams, $rootScope, myCache, Auth, $ionicLoading, $ionicModal) {
+  var key = '';
+  $scope.getMarksData = function(cache) {
+    $scope.empty = false;
+    $scope.dashboard = false;
+    console.log("Filters", $rootScope.filters);
+    if($rootScope.filters)
+      key = $rootScope.filters.educationyears[$rootScope.filters.educationyear];
+    else key = false;
+    console.log("Key:", key);
+    if(key) {
+      var mcache = myCache.get(key) || {};
+      console.log("marks cache", mcache);
+      if(cache && mcache[$stateParams.uid]) {
+        $scope.dashboard = true;
+        $scope.$broadcast('scroll.refreshComplete');
+        applyMarks(mcache[$stateParams.uid]);
+      } else {
+        $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner>'});
+        $scope.marks = Auth.getMarks(key+"/"+$stateParams.uid);
+        $scope.$broadcast('scroll.refreshComplete');
+        $scope.dashboard = true;
+        $scope.marks.$loaded().then(function(alldata) {
+          $ionicLoading.hide();
+          var dmark = {};
+          dmark[$stateParams.uid] = alldata;
+          myCache.put(key, dmark);
+          applyMarks(alldata);
+        })
+      }
+    } else {
+      $scope.$broadcast('scroll.refreshComplete');
+      $scope.empty = true;
+    }
+  }
 
+  var applyMarks = function(marks) {
+    console.log("marks", marks);
+    var allsubjectData = [];
+    for (var i = 0; i < marks.allSubjects.length; i++) {
+      allsubjectData.push({name: marks.allSubjects[i], data: marks.subjectDataMarks[marks.allSubjects[i]]});
+    };
+    $scope.somarksConfig = {
+      chart: {renderTo: 'somarks',type: 'column', options3d: {enabled: true,alpha: 10,beta: 20,depth: 50}},
+      title: {text:"Percentage"},plotOptions: {column: {depth: 25,showInLegend: false, dataLabels: {enabled: true,format: '{point.y}%'},events: {legendItemClick: function () {return false;}}},allowPointSelect: false},
+      xAxis: {categories: marks.examLabels},
+      yAxis: {title: {text: null}},
+      series: [{name: 'Percentage',data: marks.allMarks}]
+    };
+    $scope.allmarksConfig = {
+      chart: {renderTo: 'allmarks',type: 'line', options3d: {enabled: true,alpha: 10,beta: 20,depth: 50}},
+      title: {text:"Total Mark"},plotOptions: {line: {dataLabels: {enabled: true},showInLegend: false,enableMouseTracking: false,events: {legendItemClick: function () {return false;}}}},
+      xAxis: {categories: marks.examLabels},
+      yAxis: {title: {text: null}},
+      series: [{name: 'Total',data: marks.allMarks}]
+    };    
+    $scope.sosubjectsConfig = {
+      chart: {renderTo: 'sosubjects',type: 'spline', options3d: {enabled: true,alpha: 10,beta: 20,depth: 50}},
+      title: {text:"Subjects"},tooltip:{pointFormat:'{point.y}'},plotOptions: {spline: {depth: 25,dataLabels: {enabled: true,format: '{point.y}'}}},
+      xAxis: {categories: marks.examLabels},
+      yAxis: {title: {text: null}},
+      series: allsubjectData
+    };
+    $scope.ranksConfig = {
+      chart: {renderTo: 'ranks',type: 'line', options3d: {enabled: true,alpha: 10,beta: 20,depth: 50}},
+      title: {text:"Rank"},plotOptions: {line: {dataLabels: {enabled: true},showInLegend: false,enableMouseTracking: false,events: {legendItemClick: function () {return false;}}}},
+      xAxis: {categories: marks.examLabels},
+      yAxis: {title: {text: null},tickInterval: 1, min: 0,},
+      series: [{name: 'Rank',data: marks.ranks}]
+    }; 
+/*    $scope.opassfailConfig = {
+      chart: {renderTo: 'opassfail',type: 'pie',height:200,options3d:{enabled: true,alpha: 45,beta: 0},},
+      title: {text:"Total Pass/Fail"},plotOptions: {pie: {innerSize: 50,depth: 35,dataLabels:{enabled: true,format: '{point.name}: <b>{point.y}</b>'}}},
+      series: [{type: 'pie',name: 'Total',data: [["Pass", marks.pass],["Fail", marks.fail]]}]
+    };   */     
+    var attendance = [];
+    for (var i = 0; i < marks.attendance.length; i++) {
+      attendance.push(parseInt(marks.attendance[i]));
+    };
+    $scope.soattendanceConfig = {
+      chart: {renderTo: 'soattendance',type: 'column', options3d: {enabled: true,alpha: 10,beta: 20,depth: 50}},
+      title: {text:"Attendance"},plotOptions: {column: {depth: 25,showInLegend: false, dataLabels: {enabled: true,format: '{point.y}%'},events: {legendItemClick: function () {return false;}}},allowPointSelect: false},
+      xAxis: {categories: marks.examLabels},
+      yAxis: {title: {text: null}, max:100},
+      series: [{name: 'Attendance',data: attendance}]
+    };
+    $scope.title = key.replace("_", " ") + " " + $stateParams.name;
+  }
+  $scope.getMarksData(true);
+  $scope.noexams = true;
+  $ionicModal.fromTemplateUrl('templates/dashboardFilters.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
+
+  $scope.openModal = function() {
+    $scope.modal.show();
+  };
+
+  $scope.closeModal = function() {
+    $scope.modal.hide();
+  };
+
+  $scope.filterData = function() {
+    $scope.openModal();
+  }
+  $scope.dashboardFilters = function() {
+    console.log("Filters", $rootScope.filters);
+    key = $rootScope.filters.educationyears[$rootScope.filters.educationyear] +'_'+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam];
+    $scope.getMarksData(true);
+    $scope.closeModal();
+  }
 })
 
 .controller("AllClassesCtrl", function($scope, myCache, Auth) {
@@ -625,11 +545,14 @@ angular.module('starter.controllers', ['starter.services'])
 })
 
 .controller("MarkStudentsCtrl", function($scope, $stateParams, myCache) {
-  var title = $stateParams.filter.replace("_", " ") + " ";
   var cache = myCache.get($stateParams.filter);
-  console.log("Params", $stateParams);
-  if($stateParams.type != "hm") {
-    cache = cache[$stateParams.type];
+  console.log("Main cache", cache);
+  var title = $stateParams.filter.replace("_", " ") + " ";
+  if($stateParams.type.indexOf("student") != -1) {
+    var type = $stateParams.type.split("_");
+    var cache = cache[type[1]][type[2]];
+  } else {
+    var cache = cache[$stateParams.type];
   }
   console.log("Cache", cache);
   var users = [];

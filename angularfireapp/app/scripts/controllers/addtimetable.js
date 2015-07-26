@@ -41,20 +41,9 @@ angular.module('angularfireappApp')
 	  	$scope.listSchool = false;
   		console.log("schoolitem", schoolItem);
   		$scope.school = schoolItem;
-    });
-    
- /*   // push a message to the end of the array
-    $scope.messages.set({text: newMessage})
-      // display any errors
-      .catch(alert);
-  		    var fredNameRef = Ref.child('-JuWkw5o0Mgkiv8BXSJl/lastmark');
-			fredNameRef.child('educationyear').set("2015-2016");
-			fredNameRef.child('typeofexam').set("periodical1");
-			fredNameRef.child('educationyears').push("2015-2016");
-			fredNameRef.child('typeofexams').push("periodical1");*/
   		schoolValues(schoolItem);
-  	}
-
+    };
+    
     var schoolValues = function(schoolValues) {
       school = schoolValues;
       console.log("Marks: ", marks);
@@ -80,7 +69,7 @@ angular.module('angularfireappApp')
 
 						console.log("userdata", userdata);
 						if(!allusers[userdata.standard+'-'+userdata.division]) allusers[userdata.standard+'-'+userdata.division] = {};
-						if(!allusers[userdata.standard+'-'+userd ata.division][userdata.day]) allusers[userdata.standard+'-'+userdata.division][userdata.day] = {};
+						if(!allusers[userdata.standard+'-'+userdata.division][userdata.day]) allusers[userdata.standard+'-'+userdata.division][userdata.day] = {};
 						allusers[userdata.standard+'-'+userdata.division][userdata.day][userdata.time] = userdata.subject;
 						for(var teacher in teachers) {
 							for (var ti = 0; ti < teachers[teacher].subjects.length; ti++) {

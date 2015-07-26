@@ -95,9 +95,12 @@ angular.module('starter.services', [])
       });
       return deferred.promise;
     },
+    getAllMarks: function() {
+      return $firebaseObject(ref.child(user.schoolid+'/marks'));
+    },
     getMarks: function(key) {
       console.log("key in service", key);
-      return ref.child(user.schoolid+'/marks/'+key);
+      return $firebaseObject(ref.child(user.schoolid+'/marks/'+key));
     },
     getFilteredMarks: function(filter, key, sclass) {
       console.log("key in service", key);
