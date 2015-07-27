@@ -36,8 +36,7 @@ angular.module('starter.controllers', ['starter.services'])
         $scope.$broadcast('scroll.refreshComplete');
         applyMarks(mcache["hm"]);
       } else {
-        console.log("in again");
-        $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner>'});
+        if(!mcache["hm"]) $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner>'});
         $scope.hmmarks = Auth.getMarks(key+"/hm");
         $scope.$broadcast('scroll.refreshComplete');
         $scope.dashboard = true;
@@ -55,7 +54,6 @@ angular.module('starter.controllers', ['starter.services'])
   }
 
   var applyMarks = function(marks) {
-    console.log("Marks", marks);
     $scope.toppers = marks.toppers;
     $scope.passfailConfig = {
       chart: {renderTo: 'passfailstatus',type: 'pie',height:200,options3d:{enabled: true,alpha: 45,beta: 0},},
@@ -373,6 +371,7 @@ angular.module('starter.controllers', ['starter.services'])
       key = $rootScope.filters.educationyears[$rootScope.filters.educationyear];
     else key = false;
     console.log("Key:", key);
+    $scope.title = key + " " + $stateParams.name;
     if(key) {
       var mcache = myCache.get(key) || {};
       console.log("marks cache", mcache);
@@ -449,7 +448,6 @@ angular.module('starter.controllers', ['starter.services'])
       yAxis: {title: {text: null}, max:100},
       series: [{name: 'Attendance',data: attendance}]
     };
-    $scope.title = key.replace("_", " ") + " " + $stateParams.name;
   }
   $scope.getMarksData(true);
   $scope.noexams = true;

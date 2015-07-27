@@ -18,7 +18,7 @@ angular.module('angularfireappApp')
   	var periodicalRef = '';
   	var yearRef = '';
   	var filtersRef = '';
-	var defaultMark = {hm:{pass:0,fail:0,Pass:[],Fail:[],allSubjects:[],subjectPass:[], subjectFail:[],subjectPassUsers:{}, subjectFailUsers:{}, gradeData:[], gradeUsers:{}, toppers:[]}};
+	var defaultMark = {hm:{pass:0,fail:0,Pass:[],Fail:[],allSubjects:[],subjectPass:[], subjectFail:[],subjectPassUsers:{}, subjectFailUsers:{}, gradeData:[], grades:[], gradeUsers:{}, toppers:[]}};
 	var dmarks = {};
   	$scope.listSchool = true;
   
@@ -53,7 +53,6 @@ angular.module('angularfireappApp')
 
   	$scope.addUsers = function(schoolItem) {
 	  	$scope.listSchool = false;
-  		console.log("schoolitem", schoolItem);
   		$scope.school = schoolItem;
   		schoolValues(schoolItem);
   	}
@@ -63,7 +62,6 @@ angular.module('angularfireappApp')
       filtersRef = Ref.child(school.$id+'/filters');
       $scope.filters = $firebaseObject(filtersRef);
 	  $scope.filters.$loaded().then(function(fbfilters) {
-		  console.log("Filters", fbfilters);
 		  if(fbfilters.educationyears) {
 			filters.typeofexams = fbfilters.typeofexams; filters.educationyears = fbfilters.educationyears;
 			filters.typeofexam = fbfilters.typeofexam; filters.educationyear = fbfilters.educationyear;
@@ -72,7 +70,6 @@ angular.module('angularfireappApp')
 			filters.typeofexam = 0; filters.educationyear = 0;
 		  }
 	  });
-      console.log("Marks: ", marks);
     }
 
   $scope.csvImport = function(csvdata) {
@@ -81,14 +78,10 @@ angular.module('angularfireappApp')
 		$scope.processing = true;
 		var allusers = [];
 		var newdata = csvdata;
-    	console.log("csvdata", csvdata);
 		var commondata = {};
 		var common = Object.keys(newdata[0]);
-		console.log("Common", common);
 		var commonHead = common[0].toLowerCase().split(";");
-		console.log("Common head", commonHead);
 		var commonVal = newdata[0][common[0]].toLowerCase().split(";");
-		console.log("commonVal", commonVal);
 		for (var c = 0; c < commonHead.length; c++) {
 			if(commonVal[c]) {
 				commondata[commonHead[c].replace(/"/g, "")] = commonVal[c].replace(/"/g, "");
@@ -105,7 +98,6 @@ angular.module('angularfireappApp')
 			    			userdata[head[ri].replace(/"/g, "")] = row[ri].replace(/"/g, "");
 			    		};
 
-						console.log("userdata", userdata);
 						if(!userdata.division) userdata.division = "all";
 						if(userdata.student && (userdata.student != "Student"))
 							allusers.push(userdata);
@@ -114,13 +106,8 @@ angular.module('angularfireappApp')
 			}
 		}
     }
-	console.log("USERDATA:", allusers);
     var alluserSubmit = function(iteration) {
-    	console.log("school", school);
-    	console.log("All Firebase Users", allfbusers);
-    	console.log("Student id", allusers[iteration].studentid);
     	var student = allfbusers["students"][allusers[iteration].studentid];
-    	console.log("Student", student);
     	allusers[iteration].class = commondata.standard +'-'+commondata.division;
     	var studentMark = {};
     	studentMark.student = student.name;
@@ -130,23 +117,18 @@ angular.module('angularfireappApp')
     	studentMark.standard = commondata.standard;
     	studentMark.attendance = allusers[iteration].attendance;
     	studentMark.remarks = allusers[iteration].remarks;
-		console.log("iteration", allusers[iteration]);
 		var total = 0;
 		var status = "Pass";
 		var maxmark = school.maxmark[0].max;
 		for (var mm = 0; mm < school.maxmark.length; mm++) {
-			console.log("MM", student.standard);
 			if(school.maxmark[mm].standard == student.standard) maxmark = school.maxmark[mm].max;
 		};
 		var passmark = school.passmark[0].passmark;
 		for (var pm = 0; pm < school.passmark.length; pm++) {
 			if(school.passmark[pm].standard == student.standard) passmark = school.passmark[pm].passmark;
 		};
-		console.log("Passmark", passmark);
-		console.log("maxmark", maxmark);
 		studentMark.marks = {};
 		for(var fsub in allfbusers["teachers"][allusers[iteration].class]) {
-			console.log("Subject", allusers[iteration][fsub]);
 			if(allusers[iteration][fsub]) {
 	        	studentMark.marks[fsub] = {teacher: allfbusers["teachers"][allusers[iteration].class][fsub]["teacher"], teacherid:allfbusers["teachers"][allusers[iteration].class][fsub]["teacherid"], maxmark:maxmark, passmark:passmark};
 				if(allusers[iteration][fsub] == "ab") {
@@ -186,7 +168,6 @@ angular.module('angularfireappApp')
 		var attendanceVal = allusers[iteration].attendance.split("/");
 		studentMark.attendanceP = (parseInt(attendanceVal[0]) * (100/parseInt(attendanceVal[1]))).toPrecision(4);
 		}
-		console.log("Student Mark", studentMark);
 		
 		AllMarks.push(studentMark);
       	if(iteration != (allusers.length -1)) {
@@ -238,12 +219,12 @@ angular.module('angularfireappApp')
 					for(var mi = 0; mi < totalrecords; mi++) {
 						count++;
 						var mark = AllMarks[mi];
-						if(!dmarks[key][mark.class]) dmarks[key][mark.class] = {pass:0,fail:0, Pass:[], Fail:[], allSubjects:[],subjectPass:[], subjectFail:[], subjectPassUsers:{}, subjectFailUsers:{}, gradeData:[], gradeUsers:{}, toppers:[]};
-						if(mark.status == "Pass") {dmarks[key]["hm"].pass++; dmarks[key]["hm"].Pass.push({class:mark.class,uid:mark.studentid,name:mark.student}); dmarks[key][mark.class].pass++; dmarks[key][mark.class].Pass.push({class:mark.class,uid:mark.studentid,name:mark.student});}
-						if(mark.status == "Fail") {dmarks[key]["hm"].fail++; dmarks[key]["hm"].Fail.push({class:mark.class,uid:mark.studentid,name:mark.student}); dmarks[key][mark.class].fail++; dmarks[key][mark.class].Fail.push({class:mark.class,uid:mark.studentid,name:mark.student});}
+						if(!dmarks[ykey][mark.studentid]) dmarks[ykey][mark.studentid] = {pass:0,fail:0,examLabels:[],allSubjects:[],examMarks:[],allMarks:[],ranks:[],subjectDataMarks:{},attendance:[]};
+						if(!dmarks[key][mark.class]) dmarks[key][mark.class] = {pass:0,fail:0, Pass:[], Fail:[], allSubjects:[],subjectPass:[], subjectFail:[], subjectPassUsers:{}, subjectFailUsers:{}, gradeData:[], grades:[], gradeUsers:{}, toppers:[]};
+						if(mark.status == "Pass") {dmarks[key]["hm"].pass++; dmarks[ykey][mark.studentid].pass++; dmarks[key]["hm"].Pass.push({class:mark.class,uid:mark.studentid,name:mark.student}); dmarks[key][mark.class].pass++; dmarks[key][mark.class].Pass.push({class:mark.class,uid:mark.studentid,name:mark.student});}
+						if(mark.status == "Fail") {dmarks[key]["hm"].fail++; dmarks[ykey][mark.studentid].fail++; dmarks[key]["hm"].Fail.push({class:mark.class,uid:mark.studentid,name:mark.student}); dmarks[key][mark.class].fail++; dmarks[key][mark.class].Fail.push({class:mark.class,uid:mark.studentid,name:mark.student});}
 						for(var mm in mark.marks) {
 						  if(!dmarks[key][mark.marks[mm].teacherid]) dmarks[key][mark.marks[mm].teacherid] = {pass:0,fail:0, Pass:[], Fail:[], allSubjects:[],subjectPass:[], subjectFail:[], subjectPassUsers:{}, subjectFailUsers:{}, gradeData:[], gradeUsers:{}, toppers:{}};
-						  if(!dmarks[ykey][mark.studentid]) dmarks[ykey][mark.studentid] = {examLabels:[],allSubjects:[],examMarks:[],allMarks:[],ranks:[],subjectDataMarks:{},attendance:[]};
 						  if(dmarks[ykey][mark.studentid].allSubjects.indexOf(mm) == -1) {
 						  	if(!dmarks[ykey][mark.studentid].subjectDataMarks[mm]) dmarks[ykey][mark.studentid].subjectDataMarks[mm] = [];
 						    dmarks[ykey][mark.studentid].allSubjects.push(mm);
@@ -339,18 +320,28 @@ angular.module('angularfireappApp')
 						    dmarks[key][mark.marks[mm].teacherid].toppers[mark.class+'_'+mm].push({student: mark.student, standard: mark.standard, class: mark.class, mark: mark.marks[mm].mark, studentid: mark.studentid});
 						  }
 						}
-						if(grades.indexOf(mark.grade) == -1) {
-						  grades.push(mark.grade);
-						  dmarks[key]["hm"].gradeData.push({name: mark.grade, y:1});
+						var hmindex = dmarks[key]["hm"].grades.indexOf(mark.grade);
+						if(hmindex == -1) {
+						  dmarks[key]["hm"].grades.push(mark.grade);
+						  var val = {name: mark.grade, y:1};
+						  if(mark.grade == "Grade F") val.color = "#ff6c60";
+						  dmarks[key]["hm"].gradeData.push(val);
 						  dmarks[key]["hm"].gradeUsers[mark.grade] = [{class:mark.class,uid:mark.studentid, name:mark.student}];
-						  dmarks[key][mark.class].gradeData.push({name: mark.grade, y:1});
+						} else {
+						  dmarks[key]["hm"].gradeData[hmindex].y++;
+						  dmarks[key]["hm"].gradeUsers[mark.grade].push({class:mark.class,uid:mark.studentid, name:mark.student});
+						}
+						var yindex = dmarks[key][mark.class].grades.indexOf(mark.grade);
+						if(yindex == -1) {
+						  dmarks[key][mark.class].grades.push(mark.grade);
+						  var yval = {name: mark.grade, y:1};
+						  if(mark.grade == "Grade F") yval.color = "#ff6c60";
+						  dmarks[key][mark.class].gradeData.push(yval);
 						  dmarks[key][mark.class].gradeUsers[mark.grade] = [{class:mark.class,uid:mark.studentid, name:mark.student}];
 						} else {
-						  dmarks[key]["hm"].gradeData[grades.indexOf(mark.grade)].y++;
-						  dmarks[key]["hm"].gradeUsers[mark.grade].push({class:mark.class,uid:mark.studentid, name:mark.student});
-						  dmarks[key][mark.class].gradeData[grades.indexOf(mark.grade)].y++;
+						  dmarks[key][mark.class].gradeData[yindex].y++;
 						  dmarks[key][mark.class].gradeUsers[mark.grade].push({class:mark.class,uid:mark.studentid, name:mark.student});
-						}
+						}						
 						if(mark.rank == 1) {
 						  dmarks[key]["hm"].toppers.push({student: mark.student, standard: mark.standard, class: mark.class, total: mark.total, studentid: mark.studentid});
 						  dmarks[key][mark.class].toppers.push({student: mark.student, standard: mark.standard, class: mark.class, total: mark.total, studentid: mark.studentid});
@@ -359,7 +350,7 @@ angular.module('angularfireappApp')
 						dmarks[ykey][mark.studentid].examLabels.push(mark.typeofexam);
 						dmarks[ykey][mark.studentid].examMarks.push({name: mark.typeofexam, y: mark.percentage});
 						dmarks[ykey][mark.studentid].allMarks.push({name: mark.typeofexam, y: mark.total});
-						dmarks[ykey][mark.studentid].attendance.push(mark.attendanceP);
+						dmarks[ykey][mark.studentid].attendance.push(parseInt(mark.attendanceP));
 						dmarks[ykey][mark.studentid].ranks.push(mark.rank);
 					};
 					console.log("Total count", count);

@@ -7,13 +7,7 @@ angular.module('starter.services', [])
 .factory('Auth', function ( $firebaseAuth, $q, $firebaseObject, myCache, $firebaseArray, FIREBASE_URL, $state, $rootScope) {
   var ref = new Firebase(FIREBASE_URL);
   var auth = $firebaseAuth(ref);
-  var menus = {
-    "hmMenu": {"Links":[{"title":"Dashboard", "href":"/app/hmdashboard", "class":"ion-stats-bars"},{"title":"Classes", "href":"/app/allclasses", "class": "ion-easel"},{"title":"Students", "href":"/app/allstudents", "class": "ion-person-stalker"},{"title":"Teachers", "href":"/app/allteachers", "class": "ion-ios-body"},{"title":"Wall","href":"/app/wall","class":"ion-ios-list"},{"title":"Messages", "href":"/app/messages", "class":"ion-chatboxes"}]},
-    //"parentMenu": {"Links":[{"title":"Children", "href":"/app/allstudents", "class": "ion-person-stalker"},{"title":"Wall","href":"/app/wall","class":"ion-ios-list"},{"title":"log-out", "href":"logout", "class":"ion-log-out"}]},
-    "parentSingleMenu": {"Links":[{"title":"Dashboard", "href":"/app/studentdashboard", "class":"ion-stats-bars"},{"title":"Overall Dashboard", "href":"/app/studentoveralldashboard", "class":"ion-ios-pulse-strong"},{"title":"Class Dashboard", "href":"/app/dashboard", "class":"ion-pie-graph"},{"title":"Wall","href":"/app/wall","class":"ion-ios-list"},{"title":"Messages", "href":"/app/messages", "class":"ion-chatboxes"},{"title":"TimeTable", "href":"/app/timetable", "class":"ion-ios-time-outline"}]},
-    "teacherMenu": {"Links":[{"title":"Dashboard", "href":"/app/teacherdashboard", "class":"ion-stats-bars"},{"title":"Students", "href":"/app/allstudents", "class": "ion-person-stalker"},{"title":"Wall","href":"/app/wall","class":"ion-ios-list"},{"title":"Messages", "href":"/app/messages", "class":"ion-chatboxes"}]},
-    "classTeacherMenu": {"Links":[{"title":"Class Dashboard", "href":"/app/dashboard", "class":"ion-stats-bars"},{"title":"Teacher Dashboard", "href":"/app/teacherdashboard", "class":"ion-ios-pulse-strong"},{"title":"Students", "href":"/app/allstudents", "class": "ion-person-stalker"},{"title":"Messages", "href":"/app/messages", "class":"ion-chatboxes"},{"title":"Profile", "href":"/app/teacherprofile", "class": "ion-person"},{"title":"Wall","href":"/app/wall","class":"ion-ios-list"}]},
-  }
+  
   var Auth = {
     login: function (userdata) {
       var defer = $q.defer();
@@ -118,9 +112,10 @@ angular.module('starter.services', [])
     },
     getMenus: function() {
       if(user.role == "hm") {
-        return menus.hmMenu;
+        return {"Links":[{"title":"Dashboard", "href":"/app/hmdashboard", "class":"ion-stats-bars"},{"title":"Classes", "href":"/app/allclasses", "class": "ion-easel"},{"title":"Students", "href":"/app/allstudents", "class": "ion-person-stalker"},{"title":"Teachers", "href":"/app/allteachers", "class": "ion-ios-body"}]};
       } else if (user.role == "parent") {
         if(user.students.length > 1) {
+
         /*  $rootScope.role = "parent";
           var parentMenu = {"Links":[]};
           for (var i = 0; i < user.students.length; i++) {
@@ -136,15 +131,15 @@ angular.module('starter.services', [])
           parentMenu.Links.push({"title":"Wall","href":"/app/wall","class":"ion-ios-list"});
           parentMenu.Links.push({"title":"log-out", "href":"logout", "class":"ion-log-out"});
           return parentMenu;*/
-          return menus.parentSingleMenu;
+          return {"Links":[{"title":"Dashboard", "href":"/app/studentdashboard", "class":"ion-stats-bars"},{"title":"Overall Dashboard", "href":"/app/studentoveralldashboard", "class":"ion-ios-pulse-strong"},{"title":"Class Dashboard", "href":"/app/classdashboard/__class__", "class":"ion-pie-graph"},{"title":"TimeTable", "href":"/app/timetable", "class":"ion-ios-time-outline"}]};
         } else {
-          return menus.parentSingleMenu;
+          return {"Links":[{"title":"Dashboard", "href":"/app/studentdashboard", "class":"ion-stats-bars"},{"title":"Overall Dashboard", "href":"/app/studentoveralldashboard", "class":"ion-ios-pulse-strong"},{"title":"Class Dashboard", "href":"/app/classdashboard/__class__", "class":"ion-pie-graph"},{"title":"TimeTable", "href":"/app/timetable", "class":"ion-ios-time-outline"}]};
         }
       } else {
         if(user.standard) {
-          return menus.classTeacherMenu;
+          return {"Links":[{"title":"Class Dashboard", "href":"/app/dashboard", "class":"ion-stats-bars"},{"title":"Teacher Dashboard", "href":"/app/teacherdashboard", "class":"ion-ios-pulse-strong"},{"title":"Students", "href":"/app/allstudents", "class": "ion-person-stalker"}]};
         } else {
-          return menus.teacherMenu;
+          return {"Links":[{"title":"Dashboard", "href":"/app/teacherdashboard", "class":"ion-stats-bars"},{"title":"Students", "href":"/app/allstudents", "class": "ion-person-stalker"}]};
         }
       }      
     },
