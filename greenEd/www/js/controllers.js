@@ -310,12 +310,13 @@ angular.module('starter.controllers', ['starter.services'])
     for (var i in v.marks) {
       subjectLabels.push(i);
       var smark = {name:i, y:v.marks[i].mark, tip:v.marks[i].mark}
-      if(v.marks[i].level == "Fail") {
+      if(v.marks[i].status == "Fail") {
         smark.color = '#ff6c60';
       }
       if(v.marks[i].status == "absent") {smark.tip = "Ab"; smark.name += " Absent"}
       subjectMarks.push(smark);
     };
+    console.log("Checked Marks",subjectMarks);
     $scope.ssubjectsConfig = {
       chart: {renderTo: 'ssubjects',type: 'column', options3d: {enabled: true,alpha: 10,beta: 20,depth: 50}},
       title: {text:"Subject Marks"},plotOptions: {column: {depth: 25,showInLegend: false, dataLabels: {enabled: true,format: '{point.tip}'}, events: {legendItemClick: function () {return false;}}}},
