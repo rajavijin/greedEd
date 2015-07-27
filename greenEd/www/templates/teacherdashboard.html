@@ -9,10 +9,12 @@
       </ion-list>
       <chart id="tpassfailstatus" config="tpassfailConfig" class="noclick"></chart>
       <chart id="tsubjects" config="tsubjectsConfig"></chart>
-<!--       <chart id="cgrades" config="cgradeConfig"></chart> -->
+      <chart id="tgrades" config="tgradeConfig"></chart>
       <ion-list ng-show="dashboard">
          <div class="collection-repeat-container"><ion-item class="item-icon-left" href="#"><i class="icon ion-trophy positive"></i> <h2><span style="color:#aaa;font-weight:bold">Class - Topper</span> <span class="badge">Total</span></h2></ion-item></div>
-         <ion-item class="item-icon-left" ng-repeat="v in toppers" href="#/app/studentdashboard/{{v.studentid}}/{{v.class}}"><i class="icon ion-person positive"></i> <h2>{{v.class}} - {{v.student}} <span class="badge badge-positive">{{v.total}}</span></h2></ion-item>
+         <span ng-repeat="(k, stoppers) in toppers">
+         <ion-item class="item-icon-left" ng-repeat="v in stoppers" href="#/app/studentdashboard/{{v.studentid}}/{{v.class}}"><i class="icon ion-person positive"></i> <h2>{{k.replace("_", " ")}} - {{v.student}} <span class="badge badge-positive">{{v.mark}}</span></h2></ion-item>
+         </span>
       </ion-list>
    </ion-content>
 </ion-view>
