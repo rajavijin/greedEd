@@ -303,7 +303,9 @@ angular.module('angularfireappApp')
 						  if(!sgrades[mark.marks[mm].teacherid]) sgrades[mark.marks[mm].teacherid] = [];
 						  if(sgrades[mark.marks[mm].teacherid].indexOf(mark.marks[mm].grade) == -1) {
 			                  sgrades[mark.marks[mm].teacherid].push(mark.marks[mm].grade);
-			                  dmarks[key][mark.marks[mm].teacherid].gradeData.push({name: mark.marks[mm].grade, y:1});
+			                  var gtxt = {name: mark.marks[mm].grade, y:1};
+			                  if(mark.marks[mm].grade == "Grade F") gtxt.color = "#ff6c60";
+			                  dmarks[key][mark.marks[mm].teacherid].gradeData.push(gtxt);
 			                  dmarks[key][mark.marks[mm].teacherid].gradeUsers[mark.marks[mm].grade] = [{class:mark.class,uid:mark.studentid, name:mark.student}];
 			              } else {
 			                  dmarks[key][mark.marks[mm].teacherid].gradeData[sgrades[mark.marks[mm].teacherid].indexOf(mark.marks[mm].grade)].y++;

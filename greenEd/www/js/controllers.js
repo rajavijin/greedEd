@@ -234,11 +234,11 @@ angular.module('starter.controllers', ['starter.services'])
       yAxis: {title: {text: null}},
       series: [{name: 'Pass',data: marks.subjectPass},{name: 'Fail',data: marks.subjectFail}]
     }; 
-/*    $scope.tgradeConfig = {
+    $scope.tgradeConfig = {
       chart: {renderTo: 'tgrades',type: 'pie',height: 200,options3d:{enabled: true,alpha: 45,beta: 0}},
       title: {text:"Grades"},plotOptions: {series:{cursor:'pointer',events:{click:function(event){$state.go("app.markstudents", {filter:key,type:"hm",key:"gradeUsers",val:event.point.name});}}},pie: {innerSize: 0,depth: 35,dataLabels:{enabled: true,format: '{point.name}: <b>{point.y}</b>'}}},
       series: [{type: 'pie',name: 'Total',data: marks.gradeData}]
-    };*/
+    };
   }  
   $scope.getMarksData(true);
   $ionicModal.fromTemplateUrl('templates/dashboardFilters.html', {
@@ -279,7 +279,14 @@ angular.module('starter.controllers', ['starter.services'])
     console.log("Key:", key);
     if(key) {
       var mcache = myCache.get(key) || {};
-      if(cache && mcache[$stateParams.class]) {
+      var mcacheStudent = false
+      if(mcache[$stateParams.class]) {
+        if(mcache[$stateParams.class][$stateParams.class]) {
+          mcacheStudent = true;
+        }
+      }
+      if(cache && mcacheStudent) {
+        console.log("cache available", mcache[$stateParams.class]);
         $scope.dashboard = true;
         $scope.$broadcast('scroll.refreshComplete');
         applyMarks(mcache[$stateParams.class][$stateParams.uid]);
