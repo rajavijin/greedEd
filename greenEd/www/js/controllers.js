@@ -613,7 +613,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   });
   $scope.uid = user.uid;
   $scope.addwall = true;
-  if(user.role == 'teacher') $scope.addwall = false;
+  if(user.role == 'parent') $scope.addwall = false;
   $scope.addpost = function() {
     $state.go('app.addpost', {});
   }
