@@ -237,12 +237,12 @@ angular.module('angularfireappApp')
 						    dmarks[key][mark.class]["class"].subjectPassUsers[mm] = []; dmarks[key][mark.class]["class"].subjectFailUsers[mm] = [];
 						    dmarks[key][mark.class]["class"].allSubjects.push(mm);
 						    if(mark.marks[mm].status == "Pass") {
-						      dmarks[key][mark.class]["class"].subjectPass.push({name:mm, y:1});
+						      dmarks[key][mark.class]["class"].subjectPass.push({name:"Pass", y:1});
+						      dmarks[key][mark.class]["class"].subjectFail.push({name:"Fail", y:0});
 						      dmarks[key][mark.class]["class"].subjectPassUsers[mm].push({class:mark.class,uid:mark.studentid, name:mark.student});
-						      dmarks[key][mark.class]["class"].subjectFail.push({name:mm, y:0});
 						    } else {
-						      dmarks[key][mark.class]["class"].subjectPass.push({name:mm, y:0});
-						      dmarks[key][mark.class]["class"].subjectFail.push({name:mm, y:1});
+						      dmarks[key][mark.class]["class"].subjectPass.push({name:"Pass", y:0});
+						      dmarks[key][mark.class]["class"].subjectFail.push({name:"Fail", y:1});
 						      dmarks[key][mark.class]["class"].subjectFailUsers[mm].push({class:mark.class,uid:mark.studentid, name:mark.student});
 						    }
 						  } else {

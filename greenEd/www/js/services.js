@@ -4,7 +4,7 @@ angular.module('starter.services', [])
   return $cacheFactory('myCache');
 })
 
-.factory('Auth', function ( $firebaseAuth, $q, $firebaseObject, myCache, $firebaseArray, FIREBASE_URL, $state, $rootScope) {
+.factory('Auth', function ( $firebaseAuth, $q, $firebaseObject, $ionicLoading, myCache, $firebaseArray, FIREBASE_URL, $state, $rootScope) {
   var ref = new Firebase(FIREBASE_URL);
   var auth = $firebaseAuth(ref);
 
@@ -15,6 +15,8 @@ angular.module('starter.services', [])
         if(err) {
           defer.reject(err);
         } else {
+          $ionicLoading.hide();
+          $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Fetching user data...'});
           ref.child('users/'+userdatafb.uid).on('value', function(profilesnap) {
             user = profilesnap.val();
             user.uid = userdatafb.uid;

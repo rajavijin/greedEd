@@ -119,12 +119,14 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     console.log("Key", key);
     if(key) {
       var mcache = myCache.get(key) || {};
+      if(mcache[$stateParams.class]) var classCache = mcache[$stateParams.class]["class"];
+      else var classCache = false;
       console.log("marks cache", mcache);
-      if(cache && mcache[$stateParams.class]) {
-        console.log("From cache", mcache[$stateParams.class]);
+      if(cache && classCache) {
+        console.log("From cache", classCache);
         $scope.dashboard = true;
         $scope.$broadcast('scroll.refreshComplete');
-        applyMarks(mcache[$stateParams.class]["class"]);
+        applyMarks(classCache);
       } else {
         $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner>'});
         $scope.marks = Auth.getMarks(key+"/"+$stateParams.class+"/class");
@@ -1031,7 +1033,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       password: "vdwmte29"
   };
   $scope.login = function () {
-    $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner>'})
+    $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Authenticating...'});
     Auth.login($scope.user).then(function (user) {
       $state.go('app.wall', {}, {reload: true});
       $ionicLoading.hide();
