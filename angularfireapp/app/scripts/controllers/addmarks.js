@@ -220,9 +220,9 @@ angular.module('angularfireappApp')
 						count++;
 						var mark = AllMarks[mi];
 						if(!dmarks[ykey][mark.studentid]) dmarks[ykey][mark.studentid] = {pass:0,fail:0,examLabels:[],allSubjects:[],examMarks:[],allMarks:[],ranks:[],subjectDataMarks:{},attendance:[]};
-						if(!dmarks[key][mark.class]) dmarks[key][mark.class] = {pass:0,fail:0, Pass:[], Fail:[], allSubjects:[],subjectPass:[], subjectFail:[], subjectPassUsers:{}, subjectFailUsers:{}, gradeData:[], grades:[], gradeUsers:{}, toppers:[]};
-						if(mark.status == "Pass") {dmarks[key]["hm"].pass++; dmarks[ykey][mark.studentid].pass++; dmarks[key]["hm"].Pass.push({class:mark.class,uid:mark.studentid,name:mark.student}); dmarks[key][mark.class].pass++; dmarks[key][mark.class].Pass.push({class:mark.class,uid:mark.studentid,name:mark.student});}
-						if(mark.status == "Fail") {dmarks[key]["hm"].fail++; dmarks[ykey][mark.studentid].fail++; dmarks[key]["hm"].Fail.push({class:mark.class,uid:mark.studentid,name:mark.student}); dmarks[key][mark.class].fail++; dmarks[key][mark.class].Fail.push({class:mark.class,uid:mark.studentid,name:mark.student});}
+						if(!dmarks[key][mark.class]) dmarks[key][mark.class] = {class:{pass:0,fail:0, Pass:[], Fail:[], allSubjects:[],subjectPass:[], subjectFail:[], subjectPassUsers:{}, subjectFailUsers:{}, gradeData:[], grades:[], gradeUsers:{}, toppers:[]}};
+						if(mark.status == "Pass") {dmarks[key]["hm"].pass++; dmarks[ykey][mark.studentid].pass++; dmarks[key]["hm"].Pass.push({class:mark.class,uid:mark.studentid,name:mark.student}); dmarks[key][mark.class]["class"].pass++; dmarks[key][mark.class]["class"].Pass.push({class:mark.class,uid:mark.studentid,name:mark.student});}
+						if(mark.status == "Fail") {dmarks[key]["hm"].fail++; dmarks[ykey][mark.studentid].fail++; dmarks[key]["hm"].Fail.push({class:mark.class,uid:mark.studentid,name:mark.student}); dmarks[key][mark.class]["class"].fail++; dmarks[key][mark.class]["class"].Fail.push({class:mark.class,uid:mark.studentid,name:mark.student});}
 						for(var mm in mark.marks) {
 						  if(!dmarks[key][mark.marks[mm].teacherid]) dmarks[key][mark.marks[mm].teacherid] = {pass:0,fail:0, Pass:[], Fail:[], allSubjects:[],subjectPass:[], subjectFail:[], subjectPassUsers:{}, subjectFailUsers:{}, gradeData:[], gradeUsers:{}, toppers:{}};
 						  if(dmarks[ykey][mark.studentid].allSubjects.indexOf(mm) == -1) {
@@ -233,25 +233,25 @@ angular.module('angularfireappApp')
 					        dmarks[ykey][mark.studentid].subjectDataMarks[mm].push({name: mm, y:parseInt(mark.marks[mm].mark)});
 						  }
 
-						  if(dmarks[key][mark.class].allSubjects.indexOf(mm) == -1) {
-						    dmarks[key][mark.class].subjectPassUsers[mm] = []; dmarks[key][mark.class].subjectFailUsers[mm] = [];
-						    dmarks[key][mark.class].allSubjects.push(mm);
+						  if(dmarks[key][mark.class]["class"].allSubjects.indexOf(mm) == -1) {
+						    dmarks[key][mark.class]["class"].subjectPassUsers[mm] = []; dmarks[key][mark.class]["class"].subjectFailUsers[mm] = [];
+						    dmarks[key][mark.class]["class"].allSubjects.push(mm);
 						    if(mark.marks[mm].status == "Pass") {
-						      dmarks[key][mark.class].subjectPass.push({name:mm, y:1});
-						      dmarks[key][mark.class].subjectPassUsers[mm].push({class:mark.class,uid:mark.studentid, name:mark.student});
-						      dmarks[key][mark.class].subjectFail.push({name:mm, y:0});
+						      dmarks[key][mark.class]["class"].subjectPass.push({name:mm, y:1});
+						      dmarks[key][mark.class]["class"].subjectPassUsers[mm].push({class:mark.class,uid:mark.studentid, name:mark.student});
+						      dmarks[key][mark.class]["class"].subjectFail.push({name:mm, y:0});
 						    } else {
-						      dmarks[key][mark.class].subjectPass.push({name:mm, y:0});
-						      dmarks[key][mark.class].subjectFail.push({name:mm, y:1});
-						      dmarks[key][mark.class].subjectFailUsers[mm].push({class:mark.class,uid:mark.studentid, name:mark.student});
+						      dmarks[key][mark.class]["class"].subjectPass.push({name:mm, y:0});
+						      dmarks[key][mark.class]["class"].subjectFail.push({name:mm, y:1});
+						      dmarks[key][mark.class]["class"].subjectFailUsers[mm].push({class:mark.class,uid:mark.studentid, name:mark.student});
 						    }
 						  } else {
 						    if(mark.marks[mm].status == "Pass") {
-						      dmarks[key][mark.class].subjectPass[dmarks[key][mark.class].allSubjects.indexOf(mm)].y++;
-						      dmarks[key][mark.class].subjectPassUsers[mm].push({class:mark.class,uid:mark.studentid, name:mark.student});
+						      dmarks[key][mark.class]["class"].subjectPass[dmarks[key][mark.class]["class"].allSubjects.indexOf(mm)].y++;
+						      dmarks[key][mark.class]["class"].subjectPassUsers[mm].push({class:mark.class,uid:mark.studentid, name:mark.student});
 						  	} else {
-						      dmarks[key][mark.class].subjectFail[dmarks[key][mark.class].allSubjects.indexOf(mm)].y++;
-						      dmarks[key][mark.class].subjectFailUsers[mm].push({class:mark.class,uid:mark.studentid, name:mark.student});
+						      dmarks[key][mark.class]["class"].subjectFail[dmarks[key][mark.class]["class"].allSubjects.indexOf(mm)].y++;
+						      dmarks[key][mark.class]["class"].subjectFailUsers[mm].push({class:mark.class,uid:mark.studentid, name:mark.student});
 						  	}
 						  }
 						  if(dmarks[key][mark.marks[mm].teacherid].allSubjects.indexOf(mm) == -1) {
@@ -333,20 +333,20 @@ angular.module('angularfireappApp')
 						  dmarks[key]["hm"].gradeData[hmindex].y++;
 						  dmarks[key]["hm"].gradeUsers[mark.grade].push({class:mark.class,uid:mark.studentid, name:mark.student});
 						}
-						var yindex = dmarks[key][mark.class].grades.indexOf(mark.grade);
+						var yindex = dmarks[key][mark.class]["class"].grades.indexOf(mark.grade);
 						if(yindex == -1) {
-						  dmarks[key][mark.class].grades.push(mark.grade);
+						  dmarks[key][mark.class]["class"].grades.push(mark.grade);
 						  var yval = {name: mark.grade, y:1};
 						  if(mark.grade == "Grade F") yval.color = "#ff6c60";
-						  dmarks[key][mark.class].gradeData.push(yval);
-						  dmarks[key][mark.class].gradeUsers[mark.grade] = [{class:mark.class,uid:mark.studentid, name:mark.student}];
+						  dmarks[key][mark.class]["class"].gradeData.push(yval);
+						  dmarks[key][mark.class]["class"].gradeUsers[mark.grade] = [{class:mark.class,uid:mark.studentid, name:mark.student}];
 						} else {
-						  dmarks[key][mark.class].gradeData[yindex].y++;
-						  dmarks[key][mark.class].gradeUsers[mark.grade].push({class:mark.class,uid:mark.studentid, name:mark.student});
+						  dmarks[key][mark.class]["class"].gradeData[yindex].y++;
+						  dmarks[key][mark.class]["class"].gradeUsers[mark.grade].push({class:mark.class,uid:mark.studentid, name:mark.student});
 						}						
 						if(mark.rank == 1) {
 						  dmarks[key]["hm"].toppers.push({student: mark.student, standard: mark.standard, class: mark.class, total: mark.total, studentid: mark.studentid});
-						  dmarks[key][mark.class].toppers.push({student: mark.student, standard: mark.standard, class: mark.class, total: mark.total, studentid: mark.studentid});
+						  dmarks[key][mark.class]["class"].toppers.push({student: mark.student, standard: mark.standard, class: mark.class, total: mark.total, studentid: mark.studentid});
 						}
 						dmarks[key][mark.class][mark.studentid] = mark;
 						dmarks[ykey][mark.studentid].examLabels.push(mark.typeofexam);
