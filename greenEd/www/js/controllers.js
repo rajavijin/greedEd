@@ -28,7 +28,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     $scope.empty = false;
     $scope.dashboard = false;
     console.log("Filters", $rootScope.filters);
-    if($rootScope.filters.educationyear)
+    if($rootScope.filters.educationyear >= 0)
       key = $rootScope.filters.educationyears[$rootScope.filters.educationyear] +'_'+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam];
     else key = false;
     if(key) {
@@ -110,7 +110,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     $scope.empty = false;
     $scope.dashboard = false;
     console.log("Filters", $rootScope.filters);
-    if($rootScope.filters.educationyear) {
+    if($rootScope.filters.educationyear >= 0) {
       key = $rootScope.filters.educationyears[$rootScope.filters.educationyear] +'_'+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam];
       title += " "+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam] +" "+ $rootScope.filters.educationyears[$rootScope.filters.educationyear];
     }
@@ -124,16 +124,16 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
         console.log("From cache", mcache[$stateParams.class]);
         $scope.dashboard = true;
         $scope.$broadcast('scroll.refreshComplete');
-        applyMarks(mcache[$stateParams.class]);
+        applyMarks(mcache[$stateParams.class]["class"]);
       } else {
         $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner>'});
-        $scope.marks = Auth.getMarks(key+"/"+$stateParams.class);
+        $scope.marks = Auth.getMarks(key+"/"+$stateParams.class+"/class");
         $scope.$broadcast('scroll.refreshComplete');
         $scope.dashboard = true;
         $scope.marks.$loaded().then(function(alldata) {
           $ionicLoading.hide();
-          mcache[$stateParams.class] = alldata;
-          myCache.put(key, dmark);
+          mcache[$stateParams.class] = {class:alldata};
+          myCache.put(key, mcache);
           applyMarks(alldata);
         })
       }
@@ -147,19 +147,19 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     $scope.toppers = marks.toppers;
     $scope.cpassfailConfig = {
       chart: {renderTo: 'cpassfailstatus',type: 'pie',height:200,options3d:{enabled: true,alpha: 45,beta: 0},},
-      title: {text:"Pass/Fail"},plotOptions: {series:{cursor:'pointer',events:{click:function(event){$state.go("app.markstudents", {filter:key,type:$stateParams.class,key:"passfail",val:event.point.name,});}}},pie: {innerSize: 50,depth: 35,dataLabels:{enabled: true,format: '{point.name}: <b>{point.y}</b>'}}},
+      title: {text:"Pass/Fail"},plotOptions: {series:{cursor:'pointer',events:{click:function(event){$state.go("app.markstudents", {filter:key,type:$stateParams.class+"_class",key:"passfail",val:event.point.name,});}}},pie: {innerSize: 50,depth: 35,dataLabels:{enabled: true,format: '{point.name}: <b>{point.y}</b>'}}},
       series: [{type: 'pie',name: 'Total',data: [{name:"Pass", y:marks.pass},{name:"Fail", y:marks.fail}]}]
     };
     $scope.csubjectsConfig = {
       chart: {renderTo: 'csubjects',type: 'column', options3d: {enabled: true,alpha: 10,beta: 20,depth: 50}},
-      title: {text:"Subjects Pass/Fail"},tooltip:{pointFormat:'<span style="color:{point.color}">\u25CF</span> {point.category}: <b>{point.y}</b>'},plotOptions: {series:{cursor:'pointer',events:{click:function(event){console.log("Event", event); $state.go("app.markstudents", {filter:key,type:$stateParams.class,key:event.point.name,val:event.point.category});}}},column: {depth: 25,dataLabels: {enabled: true,format: '{point.y}'}}},
+      title: {text:"Subjects Pass/Fail"},tooltip:{pointFormat:'<span style="color:{point.color}">\u25CF</span> {point.category}: <b>{point.y}</b>'},plotOptions: {series:{cursor:'pointer',events:{click:function(event){console.log("Event", event); $state.go("app.markstudents", {filter:key,type:$stateParams.class+"_class",key:event.point.name,val:event.point.category});}}},column: {depth: 25,dataLabels: {enabled: true,format: '{point.y}'}}},
       xAxis: {categories: marks.allSubjects},
       yAxis: {title: {text: null}},
       series: [{name: 'Pass',data: marks.subjectPass},{name: 'Fail',data: marks.subjectFail}]
     }; 
     $scope.cgradeConfig = {
       chart: {renderTo: 'cgrades',type: 'pie',height: 200,options3d:{enabled: true,alpha: 45,beta: 0}},
-      title: {text:"Grades"},plotOptions: {series:{cursor:'pointer',events:{click:function(event){$state.go("app.markstudents", {filter:key,type:$stateParams.class,key:"gradeUsers",val:event.point.name});}}},pie: {innerSize: 0,depth: 35,dataLabels:{enabled: true,format: '{point.name}: <b>{point.y}</b>'}}},
+      title: {text:"Grades"},plotOptions: {series:{cursor:'pointer',events:{click:function(event){$state.go("app.markstudents", {filter:key,type:$stateParams.class+"_class",key:"gradeUsers",val:event.point.name});}}},pie: {innerSize: 0,depth: 35,dataLabels:{enabled: true,format: '{point.name}: <b>{point.y}</b>'}}},
       series: [{type: 'pie',name: 'Total',data: marks.gradeData}]
     };
   }  
@@ -197,7 +197,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     $scope.empty = false;
     $scope.dashboard = false;
     console.log("Filters", $rootScope.filters);
-    if($rootScope.filters.educationyear) {
+    if($rootScope.filters.educationyear >= 0) {
       key = $rootScope.filters.educationyears[$rootScope.filters.educationyear] +'_'+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam];
       title += $rootScope.filters.educationyears[$rootScope.filters.educationyear] +' '+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam];
     }
@@ -286,7 +286,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     $scope.empty = false;
     $scope.dashboard = false;
     console.log("Filters", $rootScope.filters);
-    if($rootScope.filters.educationyear) {
+    if($rootScope.filters.educationyear >= 0) {
       key = $rootScope.filters.educationyears[$rootScope.filters.educationyear] +'_'+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam];
       title += $rootScope.filters.educationyears[$rootScope.filters.educationyear] +' '+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam]; 
     }
@@ -392,7 +392,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     $scope.empty = false;
     $scope.dashboard = false;
     console.log("Filters", $rootScope.filters);
-    if($rootScope.filters.educationyear)
+    if($rootScope.filters.educationyear >= 0)
       key = $rootScope.filters.educationyears[$rootScope.filters.educationyear];
     else key = false;
     console.log("Key:", key);
@@ -574,6 +574,9 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   if($stateParams.type.indexOf("student") != -1) {
     var type = $stateParams.type.split("_");
     var cache = cache[type[1]][type[2]];
+  }  else if ($stateParams.type.indexOf("class") != -1) {
+    var type = $stateParams.type.split("_");
+    var cache = cache[type[0]][type[1]];
   } else {
     var cache = cache[$stateParams.type];
   }
