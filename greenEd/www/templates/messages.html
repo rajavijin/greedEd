@@ -27,7 +27,7 @@
                 <ion-refresher pulling-text="Pull to refresh" on-refresh="getUsers()"></ion-refresher>
                 <div class="list">
   <a ng-click="toMessageBox(contact)" class="item item-icon-left" ng-repeat="contact in allcontacts | filter:query.search.value | orderBy:['role','name']">
-  <i class="icon positive" ng-class="{'ion-easel' : contact.role == 'class', 'ion-person' : contact.role == 'student', 'ion-ios-body' : contact.role == 'teacher', 'ion-android-person' : contact.role == 'hm'}"></i>
+  <i class="icon positive" ng-class="{'ion-easel' : contact.role == 'class', 'ion-person' : contact.role == 'parent', 'ion-ios-body' : contact.role == 'teacher', 'ion-android-person' : contact.role == 'hm'}"></i>
      <h2>{{contact.name}}</h2>
   </a>
 </div>

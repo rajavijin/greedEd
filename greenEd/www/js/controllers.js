@@ -106,13 +106,16 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
 .controller("ClassDashboardCtrl", function($scope, $state, $stateParams, $rootScope, myCache, $ionicModal, Auth, $ionicLoading) {
   var key = '';
   $scope.getMarksData = function(cache) {
+    var title = $stateParams.class;
     $scope.empty = false;
     $scope.dashboard = false;
     console.log("Filters", $rootScope.filters);
-    if($rootScope.filters.educationyear)
+    if($rootScope.filters.educationyear) {
       key = $rootScope.filters.educationyears[$rootScope.filters.educationyear] +'_'+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam];
+      title += " "+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam] +" "+ $rootScope.filters.educationyears[$rootScope.filters.educationyear];
+    }
     else key = false;
-    $scope.title = $stateParams.class +" "+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam] +" "+ $rootScope.filters.educationyears[$rootScope.filters.educationyear];
+    $scope.title = title;
     console.log("Key", key);
     if(key) {
       var mcache = myCache.get(key) || {};
@@ -319,6 +322,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       }
     } else {
       $scope.$broadcast('scroll.refreshComplete');
+      $scope.dashboard = false;
       $scope.empty = true;
     }
   }
@@ -595,7 +599,11 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
 })
 
 .controller('WallCtrl', function($scope, $state, $ionicModal, Auth) {
+  $scope.empty = false;
   $scope.walls = Auth.wall(user.schoolid+'/wall');
+  $scope.walls.$loaded().then(function(wall) {
+    if(wall.length == 0) $scope.empty = true;
+  });
   $scope.uid = user.uid;
   $scope.addwall = true;
   if(user.role == 'teacher') $scope.addwall = false;
