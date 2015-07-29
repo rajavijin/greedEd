@@ -804,6 +804,8 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
           var allusers = myCache.get("allusers");
           console.log("allusers", allusers);
           console.log("Message", message);
+          hm = {chatid:chatid, notify:0, name: message.to, uid:message.toUid, type:message.type};
+          chatrooms.child($scope.hm.uid).child(chatid).set(hm);
           for (var i = 0; i < allusers["groups"][message.toUid].length; i++) {
             var classStudent = allusers["groups"][message.toUid][i];
             rooms = {chatid:chatid, notify:0, name: message.to, uid:message.toUid, type:message.type};
