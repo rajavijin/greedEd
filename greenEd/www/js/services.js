@@ -7,7 +7,7 @@ angular.module('starter.services', [])
 .factory('Auth', function ( $firebaseAuth, $q, $firebaseObject, myCache, $firebaseArray, FIREBASE_URL, $state, $rootScope) {
   var ref = new Firebase(FIREBASE_URL);
   var auth = $firebaseAuth(ref);
-  
+
   var Auth = {
     login: function (userdata) {
       var defer = $q.defer();
@@ -26,15 +26,32 @@ angular.module('starter.services', [])
                 value = (i == 0) ? user.subjects[i].subject : value+'_'+user.subject[i].subject;
               };
               value += "_"+user.name;
+              user.alluserskey = key;
+              user.allusersval = value;
+              localStorage.setItem("user", JSON.stringify(user));
+              defer.resolve(user);
             } else if (user.role == 'parent') {
               key = 'parentkids';
               value += '_'+user.uid;
+              user.students = [];
+              ref.child("users").orderByChild(key).equalTo(value).once('value', function(kidssnap) {
+                kidssnap.forEach(function(student) {
+                  console.log("key", student.key());
+                  console.log("student", student.val());
+                  var kid = student.val();
+                  kid.uid = student.key();
+                  user.students.push(kid);
+                })
+                console.log("user", user);
+                localStorage.setItem("user", JSON.stringify(user));
+                defer.resolve(user);
+              })
+            } else {
+              user.alluserskey = key;
+              user.allusersval = value;
+              localStorage.setItem("user", JSON.stringify(user));
+              defer.resolve(user);
             }
-            user.alluserskey = key;
-            user.allusersval = value;
-            console.log("Profile from FB:", user);
-            localStorage.setItem("user", JSON.stringify(user));
-            defer.resolve(user);
           });
         }
       });
@@ -51,43 +68,79 @@ angular.module('starter.services', [])
       var deferred = $q.defer();
       var steacherindex = {};
       ref.child('users').orderByChild(user.alluserskey).equalTo(user.allusersval).once('value', function(usnap) {
-        var allusers = {allclasses:[],classes:{},allstudents:[],students:{},allteachers:[], teachers:{}};
-        usnap.forEach(function(fbusers) {
-          var fbuser = fbusers.key();
-          var fbusers = fbusers.val();
-          allusers["students"][fbuser] = fbusers;
-          allusers["allstudents"].push({name:fbusers.name, standard:fbusers.standard, division:fbusers.division, uid:fbuser});
-          if(!allusers["classes"][fbusers.standard+'-'+fbusers.division]) {
-            allusers["classes"][fbusers.standard+'-'+fbusers.division] = {standard:fbusers.standard, division:fbusers.division};
-            allusers["allclasses"].push({standard:fbusers.standard, division:fbusers.division});
-          }
-          if(fbusers.division != "all") {
-            if(!allusers["classes"][fbusers.standard]) {
-              allusers["classes"][fbusers.standard] = {standard:fbusers.standard, division:fbusers.division};
+        if(user.role == "hm") {
+          var classes = {};
+          var standard = {}
+          var parents = {};
+          var teachers = {};
+          var chatcontacts = {};
+          var allusers = {allclasses:[],allstudents:[],allteachers:[],chatcontacts:[],groups:{}};
+          usnap.forEach(function(fbusers) {
+            var fbuser = fbusers.key();
+            var fbusers = fbusers.val();
+            if(!allusers["groups"][fbusers.standard+'-'+fbusers.division]) allusers["groups"][fbusers.standard+'-'+fbusers.division] = [];
+            if(!classes[fbusers.standard+'-'+fbusers.division]) {
+              classes[fbusers.standard+'-'+fbusers.division] = true;
+              allusers["allclasses"].push({standard:fbusers.standard, division:fbusers.division});  
+              allusers["chatcontacts"].push({name: fbusers.standard+'-'+fbusers.division, role:"class", uid:fbusers.standard+'-'+fbusers.division,type:"group"})
+            }
+
+            if(!standard[fbusers.standard] && (fbusers.division != "all")) {
+              standard[fbusers.standard] = true;
               allusers["allclasses"].push({standard:fbusers.standard, division:"all"});
             }
-          }
-          for(var t in fbusers) {
-            if(t.indexOf("simplelogin") != -1) {
-              var tt = fbusers[t].split("_");
-              var teacher = {
-                name: tt[1],
-                subject: tt[0],
-                uid: t
-              }
-              if(!steacherindex[t]) {
-                steacherindex[t] = true;
-                allusers["allteachers"].push(teacher);
-              }
-            } 
-          }
-        });
+            allusers["allstudents"].push({name:fbusers.name, standard:fbusers.standard, division:fbusers.division, uid:fbuser});
+            var parent = fbusers.parentkids.split("_");
+            if(chatcontacts[fbusers.name]) {
+              allusers["chatcontacts"][chatcontacts[fbusers.name] - 1].name += ","+fbusers.name;
+              allusers["groups"][fbusers.standard+'-'+fbusers.division][chatcontacts[fbusers.name] - 1].name += ","+fbusers.name;
+            } else {
+              var cci = allusers["chatcontacts"].push({name: "Parent of "+fbusers.name, role:"parent", class:fbusers.standard+'-'+fbusers.division, uid:parent[2],type:"single"});
+              allusers["groups"][fbusers.standard+'-'+fbusers.division].push({name: "Parent of "+fbusers.name, role:"parent", class:fbusers.standard+'-'+fbusers.division, uid:parent[2],type:"single"})
+              chatcontacts[fbusers.name] = cci;
+            }
+            for(var t in fbusers) {
+              if(t.indexOf("simplelogin") != -1) {
+                var tt = fbusers[t].split("_");
+                var teacher = {
+                  name: tt[1],
+                  subject: tt[0],
+                  uid: t,
+                  class: fbusers.standard+'-'+fbusers.division
+                }
+                if(!teachers[t]) {
+                  teachers[t] = true;
+                  allusers["allteachers"].push(teacher);
+                  teacher.role = "teacher";
+                  teacher.type = "single";
+                  allusers["chatcontacts"].push(teacher);
+                }
+                allusers["groups"][fbusers.standard+'-'+fbusers.division].push(teacher);
+              } 
+            }
+          });
+        }
         myCache.put("allusers", allusers);
         deferred.resolve(allusers);
       }, function(err) {
         deferred.reject(err);
       });
       return deferred.promise;
+    },
+    chats: function() {
+      return $firebaseArray(ref.child(user.schoolid+"/chats"));
+    },
+    chatrooms: function() {
+      return ref.child(user.schoolid+"/chatrooms");
+    },
+    getUserChatRooms: function() {
+      return $firebaseObject(ref.child(user.schoolid+"/chatrooms/"+user.uid));
+    },
+    getAllMessages: function(chatid) {
+      return ref.child(user.schoolid+"/chats/"+chatid);
+    },
+    getHm: function() {
+      return ref.child("users").orderByChild("role").equalTo("hm");
     },
     getAllMarks: function() {
       return $firebaseObject(ref.child(user.schoolid+'/marks'));
@@ -131,15 +184,15 @@ angular.module('starter.services', [])
           parentMenu.Links.push({"title":"Wall","href":"/app/wall","class":"ion-ios-list"});
           parentMenu.Links.push({"title":"log-out", "href":"logout", "class":"ion-log-out"});
           return parentMenu;*/
-          return {"Links":[{"title":"Dashboard", "href":"/app/studentdashboard", "class":"ion-stats-bars"},{"title":"Overall Dashboard", "href":"/app/studentoveralldashboard", "class":"ion-ios-pulse-strong"},{"title":"Class Dashboard", "href":"/app/classdashboard/__class__", "class":"ion-pie-graph"},{"title":"TimeTable", "href":"/app/timetable", "class":"ion-ios-time-outline"}]};
+          return {"Links":[{"title":"Dashboard", "href":"/app/studentdashboard", "class":"ion-stats-bars"},{"title":"Overall Dashboard", "href":"/app/studentoveralldashboard", "class":"ion-ios-pulse-strong"},{"title":"Class Dashboard", "href":"/app/classdashboard", "class":"ion-pie-graph"},{"title":"TimeTable", "href":"/app/timetable", "class":"ion-ios-time-outline"}]};
         } else {
-          return {"Links":[{"title":"Dashboard", "href":"/app/studentdashboard", "class":"ion-stats-bars"},{"title":"Overall Dashboard", "href":"/app/studentoveralldashboard", "class":"ion-ios-pulse-strong"},{"title":"Class Dashboard", "href":"/app/classdashboard/__class__", "class":"ion-pie-graph"},{"title":"TimeTable", "href":"/app/timetable", "class":"ion-ios-time-outline"}]};
+          return {"Links":[{"title":"Dashboard", "href":"/app/studentdashboard/"+user.students[0].uid+"/"+user.students[0].standard+"-"+user.students[0].division, "class":"ion-stats-bars"},{"title":"Overall Dashboard", "href":"/app/studentoveralldashboard/"+user.students[0].uid+"/"+user.students[0].name, "class":"ion-ios-pulse-strong"},{"title":"Class Dashboard", "href":"/app/classdashboard/"+user.students[0].class, "class":"ion-pie-graph"},{"title":"TimeTable", "href":"/app/timetable", "class":"ion-ios-time-outline"}]};
         }
       } else {
-        if(user.standard) {
-          return {"Links":[{"title":"Class Dashboard", "href":"/app/dashboard", "class":"ion-stats-bars"},{"title":"Teacher Dashboard", "href":"/app/teacherdashboard", "class":"ion-ios-pulse-strong"},{"title":"Students", "href":"/app/allstudents", "class": "ion-person-stalker"}]};
+        if(user.class) {
+          return {"Links":[{"title":"Class Dashboard", "href":"/app/classdashboard/"+user.class, "class":"ion-stats-bars"},{"title":"Teacher Dashboard", "href":"/app/teacherdashboard/"+user.uid+"/"+user.name, "class":"ion-ios-pulse-strong"},{"title":"Students", "href":"/app/allstudents", "class": "ion-person-stalker"}]};
         } else {
-          return {"Links":[{"title":"Dashboard", "href":"/app/teacherdashboard", "class":"ion-stats-bars"},{"title":"Students", "href":"/app/allstudents", "class": "ion-person-stalker"}]};
+          return {"Links":[{"title":"Dashboard", "href":"/app/teacherdashboard/"+user.uid+"/"+user.name, "class":"ion-stats-bars"},{"title":"Students", "href":"/app/allstudents", "class": "ion-person-stalker"}]};
         }
       }      
     },
