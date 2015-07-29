@@ -234,6 +234,24 @@ angular.module('starter', ['ionic', 'starter.controllers','firebase'])
         controller: 'MarkStudentsCtrl'
       }
     }
+  })
+  .state('app.messages', {
+    url: "/messages",
+    views: {
+      'menuContent' :{
+        templateUrl: "templates/messages.html",
+        controller: 'MessagesCtrl'
+      }
+    }
+  })      
+  .state('app.messagebox', {
+    url: "/messages/:chatid/:toUid/:to/:type",
+    views: {
+      'menuContent' :{
+        templateUrl: "templates/messagebox.html",
+        controller: 'MessageBoxCtrl'
+      }
+    }
   });
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/login');
