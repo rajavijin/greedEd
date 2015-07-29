@@ -788,28 +788,27 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       'created': Date.now(),
       'type': contact.type,
     }
-    var NewChat = function() {
+    var NewChat = function(action) {
       $scope.messages.$add(message).then(function(msnap) {
         console.log("msnap", msnap.key());
         var chatid = msnap.key();
         var rooms = {};
-        rooms[message.fromUid] = {};
-        rooms[message.fromUid][chatid] = {chatid:chatid, notify:0, name: message.to, uid:message.toUid};
         console.log("allusers", allusers);
+        froom = {chatid:chatid, notify:0, name: message.to, uid:message.toUid, type:message.type};
+        chatrooms.child(message.fromUid).child(chatid).set(froom);
         if(message.type == "group") {
           var allusers = myCache.get("allusers");
           console.log("allusers", allusers);
           console.log("Message", message);
           for (var i = 0; i < allusers["groups"][message.toUid].length; i++) {
             var classStudent = allusers["groups"][message.toUid][i];
-            rooms[classStudent.uid] = {};
-            rooms[classStudent.uid][chatid] = {chatid:chatid, notify:0, name: message.to, uid:message.toUid, type:message.type};
+            rooms = {chatid:chatid, notify:0, name: message.to, uid:message.toUid, type:message.type};
+            chatrooms.child(classStudent.uid).child(chatid).set(rooms);
           };
         } else {
-          rooms[message.toUid] = {};
-          rooms[message.toUid][chatid] = {chatid:chatid, notify:0, name: message.from, uid: message.fromUid, type:message.type};
+          rooms = {chatid:chatid, notify:0, name: message.from, uid: message.fromUid, type:message.type};
+          chatrooms.child(message.toUid).child(chatid).set(rooms);
         }
-        chatrooms.set(rooms);
         $state.go('app.messagebox', {chatid:chatid, to:contact.name, toUid:contact.uid,  type:message.type});
       })
     }
@@ -817,7 +816,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     chatrooms.child(message.fromUid).orderByChild("uid").equalTo(message.toUid).once('value', function(data) {
       console.log("data", data.val());
       if(!data.val()) {
-        NewChat();
+        NewChat("set");
       } else {
         data.forEach(function(chatval) {
           var chatid = chatval.key();
@@ -825,7 +824,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
           if(chatid) {
             $state.go('app.messagebox', {chatid:chatid, toUid:message.toUid, to:message.to, type:message.type});
           } else {
-            NewChat();
+            NewChat("update");
           }
         })
       }
@@ -1024,36 +1023,40 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     });
 })
 
-.controller('AuthCtrl', function ($scope, $state, $rootScope, Auth, $ionicLoading) {
+.controller('AuthCtrl', function ($scope, $state, $rootScope, Auth, $ionicLoading, $ionicPopup) {
   if(localStorage.getItem("user")) {
     $state.go('app.messages', {}, {reload:true});
   }
   $scope.user = {
-      email: "9944711034@ge.com",
+      email: "9944711034",
       password: "vdwmte29"
   };
   $scope.login = function () {
     $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Authenticating...'});
+    $scope.user.email += "@ge.com";
     Auth.login($scope.user).then(function (user) {
       $state.go('app.wall', {}, {reload: true});
       $ionicLoading.hide();
       var filters = Auth.filters(user.schoolid);
       filters.$bindTo($rootScope, 'filters');
     }, function (error) {
+      $ionicLoading.hide();
       console.log("error", error);
+      var msg = error;
       switch (error.code) {
         case "INVALID_EMAIL":
-          console.log("The specified user account email is invalid.");
+          msg = "The specified user account email is invalid.";
           break;
         case "INVALID_PASSWORD":
-          console.log("The specified user account password is incorrect.");
+          msg = "The specified user account password is incorrect.";
           break;
         case "INVALID_USER":
-          console.log("The specified user account does not exist.");
+          msg = "The specified user account does not exist.";
           break;
         default:
-          console.log("Error logging user in:", error);
+          msg = "Error logging user in:";
       }
+      $ionicPopup.alert({title: 'Login Failed',template: msg});
     })
   };
 })
