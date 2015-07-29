@@ -26,7 +26,11 @@ angular.module('starter.services', [])
             if(user.role == 'teacher') {
               key = user.uid;
               for (var i = 0; i < user.subjects.length; i++) {
-                value = (i == 0) ? user.subjects[i].subject : value+'_'+user.subjects[i].subject;
+                if(i == 0) {
+                  value = user.subjects[i].subject;
+                } else {
+                  if(value != user.subjects[i].subject) value += ","+user.subjects[i].subject;
+                }
               };
               value += "_"+user.name;
               user.alluserskey = key;
@@ -70,6 +74,8 @@ angular.module('starter.services', [])
     getUsers: function() {
       var deferred = $q.defer();
       var steacherindex = {};
+      console.log("alluserskey", user.alluserskey);
+      console.log("allusersval", user.allusersval);
       ref.child('users').orderByChild(user.alluserskey).equalTo(user.allusersval).once('value', function(usnap) {
         if(user.role == "hm") {
           var classes = {};
@@ -123,25 +129,20 @@ angular.module('starter.services', [])
             }
           });
         } else if (user.role == "teacher") {
+          console.log("getting users in service", usnap.val());
           var classes = {};
           var standard = {}
           var parents = {};
-          var teachers = {};
           var chatcontacts = {};
-          var allusers = {allclasses:[],allstudents:[],allteachers:[],chatcontacts:[],groups:{}};
+          var allusers = {allstudents:[],chatcontacts:[],groups:{}};
           usnap.forEach(function(fbusers) {
             var fbuser = fbusers.key();
             var fbusers = fbusers.val();
+            console.log("fbusers in service", fbusers);
             if(!allusers["groups"][fbusers.standard+'-'+fbusers.division]) allusers["groups"][fbusers.standard+'-'+fbusers.division] = [];
             if(!classes[fbusers.standard+'-'+fbusers.division]) {
               classes[fbusers.standard+'-'+fbusers.division] = true;
-              allusers["allclasses"].push({standard:fbusers.standard, division:fbusers.division});  
               allusers["chatcontacts"].push({name: fbusers.standard+'-'+fbusers.division, role:"class", uid:fbusers.standard+'-'+fbusers.division,type:"group"})
-            }
-
-            if(!standard[fbusers.standard] && (fbusers.division != "all")) {
-              standard[fbusers.standard] = true;
-              allusers["allclasses"].push({standard:fbusers.standard, division:"all"});
             }
             allusers["allstudents"].push({name:fbusers.name, standard:fbusers.standard, division:fbusers.division, uid:fbuser});
             var parent = fbusers.parentkids.split("_");
@@ -152,25 +153,6 @@ angular.module('starter.services', [])
               var cci = allusers["chatcontacts"].push({name: "Parent of "+fbusers.name, role:"parent", class:fbusers.standard+'-'+fbusers.division, uid:parent[2],type:"single"});
               allusers["groups"][fbusers.standard+'-'+fbusers.division].push({name: "Parent of "+fbusers.name, role:"parent", class:fbusers.standard+'-'+fbusers.division, uid:parent[2],type:"single"})
               chatcontacts[fbusers.name] = cci;
-            }
-            for(var t in fbusers) {
-              if(t.indexOf("simplelogin") != -1) {
-                var tt = fbusers[t].split("_");
-                var teacher = {
-                  name: tt[1],
-                  subject: tt[0],
-                  uid: t,
-                  class: fbusers.standard+'-'+fbusers.division
-                }
-                if(!teachers[t]) {
-                  teachers[t] = true;
-                  allusers["allteachers"].push(teacher);
-                  teacher.role = "teacher";
-                  teacher.type = "single";
-                  allusers["chatcontacts"].push(teacher);
-                }
-                allusers["groups"][fbusers.standard+'-'+fbusers.division].push(teacher);
-              } 
             }
           });          
         }

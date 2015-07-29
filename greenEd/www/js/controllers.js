@@ -20,6 +20,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
     $rootScope.state = toState.name;
   });
+  $scope.user = user;
 })
 
 .controller("HmDashboardCtrl", function($scope, $state, $rootScope, myCache, $ionicModal, Auth, $ionicLoading) {
@@ -734,7 +735,9 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   $scope.getUsers = function() {
     $scope.title = "Contacts";
     contacts = [];
+      console.log("contacts", user);
     if(user.role == "parent") {
+      
       for (var i = 0; i < user.students.length; i++) {
         for(var ss in user.students[i]) {
           if(ss.indexOf("simplelogin") != -1) {
@@ -749,9 +752,8 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
         }
       };
       if($scope.hm) contacts.push($scope.hm);
-      console.log("contacts", contacts);
       $scope.allcontacts = contacts;
-    } else if(user.role == "hm") {
+    } else {
       var allusers = myCache.get("allusers");
       console.log("all users in students", allusers);
       if(allusers) {
@@ -762,6 +764,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
         Auth.getUsers().then(function(allusers) {
           console.log("allfbusers", allusers);
           if(allusers["chatcontacts"]) {
+            if(user.role == "teacher") allusers["chatcontacts"].push($scope.hm);
             $scope.allcontacts = allusers["chatcontacts"];
           }
         })
