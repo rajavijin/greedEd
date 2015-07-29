@@ -25,7 +25,7 @@ angular.module('starter.controllers', ['starter.services'])
     $scope.empty = false;
     $scope.dashboard = false;
     console.log("Filters", $rootScope.filters);
-    if($rootScope.filters)
+    if($rootScope.filters.educationyear)
       key = $rootScope.filters.educationyears[$rootScope.filters.educationyear] +'_'+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam];
     else key = false;
     if(key) {
@@ -106,7 +106,7 @@ angular.module('starter.controllers', ['starter.services'])
     $scope.empty = false;
     $scope.dashboard = false;
     console.log("Filters", $rootScope.filters);
-    if($rootScope.filters)
+    if($rootScope.filters.educationyear)
       key = $rootScope.filters.educationyears[$rootScope.filters.educationyear] +'_'+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam];
     else key = false;
     if(key) {
@@ -185,14 +185,17 @@ angular.module('starter.controllers', ['starter.services'])
 .controller("TeacherDashboardCtrl", function($scope, $state, $rootScope, $stateParams, Auth, myCache, $ionicLoading, $ionicModal) {
   var key = '';
   $scope.getMarksData = function(cache) {
+    var title = $stateParams.name + " Teacher"; 
     $scope.empty = false;
     $scope.dashboard = false;
     console.log("Filters", $rootScope.filters);
-    if($rootScope.filters)
+    if($rootScope.filters.educationyear) {
       key = $rootScope.filters.educationyears[$rootScope.filters.educationyear] +'_'+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam];
-    else key = false;
+      title += $rootScope.filters.educationyears[$rootScope.filters.educationyear] +' '+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam];
+    }
+    else { key = false;}
     console.log("Key:", key);
-    $scope.title = $stateParams.name + " Teacher "+ key.replace("_", " "); 
+    $scope.title = title;
     if(key) {
       var mcache = myCache.get(key) || {};
       console.log("marks cache", mcache);
@@ -270,13 +273,18 @@ angular.module('starter.controllers', ['starter.services'])
 .controller("StudentDashboardCtrl", function($scope, $state, $rootScope, $stateParams, Auth, myCache, $ionicLoading, $ionicModal) {
   var key = '';
   $scope.getMarksData = function(cache) {
+    var title = $stateParams.name + " Student";
+    console.log("Student-Name", $stateParams);
     $scope.empty = false;
     $scope.dashboard = false;
     console.log("Filters", $rootScope.filters);
-    if($rootScope.filters)
+    if($rootScope.filters.educationyear) {
       key = $rootScope.filters.educationyears[$rootScope.filters.educationyear] +'_'+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam];
-    else key = false;
+      title += $rootScope.filters.educationyears[$rootScope.filters.educationyear] +' '+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam]; 
+    }
+    else { key = false; }
     console.log("Key:", key);
+    $scope.title = title;
     if(key) {
       var mcache = myCache.get(key) || {};
       var mcacheStudent = false
@@ -375,7 +383,7 @@ angular.module('starter.controllers', ['starter.services'])
     $scope.empty = false;
     $scope.dashboard = false;
     console.log("Filters", $rootScope.filters);
-    if($rootScope.filters)
+    if($rootScope.filters.educationyear)
       key = $rootScope.filters.educationyears[$rootScope.filters.educationyear];
     else key = false;
     console.log("Key:", key);
