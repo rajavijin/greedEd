@@ -538,6 +538,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     }
   } else {
     Auth.getUsers().then(function(allusersfb) {
+      console.log("allusersfb", allusersfb);
       if(allusersfb["allstudents"]) {
         $scope.status = true;
         $scope.students = allusersfb["allstudents"];
@@ -1028,8 +1029,8 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     $state.go('app.messages', {}, {reload:true});
   }
   $scope.user = {
-      email: "9944711034",
-      password: "vdwmte29"
+      email: "9496255106",
+      password: "qc3anhfr"
   };
   $scope.login = function () {
     $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Authenticating...'});
