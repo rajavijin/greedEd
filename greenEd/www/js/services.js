@@ -11,6 +11,7 @@ angular.module('starter.services', [])
   var Auth = {
     login: function (userdata) {
       var defer = $q.defer();
+      userdata.email += "@ge.com";
       ref.authWithPassword(userdata, function(err, userdatafb) {
         if(err) {
           defer.reject(err);
@@ -21,7 +22,7 @@ angular.module('starter.services', [])
             user = profilesnap.val();
             user.uid = userdatafb.uid;
             var key = "usertype";
-            var value = user.schoolid + '_student';
+            var value = user.schoolid + '|student';
             console.log("user", user);
             if(user.role == 'teacher') {
               key = user.uid;
@@ -39,7 +40,7 @@ angular.module('starter.services', [])
               defer.resolve(user);
             } else if (user.role == 'parent') {
               key = 'parentkids';
-              value += '_'+user.uid;
+              value += '|'+user.uid;
               user.students = [];
               ref.child("users").orderByChild(key).equalTo(value).once('value', function(kidssnap) {
                 kidssnap.forEach(function(student) {
@@ -77,6 +78,7 @@ angular.module('starter.services', [])
       console.log("alluserskey", user.alluserskey);
       console.log("allusersval", user.allusersval);
       ref.child('users').orderByChild(user.alluserskey).equalTo(user.allusersval).once('value', function(usnap) {
+        console.log("usnap val", usnap.val());
         if(user.role == "hm") {
           var classes = {};
           var standard = {}

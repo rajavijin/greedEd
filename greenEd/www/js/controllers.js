@@ -680,7 +680,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   }
 })
 
-.controller('AddPostCtrl', function($scope, Auth, $state) {
+.controller('AddPostCtrl', function($scope, Auth, $state, $cordovaCamera) {
   $scope.walls = Auth.wall(user.schoolid+'/wall');
   $scope.priority = 0;
   $scope.walls.$loaded().then(function(data) {
@@ -690,8 +690,24 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     }
   })  
   $scope.post = {};
+  $scope.post.pictures = [];
   $scope.takePicture = function(type) {
-
+    var options = {
+        quality : 75,
+        destinationType : Camera.DestinationType.DATA_URL,
+        sourceType : Camera.PictureSourceType.CAMERA,
+        encodingType: Camera.EncodingType.JPEG,
+        popoverOptions: CameraPopoverOptions,
+        targetWidth: 500,
+        targetHeight: 500,
+        saveToPhotoAlbum: false
+    };
+    if(type == "browse") options.sourceType = Camera.PictureSourceType.PHOTOLIBRARY;
+    $cordovaCamera.getPicture(options).then(function(imageData) {
+        $scope.post.pictures.push(imageData);
+    }, function(error) {
+        console.error(error);
+    });    
   }
   $scope.viewWall = function() {
     $state.go('app.wall', {});
@@ -706,7 +722,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       'text' : $scope.post.message,
       '$priority' : $scope.priority,
       'likeuids' : [],
-      'pictures' : [],
+      'pictures' : $scope.post.pictures,
       'like' : 0
     });
     $state.go('app.wall', {}, {reload:true});
@@ -1034,12 +1050,11 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     $state.go('app.messages', {}, {reload:true});
   }
   $scope.user = {
-      email: "9496255106",
-      password: "qc3anhfr"
+      email: "8951572125",
+      password: "lm3oko6r"
   };
   $scope.login = function () {
     $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Authenticating...'});
-    $scope.user.email += "@ge.com";
     Auth.login($scope.user).then(function (user) {
       $state.go('app.wall', {}, {reload: true});
       $ionicLoading.hide();
@@ -1170,13 +1185,13 @@ moment.locale('en', {
     future: "in %s",
     past: "%s ago",
     s: "%d sec",
-    m: "a minute",
-    mm: "%d minutes",
-    h: "an hour",
-    hh: "%d hours",
-    d: "a day",
+    m: "a min",
+    mm: "%d min",
+    h: "hr",
+    hh: "%d hrs",
+    d: "day",
     dd: "%d days",
-    M: "a month",
+    M: "mon",
     MM: "%d months",
     y: "a year",
     yy: "%d years"

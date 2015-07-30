@@ -17,10 +17,10 @@
     <h2>{{wall.name}}</h2>
     <p>{{wall.date| date:'hh:mm a, MMM dd yyyy'}}</p>
   </div>
-<!-- 
+
   <div class="item item-image" ng-hide="wall.pictures.length == 0">
-    <img ng-click="showImage('{{pic}}')" class="full-image" src="{{pic}}" ng-repeat="pic in wall.pictures">
-  </div> -->
+    <img ng-click="showImage('{{pic}}')" class="full-image" ng-src="data:image/jpeg;base64,{{pic}}" ng-repeat="pic in wall.pictures">
+  </div>
   <a class="item" href="#">
     {{wall.text}}
   </a>
