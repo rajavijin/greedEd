@@ -733,6 +733,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
 })
 
 .controller('MessagesCtrl', function($scope, $rootScope, $ionicLoading, $state, myCache, Auth) {
+  $scope.title = "Chats";
   var allmessages = Auth.getUserChatRooms();
   $scope.changeStatus = function() {$scope.filterStatus = !$scope.filterStatus};
   $scope.messages = Auth.chats();
