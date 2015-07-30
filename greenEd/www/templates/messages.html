@@ -1,12 +1,14 @@
    <ion-view cache-view="false" title="{{title}}" hide-nav-bar="filterStatus">
    	<div class="bar bar-header item-input-inset header-search bar-positive padding" ng-show="filterStatus">
-  	<ion-search placeholder="Search" filter="query.search"></ion-search>
-  	<div class="buttons buttons-right header-item"><span class="right-buttons">
-	<button class="button button-icon button-clear ion-ios-search" ng-click="filterToggle()"></button>
-    </span></div>
-	</div>
+    <span class="left-buttons">
+  <button class="button button-icon button-clear ion-android-arrow-back" ng-click="filterStatus = !filterStatus"></button>
+    </span>
+    <ion-search placeholder="Search" filter="query.search"></ion-search>
+    <div class="buttons buttons-right header-item">
+    </div>
+  </div>
 	<ion-nav-buttons side="right">
-	<button class="button button-icon button-clear ion-ios-search" ng-click="filterToggle()"></button>
+	<button class="button button-icon button-clear ion-ios-search" ng-click="changeStatus()"></button>
     </ion-nav-buttons>
         <ion-tabs tabs-type="tabs-icon-only" class="positive">
             <ion-tab class="positive" title="Messages" icon-on="ion-ios-chatboxes" icon-off="ion-ios-chatboxes-outline" on-select="getMessages()">

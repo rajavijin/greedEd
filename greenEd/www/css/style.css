@@ -182,7 +182,7 @@ input[type="search"] {width: 100%;}
 #logo h4 {margin: 0;}
 .pane.tab-content {top: 92px;}
 .tabs-striped .tab-item.tab-item-active, .tabs-striped .tab-item.active, .tabs-striped .tab-item.activated {border-color: #23b7e5;}
-.header-search .item-input-wrapper {margin: 0 0 0 6px;}
+.header-search .item-input-wrapper {margin: 0 6px 0 6px;}
 /* allows the bar-footer to be elastic /*
 /* optionally set a max-height */
 /* maxlength on the textarea will prevent /*
@@ -214,7 +214,9 @@ button.ion-android-send {
   white-space: nowrap;
   font-size: 13px;
 }
-
+.header-search.bar.item-input-inset .item-input-wrapper input {
+  padding-left: 0px;
+}
 .bar.item-input-inset .item-input-wrapper input {
   width: 100% !important;
 }
@@ -235,6 +237,10 @@ button.ion-android-send {
   margin: 5px;
   max-width: 80%;
   line-height: 18px;
+  border-radius: 7.5px;
+  box-shadow: 0 1px .5px rgba(0,0,0,.13);
+  -webkit-transition: .2s cubic-bezier(.31,.34,.3,.99);
+  transition: .2s cubic-bezier(.31,.34,.3,.99);
 }
 
 .chat-bubble:before {
