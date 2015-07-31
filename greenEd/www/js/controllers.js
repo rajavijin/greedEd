@@ -47,8 +47,8 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
         $scope.hmmarks.$loaded().then(function(alldata) {
           $ionicLoading.hide();
           console.log("updating cache", alldata);
-          var hm = {hm:alldata};
-          myCache.put(key, hm);
+          mcache["hm"] = alldata;
+          myCache.put(key, mcache);
           applyMarks(alldata);
         })
       }
@@ -222,9 +222,8 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
         $scope.dashboard = true;
         $scope.marks.$loaded().then(function(alldata) {
           $ionicLoading.hide();
-          var dmark = {};
-          dmark[$stateParams.uid] = alldata;
-          myCache.put(key, dmark);
+          mcache[$stateParams.uid] = alldata;
+          myCache.put(key, mcache);
           applyMarks(alldata);
         })
       }
@@ -317,10 +316,9 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
         $scope.dashboard = true;
         $scope.marks.$loaded().then(function(alldata) {
           $ionicLoading.hide();
-          var dmark = {};
-          dmark[$stateParams.class] = {};
-          dmark[$stateParams.class][$stateParams.uid] = alldata;
-          myCache.put(key, dmark);
+          if(!mcache[$stateParams.class]) mcache[$stateParams.class] = {};
+          mcache[$stateParams.class][$stateParams.uid] = alldata;
+          myCache.put(key, mcache);
           applyMarks(alldata);
         })
       }
@@ -415,9 +413,8 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
         $scope.dashboard = true;
         $scope.marks.$loaded().then(function(alldata) {
           $ionicLoading.hide();
-          var dmark = {};
-          dmark[$stateParams.uid] = alldata;
-          myCache.put(key, dmark);
+          mcache[$stateParams.uid] = alldata;
+          myCache.put(key, mcache);
           applyMarks(alldata);
         })
       }
@@ -509,15 +506,9 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
 .controller("AllClassesCtrl", function($scope, myCache, Auth) {
   var allusers = myCache.get("allusers");
   $scope.changeStatus = function() {$scope.filterStatus = !$scope.filterStatus};
-  if(allusers) {
-    if(allusers["allclasses"]) {
-      $scope.status = true;
-      $scope.classes = allusers["allclasses"];    
-    } else {
-      $scope.status = false;      
-    }
-  } else {
+  $scope.fetchData = function(refresh) {
     Auth.getUsers().then(function(allusersfb) {
+      if(refresh) $scope.$broadcast('scroll.refreshComplete');
       if(allusersfb["allclasses"]) {
         $scope.status = true;
         $scope.classes = allusersfb["allclasses"];
@@ -526,11 +517,33 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       }
     })
   }
+  if(allusers) {
+    if(allusers["allclasses"]) {
+      $scope.status = true;
+      $scope.classes = allusers["allclasses"];    
+    } else {
+      $scope.status = false;      
+    }
+  } else {
+    $scope.fetchData(false);
+  }
 })
 
 .controller("AllStudentsCtrl", function($scope, Auth, myCache) {
   $scope.title = "All Students";
   $scope.changeStatus = function() {$scope.filterStatus = !$scope.filterStatus};
+  $scope.fetchData = function(refresh) {
+    Auth.getUsers().then(function(allusersfb) {
+      console.log("allusersfb", allusersfb);
+      if(refresh) $scope.$broadcast('scroll.refreshComplete');
+      if(allusersfb["allstudents"]) {
+        $scope.status = true;
+        $scope.students = allusersfb["allstudents"];
+      } else {
+        $scope.status = false;        
+      }
+    })
+  }
   var allusers = myCache.get("allusers");
   console.log("all users in students", allusers);
   if(allusers) {
@@ -541,21 +554,24 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       $scope.status = false;      
     }
   } else {
-    Auth.getUsers().then(function(allusersfb) {
-      console.log("allusersfb", allusersfb);
-      if(allusersfb["allstudents"]) {
-        $scope.status = true;
-        $scope.students = allusersfb["allstudents"];
-      } else {
-        $scope.status = false;        
-      }
-    })
+    $scope.fetchData(false);
   }
 })
 
 .controller("AllTeachersCtrl", function($scope, myCache, Auth) {
   var allusers = myCache.get("allusers");
   $scope.changeStatus = function() {$scope.filterStatus = !$scope.filterStatus};
+  $scope.fetchData = function(refresh) {
+    Auth.getUsers().then(function(allusersfb) {
+      if(refresh) $scope.$broadcast('scroll.refreshComplete');
+      if(allusersfb["allteachers"]) {
+        $scope.status = true;
+        $scope.teachers = allusersfb["allteachers"];
+      } else {
+        $scope.status = false;        
+      }
+    })
+  } 
   if(allusers) {
     if(allusers["allteachers"]) {
       $scope.status = true;
@@ -564,14 +580,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       $scope.status = false;      
     }
   } else {
-    Auth.getUsers().then(function(allusersfb) {
-      if(allusersfb["allteachers"]) {
-        $scope.status = true;
-        $scope.teachers = allusersfb["allteachers"];
-      } else {
-        $scope.status = false;        
-      }
-    })
+    $scope.fetchData(true);
   }
 })
 
