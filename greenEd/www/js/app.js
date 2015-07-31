@@ -52,7 +52,7 @@ angular.module('starter', ['ionic', 'starter.controllers','firebase','ngCordova'
                 var defaultOptions = {
                     chart: {renderTo: element[0], animation:true},
                     colors: (attrs.id.indexOf("grades") == -1) ? ['#23b7e5', '#ff6c60', '#90ed7d', '#f7a35c', '#8085e9', 
-   '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1'] : ['#23b7e5', '#90ed7d', '#f7a35c', '#8085e9', 
+   '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1'] : ['#90ed7d', '#f7a35c', '#8085e9', 
    '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1']
                 };
                 var config = angular.extend(defaultOptions, scope.config);
