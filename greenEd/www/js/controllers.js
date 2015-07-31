@@ -46,6 +46,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
         $scope.dashboard = true;
         $scope.hmmarks.$loaded().then(function(alldata) {
           $ionicLoading.hide();
+          console.log("updating cache", alldata);
           var hm = {hm:alldata};
           myCache.put(key, hm);
           applyMarks(alldata);
@@ -1055,11 +1056,12 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     $state.go('app.messages', {}, {reload:true});
   }
   $scope.user = {
-      email: "8951572125",
+      username: "8951572125",
       password: "lm3oko6r"
   };
   $scope.login = function () {
     $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Authenticating...'});
+    $scope.user.email = $scope.user.username + "@ge.com";
     Auth.login($scope.user).then(function (user) {
       $state.go('app.wall', {}, {reload: true});
       $ionicLoading.hide();

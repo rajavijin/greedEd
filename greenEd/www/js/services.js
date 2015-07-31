@@ -11,7 +11,6 @@ angular.module('starter.services', [])
   var Auth = {
     login: function (userdata) {
       var defer = $q.defer();
-      userdata.email += "@ge.com";
       ref.authWithPassword(userdata, function(err, userdatafb) {
         if(err) {
           defer.reject(err);
@@ -114,8 +113,8 @@ angular.module('starter.services', [])
               if(t.indexOf("simplelogin") != -1) {
                 var tt = fbusers[t].split("_");
                 var teacher = {
-                  name: tt[1],
-                  subject: tt[0],
+                  name: tt[0],
+                  subject: tt[1],
                   uid: t,
                   class: fbusers.standard+'-'+fbusers.division
                 }

@@ -224,12 +224,9 @@ angular.module('angularfireappApp')
 						if(mark.status == "Pass") {dmarks[key]["hm"].pass++; dmarks[ykey][mark.studentid].pass++; dmarks[key]["hm"].Pass.push({class:mark.class,uid:mark.studentid,name:mark.student}); dmarks[key][mark.class]["class"].pass++; dmarks[key][mark.class]["class"].Pass.push({class:mark.class,uid:mark.studentid,name:mark.student});}
 						if(mark.status == "Fail") {dmarks[key]["hm"].fail++; dmarks[ykey][mark.studentid].fail++; dmarks[key]["hm"].Fail.push({class:mark.class,uid:mark.studentid,name:mark.student}); dmarks[key][mark.class]["class"].fail++; dmarks[key][mark.class]["class"].Fail.push({class:mark.class,uid:mark.studentid,name:mark.student});}
 						for(var mm in mark.marks) {
-							console.log("dmarks status", dmarks[key][mark.marks[mm].teacherid]);
 						  if(!dmarks[key][mark.marks[mm].teacherid]) dmarks[key][mark.marks[mm].teacherid] = {pass:0,fail:0, Pass:[], Fail:[], allSubjects:[],subjectPass:[], subjectFail:[], subjectPassUsers:{}, subjectFailUsers:{}, gradeData:[], gradeUsers:{}, toppers:{}};
-						  console.log("allSubjects", dmarks[key][mark.marks[mm].teacherid].allSubjects);
-						  console.log("mm", mm);
-						  console.log("dmarks", dmarks);
-						  console.log("teacherid", mark.marks[mm].teacherid);
+						  if(!dmarks[key][mark.marks[mm].teacherid]["subjectFailUsers"]) dmarks[key][mark.marks[mm].teacherid]["subjectFailUsers"] = [];
+						  if(!dmarks[key][mark.marks[mm].teacherid]["Fail"]) dmarks[key][mark.marks[mm].teacherid]["Fail"] = [];
 						  if(dmarks[ykey][mark.studentid].allSubjects.indexOf(mm) == -1) {
 						  	if(!dmarks[ykey][mark.studentid].subjectDataMarks[mm]) dmarks[ykey][mark.studentid].subjectDataMarks[mm] = [];
 						    dmarks[ykey][mark.studentid].allSubjects.push(mm);
@@ -362,7 +359,7 @@ angular.module('angularfireappApp')
 					};
 					console.log("Total count", count);
 					console.log("Finally", dmarks);
-		/*			periodicalRef.set(dmarks[key]);
+					periodicalRef.set(dmarks[key]);
 					yearRef.set(dmarks[ykey]);
 					if(filters.typeofexams.indexOf(commondata.typeofexam) == -1) {
 						filters.typeofexams.push(commondata.typeofexam); 
@@ -372,7 +369,7 @@ angular.module('angularfireappApp')
 						filters.educationyears.push(commondata.educationyear);
 						filters.educationyear = filters.educationyears.indexOf(commondata.educationyear);
 					}
-					filtersRef.set(filters);*/
+					filtersRef.set(filters);
 					//console.log("Filters Finally", filters);
 				})
 			})

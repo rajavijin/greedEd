@@ -35,7 +35,7 @@ angular.module('starter', ['ionic', 'starter.controllers','firebase','ngCordova'
   });
 })
 
-.constant('FIREBASE_URL', 'https://vivid-inferno-3813.firebaseio.com/')
+.constant('FIREBASE_URL', 'https://greendev.firebaseio.com/')
 
 
 .directive('chart', function() {
