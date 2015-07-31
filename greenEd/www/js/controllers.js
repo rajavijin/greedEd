@@ -507,6 +507,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
 
 .controller("AllClassesCtrl", function($scope, myCache, Auth) {
   var allusers = myCache.get("allusers");
+  $scope.changeStatus = function() {$scope.filterStatus = !$scope.filterStatus};
   if(allusers) {
     if(allusers["allclasses"]) {
       $scope.status = true;
@@ -528,6 +529,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
 
 .controller("AllStudentsCtrl", function($scope, Auth, myCache) {
   $scope.title = "All Students";
+  $scope.changeStatus = function() {$scope.filterStatus = !$scope.filterStatus};
   var allusers = myCache.get("allusers");
   console.log("all users in students", allusers);
   if(allusers) {
@@ -552,6 +554,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
 
 .controller("AllTeachersCtrl", function($scope, myCache, Auth) {
   var allusers = myCache.get("allusers");
+  $scope.changeStatus = function() {$scope.filterStatus = !$scope.filterStatus};
   if(allusers) {
     if(allusers["allteachers"]) {
       $scope.status = true;
@@ -730,7 +733,9 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
 })
 
 .controller('MessagesCtrl', function($scope, $rootScope, $ionicLoading, $state, myCache, Auth) {
+  $scope.title = "Chats";
   var allmessages = Auth.getUserChatRooms();
+  $scope.changeStatus = function() {$scope.filterStatus = !$scope.filterStatus};
   $scope.messages = Auth.chats();
   var chatrooms = Auth.chatrooms();
   var contacts = [];
