@@ -2177,17 +2177,17 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
   {
     title: 'Head Master',
     email: "8951572125",
-    password: '03jfko6r'
+    password: '9GjRcghs/3WOIheuDX5s5Q=='
   },
   {
     title: 'Class Teacher',
-    email: "9496255106",
-    password: "qc3anhfr"
+    email: "9496255108",
+    password: "136h9qkt9"
   },
   {
     title: 'Subject Teacher',
-    email: "9496255121",
-    password: "l9mzyf1or"
+    email: "9496255110",
+    password: "7fhcl3di"
   },
   {
     title: "Parent with single Student",

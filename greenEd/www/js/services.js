@@ -27,12 +27,12 @@ angular.module('starter.services', [])
               key = user.uid;
               for (var i = 0; i < user.subjects.length; i++) {
                 if(i == 0) {
-                  value = user.subjects[i].subject;
+                  var tsub = user.subjects[i].subject;
                 } else {
-                  if(value != user.subjects[i].subject) value += ","+user.subjects[i].subject;
+                  if(tsub != user.subjects[i].subject) tsub += ","+user.subjects[i].subject;
                 }
               };
-              value += "_"+user.name;
+              value = user.name + "_" +tsub;
               user.alluserskey = key;
               user.allusersval = value;
               localStorage.setItem("user", JSON.stringify(user));
@@ -226,7 +226,7 @@ angular.module('starter.services', [])
           return parentMenu;*/
           return {"Links":[{"title":"Dashboard", "href":"/app/studentdashboard", "class":"ion-stats-bars"},{"title":"Overall Dashboard", "href":"/app/studentoveralldashboard", "class":"ion-ios-pulse-strong"},{"title":"Class Dashboard", "href":"/app/classdashboard", "class":"ion-pie-graph"},{"title":"TimeTable", "href":"/app/timetable", "class":"ion-ios-time-outline"}]};
         } else {
-          return {"Links":[{"title":"Dashboard", "href":"/app/studentdashboard/"+user.students[0].standard+"-"+user.students[0].division+"/"+user.students[0].uid+"/"+user.students[0].name, "class":"ion-stats-bars"},{"title":"Overall Dashboard", "href":"/app/studentoveralldashboard/"+user.students[0].uid+"/"+user.students[0].name, "class":"ion-ios-pulse-strong"},{"title":"Class Dashboard", "href":"/app/classdashboard/"+user.students[0].standard+"-"+user.students[0].division, "class":"ion-pie-graph"},{"title":"TimeTable", "href":"/app/timetable", "class":"ion-ios-time-outline"}]};
+          return {"Links":[{"title":"Dashboard", "href":"/app/studentdashboard/"+user.students[0].standard+"-"+user.students[0].division+"/"+user.students[0].uid+"/"+user.students[0].name, "class":"ion-stats-bars"},{"title":"Overall Dashboard", "href":"/app/studentoveralldashboard/"+user.students[0].uid+"/"+user.students[0].name, "class":"ion-ios-pulse-strong"},{"title":"Class Dashboard", "href":"/app/classdashboard/"+user.students[0].standard+"-"+user.students[0].division, "class":"ion-pie-graph"},{"title":"TimeTable", "href":"/app/timetable/"+user.students[0].standard+"-"+user.students[0].division, "class":"ion-ios-time-outline"}]};
         }
       } else {
         if(user.class) {

@@ -44,7 +44,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
         $scope.$broadcast('scroll.refreshComplete');
         applyMarks(mcache["hm"]);
       } else {
-        if(!mcache["hm"]) $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner>'});
+        if(!mcache["hm"]) $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Fetching Marks...'});
         $scope.hmmarks = Auth.getMarks(key+"/hm");
         $scope.$broadcast('scroll.refreshComplete');
         $scope.dashboard = true;
@@ -134,7 +134,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
         $scope.$broadcast('scroll.refreshComplete');
         applyMarks(classCache);
       } else {
-        $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner>'});
+        $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Fetching Marks...'});
         $scope.marks = Auth.getMarks(key+"/"+$stateParams.class+"/class");
         $scope.$broadcast('scroll.refreshComplete');
         $scope.dashboard = true;
@@ -220,7 +220,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
         $scope.$broadcast('scroll.refreshComplete');
         applyMarks(mcache[$stateParams.uid]);
       } else {
-        $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner>'});
+        $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Fetching Marks...'});
         $scope.marks = Auth.getMarks(key+"/"+$stateParams.uid);
         $scope.$broadcast('scroll.refreshComplete');
         $scope.dashboard = true;
@@ -252,11 +252,11 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       yAxis: {title: {text: null}},
       series: [{name: 'Pass',data: marks.subjectPass},{name: 'Fail',data: marks.subjectFail}]
     }; 
-    $scope.tgradeConfig = {
+/*    $scope.tgradeConfig = {
       chart: {renderTo: 'tgrades',type: 'pie',height: 200,options3d:{enabled: true,alpha: 45,beta: 0}},
       title: {text:"Grades"},plotOptions: {series:{cursor:'pointer',events:{click:function(event){$state.go("app.markstudents", {filter:key,type:"hm",key:"gradeUsers",val:event.point.name});}}},pie: {innerSize: 0,depth: 35,dataLabels:{enabled: true,format: '{point.name}: <b>{point.y}</b>'}}},
       series: [{type: 'pie',name: 'Total',data: marks.gradeData}]
-    };
+    };*/
   }  
   $scope.getMarksData(true);
   $ionicModal.fromTemplateUrl('templates/dashboardFilters.html', {
@@ -314,7 +314,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
         $scope.$broadcast('scroll.refreshComplete');
         applyMarks(mcache[$stateParams.class][$stateParams.uid]);
       } else {
-        $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner>'});
+        $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Fetching Marks...'});
         $scope.marks = Auth.getMarks(key+"/"+$stateParams.class+"/"+$stateParams.uid);
         $scope.$broadcast('scroll.refreshComplete');
         $scope.dashboard = true;
@@ -411,7 +411,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
         $scope.$broadcast('scroll.refreshComplete');
         applyMarks(mcache[$stateParams.uid]);
       } else {
-        $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner>'});
+        $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Fetching Marks...'});
         $scope.marks = Auth.getMarks(key+"/"+$stateParams.uid);
         $scope.$broadcast('scroll.refreshComplete');
         $scope.dashboard = true;
@@ -507,11 +507,12 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   }
 })
 
-.controller("AllClassesCtrl", function($scope, myCache, Auth) {
+.controller("AllClassesCtrl", function($scope, myCache, Auth, $ionicLoading) {
   var allusers = myCache.get("allusers");
   $scope.changeStatus = function() {$scope.filterStatus = !$scope.filterStatus};
   $scope.fetchData = function(refresh) {
     Auth.getUsers().then(function(allusersfb) {
+      $ionicLoading.hide();
       if(refresh) $scope.$broadcast('scroll.refreshComplete');
       if(allusersfb["allclasses"]) {
         $scope.status = true;
@@ -529,16 +530,18 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       $scope.status = false;      
     }
   } else {
+    $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Fetching Classes...'});
     $scope.fetchData(false);
   }
 })
 
-.controller("AllStudentsCtrl", function($scope, Auth, myCache) {
+.controller("AllStudentsCtrl", function($scope, Auth, myCache, $ionicLoading) {
   $scope.title = "All Students";
   $scope.changeStatus = function() {$scope.filterStatus = !$scope.filterStatus};
   $scope.fetchData = function(refresh) {
     Auth.getUsers().then(function(allusersfb) {
       console.log("allusersfb", allusersfb);
+      $ionicLoading.hide();
       if(refresh) $scope.$broadcast('scroll.refreshComplete');
       if(allusersfb["allstudents"]) {
         $scope.status = true;
@@ -558,15 +561,17 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       $scope.status = false;      
     }
   } else {
+    $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Fetching Students...'});
     $scope.fetchData(false);
   }
 })
 
-.controller("AllTeachersCtrl", function($scope, myCache, Auth) {
+.controller("AllTeachersCtrl", function($scope, myCache, Auth, $ionicLoading) {
   var allusers = myCache.get("allusers");
   $scope.changeStatus = function() {$scope.filterStatus = !$scope.filterStatus};
   $scope.fetchData = function(refresh) {
     Auth.getUsers().then(function(allusersfb) {
+      $ionicLoading.hide();
       if(refresh) $scope.$broadcast('scroll.refreshComplete');
       if(allusersfb["allteachers"]) {
         $scope.status = true;
@@ -584,6 +589,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       $scope.status = false;      
     }
   } else {
+    $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Fetching Teachers...'});
     $scope.fetchData(true);
   }
 })
@@ -625,8 +631,10 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
 
 .controller('WallCtrl', function($scope, $state, $ionicModal, Auth) {
   $scope.empty = false;
+  console.log("schoolid", user.schoolid);
   $scope.walls = Auth.wall(user.schoolid+'/wall');
   $scope.walls.$loaded().then(function(wall) {
+    console.log("FB wall:", wall);
     if(wall.length == 0) $scope.empty = true;
   });
   $scope.uid = user.uid;
@@ -702,7 +710,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   $scope.walls = Auth.wall(user.schoolid+'/wall');
   $scope.priority = 0;
   $scope.walls.$loaded().then(function(data) {
-    console.log("data", data[0]);
+    console.log("data", data);
     if(data.length > 0) {
       $scope.priority = data[0].$priority - 1;
     }
@@ -732,7 +740,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   }
   $scope.submit = function() {
     var uid = user.uid;
-    console.log("Auth user", user);
+    console.log("Priority", $scope.priority);
     $scope.walls.$add({
       'name' : user.name,
       'uid' : uid,
@@ -1068,27 +1076,6 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   $scope.user = user;
 })
 .controller('TimetableCtrl', function($scope, $ionicSideMenuDelegate, $stateParams, Auth, $ionicSlideBoxDelegate ) {
-  $ionicSideMenuDelegate.$getByHandle('right-menu').canDragContent(false);
-  // Called to navigate to the main app
-  $scope.startApp = function() {
-    $state.go('main');
-  };
-  $scope.next = function() {
-    $ionicSlideBoxDelegate.next();
-  };
-  $scope.previous = function() {
-    $ionicSlideBoxDelegate.previous();
-  };
-  var daysIndex = function(index) {
-    var days = ["monday","tuesday","wednesday","thursday","friday","saturday"];
-    return days[index];
-  }
-  // Called each time the slide changes
-  $scope.slideChanged = function(index) {
-    $scope.data.slideIndex = index;
-    $scope.title = daysIndex(index);
-  };
-
   $scope.getTimetable = function() {
     console.log("Get Data", $stateParams.id);
     var tref = Auth.getTimetable($stateParams.id);
@@ -1110,82 +1097,31 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
           first = false;
         }
       }
+      $scope.$apply();
     })
-    /*if($stateParams) {
-      var params = $stateParams;
-    } else {
-      var params = {};
-    }
-    if(!params.subject) params.subject = 'all';
-    params.schoolid = user.schoolid;
-    if(!params.class) {
-      if(user.role == 'parent') {
-        if(user.students.length == 1) {
-          params.class = user.students[0].class;
-        }
-      } else if(user.role == 'teacher') {
-        for (var i = 0; i < user.subjects.length; i++) {
-          params.class += (i == user.subjects.length - 1) ? user.subjects[i].class : user.subjects[i].class + ",";
-        };
-      }
-    }
-    if(params.subject == "all") {
-      $scope.classStatus = false;
-    } else {
-      $scope.classStatus = true;
-    }
-    if(MyService.online()) {
-      MyService.getTimetable(params).then(function(timetables) {
-        if(timetables.length > 0) {
-          var totaldays = [];
-          var timedata = {};
-          var daycontainer = {};
-          var j = 0;
-          console.log("timetable:", timetables);
-          for (var i = 0; i < timetables.length; i++) {
-            var available = false;
-            for (var td = 0; td < totaldays.length; td++) {
-              if(totaldays[td].day == timetables[i].day) available = true;
-            };
-            console.log("totaldays", totaldays);
-            console.log("available", available);
-            if(!available) {
-              totaldays.push({day: timetables[i].day});
-              daycontainer[timetables[i].day] = (daycontainer[timetables[i].day]) ? daycontainer[timetables[i].day] : j;
-              console.log("daycontainer", daycontainer);
-              console.log("timetables i", timetables[i]);
-              if(params.subject == "all") {
-                totaldays[daycontainer[timetables[i].day]].timetable = timetables[i].timetable;
-              } else {
-                totaldays[daycontainer[timetables[i].day]].timetable = [];
-              }
-              j++;
-            }
-            if(params.subject) {
-              console.log("i", i);
-              for (var k = 0; k < timetables[i].timetable.length; k++) {
-                if(params.subject.indexOf(timetables[i].timetable[k].subject) >= 0) {
-                  timetables[i].timetable[k].class = timetables[i].class;
-                  totaldays[daycontainer[timetables[i].day]].timetable.push(timetables[i].timetable[k]);
-                }
-              }
-            }
-          }
-          $scope.data = {
-            numViewableSlides : totaldays.length,
-            slideIndex : 0,
-            initialInstruction : true,
-            secondInstruction : false,
-            slides : totaldays
-          };
-          console.log("Data", $scope.data.slides);
-          $scope.title = totaldays[0].day;
-        }
-      })
-    } else {
-
-    }*/
   }
+  $scope.getTimetable();
+  $ionicSideMenuDelegate.$getByHandle('right-menu').canDragContent(false);
+  // Called to navigate to the main app
+  $scope.startApp = function() {
+    $state.go('main');
+  };
+  $scope.next = function() {
+    $ionicSlideBoxDelegate.next();
+  };
+  $scope.previous = function() {
+    $ionicSlideBoxDelegate.previous();
+  };
+  var daysIndex = function(index) {
+    var days = ["monday","tuesday","wednesday","thursday","friday","saturday"];
+    return days[index];
+  }
+  // Called each time the slide changes
+  $scope.slideChanged = function(index) {
+    $scope.data.slideIndex = index;
+    $scope.title = daysIndex(index);
+  };
+
 })
 .controller('AuthCtrl', function ($scope, $state, $rootScope, Auth, $ionicLoading, $ionicPopup, $ionicModal) {
   console.log("auth");
