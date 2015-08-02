@@ -27,13 +27,15 @@ angular.module('angularfireappApp')
     }
 	var scoresRef = Ref.child('users');
 	var teachers = {};
-	scoresRef.once("value", function(snap) {
+	scoresRef.orderByChild("role").equalTo("teacher").once("value", function(snap) {
 		var fbusers = snap.val();
-	    for(var fbuser in fbusers) {
-	    	if(fbusers[fbuser].role == "teacher") {
-	    		teachers[fbuser] = fbusers[fbuser];
-	    	}
-        }
+		snap.forEach(function(tdata) {
+			var data = tdata.val();
+			var tid = tdata.key();
+			for (var i = 0; i < data.subjects.length; i++) {
+				teachers[data.subjects[i].class+'_'+data.subjects[i].subject] = tid;
+			};
+		})
         console.log("All Firebase teachers", teachers);
 	});
 
@@ -46,162 +48,81 @@ angular.module('angularfireappApp')
     
     var schoolValues = function(schoolValues) {
       school = schoolValues;
-      console.log("Marks: ", marks);
+
+    }
+    var daysIndex = function(day) {
+    	var days = {};
+    	days["monday"] = 0;
+    	days["tuesday"] = 1;
+    	days["wednesday"] = 2;
+    	days["thursday"] = 3;
+    	days["friday"] = 4;
+    	days["saturday"] = 5;
+    	return days[day];
     }
 
+
   $scope.csvImport = function(csvdata) {
+  	var timeRef = Ref.child(school.$id+'/timetable');
+  	timeRef.once('value', function(timetableDataSnap) {
+  	var allusers = timetableDataSnap.val() || {};
+  	console.log("allusers", allusers);
     var sentcount = 0;
     if(csvdata && !$scope.processing) {
 		$scope.processing = true;
-		var allusers = {};
+		var days = {};
+		var tdays = {};
 		var newdata = csvdata;
     	console.log("csvdata", csvdata);
 		for (var i = 0; i < newdata.length; i++) {
 			var userdata = {};
-			if(i > 1) {
-				for(var dkey in newdata[i]) {
-					var head = newdata[2][dkey].toLowerCase().split(/[;]/);
-			  		var row = newdata[i][dkey].toLowerCase().split(/[;]/);
-			    	if(row.length > 1) {
-			    		for (var ri = 0; ri < row.length; ri++) {
-			    			userdata[head[ri].replace(/"/g, "")] = row[ri].replace(/"/g, "");
-			    		};
+			for(var dkey in newdata[i]) {
+				var head = dkey.toLowerCase().split(/[;]/);
+		  		var row = newdata[i][dkey].toLowerCase().split(/[;]/);
+		    	if(row.length > 1) {
+		    		for (var ri = 0; ri < row.length; ri++) {
+		    			userdata[head[ri].replace(/"/g, "")] = row[ri].replace(/"/g, "");
+		    		};
 
-						console.log("userdata", userdata);
-						if(!allusers[userdata.standard+'-'+userdata.division]) allusers[userdata.standard+'-'+userdata.division] = {};
-						if(!allusers[userdata.standard+'-'+userdata.division][userdata.day]) allusers[userdata.standard+'-'+userdata.division][userdata.day] = {};
-						allusers[userdata.standard+'-'+userdata.division][userdata.day][userdata.time] = userdata.subject;
-						for(var teacher in teachers) {
-							for (var ti = 0; ti < teachers[teacher].subjects.length; ti++) {
-								if((teachers[teacher].subjects[ti].class = userdata.standard+'-'+userdata.division) && (teachers[teacher].subjects[ti].subject.indexOf(userdata.subject) > 0)) {
-									if(!allusers[teacher]) allusers[teacher] = {};
-									if(!allusers[teacher][userdata.day]) allusers[teacher][userdata.day] = {};
-									allusers[teacher][userdata.day][userdata.time] = userdata.subject;
-								}
-							};
-						}
-			    	}	
-				}
+					var tclass = userdata.standard+'-'+userdata.division;
+					console.log("tclass", tclass);
+					if(!allusers[tclass]) allusers[tclass] = {};
+					if(!allusers[tclass][daysIndex(userdata.day)]) allusers[tclass][daysIndex(userdata.day)] = {};
+					if(userdata.time.indexOf("am") == -1) {
+						var tt = userdata.time.replace("pm", "");
+						if(tt.length == 1) var timekey = 'pm0'+tt;
+						else var timekey = "pm"+tt;
+					} else {
+						var tt = userdata.time.replace("am", "");
+						if(tt.length == 1) var timekey = 'am0'+tt;
+						else var timekey = "am"+tt;
+					}
+					console.log("timekey", timekey);
+					allusers[tclass][daysIndex(userdata.day)][timekey] = {subject:userdata.subject, time:userdata.time, day:userdata.day};
+
+					var subjects = [];
+					if(userdata.subject.indexOf("/") == -1) {
+						subjects.push(userdata.subject);
+					} else { subjects = userdata.subject.split("/"); }
+					console.log("subjects", subjects);
+					for (var si = 0; si < subjects.length; si++) {
+						var teacherid = teachers[tclass+'_'+subjects[si]];
+						console.log("teacherid", teacherid);
+						if(!allusers[teacherid]) allusers[teacherid] = {};
+						if(!allusers[teacherid][daysIndex(userdata.day)]) allusers[teacherid][daysIndex(userdata.day)] = {};
+						allusers[teacherid][daysIndex(userdata.day)][timekey] = {subject:userdata.subject, time:userdata.time, class:tclass, day:userdata.day};
+					};
+
+		    	}	
+			}
+			if(i == newdata.length - 1) {
+				console.log("allusers", allusers);
+				//timeRef.set(allusers);
 			}
 		}
     }
-	console.log("Timetables:", allusers);
-    var alluserSubmit = function(iteration) {
-    	console.log("school", school);
-    	console.log("All Firebase Users", allfbusers);
-    	console.log("Student id", allusers[iteration].studentid);
-    	var student = allfbusers["students"][allusers[iteration].studentid];
-    	console.log("Student", student);
-    	allusers[iteration].class = commondata.standard +'-'+commondata.division;
-    	var studentMark = {};
-    	studentMark.student = student.name;
-    	studentMark.educationyear = commondata.educationyear;
-    	studentMark.typeofexam = commondata.typeofexam;
-    	studentMark.class = allusers[iteration].class;
-    	studentMark.standard = commondata.standard;
-    	studentMark.attendance = allusers[iteration].attendance;
-    	studentMark.remarks = allusers[iteration].remarks;
-		console.log("iteration", allusers[iteration]);
-		console.log("mkey", mkey);
-		var total = 0;
-		var status = "Pass";
-		var maxmark = school.maxmark[0].max;
-		for (var mm = 0; mm < school.maxmark.length; mm++) {
-			console.log("MM", student.standard);
-			if(school.maxmark[mm].standard == student.standard) maxmark = school.maxmark[mm].max;
-		};
-		var passmark = school.passmark[0].passmark;
-		for (var pm = 0; pm < school.passmark.length; pm++) {
-			if(school.passmark[pm].standard == student.standard) passmark = school.passmark[pm].passmark;
-		};
-		console.log("Passmark", passmark);
-		console.log("maxmark", maxmark);
-		studentMark.marks = {};
-		for(var fsub in allfbusers["teachers"][allusers[iteration].class]) {
-			console.log("Subject", allusers[iteration][fsub]);
-			if(allusers[iteration][fsub]) {
-	        	studentMark.marks[fsub] = {teacher: allfbusers["teachers"][allusers[iteration].class][fsub]["teacher"], teacherid:allfbusers["teachers"][allusers[iteration].class][fsub]["teacherid"], maxmark:maxmark, passmark:passmark};
-				if(allusers[iteration][fsub] == "ab") {
-				  studentMark.marks[fsub]["astatus"] = "absent";
-				  studentMark.marks[fsub]["mark"] = 0;
-				  status = "Fail";
-				} else {
-				  studentMark.marks[fsub]["status"] = "present";
-				  studentMark.marks[fsub]["mark"] = parseInt(allusers[iteration][fsub]);
-				}
-				if(studentMark.marks[fsub]["mark"] < passmark) {
-				  status = "Fail";
-				  studentMark.marks[fsub]["status"] = "Fail";
-				} else {
-				  studentMark.marks[fsub]["status"] = "Pass";
-				}
-				total = parseInt(total) + studentMark.marks[fsub]["mark"];
-			}
-		}
-		studentMark.studentid = student.uid;
-		studentMark.status = status;
-		studentMark.total = total;
-		studentMark.percentage = (total * (100/(Object.keys(studentMark.marks).length*maxmark))).toPrecision(4);
-		school.grades.forEach(function(gv, gk) {
-		var mpercentage = Math.floor(studentMark.percentage);
-		if((mpercentage >= gv.lesser) && ((mpercentage <= gv.greater))) {
-		  studentMark.grade = (status == "Fail") ? "Grade F" : gv.grade;
-		}
-		})
-		if(allusers[iteration].attendance) {
-		var attendanceVal = allusers[iteration].attendance.split("/");
-		studentMark.attendanceP = (parseInt(attendanceVal[0]) * (100/parseInt(attendanceVal[1]))).toPrecision(4);
-		}
-		console.log("Student Mark", studentMark);
-		
-		AllMarks.push(studentMark);
-      	if(iteration != (allusers.length -1)) {
-		iteration++;
-			alluserSubmit(iteration);
-		} else {
-			/*AllMarks.sort(dynamicSort("total"));
-			var ri = 1;
-            var ric = 0;
-			for (var mk = AllMarks.length - 1; mk >= 0; mk--) {
-				if(AllMarks[mk].status == "Pass") {
-	              AllMarks[mk].rank = ri;
-	              if(mk > 0) {
-	                if(AllMarks[mk].total == AllMarks[mk-1].total) {
-	                  ric++;
-	                } else {
-	                  if(school.ranktype == "dynamic") {
-	                    ri = ri + ric + 1;
-	                    ric = 0;
-	                  } else {
-	                    ri++;                          
-	                  }
-	                }
-	              }
-				} else {
-					AllMarks[mk].rank = 0;
-				}
+  	})
 
-				//Send data to firebase
-            }
-            console.log("AllMarks Final", AllMarks);
-            for (var ii = 0; ii < AllMarks.length; ii++) {
-				var mkey = school.$id+'/marks/'+AllMarks[ii].educationyear+'_'+AllMarks[ii].typeofexam;
-				$scope.allmarks = $firebaseArray(Ref.child(mkey).limitToLast(1));
-
-			    // display any errors
-			    $scope.allmarks.$loaded().catch(alert);
-			    // push a message to the end of the array
-			    $scope.allmarks.$add(AllMarks[ii])
-			      // display any errors
-			      .catch(alert);
-            };
-            var fredNameRef = Ref.child(school.$id+'/lastmark');
-			fredNameRef.child('educationyear').set(commondata.educationyear);
-			fredNameRef.child('typeofexam').set(commondata.typeofexam);*/
-			//$location.path('/');
-		}
-	}
-	alluserSubmit(0);
   }
   function showError() {
 	alert("error");

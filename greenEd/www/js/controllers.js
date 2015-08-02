@@ -585,6 +585,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
 })
 
 .controller("MarkStudentsCtrl", function($scope, $stateParams, myCache) {
+  $scope.changeStatus = function() {$scope.filterStatus = !$scope.filterStatus};
   var cache = myCache.get($stateParams.filter);
   console.log("Main cache", cache);
   var title = $stateParams.filter.replace("_", " ") + " ";
@@ -849,7 +850,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
         $state.go('app.messagebox', {chatid:chatid, to:contact.name, toUid:contact.uid,  type:message.type});
       })
     }
-
+    console.log("from", message);
     chatrooms.child(message.fromUid).orderByChild("uid").equalTo(message.toUid).once('value', function(data) {
       console.log("data", data.val());
       if(!data.val()) {
@@ -1059,7 +1060,129 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       scroller.style.bottom = newFooterHeight + 'px'; 
     });
 })
+.controller('AccountCtrl', function($scope) {
+  $scope.user = user;
+})
+.controller('TimetableCtrl', function($scope, $ionicSideMenuDelegate, $stateParams, Auth, $ionicSlideBoxDelegate ) {
+  $ionicSideMenuDelegate.$getByHandle('right-menu').canDragContent(false);
+  // Called to navigate to the main app
+  $scope.startApp = function() {
+    $state.go('main');
+  };
+  $scope.next = function() {
+    $ionicSlideBoxDelegate.next();
+  };
+  $scope.previous = function() {
+    $ionicSlideBoxDelegate.previous();
+  };
+  var daysIndex = function(index) {
+    var days = ["monday","tuesday","wednesday","thursday","friday","saturday"];
+    return days[index];
+  }
+  // Called each time the slide changes
+  $scope.slideChanged = function(index) {
+    $scope.data.slideIndex = index;
+    $scope.title = daysIndex(index);
+  };
 
+  $scope.getTimetable = function() {
+    console.log("Get Data", $stateParams.id);
+    var tref = Auth.getTimetable($stateParams.id);
+    tref.on('value', function(tdata) {
+      var timetable = tdata.val() || {};
+      console.log("tdata", timetable);
+      $scope.data = {
+        numViewableSlides : Object.keys(timetable).length,
+        slideIndex : 0,
+        initialInstruction : true,
+        secondInstruction : false,
+        slides: timetable,
+      };
+      var defaultVal = timetable[Object.keys(timetable)[0]];
+      var first = true;
+      for(var dd in defaultVal) {
+        if(first) {
+          $scope.title = defaultVal[dd].day;
+          first = false;
+        }
+      }
+    })
+    /*if($stateParams) {
+      var params = $stateParams;
+    } else {
+      var params = {};
+    }
+    if(!params.subject) params.subject = 'all';
+    params.schoolid = user.schoolid;
+    if(!params.class) {
+      if(user.role == 'parent') {
+        if(user.students.length == 1) {
+          params.class = user.students[0].class;
+        }
+      } else if(user.role == 'teacher') {
+        for (var i = 0; i < user.subjects.length; i++) {
+          params.class += (i == user.subjects.length - 1) ? user.subjects[i].class : user.subjects[i].class + ",";
+        };
+      }
+    }
+    if(params.subject == "all") {
+      $scope.classStatus = false;
+    } else {
+      $scope.classStatus = true;
+    }
+    if(MyService.online()) {
+      MyService.getTimetable(params).then(function(timetables) {
+        if(timetables.length > 0) {
+          var totaldays = [];
+          var timedata = {};
+          var daycontainer = {};
+          var j = 0;
+          console.log("timetable:", timetables);
+          for (var i = 0; i < timetables.length; i++) {
+            var available = false;
+            for (var td = 0; td < totaldays.length; td++) {
+              if(totaldays[td].day == timetables[i].day) available = true;
+            };
+            console.log("totaldays", totaldays);
+            console.log("available", available);
+            if(!available) {
+              totaldays.push({day: timetables[i].day});
+              daycontainer[timetables[i].day] = (daycontainer[timetables[i].day]) ? daycontainer[timetables[i].day] : j;
+              console.log("daycontainer", daycontainer);
+              console.log("timetables i", timetables[i]);
+              if(params.subject == "all") {
+                totaldays[daycontainer[timetables[i].day]].timetable = timetables[i].timetable;
+              } else {
+                totaldays[daycontainer[timetables[i].day]].timetable = [];
+              }
+              j++;
+            }
+            if(params.subject) {
+              console.log("i", i);
+              for (var k = 0; k < timetables[i].timetable.length; k++) {
+                if(params.subject.indexOf(timetables[i].timetable[k].subject) >= 0) {
+                  timetables[i].timetable[k].class = timetables[i].class;
+                  totaldays[daycontainer[timetables[i].day]].timetable.push(timetables[i].timetable[k]);
+                }
+              }
+            }
+          }
+          $scope.data = {
+            numViewableSlides : totaldays.length,
+            slideIndex : 0,
+            initialInstruction : true,
+            secondInstruction : false,
+            slides : totaldays
+          };
+          console.log("Data", $scope.data.slides);
+          $scope.title = totaldays[0].day;
+        }
+      })
+    } else {
+
+    }*/
+  }
+})
 .controller('AuthCtrl', function ($scope, $state, $rootScope, Auth, $ionicLoading, $ionicPopup) {
   if(localStorage.getItem("user")) {
     $state.go('app.messages', {}, {reload:true});

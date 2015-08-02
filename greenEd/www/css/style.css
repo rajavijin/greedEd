@@ -30,7 +30,12 @@
   padding: 0 10px 0 0;
   font-size: 20px;
 }
-
+.menu-open .ion-navicon:before {
+  content: "\f2ca";
+}
+/*.bar .back-button + div.buttons-left {
+  display: none;
+}*/
 .list .item .wall-title {
   position: absolute;
   top: 16px;
