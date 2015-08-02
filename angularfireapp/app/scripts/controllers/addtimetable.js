@@ -117,7 +117,7 @@ angular.module('angularfireappApp')
 			}
 			if(i == newdata.length - 1) {
 				console.log("allusers", allusers);
-				//timeRef.set(allusers);
+				timeRef.set(allusers);
 			}
 		}
     }
