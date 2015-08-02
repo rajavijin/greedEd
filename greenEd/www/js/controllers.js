@@ -829,14 +829,22 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   $scope.toMessageBox = function(contact) {
     var chatroom = {};
     console.log("contact", contact);
+    var fromName = user.name;
+    if(user.role == "parent") {
+      fromName = "Parent of ";
+      for (var si = 0; si < user.students.length; si++) {
+        fromName += (si == 0) ? user.students[si].name : ","+user.students[si].name;
+      };
+    }
     var message = {
-      'from': user.name,
+      'from': fromName,
       'fromUid': user.uid,
       'to': contact.name,
       'toUid': contact.uid,
       'created': Date.now(),
       'type': contact.type,
     }
+    console.log("from", message);
     var NewChat = function(action) {
       $scope.messages.$add(message).then(function(msnap) {
         console.log("msnap", msnap.key());
@@ -849,8 +857,10 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
           var allusers = myCache.get("allusers");
           console.log("allusers", allusers);
           console.log("Message", message);
-          hm = {chatid:chatid, notify:0, name: message.to, uid:message.toUid, type:message.type};
-          chatrooms.child($scope.hm.uid).child(chatid).set(hm);
+          if(user.role != "hm") {
+            hm = {chatid:chatid, notify:0, name: message.to, uid:message.toUid, type:message.type};
+            chatrooms.child($scope.hm.uid).child(chatid).set(hm);
+          }
           for (var i = 0; i < allusers["groups"][message.toUid].length; i++) {
             var classStudent = allusers["groups"][message.toUid][i];
             rooms = {chatid:chatid, notify:0, name: message.to, uid:message.toUid, type:message.type};
@@ -863,7 +873,6 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
         $state.go('app.messagebox', {chatid:chatid, to:contact.name, toUid:contact.uid,  type:message.type});
       })
     }
-    console.log("from", message);
     chatrooms.child(message.fromUid).orderByChild("uid").equalTo(message.toUid).once('value', function(data) {
       console.log("data", data.val());
       if(!data.val()) {
