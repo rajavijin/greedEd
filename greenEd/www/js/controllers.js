@@ -585,6 +585,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
 })
 
 .controller("MarkStudentsCtrl", function($scope, $stateParams, myCache) {
+  $scope.changeStatus = function() {$scope.filterStatus = !$scope.filterStatus};
   var cache = myCache.get($stateParams.filter);
   console.log("Main cache", cache);
   var title = $stateParams.filter.replace("_", " ") + " ";
