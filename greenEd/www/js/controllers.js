@@ -1101,6 +1101,11 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     })
   }
   $scope.getTimetable();
+  if($stateParams.id.indexOf("simplelogin") == -1) {
+    $scope.classStatus = false;
+  } else {
+    $scope.classStatus = true;
+  }
   $ionicSideMenuDelegate.$getByHandle('right-menu').canDragContent(false);
   // Called to navigate to the main app
   $scope.startApp = function() {
