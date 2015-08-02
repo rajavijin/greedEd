@@ -1,6 +1,6 @@
 angular.module('starter.controllers', ['starter.services', 'monospaced.elastic', 'angularMoment'])
 
-.controller('AppCtrl', function($scope, $rootScope, Auth) {
+.controller('AppCtrl', function($scope, $window, $rootScope, Auth) {
   $scope.logout = Auth.logout;
   if(user && $rootScope.updateMenu) {
     console.log("updating menu");
@@ -19,6 +19,10 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   }*/
   $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
     $rootScope.state = toState.name;
+    console.log("state", toState.name);
+    if(toState.name == "login") {
+      $window.location.reload(true);
+    }
   });
   $scope.user = user;
 })
@@ -1183,17 +1187,52 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     }*/
   }
 })
-.controller('AuthCtrl', function ($scope, $state, $rootScope, Auth, $ionicLoading, $ionicPopup) {
+.controller('AuthCtrl', function ($scope, $state, $rootScope, Auth, $ionicLoading, $ionicPopup, $ionicModal) {
+  console.log("auth");
   if(localStorage.getItem("user")) {
     $state.go('app.messages', {}, {reload:true});
   }
-/*  $scope.user = {
-      username: "8951572125",
-      password: "lm3oko6r"
-  };*/
   $scope.user = {
+    username: '',
+    password: '',
+  }
+  $scope.users = [
+  {
+    title: 'Head Master',
     username: "8951572125",
-    password: "03jfko6r"
+    password: '03jfko6r'
+  },
+  {
+    title: 'Class Teacher',
+    username: "9496255106",
+    password: "bwlba9k9"
+  },
+  {
+    title: 'Subject Teacher',
+    username: "9496255110",
+    password: "7fhcl3di"
+  },
+  {
+    title: "Parent",
+    username: "9944711022",
+    password: "7p6wdn29"
+  }];
+  $scope.fillUser = function(modal, username, password) {
+    modal.hide();
+    $scope.user = {
+      username: username,
+      password: password
+    }
+    $scope.login();
+  }
+  $scope.showUsers = function() {
+    $ionicModal.fromTemplateUrl('templates/selectusers.html', {
+      scope: $scope,
+      animation: 'slide-in-up'
+    }).then(function(modal) {
+      $scope.modal = modal;
+      $scope.modal.show();
+    });
   }
   $scope.login = function () {
     $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Authenticating...'});
