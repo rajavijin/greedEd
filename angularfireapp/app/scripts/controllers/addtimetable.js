@@ -77,8 +77,8 @@ angular.module('angularfireappApp')
 		for (var i = 0; i < newdata.length; i++) {
 			var userdata = {};
 			for(var dkey in newdata[i]) {
-				var head = dkey.toLowerCase().split(/[;]/);
-		  		var row = newdata[i][dkey].toLowerCase().split(/[;]/);
+				var head = dkey.toLowerCase().split(/[,;]/);
+		  		var row = newdata[i][dkey].toLowerCase().split(/[,;]/);
 		    	if(row.length > 1) {
 		    		for (var ri = 0; ri < row.length; ri++) {
 		    			userdata[head[ri].replace(/"/g, "")] = row[ri].replace(/"/g, "");
