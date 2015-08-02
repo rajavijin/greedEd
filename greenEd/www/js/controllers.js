@@ -708,10 +708,11 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
 
 .controller('AddPostCtrl', function($scope, Auth, $state, $cordovaCamera) {
   $scope.walls = Auth.wall(user.schoolid+'/wall');
-  $scope.priority = 0;
+  $scope.priority = -1;
   $scope.walls.$loaded().then(function(data) {
     console.log("data", data);
     if(data.length > 0) {
+      console.log("first data", data[0].$priority);
       $scope.priority = data[0].$priority - 1;
     }
   })  
@@ -739,8 +740,8 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     $state.go('app.wall', {});
   }
   $scope.submit = function() {
-    var uid = user.uid;
     console.log("Priority", $scope.priority);
+    var uid = user.uid;
     $scope.walls.$add({
       'name' : user.name,
       'uid' : uid,
