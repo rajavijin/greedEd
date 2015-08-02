@@ -1187,10 +1187,14 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   if(localStorage.getItem("user")) {
     $state.go('app.messages', {}, {reload:true});
   }
-  $scope.user = {
+/*  $scope.user = {
       username: "8951572125",
       password: "lm3oko6r"
-  };
+  };*/
+  $scope.user = {
+    username: "8951572125",
+    password: "03jfko6r"
+  }
   $scope.login = function () {
     $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Authenticating...'});
     $scope.user.email = $scope.user.username + "@ge.com";

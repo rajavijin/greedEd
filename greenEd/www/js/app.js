@@ -271,5 +271,5 @@ angular.module('starter', ['ionic', 'starter.controllers','firebase','ngCordova'
     }
   });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/timetable/6-all');
+  $urlRouterProvider.otherwise('/login');
 });
