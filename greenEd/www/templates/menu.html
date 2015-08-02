@@ -1,7 +1,11 @@
 <ion-side-menus enable-menu-with-back-views="true" ng-init="AppCtrl" delegate-handle="right-menu">
    <ion-side-menu-content>
       <ion-nav-bar class="bar-positive">
-         <ion-nav-buttons side="left"><button class="button button-icon button-clear ion-navicon show" menu-toggle="left"></button></ion-nav-buttons>
+      <ion-nav-back-button>
+      </ion-nav-back-button>
+         <ion-nav-buttons side="left">
+         <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
+         </ion-nav-buttons>
 <!--          <ion-nav-buttons side="right"><button ng-show="filters" class="button button-icon button-clear ion-funnel" menu-toggle="right"></button></ion-nav-buttons> -->
       </ion-nav-bar>
       <ion-nav-view name="menuContent"></ion-nav-view>
@@ -17,6 +21,7 @@
 <ion-item ng-show="linkItem[link.index]" ng-if="link.header == 'submenu'" nav-clear menu-close class="item-icon-left sub" href="#{{link.href}}"><i class="icon {{link.class}} positive"></i> <h2>{{link.title}}</h2></ion-item>
                <ion-item ng-if="!link.header" nav-clear menu-close class="item-icon-left" href="#{{link.href}}"><i class="icon {{link.class}} positive"></i><h2>{{linkItem[link.index]}} {{link.title}}</h2></ion-item>
             </div>
+            <ion-item nav-clear menu-close class="item-icon-left" href="#/app/account"><i class="icon ion-person positive"></i><h2>Account</h2></ion-item>            
             <ion-item nav-clear menu-close class="item-icon-left" ng-click="logout()"><i class="icon ion-log-out positive"></i><h2>Logout</h2></ion-item>
          </ion-list>
       </ion-content>

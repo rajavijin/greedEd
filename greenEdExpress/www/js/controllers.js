@@ -1656,7 +1656,6 @@ angular.module('starter.controllers', ['starter.services','monospaced.elastic', 
 })
 .controller('TimeTableCtrl', function($scope, $rootScope, $stateParams, $ionicSideMenuDelegate, $state, $ionicSlideBoxDelegate, MyService) {
   $ionicSideMenuDelegate.$getByHandle('right-menu').canDragContent(false);
-  console.log("filters", $rootScope.filters);
   // Called to navigate to the main app
   $scope.startApp = function() {
     $state.go('main');

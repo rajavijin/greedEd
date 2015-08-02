@@ -100,7 +100,7 @@ angular.module('starter.services', [])
               allusers["allclasses"].push({standard:fbusers.standard, division:"all"});
             }
             allusers["allstudents"].push({name:fbusers.name, standard:fbusers.standard, division:fbusers.division, uid:fbuser});
-            var parent = fbusers.parentkids.split("_");
+            var parent = fbusers.parentkids.split("|");
             if(chatcontacts[fbusers.name]) {
               allusers["chatcontacts"][chatcontacts[fbusers.name] - 1].name += ","+fbusers.name;
               allusers["groups"][fbusers.standard+'-'+fbusers.division][chatcontacts[fbusers.name] - 1].name += ","+fbusers.name;
@@ -199,6 +199,9 @@ angular.module('starter.services', [])
     },
     updateWall: function(key, update) {
       return ref.child(key).update(update);
+    },
+    getTimetable: function(key) {
+      return ref.child(user.schoolid+'/timetable/'+key);
     },
     getMenus: function() {
       if(user.role == "hm") {

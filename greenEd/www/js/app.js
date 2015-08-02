@@ -35,7 +35,7 @@ angular.module('starter', ['ionic', 'starter.controllers','firebase','ngCordova'
   });
 })
 
-.constant('FIREBASE_URL', 'https://greendev.firebaseio.com/')
+.constant('FIREBASE_URL', 'https://vivid-inferno-3813.firebaseio.com/')
 
 
 .directive('chart', function() {
@@ -251,7 +251,25 @@ angular.module('starter', ['ionic', 'starter.controllers','firebase','ngCordova'
         controller: 'MessageBoxCtrl'
       }
     }
+  })
+  .state('app.timetable', {
+    url: "/timetable/:id",
+    views: {
+      'menuContent' :{
+        templateUrl: "templates/timetable.html",
+        controller: 'TimetableCtrl'
+      }
+    }
+  })
+  .state('app.account', {
+    url: "/account",
+    views: {
+      'menuContent' :{
+        templateUrl: "templates/account.html",
+        controller: 'AccountCtrl'
+      }
+    }
   });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/login');
+  $urlRouterProvider.otherwise('/timetable/6-all');
 });
