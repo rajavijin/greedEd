@@ -9,13 +9,37 @@
           <h3 id="profile-name">{{user.name}}</h3>
         </div>
 <!--         <a class="item item-icon-left" listtodash id="{{user._id}}-{{user.name}}" href="#/app/studentdashboard"><i class="icon ion-person positive"></i> {{user.name}}</a> -->
-      <div class="list"><a class="item item-icon-left"><i class="icon ion-easel positive"></i> {{user.standard}}{{user.division}}</a> <a class="item item-icon-left" href="#" ng-if="user.sex"><i ng-class="{'icon ion-woman positive': user.sex == 'female', 'icon ion-man positive': user.sex == 'male'}"></i> {{user.sex}}</a> <a class="item item-icon-left"><i class="icon ion-ios-body positive"></i> {{user.teacher}}</a> <a class="item item-icon-left"><i class="icon ion-android-person positive"></i> {{user.parent}}</a><a class="item item-icon-left item-icon-right" href="tel:9994522610">
-    <i class="icon ion-chatbubble-working positive"></i>
-    Call Parent
-    <i class="icon ion-ios-telephone-outline"></i>
-  </a><a class="item item-icon-left" href="#"><i class="icon ion-home positive"></i> {{user.address}}</a>
-  <a ng-if="user.role == 'teacher'" class="item item-icon-left" href="#/app/timetable/{{user.uid}}"><i class="icon ion-ios-time-outline positive"></i>TimeTable</a>
-  <a ng-if="user.role == 'parent'" class="item item-icon-left" ng-repeat="student in user.students" href="#/app/timetable/{{student.class}}"><i class="icon ion-ios-time-outline positive"></i>TimeTable</a>  
-  </div></div>
+      <ion-list ng-if="user.role == 'hm'">
+        <ion-item>
+        </ion-item>
+      </ion-list>
+      <ion-list ng-if="user.role == 'teacher'">
+        <ion-item class="item item-icon-left" href="#">
+          <i class="icon ion-ios-telephone-outline positive"></i><h2>{{user.phone}}</h2>
+        </ion-item>
+        <ion-item class="item-icon-left" ng-repeat="subject in user.subjects" href="#">
+          <i class="icon ion-ios-book positive"></i><h2>{{subject.class}} {{subject.subject}}</h2>
+        </ion-item>
+        <ion-item class="item-icon-left" href="#/app/timetable/{{user.uid}}">
+          <i class="icon ion-ios-time-outline positive"></i><h2>TimeTable</h2>
+        </ion-item>
+      <ion-list ng-if="user.role == 'parent'">
+        <ion-item class="item item-icon-left" href="#">
+          <i class="icon ion-ios-telephone-outline positive"></i><h2>{{user.phone}}</h2>
+        </ion-item>
+        <ion-item class="item-icon-left positive"><i class="icon ion-clock"></i><strong>{{student.name}}</strong></ion-item>
+        <ion-item class="item-icon-left positive"><i class="icon ion-clock"></i><h2>{{student.studentid}}</h2></ion-item>
+        <ion-item class="item-icon-left positive" href="#" ng-if="user.sex"><i ng-class="{'icon ion-woman positive': user.sex == 'female', 'icon ion-man positive': user.sex == 'male'}"></i><h2>{{student.sex}}</h2>
+        </ion-item>
+        <ion-item class="item-icon-left positive"><i class="icon ion-clock"></i><h2>{{student.teacher}}</h2></ion-item>
+        <ion-item class="item-icon-left positive"><i class="icon ion-easel positive"></i><h2>{{student.standard}}{{student.division}}</h2>
+        </ion-item>
+        <ion-item class="item-icon-left positive" href="#"><i class="icon ion-home positive"></i><h2>{{student.address}}</h2>
+        </ion-item>
+        <ion-item class="item-icon-left" href="#/app/timetable/{{student.class}}">
+          <i class="icon ion-ios-time-outline positive"></i><h2>TimeTable</h2>
+        </ion-item>
+        </span>
+      </ion-list></div>
    </ion-content>
 </ion-view>
