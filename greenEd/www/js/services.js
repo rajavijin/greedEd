@@ -91,7 +91,7 @@ angular.module('starter.services', [])
               standard[fbusers.standard] = true;
               allusers["allclasses"].push({standard:fbusers.standard, division:"all"});
             }
-            allusers["allstudents"].push({name:fbusers.name, standard:fbusers.standard, division:fbusers.division, uid:fbuser});
+            allusers["allstudents"].push({name:fbusers.name, studentid:fbusers.studentid, standard:fbusers.standard, division:fbusers.division, uid:fbuser});
             var parent = fbusers.parentkids.split("|");
             if(chatcontacts[fbusers.name]) {
               allusers["chatcontacts"][chatcontacts[fbusers.name] - 1].name += ","+fbusers.name;
@@ -161,7 +161,7 @@ angular.module('starter.services', [])
       return ref.child(user.schoolid+"/chatrooms");
     },
     getUserChatRooms: function() {
-      return $firebaseObject(ref.child(user.schoolid+"/chatrooms/"+user.uid));
+      return ref.child(user.schoolid+"/chatrooms/"+user.uid);
     },
     getAllMessages: function(chatid) {
       return ref.child(user.schoolid+"/chats/"+chatid);

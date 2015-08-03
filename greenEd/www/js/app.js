@@ -98,7 +98,7 @@ angular.module('starter', ['ionic', 'starter.controllers','firebase','ngCordova'
             };
         },
         template: '<div class="item-input-wrapper">' +
-                    '<input type="search" placeholder="{{placeholder}}" ng-model="search.value">' +
+                    '<input type="search" placeholder="{{placeholder}}" ng-model="search.value" class="search">' +
                     '<i ng-if="search.value.length > 0" ng-click="clearSearch()" class="icon ion-close"></i>' +
                   '</div>'
     };

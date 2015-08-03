@@ -312,6 +312,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   }
 
   var applyMarks = function(v) {
+    console.log("v", v);
     subjectLabels = [];
     subjectMarks = [];
     for (var i in v.marks) {
@@ -320,7 +321,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       if(v.marks[i].status == "Fail") {
         smark.color = '#ff6c60';
       }
-      if(v.marks[i].status == "absent") {smark.tip = "Ab"; smark.name += " Absent"}
+      if(v.marks[i].mark == 0) {smark.tip = "Ab"; smark.name += " Absent"}
       subjectMarks.push(smark);
     };
     $scope.ssubjectsConfig = {
@@ -477,9 +478,9 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   }
 })
 
-.controller("AllClassesCtrl", function($scope, myCache, Auth, $ionicLoading) {
+.controller("AllClassesCtrl", function($scope, myCache, Auth, $ionicLoading, $timeout) {
   var allusers = myCache.get("allusers");
-  $scope.changeStatus = function() {$scope.filterStatus = !$scope.filterStatus};
+  $scope.changeStatus = function() {$scope.filterStatus = !$scope.filterStatus;$timeout(function() {document.body.querySelector(".search").focus();}, 100);};
   $scope.fetchData = function(refresh) {
     Auth.getUsers().then(function(allusersfb) {
       $ionicLoading.hide();
@@ -505,9 +506,9 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   }
 })
 
-.controller("AllStudentsCtrl", function($scope, Auth, myCache, $ionicLoading) {
+.controller("AllStudentsCtrl", function($scope, Auth, myCache, $ionicLoading, $timeout) {
   $scope.title = "All Students";
-  $scope.changeStatus = function() {$scope.filterStatus = !$scope.filterStatus};
+  $scope.changeStatus = function() {$scope.filterStatus = !$scope.filterStatus;$timeout(function() {document.body.querySelector(".search").focus();}, 100);};
   $scope.fetchData = function(refresh) {
     Auth.getUsers().then(function(allusersfb) {
       $ionicLoading.hide();
@@ -534,9 +535,9 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   }
 })
 
-.controller("AllTeachersCtrl", function($scope, myCache, Auth, $ionicLoading) {
+.controller("AllTeachersCtrl", function($scope, myCache, Auth, $ionicLoading, $timeout) {
   var allusers = myCache.get("allusers");
-  $scope.changeStatus = function() {$scope.filterStatus = !$scope.filterStatus};
+  $scope.changeStatus = function() {$scope.filterStatus = !$scope.filterStatus;$timeout(function() {document.body.querySelector(".search").focus();}, 100);};
   $scope.fetchData = function(refresh) {
     Auth.getUsers().then(function(allusersfb) {
       $ionicLoading.hide();
@@ -562,8 +563,8 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   }
 })
 
-.controller("MarkStudentsCtrl", function($scope, $stateParams, myCache) {
-  $scope.changeStatus = function() {$scope.filterStatus = !$scope.filterStatus};
+.controller("MarkStudentsCtrl", function($scope, $stateParams, myCache, $timeout) {
+  $scope.changeStatus = function() {$scope.filterStatus = !$scope.filterStatus;$timeout(function() {document.body.querySelector(".search").focus();}, 100);};
   var cache = myCache.get($stateParams.filter);
   var title = $stateParams.filter.replace("_", " ") + " ";
   if($stateParams.type.indexOf("student") != -1) {
@@ -595,10 +596,12 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   }
 })
 
-.controller('WallCtrl', function($scope, $state, $ionicModal, Auth) {
+.controller('WallCtrl', function($scope, $state, $ionicModal, Auth, $ionicLoading) {
   $scope.empty = false;
   $scope.walls = Auth.wall(user.schoolid+'/wall');
+  $ionicLoading.show({template:"<ion-spinner icon='lines' class='spinner-calm'></ion-spinner></br>Fetching Wall..."})
   $scope.walls.$loaded().then(function(wall) {
+    $ionicLoading.hide();
     if(wall.length == 0) $scope.empty = true;
   });
   $scope.uid = user.uid;
@@ -675,10 +678,10 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   }
 })
 
-.controller('MessagesCtrl', function($scope, $rootScope, $ionicLoading, $state, myCache, Auth) {
+.controller('MessagesCtrl', function($scope, $rootScope, $ionicLoading, $state, myCache, Auth, $timeout) {
   $scope.title = "Chats";
   var allmessages = Auth.getUserChatRooms();
-  $scope.changeStatus = function() {$scope.filterStatus = !$scope.filterStatus};
+  $scope.changeStatus = function() {$scope.filterStatus = !$scope.filterStatus;$timeout(function() {document.body.querySelector(".search").focus();}, 200);};
   $scope.messages = Auth.chats();
   var chatrooms = Auth.chatrooms();
   var contacts = [];
@@ -735,8 +738,13 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
 
   $scope.getMessages = function() {
     $scope.title = "Chats";
-    allmessages.$loaded().then(function(frchatrooms) {
-      $scope.chatrooms = frchatrooms;
+    allmessages.on('value', function(frchatrooms) {
+      console.log("chatrooms", frchatrooms.val());
+      var allmess = [];
+      frchatrooms.forEach(function(mess) {
+        allmess.push(mess.val());
+      })
+      $scope.chatrooms = allmess;
     });
   }
 
@@ -904,6 +912,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     });
 })
 .controller('AccountCtrl', function($scope) {
+  console.log("User", user);
   $scope.user = user;
 })
 .controller('TimetableCtrl', function($scope, $ionicSideMenuDelegate, $stateParams, Auth, $ionicSlideBoxDelegate ) {
@@ -959,7 +968,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
 })
 .controller('AuthCtrl', function ($scope, $state, $rootScope, Auth, $ionicLoading, $ionicPopup, $ionicModal) {
   if(localStorage.getItem("user")) {
-    $state.go('app.messages', {}, {reload:true});
+    $state.go('app.wall', {}, {reload:true});
   }
   $scope.user = {
     username: '',
