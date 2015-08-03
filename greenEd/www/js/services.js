@@ -22,7 +22,6 @@ angular.module('starter.services', [])
             user.uid = userdatafb.uid;
             var key = "usertype";
             var value = user.schoolid + '|student';
-            console.log("user", user);
             if(user.role == 'teacher') {
               key = user.uid;
               for (var i = 0; i < user.subjects.length; i++) {
@@ -43,13 +42,10 @@ angular.module('starter.services', [])
               user.students = [];
               ref.child("users").orderByChild(key).equalTo(value).once('value', function(kidssnap) {
                 kidssnap.forEach(function(student) {
-                  console.log("key", student.key());
-                  console.log("student", student.val());
                   var kid = student.val();
                   kid.uid = student.key();
                   user.students.push(kid);
                 })
-                console.log("user", user);
                 localStorage.setItem("user", JSON.stringify(user));
                 defer.resolve(user);
               })
@@ -68,16 +64,12 @@ angular.module('starter.services', [])
       return ref.unauth();
     },
     filters: function(schoolid) {
-      console.log("Filters key in service", schoolid);
       return $firebaseObject(ref.child(schoolid+"/filters"));
     },
     getUsers: function() {
       var deferred = $q.defer();
       var steacherindex = {};
-      console.log("alluserskey", user.alluserskey);
-      console.log("allusersval", user.allusersval);
       ref.child('users').orderByChild(user.alluserskey).equalTo(user.allusersval).once('value', function(usnap) {
-        console.log("usnap val", usnap.val());
         if(user.role == "hm") {
           var classes = {};
           var standard = {}
@@ -130,7 +122,6 @@ angular.module('starter.services', [])
             }
           });
         } else if (user.role == "teacher") {
-          console.log("getting users in service", usnap.val());
           var classes = {};
           var standard = {}
           var parents = {};
@@ -139,7 +130,6 @@ angular.module('starter.services', [])
           usnap.forEach(function(fbusers) {
             var fbuser = fbusers.key();
             var fbusers = fbusers.val();
-            console.log("fbusers in service", fbusers);
             if(!allusers["groups"][fbusers.standard+'-'+fbusers.division]) allusers["groups"][fbusers.standard+'-'+fbusers.division] = [];
             if(!classes[fbusers.standard+'-'+fbusers.division]) {
               classes[fbusers.standard+'-'+fbusers.division] = true;
@@ -183,18 +173,15 @@ angular.module('starter.services', [])
       return $firebaseObject(ref.child(user.schoolid+'/marks'));
     },
     getMarks: function(key) {
-      console.log("key in service", key);
       return $firebaseObject(ref.child(user.schoolid+'/marks/'+key));
     },
     getFilteredMarks: function(filter, key, sclass) {
-      console.log("key in service", key);
       return ref.child(user.schoolid+'/marks/'+filter).orderByChild(key).equalTo(sclass);
     },
     getOverallMarks: function() {
       return ref.child(user.schoolid+'/marks');
     },
     wall: function(key) {
-      console.log("wall key", key);
       return $firebaseArray(ref.child(key));
     },
     updateWall: function(key, update) {
@@ -208,22 +195,6 @@ angular.module('starter.services', [])
         return {"Links":[{"title":"Dashboard", "href":"/app/hmdashboard", "class":"ion-stats-bars"},{"title":"Classes", "href":"/app/allclasses", "class": "ion-easel"},{"title":"Students", "href":"/app/allstudents", "class": "ion-person-stalker"},{"title":"Teachers", "href":"/app/allteachers", "class": "ion-ios-body"}]};
       } else if (user.role == "parent") {
         if(user.students.length > 1) {
-
-        /*  $rootScope.role = "parent";
-          var parentMenu = {"Links":[]};
-          for (var i = 0; i < user.students.length; i++) {
-            var sd = user.students[i].class.split("-");
-            parentMenu.Links.push({title:user.students[i].name,href:"", class:"ion-android-person", header:"header", expand:true, index:i});
-            parentMenu.Links.push({title:"Dashboard",href:"/app/studentdashboard/"+user.students[i].id+"/"+user.students[i].name,class:"ion-stats-bars ",header:"submenu", index:i});
-            parentMenu.Links.push({title:"Overall Dashboard",href:"/app/studentoveralldashboard/"+user.students[i].id+"/"+user.students[i].name,class:"ion-ios-pulse-strong ",header:"submenu", index:i});
-            parentMenu.Links.push({title:"Class Dashboard",href:"/app/dashboard/"+sd[0]+"/"+sd[1],class:"ion-pie-graph ",header:"submenu", index:i});
-            parentMenu.Links.push({title:"Messages",href:"/app/messages/"+user.students[i].id,class:"ion-chatboxes ",header:"submenu", index:i});
-            parentMenu.Links.push({title:"TimeTable",href:"/app/timetable/"+user.students[i].class+"/all",class:"ion-ios-time-outline ",header:"submenu", index:i});
-            parentMenu.Links.push({title:"Profile",href:"/app/studentprofile/"+user.students[i].id,class: "ion-person ",header:"submenu", index:i});
-          }
-          parentMenu.Links.push({"title":"Wall","href":"/app/wall","class":"ion-ios-list"});
-          parentMenu.Links.push({"title":"log-out", "href":"logout", "class":"ion-log-out"});
-          return parentMenu;*/
           return {"Links":[{"title":"Dashboard", "href":"/app/studentdashboard", "class":"ion-stats-bars"},{"title":"Overall Dashboard", "href":"/app/studentoveralldashboard", "class":"ion-ios-pulse-strong"},{"title":"Class Dashboard", "href":"/app/classdashboard", "class":"ion-pie-graph"},{"title":"TimeTable", "href":"/app/timetable", "class":"ion-ios-time-outline"}]};
         } else {
           return {"Links":[{"title":"Dashboard", "href":"/app/studentdashboard/"+user.students[0].standard+"-"+user.students[0].division+"/"+user.students[0].uid+"/"+user.students[0].name, "class":"ion-stats-bars"},{"title":"Overall Dashboard", "href":"/app/studentoveralldashboard/"+user.students[0].uid+"/"+user.students[0].name, "class":"ion-ios-pulse-strong"},{"title":"Class Dashboard", "href":"/app/classdashboard/"+user.students[0].standard+"-"+user.students[0].division, "class":"ion-pie-graph"},{"title":"TimeTable", "href":"/app/timetable/"+user.students[0].standard+"-"+user.students[0].division, "class":"ion-ios-time-outline"}]};
@@ -248,29 +219,16 @@ angular.module('starter.services', [])
   };
 
   function authDataCallback(user) {
-    console.log("user", user);
     if(user) {
       $rootScope.updateMenu = true;
     } else {
       $rootScope.updateMenu = false;
-      console.log("logging out");
       localStorage.removeItem("user");
       user = {};
       $state.go('login', {}, {reload:true});
     }
   }
 
-  ref.onAuth(authDataCallback);
-
-/*  $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
-    if(toState.name == 'login') {
-      console.log("user", user);
-      if(user) {
-        event.preventDefault();
-        return false;
-      }
-    }
-  })*/
-  
+  ref.onAuth(authDataCallback);  
   return Auth;
 })

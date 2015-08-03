@@ -5,33 +5,22 @@ if(luser) {
 } else {
   var user = {};
 }
-console.log("User on start", user);
-// angular.module is a global placef for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-// 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers','firebase','ngCordova'])
 
 .run(function($ionicPlatform, $rootScope, Auth) {
   $ionicPlatform.ready(function() {
-    // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-    // for form inputs)
     if (window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       cordova.plugins.Keyboard.disableScroll(true);
 
     }
     if (window.StatusBar) {
-      // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
     if(user && !$rootScope.filters) {
       var filters = Auth.filters(user.schoolid);
-      filters.$bindTo($rootScope, 'filters').then(function() {
-        console.log("Filters", $rootScope.filters);
-      });
+      filters.$bindTo($rootScope, 'filters');
     }
-    console.log("On Ready Filters", $rootScope.filters);
   });
 })
 
@@ -94,8 +83,6 @@ angular.module('starter', ['ionic', 'starter.controllers','firebase','ngCordova'
 
             if (attrs.source) {
               scope.$watch('search.value', function (newValue, oldValue) {
-                console.log('newValue', newValue);
-                console.log('oldValue', oldValue);
                   if (newValue.length > attrs.minLength) {
                     scope.getData({str: newValue}).then(function (results) {
                       scope.model = results;
