@@ -30,12 +30,14 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
         $scope.$broadcast('scroll.refreshComplete');
         applyMarks(mcache["hm"]);
       } else {
-        if(!mcache["hm"]) $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Fetching Marks...'});
+        if(!mcache["hm"]);
+        $scope.loading = true;
         $scope.hmmarks = Auth.getMarks(key+"/hm");
         $scope.$broadcast('scroll.refreshComplete');
         $scope.dashboard = true;
         $scope.hmmarks.$loaded().then(function(alldata) {
-          $ionicLoading.hide();
+          $scope.loading = false;
+          //$ionicLoading.hide();
           mcache["hm"] = alldata;
           myCache.put(key, mcache);
           applyMarks(alldata);
@@ -114,12 +116,14 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
         $scope.$broadcast('scroll.refreshComplete');
         applyMarks(classCache);
       } else {
-        $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Fetching Marks...'});
+        $scope.loading = true;
+        //$ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Fetching Marks...'});
         $scope.marks = Auth.getMarks(key+"/"+$stateParams.class+"/class");
         $scope.$broadcast('scroll.refreshComplete');
         $scope.dashboard = true;
         $scope.marks.$loaded().then(function(alldata) {
-          $ionicLoading.hide();
+          $scope.loading = false;
+          //$ionicLoading.hide();
           mcache[$stateParams.class] = {class:alldata};
           myCache.put(key, mcache);
           applyMarks(alldata);
@@ -195,12 +199,14 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
         $scope.$broadcast('scroll.refreshComplete');
         applyMarks(mcache[$stateParams.uid]);
       } else {
-        $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Fetching Marks...'});
+        $scope.loading = true;
+        //$ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Fetching Marks...'});
         $scope.marks = Auth.getMarks(key+"/"+$stateParams.uid);
         $scope.$broadcast('scroll.refreshComplete');
         $scope.dashboard = true;
         $scope.marks.$loaded().then(function(alldata) {
-          $ionicLoading.hide();
+          $scope.loading = false;
+          //$ionicLoading.hide();
           mcache[$stateParams.uid] = alldata;
           myCache.put(key, mcache);
           applyMarks(alldata);
@@ -472,7 +478,8 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   $scope.changeStatus = function() {$scope.filterStatus = !$scope.filterStatus;$timeout(function() {document.body.querySelector(".search").focus();}, 100);};
   $scope.fetchData = function(refresh) {
     Auth.getUsers().then(function(allusersfb) {
-      $ionicLoading.hide();
+      $scope.loading = false;
+      //$ionicLoading.hide();
       if(refresh) $scope.$broadcast('scroll.refreshComplete');
       if(allusersfb["allclasses"]) {
         $scope.status = true;
@@ -490,7 +497,8 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       $scope.status = false;      
     }
   } else {
-    $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Fetching Classes...'});
+    $scope.loading = true;
+    //$ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Fetching Classes...'});
     $scope.fetchData(false);
   }
 })
@@ -529,7 +537,8 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   $scope.changeStatus = function() {$scope.filterStatus = !$scope.filterStatus;$timeout(function() {document.body.querySelector(".search").focus();}, 100);};
   $scope.fetchData = function(refresh) {
     Auth.getUsers().then(function(allusersfb) {
-      $ionicLoading.hide();
+      $scope.loading = false;
+      //$ionicLoading.hide();
       if(refresh) $scope.$broadcast('scroll.refreshComplete');
       if(allusersfb["allteachers"]) {
         $scope.status = true;
@@ -547,7 +556,8 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       $scope.status = false;      
     }
   } else {
-    $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Fetching Teachers...'});
+    $scope.loading = true;
+    //$ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Fetching Teachers...'});
     $scope.fetchData(true);
   }
 })
