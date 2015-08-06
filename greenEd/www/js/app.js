@@ -104,7 +104,8 @@ angular.module('starter', ['ionic', 'starter.controllers','firebase','ngCordova'
     };
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+
   $stateProvider
     .state('login', {
     url: '/login',

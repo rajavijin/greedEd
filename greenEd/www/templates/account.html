@@ -12,7 +12,7 @@
           <i class="icon ion-ios-home positive"></i><h2>{{user.school}}</h2>
         </ion-item>
         <ion-item class="item item-icon-left" href="#">
-          <i class="icon ion-ios-telephone-outline positive"></i><h2>{{user.email.replace("@ge.com", "")}}</h2>
+          <i class="icon ion-ios-telephone positive"></i><h2>{{user.email.replace("@ge.com", "")}}</h2>
         </ion-item>
       </ion-list>
       <ion-list ng-if="user.role == 'teacher'">
@@ -20,13 +20,13 @@
           <i class="icon ion-ios-home positive"></i><h2>{{user.school}}</h2>
         </ion-item>
         <ion-item class="item item-icon-left" href="#">
-          <i class="icon ion-ios-telephone-outline positive"></i><h2>{{user.phone}}</h2>
+          <i class="icon ion-ios-telephone positive"></i><h2>{{user.phone}}</h2>
         </ion-item>
         <ion-item class="item-icon-left" ng-repeat="subject in user.subjects" href="#">
           <i class="icon ion-ios-book positive"></i><h2>{{subject.class}} {{subject.subject}}</h2>
         </ion-item>
         <ion-item class="item-icon-left" href="#/app/timetable/{{user.uid}}">
-          <i class="icon ion-ios-time-outline positive"></i><h2>TimeTable</h2>
+          <i class="icon ion-ios-time positive"></i><h2>TimeTable</h2>
         </ion-item>
       </ion-list>
       <ion-list ng-if="user.role == 'parent'">
@@ -34,7 +34,7 @@
           <i class="icon ion-ios-home positive"></i><h2>{{user.school}}</h2>
         </ion-item>
         <ion-item class="item item-icon-left" href="#">
-          <i class="icon ion-ios-telephone-outline positive"></i><h2>{{user.phone}}</h2>
+          <i class="icon ion-ios-telephone positive"></i><h2>{{user.phone}}</h2>
         </ion-item>
         <span ng-repeat="student in user.students">
         <ion-item class="item-icon-left positive"><i class="icon ion-person"></i><strong>{{student.name}}</strong></ion-item>
@@ -46,10 +46,11 @@
         </ion-item>
         <ion-item class="item-icon-left positive" href="#"><i class="icon ion-home positive"></i><h2>{{student.address}}</h2>
         </ion-item>
-        <ion-item class="item-icon-left" href="#/app/timetable/{{student.class}}">
-          <i class="icon ion-ios-time-outline positive"></i><h2>TimeTable</h2>
+        <ion-item class="item-icon-left" href="#/app/timetable/{{student.standard}}-{{student.division}}">
+          <i class="icon ion-ios-time positive"></i><h2>TimeTable</h2>
         </ion-item>
         </span>
-      </ion-list></div>
+      </ion-list>
+      </div>
    </ion-content>
 </ion-view>

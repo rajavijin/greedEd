@@ -6,15 +6,6 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     $scope.menuLinks = Auth.getMenus();
     $rootScope.updateMenu = false;
   }
-  // With the new view caching in Ionic, Controllers are only called
-  // when they are recreated or on app start, instead of every page change.
-  // To listen for when this page is active (for example, to refresh data),
-  // listen for the $ionicView.enter event:
-  //$scope.$on('$ionicView.enter', function(e) {
-  //});
-/*  if($rootScope.user.name = "Head Master a") {
-    console.log("New Head master");
-  }*/
   $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
     $rootScope.state = toState.name;
     if(toState.name == "login") {
@@ -65,7 +56,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     };
     $scope.subjectsConfig = {
       chart: {renderTo: 'subjects',type: 'column', options3d: {enabled: true,alpha: 10,beta: 20,depth: 50}},
-      title: {text:"Subjects Pass/Fail"},tooltip:{pointFormat:'<span style="color:{point.color}">\u25CF</span> {point.category}: <b>{point.y}</b>'},plotOptions: {series:{cursor:'pointer',events:{click:function(event){console.log("Event", event); $state.go("app.markstudents", {filter:key,type:"hm",key:event.point.name,val:event.point.category});}}},column: {depth: 25,dataLabels: {enabled: true,format: '{point.y}'}}},
+      title: {text:"Subjects Pass/Fail"},tooltip:{pointFormat:'<span style="color:{point.color}">\u25CF</span> {point.category}: <b>{point.y}</b>'},plotOptions: {series:{cursor:'pointer',events:{click:function(event){$state.go("app.markstudents", {filter:key,type:"hm",key:event.point.name,val:event.point.category});}}},column: {depth: 25,dataLabels: {enabled: true,format: '{point.y}'}}},
       xAxis: {categories: marks.allSubjects},
       yAxis: {title: {text: null}},
       series: [{name: 'Pass',data: marks.subjectPass},{name: 'Fail',data: marks.subjectFail}]
@@ -148,7 +139,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     };
     $scope.csubjectsConfig = {
       chart: {renderTo: 'csubjects',type: 'column', options3d: {enabled: true,alpha: 10,beta: 20,depth: 50}},
-      title: {text:"Subjects Pass/Fail"},tooltip:{pointFormat:'<span style="color:{point.color}">\u25CF</span> {point.category}: <b>{point.y}</b>'},plotOptions: {series:{cursor:'pointer',events:{click:function(event){console.log("Event", event); $state.go("app.markstudents", {filter:key,type:$stateParams.class+"_class",key:event.point.name,val:event.point.category});}}},column: {depth: 25,dataLabels: {enabled: true,format: '{point.y}'}}},
+      title: {text:"Subjects Pass/Fail"},tooltip:{pointFormat:'<span style="color:{point.color}">\u25CF</span> {point.category}: <b>{point.y}</b>'},plotOptions: {series:{cursor:'pointer',events:{click:function(event){$state.go("app.markstudents", {filter:key,type:$stateParams.class+"_class",key:event.point.name,val:event.point.category});}}},column: {depth: 25,dataLabels: {enabled: true,format: '{point.y}'}}},
       xAxis: {categories: marks.allSubjects},
       yAxis: {title: {text: null}},
       series: [{name: 'Pass',data: marks.subjectPass},{name: 'Fail',data: marks.subjectFail}]
@@ -188,7 +179,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
 .controller("TeacherDashboardCtrl", function($scope, $state, $rootScope, $stateParams, Auth, myCache, $ionicLoading, $ionicModal) {
   var key = '';
   $scope.getMarksData = function(cache) {
-    var title = $stateParams.name + " Teacher"; 
+    var title = $stateParams.name + " "; 
     $scope.empty = false;
     $scope.dashboard = false;
     if($rootScope.filters.educationyear >= 0) {
@@ -230,7 +221,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     };
     $scope.tsubjectsConfig = {
       chart: {renderTo: 'tsubjects',type: 'column', options3d: {enabled: true,alpha: 10,beta: 20,depth: 50}},
-      title: {text:"Subjects Pass/Fail"},tooltip:{pointFormat:'<span style="color:{point.color}">\u25CF</span> {point.category}: <b>{point.y}</b>'},plotOptions: {series:{cursor:'pointer',events:{click:function(event){console.log("Event", event); $state.go("app.markstudents", {filter:key,type:$stateParams.uid,key:event.point.name,val:event.point.category});}}},column: {depth: 25,dataLabels: {enabled: true,format: '{point.y}'}}},
+      title: {text:"Subjects Pass/Fail"},tooltip:{pointFormat:'<span style="color:{point.color}">\u25CF</span> {point.category}: <b>{point.y}</b>'},plotOptions: {series:{cursor:'pointer',events:{click:function(event){$state.go("app.markstudents", {filter:key,type:$stateParams.uid,key:event.point.name,val:event.point.category});}}},column: {depth: 25,dataLabels: {enabled: true,format: '{point.y}'}}},
       xAxis: {categories: marks.allSubjects},
       yAxis: {title: {text: null}},
       series: [{name: 'Pass',data: marks.subjectPass},{name: 'Fail',data: marks.subjectFail}]
@@ -270,12 +261,12 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
 .controller("StudentDashboardCtrl", function($scope, $state, $rootScope, $stateParams, Auth, myCache, $ionicLoading, $ionicModal) {
   var key = '';
   $scope.getMarksData = function(cache) {
-    var title = $stateParams.name + " Student";
+    var title = $stateParams.name + " ";
     $scope.empty = false;
     $scope.dashboard = false;
     if($rootScope.filters.educationyear >= 0) {
       key = $rootScope.filters.educationyears[$rootScope.filters.educationyear] +'_'+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam];
-      title += $rootScope.filters.educationyears[$rootScope.filters.educationyear] +' '+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam]; 
+      title +=  $rootScope.filters.typeofexams[$rootScope.filters.typeofexam] +' '+$rootScope.filters.educationyears[$rootScope.filters.educationyear];
     }
     else { key = false; }
     $scope.title = title;
@@ -292,12 +283,10 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
         $scope.$broadcast('scroll.refreshComplete');
         applyMarks(mcache[$stateParams.class][$stateParams.uid]);
       } else {
-        $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Fetching Marks...'});
         $scope.marks = Auth.getMarks(key+"/"+$stateParams.class+"/"+$stateParams.uid);
-        $scope.$broadcast('scroll.refreshComplete');
         $scope.dashboard = true;
         $scope.marks.$loaded().then(function(alldata) {
-          $ionicLoading.hide();
+          $scope.$broadcast('scroll.refreshComplete');
           if(!mcache[$stateParams.class]) mcache[$stateParams.class] = {};
           mcache[$stateParams.class][$stateParams.uid] = alldata;
           myCache.put(key, mcache);
@@ -312,7 +301,6 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   }
 
   var applyMarks = function(v) {
-    console.log("v", v);
     subjectLabels = [];
     subjectMarks = [];
     for (var i in v.marks) {
@@ -340,7 +328,6 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       };
     }
     $scope.mark = v;
-    $scope.title = key.replace("_", " ") + " " + v.student;
   }
   $scope.getMarksData(true);
   $ionicModal.fromTemplateUrl('templates/dashboardFilters.html', {
@@ -384,12 +371,10 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
         $scope.$broadcast('scroll.refreshComplete');
         applyMarks(mcache[$stateParams.uid]);
       } else {
-        $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Fetching Marks...'});
         $scope.marks = Auth.getMarks(key+"/"+$stateParams.uid);
-        $scope.$broadcast('scroll.refreshComplete');
         $scope.dashboard = true;
+        $scope.$broadcast('scroll.refreshComplete');
         $scope.marks.$loaded().then(function(alldata) {
-          $ionicLoading.hide();
           mcache[$stateParams.uid] = alldata;
           myCache.put(key, mcache);
           applyMarks(alldata);
@@ -402,16 +387,20 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   }
 
   var applyMarks = function(marks) {
+    console.log("marks", marks);
     var allsubjectData = [];
     for (var i = 0; i < marks.allSubjects.length; i++) {
       allsubjectData.push({name: marks.allSubjects[i], data: marks.subjectDataMarks[marks.allSubjects[i]]});
+    };
+    for (var i = 0; i < marks.examMarks.length; i++) {
+      marks.examMarks[i].y = parseInt(marks.examMarks[i].y);
     };
     $scope.somarksConfig = {
       chart: {renderTo: 'somarks',type: 'column', options3d: {enabled: true,alpha: 10,beta: 20,depth: 50}},
       title: {text:"Percentage"},plotOptions: {column: {depth: 25,showInLegend: false, dataLabels: {enabled: true,format: '{point.y}%'},events: {legendItemClick: function () {return false;}}},allowPointSelect: false},
       xAxis: {categories: marks.examLabels},
       yAxis: {title: {text: null}},
-      series: [{name: 'Percentage',data: marks.allMarks}]
+      series: [{name: 'Percentage',data: marks.examMarks}]
     };
     $scope.allmarksConfig = {
       chart: {renderTo: 'allmarks',type: 'line', options3d: {enabled: true,alpha: 10,beta: 20,depth: 50}},
@@ -564,9 +553,10 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
 })
 
 .controller("MarkStudentsCtrl", function($scope, $stateParams, myCache, $timeout) {
+  $scope.role = user.role;
   $scope.changeStatus = function() {$scope.filterStatus = !$scope.filterStatus;$timeout(function() {document.body.querySelector(".search").focus();}, 100);};
   var cache = myCache.get($stateParams.filter);
-  var title = $stateParams.filter.replace("_", " ") + " ";
+  var title = "";
   if($stateParams.type.indexOf("student") != -1) {
     var type = $stateParams.type.split("_");
     var cache = cache[type[1]][type[2]];
@@ -587,7 +577,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     users = cache[$stateParams.key][$stateParams.val];
     title += $stateParams.val;
   }
-  $scope.title = title;
+  $scope.title = title +" "+ $stateParams.filter.replace("_", " ") + " ";
   if(users) {
     $scope.allStudentsStatus = true;
     $scope.users = users;
@@ -598,8 +588,8 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
 
 .controller('WallCtrl', function($scope, $state, $ionicModal, Auth, $ionicLoading) {
   $scope.empty = false;
-  $scope.walls = Auth.wall(user.schoolid+'/wall');
   $ionicLoading.show({template:"<ion-spinner icon='lines' class='spinner-calm'></ion-spinner></br>Fetching Wall..."})
+  $scope.walls = Auth.wall(user.schoolid+'/wall');
   $scope.walls.$loaded().then(function(wall) {
     $ionicLoading.hide();
     if(wall.length == 0) $scope.empty = true;
@@ -721,11 +711,15 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     } else {
       var allusers = myCache.get("allusers");
       if(allusers) {
+        $scope.$broadcast('scroll.refreshComplete');
         if(allusers["chatcontacts"]) {
           $scope.allcontacts = allusers["chatcontacts"];
         }
       } else {
+        $ionicLoading.show({template:"<ion-spinner icon='lines' class='spinner-calm'></ion-spinner></br>Getting Contacts..."});
         Auth.getUsers().then(function(allusers) {
+          $ionicLoading.hide();
+          $scope.$broadcast('scroll.refreshComplete');
           if(allusers["chatcontacts"]) {
             if(user.role == "teacher") allusers["chatcontacts"].push($scope.hm);
             $scope.allcontacts = allusers["chatcontacts"];
@@ -733,18 +727,19 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
         })
       }
     }
-    $scope.$broadcast('scroll.refreshComplete');
   }
 
   $scope.getMessages = function() {
     $scope.title = "Chats";
+    $ionicLoading.show({template:"<ion-spinner icon='lines' class='spinner-calm'></ion-spinner></br>Getting Chats..."});
     allmessages.on('value', function(frchatrooms) {
-      console.log("chatrooms", frchatrooms.val());
+      $ionicLoading.hide();
       var allmess = [];
       frchatrooms.forEach(function(mess) {
         allmess.push(mess.val());
       })
       $scope.chatrooms = allmess;
+      $scope.$broadcast('scroll.refreshComplete');
     });
   }
 
@@ -912,14 +907,15 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     });
 })
 .controller('AccountCtrl', function($scope) {
-  console.log("User", user);
   $scope.user = user;
 })
-.controller('TimetableCtrl', function($scope, $ionicSideMenuDelegate, $stateParams, Auth, $ionicSlideBoxDelegate ) {
+.controller('TimetableCtrl', function($scope, $ionicSideMenuDelegate, $stateParams, Auth, $ionicSlideBoxDelegate) {
+  $scope.empty = false;
   $scope.getTimetable = function() {
     var tref = Auth.getTimetable($stateParams.id);
     tref.on('value', function(tdata) {
       var timetable = tdata.val() || {};
+      if(!timetable) $scope.empty = true;
       $scope.data = {
         numViewableSlides : Object.keys(timetable).length,
         slideIndex : 0,
@@ -944,7 +940,6 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   } else {
     $scope.classStatus = true;
   }
-  $ionicSideMenuDelegate.$getByHandle('right-menu').canDragContent(false);
   // Called to navigate to the main app
   $scope.startApp = function() {
     $state.go('main');
@@ -964,7 +959,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     $scope.data.slideIndex = index;
     $scope.title = daysIndex(index);
   };
-
+  $ionicSideMenuDelegate.$getByHandle('my-handle').canDragContent(false);
 })
 .controller('AuthCtrl', function ($scope, $state, $rootScope, Auth, $ionicLoading, $ionicPopup, $ionicModal) {
   if(localStorage.getItem("user")) {
