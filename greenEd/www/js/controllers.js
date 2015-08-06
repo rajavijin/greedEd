@@ -588,10 +588,12 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
 
 .controller('WallCtrl', function($scope, $state, $ionicModal, Auth, $ionicLoading) {
   $scope.empty = false;
-  $ionicLoading.show({template:"<ion-spinner icon='lines' class='spinner-calm'></ion-spinner></br>Fetching Wall..."})
+  $scope.loading = true;
+  //$ionicLoading.show({template:"<ion-spinner icon='lines' class='spinner-calm'></ion-spinner></br>Fetching Wall..."})
   $scope.walls = Auth.wall(user.schoolid+'/wall');
   $scope.walls.$loaded().then(function(wall) {
-    $ionicLoading.hide();
+    $scope.loading = false;
+    //$ionicLoading.hide();
     if(wall.length == 0) $scope.empty = true;
   });
   $scope.uid = user.uid;
