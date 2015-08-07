@@ -508,7 +508,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   $scope.changeStatus = function() {$scope.filterStatus = !$scope.filterStatus;$timeout(function() {document.body.querySelector(".search").focus();}, 100);};
   $scope.fetchData = function(refresh) {
     Auth.getUsers().then(function(allusersfb) {
-      $ionicLoading.hide();
+      $scope.loading = false;
       if(refresh) $scope.$broadcast('scroll.refreshComplete');
       if(allusersfb["allstudents"]) {
         $scope.status = true;
@@ -527,7 +527,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       $scope.status = false;      
     }
   } else {
-    $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Fetching Students...'});
+    $scope.loading = true;
     $scope.fetchData(false);
   }
 })
