@@ -3,6 +3,9 @@
   text-transform:capitalize;
   white-space: normal;
 }
+.list.card .item {
+  text-transform: none;
+}
 .menu-list .item {
   font-size: 15px;
 }
@@ -62,7 +65,7 @@
   background: #fcfcfc;
 }
 text {
-  font-family: serif;
+  font-family: Helvetica;
 }
 .button {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
@@ -115,7 +118,7 @@ text {
   top: -150px;
   width: 100%;
   height: 150px;
-  background: url(../img/bg.jpg) 100% 100% no-repeat;
+  background: url(../img/bg.jpg) 100% 100%;
 }
 #profile-bg img {
   width: 100%;

@@ -138,19 +138,19 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     $scope.toppers = marks.toppers;
     $scope.cpassfailConfig = {
       chart: {renderTo: 'cpassfailstatus',type: 'pie',height:200,options3d:{enabled: true,alpha: 45,beta: 0},},
-      title: {text:"Pass/Fail"},plotOptions: {series:{cursor:'pointer',events:{click:function(event){$state.go("app.markstudents", {filter:key,type:$stateParams.class+"_class",key:"passfail",val:event.point.name,});}}},pie: {innerSize: 50,depth: 35,dataLabels:{enabled: true,format: '{point.name}: <b>{point.y}</b>'}}},
+      title: {text:"Pass/Fail"},plotOptions: {series:{cursor:'pointer',events:{click:function(event){if(user.role != "parent") $state.go("app.markstudents", {filter:key,type:$stateParams.class+"_class",key:"passfail",val:event.point.name});}}},pie: {innerSize: 50,depth: 35,dataLabels:{enabled: true,format: '{point.name}: <b>{point.y}</b>'}}},
       series: [{type: 'pie',name: 'Total',data: [{name:"Pass", y:marks.pass},{name:"Fail", y:marks.fail}]}]
     };
     $scope.csubjectsConfig = {
       chart: {renderTo: 'csubjects',type: 'column', options3d: {enabled: true,alpha: 10,beta: 20,depth: 50}},
-      title: {text:"Subjects Pass/Fail"},tooltip:{pointFormat:'<span style="color:{point.color}">\u25CF</span> {point.category}: <b>{point.y}</b>'},plotOptions: {series:{cursor:'pointer',events:{click:function(event){$state.go("app.markstudents", {filter:key,type:$stateParams.class+"_class",key:event.point.name,val:event.point.category});}}},column: {depth: 25,dataLabels: {enabled: true,format: '{point.y}'}}},
+      title: {text:"Subjects Pass/Fail"},tooltip:{pointFormat:'<span style="color:{point.color}">\u25CF</span> {point.category}: <b>{point.y}</b>'},plotOptions: {series:{cursor:'pointer',events:{click:function(event){if(user.role != "parent") $state.go("app.markstudents", {filter:key,type:$stateParams.class+"_class",key:event.point.name,val:event.point.category});}}},column: {depth: 25,dataLabels: {enabled: true,format: '{point.y}'}}},
       xAxis: {categories: marks.allSubjects},
       yAxis: {title: {text: null}},
       series: [{name: 'Pass',data: marks.subjectPass},{name: 'Fail',data: marks.subjectFail}]
     }; 
     $scope.cgradeConfig = {
       chart: {renderTo: 'cgrades',type: 'pie',height: 200,options3d:{enabled: true,alpha: 45,beta: 0}},
-      title: {text:"Grades"},plotOptions: {series:{cursor:'pointer',events:{click:function(event){$state.go("app.markstudents", {filter:key,type:$stateParams.class+"_class",key:"gradeUsers",val:event.point.name});}}},pie: {innerSize: 0,depth: 35,dataLabels:{enabled: true,format: '{point.name}: <b>{point.y}</b>'}}},
+      title: {text:"Grades"},plotOptions: {series:{cursor:'pointer',events:{click:function(event){if(user.role != "parent") $state.go("app.markstudents", {filter:key,type:$stateParams.class+"_class",key:"gradeUsers",val:event.point.name});}}},pie: {innerSize: 0,depth: 35,dataLabels:{enabled: true,format: '{point.name}: <b>{point.y}</b>'}}},
       series: [{type: 'pie',name: 'Total',data: marks.gradeData}]
     };
   }  
@@ -289,9 +289,11 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
         $scope.$broadcast('scroll.refreshComplete');
         applyMarks(mcache[$stateParams.class][$stateParams.uid]);
       } else {
+        $scope.loading = true;
         $scope.marks = Auth.getMarks(key+"/"+$stateParams.class+"/"+$stateParams.uid);
         $scope.dashboard = true;
         $scope.marks.$loaded().then(function(alldata) {
+          $scope.loading = false;
           $scope.$broadcast('scroll.refreshComplete');
           if(!mcache[$stateParams.class]) mcache[$stateParams.class] = {};
           mcache[$stateParams.class][$stateParams.uid] = alldata;
@@ -377,10 +379,12 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
         $scope.$broadcast('scroll.refreshComplete');
         applyMarks(mcache[$stateParams.uid]);
       } else {
+        $scope.loading = true;
         $scope.marks = Auth.getMarks(key+"/"+$stateParams.uid);
         $scope.dashboard = true;
         $scope.$broadcast('scroll.refreshComplete');
         $scope.marks.$loaded().then(function(alldata) {
+          $scope.loading = false;
           mcache[$stateParams.uid] = alldata;
           myCache.put(key, mcache);
           applyMarks(alldata);
@@ -563,7 +567,6 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
 })
 
 .controller("MarkStudentsCtrl", function($scope, $stateParams, myCache, $timeout) {
-  $scope.role = user.role;
   $scope.changeStatus = function() {$scope.filterStatus = !$scope.filterStatus;$timeout(function() {document.body.querySelector(".search").focus();}, 100);};
   var cache = myCache.get($stateParams.filter);
   var title = "";
@@ -597,13 +600,11 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
 })
 
 .controller('WallCtrl', function($scope, $state, $ionicModal, Auth, $ionicLoading) {
+  $scope.walls = Auth.wall(user.schoolid+'/wall');
   $scope.empty = false;
   $scope.loading = true;
-  //$ionicLoading.show({template:"<ion-spinner icon='lines' class='spinner-calm'></ion-spinner></br>Fetching Wall..."})
-  $scope.walls = Auth.wall(user.schoolid+'/wall');
   $scope.walls.$loaded().then(function(wall) {
     $scope.loading = false;
-    //$ionicLoading.hide();
     if(wall.length == 0) $scope.empty = true;
   });
   $scope.uid = user.uid;
@@ -728,9 +729,9 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
           $scope.allcontacts = allusers["chatcontacts"];
         }
       } else {
-        $ionicLoading.show({template:"<ion-spinner icon='lines' class='spinner-calm'></ion-spinner></br>Getting Contacts..."});
+        $scope.contactLoading = true;
         Auth.getUsers().then(function(allusers) {
-          $ionicLoading.hide();
+          $scope.contactLoading = false;
           $scope.$broadcast('scroll.refreshComplete');
           if(allusers["chatcontacts"]) {
             if(user.role == "teacher") allusers["chatcontacts"].push($scope.hm);
@@ -743,9 +744,9 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
 
   $scope.getMessages = function() {
     $scope.title = "Chats";
-    $ionicLoading.show({template:"<ion-spinner icon='lines' class='spinner-calm'></ion-spinner></br>Getting Chats..."});
+    $scope.chatLoading = true;
     allmessages.on('value', function(frchatrooms) {
-      $ionicLoading.hide();
+      $scope.chatLoading = false;
       var allmess = [];
       frchatrooms.forEach(function(mess) {
         allmess.push(mess.val());
@@ -999,8 +1000,8 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   },
   {
     title: "Parent",
-    username: "9944711022",
-    password: "7p6wdn29"
+    username: "9944711005",
+    password: "venopqfr"
   }];
   $scope.fillUser = function(modal, username, password) {
     modal.hide();
@@ -1023,8 +1024,8 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Authenticating...'});
     $scope.user.email = $scope.user.username + "@ge.com";
     Auth.login($scope.user).then(function (user) {
-      $state.go('app.wall', {}, {reload: true});
       $ionicLoading.hide();
+      $state.go('app.wall', {}, {reload: true});
       var filters = Auth.filters(user.schoolid);
       filters.$bindTo($rootScope, 'filters');
     }, function (error) {

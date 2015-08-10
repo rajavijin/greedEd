@@ -105,7 +105,7 @@ angular.module('starter', ['ionic', 'starter.controllers','firebase','ngCordova'
 })
 
 .config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
-
+  $ionicConfigProvider.views.forwardCache(true);
   $stateProvider
     .state('login', {
     url: '/login',
@@ -152,6 +152,7 @@ angular.module('starter', ['ionic', 'starter.controllers','firebase','ngCordova'
   })
  .state('app.classdashboard', {
     url: "/classdashboard/:class",
+    cache: false,
     views: {
       'menuContent' :{
         templateUrl: "templates/classdashboard.html",
@@ -161,6 +162,7 @@ angular.module('starter', ['ionic', 'starter.controllers','firebase','ngCordova'
   })
  .state('app.studentDashboard', {
     url: "/studentdashboard/:class/:uid/:name",
+    cache: false,
     views: {
       'menuContent' :{
         templateUrl: "templates/studentdashboard.html",
@@ -170,6 +172,7 @@ angular.module('starter', ['ionic', 'starter.controllers','firebase','ngCordova'
   })
  .state('app.teacherdashboard', {
     url: "/teacherdashboard/:uid/:name",
+    cache: false,
     views: {
       'menuContent' :{
         templateUrl: "templates/teacherdashboard.html",
@@ -179,6 +182,7 @@ angular.module('starter', ['ionic', 'starter.controllers','firebase','ngCordova'
   })
   .state('app.studentOverallDashboard', {
     url: "/studentoveralldashboard/:uid/:name",
+    cache: false,
     views: {
       'menuContent' :{
         templateUrl: "templates/studentoverall.html",
