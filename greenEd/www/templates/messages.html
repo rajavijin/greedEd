@@ -11,9 +11,9 @@
 	<button class="button button-icon button-clear ion-ios-search" ng-click="changeStatus()"></button>
     </ion-nav-buttons>
         <ion-tabs tabs-type="tabs-icon-only" class="positive">
-            <ion-tab class="positive" title="Messages" icon-on="ion-ios-chatboxes" icon-off="ion-ios-chatboxes-outline" on-select="getMessages()">
+            <ion-tab class="positive" title="Messages" icon-on="ion-ios-chatboxes" icon-off="ion-ios-chatboxes-outline" on-select="getMessages(false)">
                 <ion-content has-header="true">
-                <ion-refresher pulling-text="Pull to refresh" on-refresh="getMessages()"></ion-refresher>
+                <ion-refresher pulling-text="Pull to refresh" on-refresh="getMessages(true)"></ion-refresher>
                 <div ng-show="chatLoading" class="center padding"><ion-spinner icon="android"></ion-spinner></div>
                 <div class="list">
 <a class="item item-icon-left" href="#/app/messages/{{m.chatid}}/{{m.uid}}/{{m.name}}/{{m.type}}" ng-repeat="m in chatrooms | filter:query.search.value">
@@ -21,13 +21,17 @@
     <h2>{{m.name}}
     <span ng-hide="m.notify == 0" class="badge badge-assertive">{{m.notify}}</span></h2>
   </a>
+  <a ng-show="chatEmpty" class="item item-icon-left">
+    <i class="icon ion-chatbubble-working"></i>
+    <h2>No chats available</h2>
+  </a>
 </div>
                 </ion-content>
             </ion-tab>
 
-            <ion-tab class="positive" title="People" icon-on="ion-ios-personadd" icon-off="ion-ios-personadd-outline" on-select="getUsers()">
+            <ion-tab class="positive" title="People" icon-on="ion-ios-personadd" icon-off="ion-ios-personadd-outline" on-select="getUsers(false)">
                 <ion-content class="has-header">
-                <ion-refresher pulling-text="Pull to refresh" on-refresh="getUsers()"></ion-refresher>
+                <ion-refresher pulling-text="Pull to refresh" on-refresh="getUsers(true)"></ion-refresher>
                 <div ng-show="contactLoading" class="center padding"><ion-spinner icon="android"></ion-spinner></div>
                 <div class="list">
   <a ng-click="toMessageBox(contact)" class="item item-icon-left" ng-repeat="contact in allcontacts | filter:query.search.value | orderBy:['role','name']">

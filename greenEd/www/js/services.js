@@ -1,13 +1,15 @@
+var online = true;
+var ref = '';
 angular.module('starter.services', [])
 
 .factory('myCache', function($cacheFactory) {
   return $cacheFactory('myCache');
 })
 
-.factory('Auth', function ( $firebaseAuth, $q, $firebaseObject, $ionicLoading, myCache, $firebaseArray, FIREBASE_URL, $state, $rootScope) {
-  var ref = new Firebase(FIREBASE_URL);
+.factory('Auth', function ( $firebaseAuth, $q, $firebaseObject, $ionicLoading, $cordovaSQLite, myCache, $firebaseArray, FIREBASE_URL, $state, $rootScope) {
+  ref = new Firebase(FIREBASE_URL);
   var auth = $firebaseAuth(ref);
-
+  ref.child('.info/connected').on('value', function(csnap) {console.log("online root", csnap.val()); online = csnap.val();});
   var Auth = {
     login: function (userdata) {
       var defer = $q.defer();
@@ -19,7 +21,11 @@ angular.module('starter.services', [])
           $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Fetching user data...'});
           ref.child('users/'+userdatafb.uid).on('value', function(profilesnap) {
             user = profilesnap.val();
+            delete user.pepper;
+            wallref = $firebaseArray(ref.child(user.schoolid+"/wall"));
+            $rootScope.filters = $firebaseObject(ref.child(user.schoolid+"/filters"));
             user.uid = userdatafb.uid;
+            userchatroomsref = $firebaseObject(ref.child(user.schoolid+"/chatrooms/"+user.uid));
             var key = "usertype";
             var value = user.schoolid + '|student';
             if(user.role == 'teacher') {
@@ -33,6 +39,8 @@ angular.module('starter.services', [])
               user.alluserskey = key;
               user.allusersval = value;
               if(user.uid == 'simplelogin:2') user.class = "6-all";
+              usersref = $firebaseObject(ref.child('users').orderByChild(user.alluserskey).equalTo(user.allusersval));
+              timetableref[user.uid] = ref.child(user.schoolid+'/timetable/'+user.uid);
               localStorage.setItem("user", JSON.stringify(user));
               defer.resolve(user);
             } else if (user.role == 'parent') {
@@ -44,6 +52,7 @@ angular.module('starter.services', [])
                   var kid = student.val();
                   kid.uid = student.key();
                   user.students.push(kid);
+                  timetableref[kid.uid] = ref.child(user.schoolid+'/timetable/'+kid.uid);
                 })
                 localStorage.setItem("user", JSON.stringify(user));
                 defer.resolve(user);
@@ -51,6 +60,7 @@ angular.module('starter.services', [])
             } else {
               user.alluserskey = key;
               user.allusersval = value;
+              usersref = $firebaseObject(ref.child('users').orderByChild(user.alluserskey).equalTo(user.allusersval));
               localStorage.setItem("user", JSON.stringify(user));
               defer.resolve(user);
             }
@@ -60,15 +70,54 @@ angular.module('starter.services', [])
       return defer.promise;
     },
     logout: function() {
+      $cordovaSQLite.execute(db, "DROP TABLE mydata");
       return ref.unauth();
     },
     filters: function(schoolid) {
       return $firebaseObject(ref.child(schoolid+"/filters"));
     },
+    chats: function() {
+      return $firebaseArray(ref.child(user.schoolid+"/chats"));
+    },
+    chatrooms: function() {
+      return ref.child(user.schoolid+"/chatrooms");
+    },
+    getUserChatRooms: function() {
+      return userchatroomsref;
+    },
+    getAllMessages: function(chatid) {
+      return ref.child(user.schoolid+"/chats/"+chatid);
+    },
+    getHm: function() {
+      return ref.child("users").orderByChild("role").equalTo("hm");
+    },
+    getAllMarks: function() {
+      return $firebaseObject(ref.child(user.schoolid+'/marks'));
+    },
+    getMarks: function(key) {
+      return $firebaseObject(ref.child(user.schoolid+'/marks/'+key));
+    },
+    getFilteredMarks: function(filter, key, sclass) {
+      return ref.child(user.schoolid+'/marks/'+filter).orderByChild(key).equalTo(sclass);
+    },
+    getOverallMarks: function() {
+      return ref.child(user.schoolid+'/marks');
+    },
+    wall: function(key) {
+      return wallref;
+    },
+    updateWall: function(key, update) {
+      return ref.child(key).update(update);
+    },
+    getTimetable: function(key) {
+      return ref.child(user.schoolid+'/timetable/'+key);
+    },
     getUsers: function() {
       var deferred = $q.defer();
       var steacherindex = {};
-      ref.child('users').orderByChild(user.alluserskey).equalTo(user.allusersval).once('value', function(usnap) {
+      console.log("usersref", usersref);
+      usersref.$ref().on('value', function(usnap) {
+        console.log("usnap", usnap);
         if(user.role == "hm") {
           var classes = {};
           var standard = {}
@@ -76,48 +125,50 @@ angular.module('starter.services', [])
           var teachers = {};
           var chatcontacts = {};
           var allusers = {allclasses:[],allstudents:[],allteachers:[],chatcontacts:[],groups:{}};
-          usnap.forEach(function(fbusers) {
-            var fbuser = fbusers.key();
-            var fbusers = fbusers.val();
-            if(!allusers["groups"][fbusers.standard+'-'+fbusers.division]) allusers["groups"][fbusers.standard+'-'+fbusers.division] = [];
-            if(!classes[fbusers.standard+'-'+fbusers.division]) {
-              classes[fbusers.standard+'-'+fbusers.division] = true;
-              allusers["allclasses"].push({standard:fbusers.standard, division:fbusers.division});  
-              allusers["chatcontacts"].push({name: fbusers.standard+'-'+fbusers.division, role:"class", uid:fbusers.standard+'-'+fbusers.division,type:"group"})
-            }
+          usnap.forEach(function(iusnap) {
+            var fbuser = iusnap.key();
+            var fbusers = iusnap.val();
+            if((fbuser != "$$conf") || (fbuser != "$id") || (fbuser != "$priority")) {
+              if(!allusers["groups"][fbusers.standard+'-'+fbusers.division]) allusers["groups"][fbusers.standard+'-'+fbusers.division] = [];
+              if(!classes[fbusers.standard+'-'+fbusers.division]) {
+                classes[fbusers.standard+'-'+fbusers.division] = true;
+                allusers["allclasses"].push({standard:fbusers.standard, division:fbusers.division});  
+                allusers["chatcontacts"].push({name: fbusers.standard+'-'+fbusers.division, role:"class", uid:fbusers.standard+'-'+fbusers.division,type:"group"})
+              }
 
-            if(!standard[fbusers.standard] && (fbusers.division != "all")) {
-              standard[fbusers.standard] = true;
-              allusers["allclasses"].push({standard:fbusers.standard, division:"all"});
-            }
-            allusers["allstudents"].push({name:fbusers.name, studentid:fbusers.studentid, standard:fbusers.standard, division:fbusers.division, uid:fbuser});
-            var parent = fbusers.parentkids.split("|");
-            if(chatcontacts[fbusers.name]) {
-              allusers["chatcontacts"][chatcontacts[fbusers.name] - 1].name += ","+fbusers.name;
-              allusers["groups"][fbusers.standard+'-'+fbusers.division][chatcontacts[fbusers.name] - 1].name += ","+fbusers.name;
-            } else {
-              var cci = allusers["chatcontacts"].push({name: "Parent of "+fbusers.name, role:"parent", class:fbusers.standard+'-'+fbusers.division, uid:parent[2],type:"single"});
-              allusers["groups"][fbusers.standard+'-'+fbusers.division].push({name: "Parent of "+fbusers.name, role:"parent", class:fbusers.standard+'-'+fbusers.division, uid:parent[2],type:"single"})
-              chatcontacts[fbusers.name] = cci;
-            }
-            for(var t in fbusers) {
-              if(t.indexOf("simplelogin") != -1) {
-                var tt = fbusers[t].split("_");
-                var teacher = {
-                  name: tt[0],
-                  subject: tt[1],
-                  uid: t,
-                  class: fbusers.standard+'-'+fbusers.division
-                }
-                if(!teachers[t]) {
-                  teachers[t] = true;
-                  allusers["allteachers"].push(teacher);
-                  teacher.role = "teacher";
-                  teacher.type = "single";
-                  allusers["chatcontacts"].push(teacher);
-                }
-                allusers["groups"][fbusers.standard+'-'+fbusers.division].push(teacher);
-              } 
+              if(!standard[fbusers.standard] && (fbusers.division != "all")) {
+                standard[fbusers.standard] = true;
+                allusers["allclasses"].push({standard:fbusers.standard, division:"all"});
+              }
+              allusers["allstudents"].push({name:fbusers.name, studentid:fbusers.studentid, standard:fbusers.standard, division:fbusers.division, uid:fbuser});
+              var parent = fbusers.parentkids.split("|");
+              if(chatcontacts[fbusers.name]) {
+                allusers["chatcontacts"][chatcontacts[fbusers.name] - 1].name += ","+fbusers.name;
+                allusers["groups"][fbusers.standard+'-'+fbusers.division][chatcontacts[fbusers.name] - 1].name += ","+fbusers.name;
+              } else {
+                var cci = allusers["chatcontacts"].push({name: "Parent of "+fbusers.name, role:"parent", class:fbusers.standard+'-'+fbusers.division, uid:parent[2],type:"single"});
+                allusers["groups"][fbusers.standard+'-'+fbusers.division].push({name: "Parent of "+fbusers.name, role:"parent", class:fbusers.standard+'-'+fbusers.division, uid:parent[2],type:"single"})
+                chatcontacts[fbusers.name] = cci;
+              }
+              for(var t in fbusers) {
+                if(t.indexOf("simplelogin") != -1) {
+                  var tt = fbusers[t].split("_");
+                  var teacher = {
+                    name: tt[0],
+                    subject: tt[1],
+                    uid: t,
+                    class: fbusers.standard+'-'+fbusers.division
+                  }
+                  if(!teachers[t]) {
+                    teachers[t] = true;
+                    allusers["allteachers"].push(teacher);
+                    teacher.role = "teacher";
+                    teacher.type = "single";
+                    allusers["chatcontacts"].push(teacher);
+                  }
+                  allusers["groups"][fbusers.standard+'-'+fbusers.division].push(teacher);
+                } 
+              }
             }
           });
         } else if (user.role == "teacher") {
@@ -146,48 +197,13 @@ angular.module('starter.services', [])
             }
           });          
         }
-        myCache.put("allusers", allusers);
+        Auth.saveLocal("allusers", allusers).then(function(status) {console.log("status", status);});
+        //myCache.put("allusers", allusers);
         deferred.resolve(allusers);
       }, function(err) {
         deferred.reject(err);
       });
       return deferred.promise;
-    },
-    chats: function() {
-      return $firebaseArray(ref.child(user.schoolid+"/chats"));
-    },
-    chatrooms: function() {
-      return ref.child(user.schoolid+"/chatrooms");
-    },
-    getUserChatRooms: function() {
-      return ref.child(user.schoolid+"/chatrooms/"+user.uid);
-    },
-    getAllMessages: function(chatid) {
-      return ref.child(user.schoolid+"/chats/"+chatid);
-    },
-    getHm: function() {
-      return ref.child("users").orderByChild("role").equalTo("hm");
-    },
-    getAllMarks: function() {
-      return $firebaseObject(ref.child(user.schoolid+'/marks'));
-    },
-    getMarks: function(key) {
-      return $firebaseObject(ref.child(user.schoolid+'/marks/'+key));
-    },
-    getFilteredMarks: function(filter, key, sclass) {
-      return ref.child(user.schoolid+'/marks/'+filter).orderByChild(key).equalTo(sclass);
-    },
-    getOverallMarks: function() {
-      return ref.child(user.schoolid+'/marks');
-    },
-    wall: function(key) {
-      return $firebaseArray(ref.child(key));
-    },
-    updateWall: function(key, update) {
-      return ref.child(key).update(update);
-    },
-    getTimetable: function(key) {
-      return ref.child(user.schoolid+'/timetable/'+key);
     },
     getMenus: function() {
       if(user.role == "hm") {
@@ -200,21 +216,41 @@ angular.module('starter.services', [])
         }
       } else {
         if(user.class) {
-          return {"Links":[{"title":"Class Dashboard", "href":"/app/classdashboard/"+user.class, "class":"ion-stats-bars"},{"title":"Teacher Dashboard", "href":"/app/teacherdashboard/"+user.uid+"/"+user.name, "class":"ion-ios-pulse-strong"},{"title":"Students", "href":"/app/allstudents", "class": "ion-person-stalker"}]};
+          return {"Links":[{"title":"Class Dashboard", "href":"/app/classdashboard/"+user.class, "class":"ion-stats-bars"},{"title":"Teacher Dashboard", "href":"/app/teacherdashboard/"+user.uid+"/"+user.name, "class":"ion-ios-pulse-strong"},{"title":"Students", "href":"/app/allstudents", "class": "ion-person-stalker"},{"title":"TimeTable", "href":"/app/timetable/"+user.uid, "class":"ion-ios-time"}]};
         } else {
-          return {"Links":[{"title":"Dashboard", "href":"/app/teacherdashboard/"+user.uid+"/"+user.name, "class":"ion-stats-bars"},{"title":"Students", "href":"/app/allstudents", "class": "ion-person-stalker"}]};
+          return {"Links":[{"title":"Dashboard", "href":"/app/teacherdashboard/"+user.uid+"/"+user.name, "class":"ion-stats-bars"},{"title":"Students", "href":"/app/allstudents", "class": "ion-person-stalker"},{"title":"TimeTable", "href":"/app/timetable/"+user.uid, "class":"ion-ios-time"}]};
         }
       }      
+    },
+    saveLocal: function(lkey, lalldata) {
+      var defer = $q.defer();
+      $cordovaSQLite.execute(db, "SELECT value from mydata where key = ?", [lkey]).then(function(res) {
+        console.log("Local Data status", res.rows.length);
+        if(res.rows.length > 0) {
+          $cordovaSQLite.execute(db, "UPDATE mydata SET value = ? WHERE key = ?", [angular.toJson(lalldata),lkey]).then(function(ures) {
+            console.log("UPDATED ID -> " + ures);
+            defer.resolve("updated");
+          }, function (err) {
+            defer.reject(err);
+          }); 
+        } else {
+          $cordovaSQLite.execute(db, "INSERT INTO mydata (key, value) VALUES (?, ?)", [lkey, angular.toJson(lalldata)]).then(function(ires) {
+            console.log("INSERT ID -> " + ires.insertId);
+            defer.resolve("Inserted");
+          }, function (err) {
+            console.error(err);
+            defer.reject(err);
+          });
+        }
+      })
+      return defer.promise;
     },
     resolveUser: function() {
       return ref.getAuth();
     },
     signedIn: function() {
       return ref.getAuth();
-    },
-    user: {},
-    marks: {},
-    allusers: {allclasses:[],classes:{},allstudents:[],students:{},allteachers:[], teachers:{}}
+    }
   };
 
   function authDataCallback(user) {

@@ -335,3 +335,7 @@ a.autolinker {
 .loader .ion-loading-c {
   font-size: 64px;
 }
+.tabs-bottom .pane.tab-content {
+  top: 44px;
+}
+.empty-slide .slider-pager {display: none;}
