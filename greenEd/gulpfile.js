@@ -6,14 +6,12 @@ var sass = require('gulp-sass');
 var minifyCss = require('gulp-minify-css');
 var rename = require('gulp-rename');
 var sh = require('shelljs');
-var eslint = require('gulp-eslint');
 
 var paths = {
-  sass: ['./scss/**/*.scss'],
-  js: ['./www/js/**/*.js']
+  sass: ['./scss/**/*.scss']
 };
 
-gulp.task('default', ['sass','lint']);
+gulp.task('default', ['sass']);
 
 gulp.task('sass', function(done) {
   gulp.src('./scss/ionic.app.scss')
@@ -29,19 +27,8 @@ gulp.task('sass', function(done) {
     .on('end', done);
 });
 
-gulp.task('lint', function() {
-  // Pass the code we want to lint
-  return gulp.src(['./www/js/**/*.js'])
-    // Send that to eslint
-    .pipe(eslint())
-    // then format the out put to something readable
-    .pipe(eslint.format('stylish', process.stderr));
-});
-
 gulp.task('watch', function() {
   gulp.watch(paths.sass, ['sass']);
-  // lint while ionic serve
-  gulp.watch(paths.js, ['lint']);
 });
 
 gulp.task('install', ['git-check'], function() {

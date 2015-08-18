@@ -15,32 +15,42 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   $scope.user = user;
 })
 
-.controller("HmDashboardCtrl", function($scope, $state, $rootScope, myCache, $ionicModal, Auth, $ionicLoading) {
+.controller("HmDashboardCtrl", function($scope, $state, $cordovaSQLite, $rootScope, myCache, $ionicModal, Auth, $ionicLoading) {
   var key = '';
+  var setLocalFilters = function() {
+    console.log("setting local Filters");
+    $rootScope.filters = angular.fromJson(localStorage.getItem("filters"));
+    key = $rootScope.filters.educationyears[$rootScope.filters.educationyear] +'_'+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam];
+  }
   $scope.getMarksData = function(cache) {
     $scope.empty = false;
     $scope.dashboard = false;
-    if($rootScope.filters.educationyear >= 0)
-      key = $rootScope.filters.educationyears[$rootScope.filters.educationyear] +'_'+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam];
-    else key = false;
+    console.log("root filters", $rootScope.filters);
+    console.log("local", localStorage.getItem("filters"));
+    if($rootScope.filters) {
+      if($rootScope.filters.educationyear >= 0) key = $rootScope.filters.educationyears[$rootScope.filters.educationyear] +'_'+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam];
+      else setLocalFilters();
+    } else if (localStorage.getItem("filters")) {
+      setLocalFilters();    
+    } else {
+      key = false;
+    }
+    console.log("key", key);
+    console.log("cache", cache);
     if(key) {
-      var mcache = myCache.get(key) || {};
-      if(cache && mcache["hm"]) {
-        $scope.dashboard = true;
-        $scope.$broadcast('scroll.refreshComplete');
-        applyMarks(mcache["hm"]);
+      if(!cache && online) {
+        serverData(key);
       } else {
-        if(!mcache["hm"]);
-        $scope.loading = true;
-        $scope.hmmarks = Auth.getMarks(key+"/hm");
-        $scope.$broadcast('scroll.refreshComplete');
-        $scope.dashboard = true;
-        $scope.hmmarks.$loaded().then(function(alldata) {
-          $scope.loading = false;
-          //$ionicLoading.hide();
-          mcache["hm"] = alldata;
-          myCache.put(key, mcache);
-          applyMarks(alldata);
+        $cordovaSQLite.execute(db, "SELECT value from mydata where key = ?", [key+"_hm"]).then(function(res) {
+          console.log("Local Data length", res.rows.length);
+          if(res.rows.length > 0) {
+            $scope.dashboard = true;
+            applyMarks(angular.fromJson(res.rows.item(0).value));
+          } else {
+            if(online) serverData(key);
+            else $scope.empty = true;
+          }
+          $scope.$broadcast('scroll.refreshComplete');
         })
       }
     } else {
@@ -48,8 +58,20 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       $scope.empty = true;
     }
   }
+  var serverData = function(key) {
+    $scope.dashboard = true;
+    console.log("Taking data from server", online);
+    $scope.loading = true;
+    Auth.getMarks(key+"/hm").$ref().on('value', function(fbdata) {
+      $scope.$broadcast('scroll.refreshComplete');
+      $scope.loading = false;
+      var fkey = fbdata.ref().parent().key() + "_" + fbdata.key();
+      var falldata = fbdata.val();
+      applyMarks(falldata, fkey);       
+    })
+  }
 
-  var applyMarks = function(marks) {
+  var applyMarks = function(marks, fkey) {
     $scope.toppers = marks.toppers;
     $scope.passfailConfig = {
       chart: {renderTo: 'passfailstatus',type: 'pie',height:200,options3d:{enabled: true,alpha: 45,beta: 0},},
@@ -68,8 +90,10 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       title: {text:"Grades"},plotOptions: {series:{cursor:'pointer',events:{click:function(event){$state.go("app.markstudents", {filter:key,type:"hm",key:"gradeUsers",val:event.point.name});}}},pie: {innerSize: 0,depth: 35,dataLabels:{enabled: true,format: '{point.name}: <b>{point.y}</b>'}}},
       series: [{type: 'pie',name: 'Total',data: marks.gradeData}]
     };
+    dashboards["hm"] = true;
+    if(online) Auth.saveLocal(fkey, marks).then(function(status) {console.log("Local save status", status);});
   }  
-  $scope.getMarksData(true);
+  $scope.getMarksData(dashboards["hm"]);
   $ionicModal.fromTemplateUrl('templates/dashboardFilters.html', {
     scope: $scope,
     animation: 'slide-in-up'
@@ -95,38 +119,45 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   }
 })
 
-.controller("ClassDashboardCtrl", function($scope, $state, $stateParams, $rootScope, myCache, $ionicModal, Auth, $ionicLoading) {
+.controller("ClassDashboardCtrl", function($scope, $state, $stateParams, $rootScope, $cordovaSQLite, $ionicModal, Auth, $ionicLoading) {
   var key = '';
+  var title = $stateParams.class + " ";
+  var setLocalFilters = function() {
+    $rootScope.filters = angular.fromJson(localStorage.getItem("filters"));
+    key = $rootScope.filters.educationyears[$rootScope.filters.educationyear] +'_'+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam];
+    title += " "+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam] +" "+ $rootScope.filters.educationyears[$rootScope.filters.educationyear];
+  }
   $scope.getMarksData = function(cache) {
-    var title = $stateParams.class;
     $scope.empty = false;
     $scope.dashboard = false;
-    if($rootScope.filters.educationyear >= 0) {
+    console.log("root filters", $rootScope.filters);
+    console.log("local", localStorage.getItem("filters"));
+    if($rootScope.filters) {
+      if($rootScope.filters.educationyear >= 0) {
       key = $rootScope.filters.educationyears[$rootScope.filters.educationyear] +'_'+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam];
       title += " "+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam] +" "+ $rootScope.filters.educationyears[$rootScope.filters.educationyear];
+    } else { setLocalFilters(); }
+    } else if (localStorage.getItem("filters")) {
+      setLocalFilters();    
+    } else {
+      key = false;
     }
-    else key = false;
+    console.log("key", key);
     $scope.title = title;
     if(key) {
-      var mcache = myCache.get(key) || {};
-      if(mcache[$stateParams.class]) var classCache = mcache[$stateParams.class]["class"];
-      else var classCache = false;
-      if(cache && classCache) {
-        $scope.dashboard = true;
-        $scope.$broadcast('scroll.refreshComplete');
-        applyMarks(classCache);
+      if(!cache && online) {
+        serverData(key);
       } else {
-        $scope.loading = true;
-        //$ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Fetching Marks...'});
-        $scope.marks = Auth.getMarks(key+"/"+$stateParams.class+"/class");
-        $scope.$broadcast('scroll.refreshComplete');
-        $scope.dashboard = true;
-        $scope.marks.$loaded().then(function(alldata) {
-          $scope.loading = false;
-          //$ionicLoading.hide();
-          mcache[$stateParams.class] = {class:alldata};
-          myCache.put(key, mcache);
-          applyMarks(alldata);
+        $cordovaSQLite.execute(db, "SELECT value from mydata where key = ?", [key+"_"+$stateParams.class+"_class"]).then(function(res) {
+          console.log("Local Data length", res.rows.length);
+          if(res.rows.length > 0) {
+            $scope.dashboard = true;
+            $scope.$broadcast('scroll.refreshComplete');          
+            applyMarks(angular.fromJson(res.rows.item(0).value));
+          } else {
+            if(online) serverData(key);
+            else $scope.empty = true;
+          }
         })
       }
     } else {
@@ -134,7 +165,19 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       $scope.empty = true;
     }
   }
-  var applyMarks = function(marks) {
+  var serverData = function(key) {
+    $scope.dashboard = true;
+    console.log("Taking data from server", online);
+    $scope.loading = true;
+    Auth.getMarks(key+"/"+$stateParams.class+"/class").$ref().on('value', function(fbdata) {
+      $scope.$broadcast('scroll.refreshComplete');
+      $scope.loading = false;
+      var fkey = fbdata.ref().parent().parent().key() + "_" + fbdata.ref().parent().key() + "_" + fbdata.key();
+      var falldata = fbdata.val();
+      applyMarks(falldata, fkey);       
+    })
+  }
+  var applyMarks = function(marks, fkey) {
     $scope.toppers = marks.toppers;
     $scope.cpassfailConfig = {
       chart: {renderTo: 'cpassfailstatus',type: 'pie',height:200,options3d:{enabled: true,alpha: 45,beta: 0},},
@@ -153,8 +196,10 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       title: {text:"Grades"},plotOptions: {series:{cursor:'pointer',events:{click:function(event){if(user.role != "parent") $state.go("app.markstudents", {filter:key,type:$stateParams.class+"_class",key:"gradeUsers",val:event.point.name});}}},pie: {innerSize: 0,depth: 35,dataLabels:{enabled: true,format: '{point.name}: <b>{point.y}</b>'}}},
       series: [{type: 'pie',name: 'Total',data: marks.gradeData}]
     };
+    dashboards["class"] = true;
+    if(online) Auth.saveLocal(fkey, marks).then(function(status) {console.log("Local save status", status);});
   }  
-  $scope.getMarksData(true);
+  $scope.getMarksData(dashboards["class"]);
   $ionicModal.fromTemplateUrl('templates/dashboardFilters.html', {
     scope: $scope,
     animation: 'slide-in-up'
@@ -180,36 +225,45 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   }
 })
 
-.controller("TeacherDashboardCtrl", function($scope, $state, $rootScope, $stateParams, Auth, myCache, $ionicLoading, $ionicModal) {
+.controller("TeacherDashboardCtrl", function($scope, $state, $rootScope, $stateParams, Auth, $cordovaSQLite, $ionicLoading, $ionicModal) {
   var key = '';
+  var title = $stateParams.name + " "; 
+  var setLocalFilters = function() {
+    $rootScope.filters = angular.fromJson(localStorage.getItem("filters"));
+    key = $rootScope.filters.educationyears[$rootScope.filters.educationyear] +'_'+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam];
+    title += " "+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam] +" "+ $rootScope.filters.educationyears[$rootScope.filters.educationyear];
+  }
   $scope.getMarksData = function(cache) {
-    var title = $stateParams.name + " "; 
     $scope.empty = false;
     $scope.dashboard = false;
-    if($rootScope.filters.educationyear >= 0) {
+    console.log("root filters", $rootScope.filters);
+    console.log("local", localStorage.getItem("filters"));
+    if($rootScope.filters) {
+      if($rootScope.filters.educationyear >= 0) {
       key = $rootScope.filters.educationyears[$rootScope.filters.educationyear] +'_'+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam];
-      title += $rootScope.filters.educationyears[$rootScope.filters.educationyear] +' '+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam];
+      title += " "+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam] +" "+ $rootScope.filters.educationyears[$rootScope.filters.educationyear];
+    } else { setLocalFilters(); }
+    } else if (localStorage.getItem("filters")) {
+      setLocalFilters();    
+    } else {
+      key = false;
     }
-    else { key = false;}
+    console.log("key", key);
     $scope.title = title;
     if(key) {
-      var mcache = myCache.get(key) || {};
-      if(cache && mcache[$stateParams.uid]) {
-        $scope.dashboard = true;
-        $scope.$broadcast('scroll.refreshComplete');
-        applyMarks(mcache[$stateParams.uid]);
+      if(!cache && online) {
+        serverData(key);
       } else {
-        $scope.loading = true;
-        //$ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Fetching Marks...'});
-        $scope.marks = Auth.getMarks(key+"/"+$stateParams.uid);
-        $scope.$broadcast('scroll.refreshComplete');
-        $scope.dashboard = true;
-        $scope.marks.$loaded().then(function(alldata) {
-          $scope.loading = false;
-          //$ionicLoading.hide();
-          mcache[$stateParams.uid] = alldata;
-          myCache.put(key, mcache);
-          applyMarks(alldata);
+        $cordovaSQLite.execute(db, "SELECT value from mydata where key = ?", [key+"_"+$stateParams.uid]).then(function(res) {
+          console.log("Local Data length", res.rows.length);
+          if(res.rows.length > 0) {
+            $scope.dashboard = true;
+            $scope.$broadcast('scroll.refreshComplete');          
+            applyMarks(angular.fromJson(res.rows.item(0).value));
+          } else {
+            if(online) serverData(key);
+            else $scope.empty = true;
+          }
         })
       }
     } else {
@@ -217,8 +271,20 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       $scope.empty = true;
     }
   }
+  var serverData = function(key) {
+    $scope.dashboard = true;
+    console.log("Taking data from server", online);
+    $scope.loading = true;
+    Auth.getMarks(key+"/"+$stateParams.uid).$ref().on('value', function(fbdata) {
+      $scope.$broadcast('scroll.refreshComplete');
+      $scope.loading = false;
+      var fkey = fbdata.ref().parent().key() + "_" + fbdata.key();
+      var falldata = fbdata.val();
+      applyMarks(falldata, fkey);       
+    })
+  }
 
-  var applyMarks = function(marks) {
+  var applyMarks = function(marks, fkey) {
     $scope.toppers = marks.toppers;
     $scope.tpassfailConfig = {
       chart: {renderTo: 'tpassfailstatus',type: 'pie',height:200,options3d:{enabled: true,alpha: 45,beta: 0},},
@@ -237,8 +303,10 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       title: {text:"Grades"},plotOptions: {series:{cursor:'pointer',events:{click:function(event){$state.go("app.markstudents", {filter:key,type:"hm",key:"gradeUsers",val:event.point.name});}}},pie: {innerSize: 0,depth: 35,dataLabels:{enabled: true,format: '{point.name}: <b>{point.y}</b>'}}},
       series: [{type: 'pie',name: 'Total',data: marks.gradeData}]
     };*/
+    dashboards["teacher"] = true;
+    if(online) Auth.saveLocal(fkey, marks).then(function(status) {console.log("Local save status", status);});
   }  
-  $scope.getMarksData(true);
+  $scope.getMarksData(dashboards["teacher"]);
   $ionicModal.fromTemplateUrl('templates/dashboardFilters.html', {
     scope: $scope,
     animation: 'slide-in-up'
@@ -264,51 +332,67 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   }
 })
 
-.controller("StudentDashboardCtrl", function($scope, $state, $rootScope, $stateParams, Auth, myCache, $ionicLoading, $ionicModal) {
+.controller("StudentDashboardCtrl", function($scope, $state, $rootScope, $stateParams, Auth, $cordovaSQLite, $ionicLoading, $ionicModal) {
   var key = '';
+  var title = $stateParams.name + " "; 
+  var setLocalFilters = function() {
+    $rootScope.filters = angular.fromJson(localStorage.getItem("filters"));
+    key = $rootScope.filters.educationyears[$rootScope.filters.educationyear] +'_'+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam];
+    title += " "+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam] +" "+ $rootScope.filters.educationyears[$rootScope.filters.educationyear];
+  }
   $scope.getMarksData = function(cache) {
-    var title = $stateParams.name + " ";
     $scope.empty = false;
     $scope.dashboard = false;
-    if($rootScope.filters.educationyear >= 0) {
+    console.log("root filters", $rootScope.filters);
+    console.log("local", localStorage.getItem("filters"));
+    if($rootScope.filters) {
+      if($rootScope.filters.educationyear >= 0) {
       key = $rootScope.filters.educationyears[$rootScope.filters.educationyear] +'_'+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam];
-      title +=  $rootScope.filters.typeofexams[$rootScope.filters.typeofexam] +' '+$rootScope.filters.educationyears[$rootScope.filters.educationyear];
+      title += " "+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam] +" "+ $rootScope.filters.educationyears[$rootScope.filters.educationyear];
+    } else { setLocalFilters(); }
+    } else if (localStorage.getItem("filters")) {
+      setLocalFilters();    
+    } else {
+      key = false;
     }
-    else { key = false; }
+    console.log("key", key);
+    console.log("key", cache);
     $scope.title = title;
     if(key) {
-      var mcache = myCache.get(key) || {};
-      var mcacheStudent = false
-      if(mcache[$stateParams.class]) {
-        if(mcache[$stateParams.class][$stateParams.class]) {
-          mcacheStudent = true;
-        }
-      }
-      if(cache && mcacheStudent) {
-        $scope.dashboard = true;
-        $scope.$broadcast('scroll.refreshComplete');
-        applyMarks(mcache[$stateParams.class][$stateParams.uid]);
+      if(!cache && online) {
+        serverData(key);
       } else {
-        $scope.loading = true;
-        $scope.marks = Auth.getMarks(key+"/"+$stateParams.class+"/"+$stateParams.uid);
-        $scope.dashboard = true;
-        $scope.marks.$loaded().then(function(alldata) {
-          $scope.loading = false;
-          $scope.$broadcast('scroll.refreshComplete');
-          if(!mcache[$stateParams.class]) mcache[$stateParams.class] = {};
-          mcache[$stateParams.class][$stateParams.uid] = alldata;
-          myCache.put(key, mcache);
-          applyMarks(alldata);
+        $cordovaSQLite.execute(db, "SELECT value from mydata where key = ?", [key+"_"+$stateParams.class+"_"+$stateParams.uid]).then(function(res) {
+          console.log("Local Data length", res.rows.length);
+          if(res.rows.length > 0) {
+            $scope.dashboard = true;
+            $scope.$broadcast('scroll.refreshComplete');          
+            applyMarks(angular.fromJson(res.rows.item(0).value));
+          } else {
+            if(online) serverData(key);
+            else $scope.empty = true;
+          }
         })
       }
     } else {
       $scope.$broadcast('scroll.refreshComplete');
-      $scope.dashboard = false;
       $scope.empty = true;
     }
   }
+  var serverData = function(key) {
+    $scope.dashboard = true;
+    console.log("Taking data from server", online);
+    $scope.loading = true;
+    Auth.getMarks(key+"/"+$stateParams.class+"/"+$stateParams.uid).$ref().on('value', function(fbdata) {
+      $scope.$broadcast('scroll.refreshComplete');
+      $scope.loading = false;
+      var fkey = fbdata.ref().parent().parent().key() + "_" + fbdata.ref().parent().key() + "_" + fbdata.key();
+      var falldata = fbdata.val();
+      applyMarks(falldata, fkey);       
+    })
+  }
 
-  var applyMarks = function(v) {
+  var applyMarks = function(v, fkey) {
     subjectLabels = [];
     subjectMarks = [];
     for (var i in v.marks) {
@@ -336,8 +420,10 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       };
     }
     $scope.mark = v;
-  }
-  $scope.getMarksData(true);
+    dashboards["student"] = true;
+    if(online) Auth.saveLocal(fkey, v).then(function(status) {console.log("Local save status", status);});
+  }  
+  $scope.getMarksData(dashboards["student"]);
   $ionicModal.fromTemplateUrl('templates/dashboardFilters.html', {
     scope: $scope,
     animation: 'slide-in-up'
@@ -363,31 +449,41 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   }
 })
 
-.controller("StudentOverallDashboardCtrl", function($scope, $stateParams, $rootScope, myCache, Auth, $ionicLoading, $ionicModal) {
+.controller("StudentOverallDashboardCtrl", function($scope, $stateParams, $rootScope, $cordovaSQLite, Auth, $ionicLoading, $ionicModal) {
   var key = '';
+  var setLocalFilters = function() {
+    $rootScope.filters = angular.fromJson(localStorage.getItem("filters"));
+    key = $rootScope.filters.educationyears[$rootScope.filters.educationyear] +'_'+ $rootScope.filters.typeofexams[$rootScope.filters.typeofexam];
+  }
   $scope.getMarksData = function(cache) {
     $scope.empty = false;
     $scope.dashboard = false;
-    if($rootScope.filters.educationyear >= 0)
+    if($rootScope.filters) {
+      if($rootScope.filters.educationyear >= 0) {
       key = $rootScope.filters.educationyears[$rootScope.filters.educationyear];
-    else key = false;
+    } else { setLocalFilters(); }
+    } else if (localStorage.getItem("filters")) {
+      setLocalFilters();    
+    } else {
+      key = false;
+    }
+    console.log("key", key);
     $scope.title = key + " " + $stateParams.name;
     if(key) {
-      var mcache = myCache.get(key) || {};
-      if(cache && mcache[$stateParams.uid]) {
-        $scope.dashboard = true;
-        $scope.$broadcast('scroll.refreshComplete');
-        applyMarks(mcache[$stateParams.uid]);
+      console.log("online", online);
+      if(!cache && online) {
+        serverData(key);
       } else {
-        $scope.loading = true;
-        $scope.marks = Auth.getMarks(key+"/"+$stateParams.uid);
-        $scope.dashboard = true;
-        $scope.$broadcast('scroll.refreshComplete');
-        $scope.marks.$loaded().then(function(alldata) {
-          $scope.loading = false;
-          mcache[$stateParams.uid] = alldata;
-          myCache.put(key, mcache);
-          applyMarks(alldata);
+        $cordovaSQLite.execute(db, "SELECT value from mydata where key = ?", [key+"_"+$stateParams.uid]).then(function(res) {
+          console.log("Local Data length", res.rows.length);
+          if(res.rows.length > 0) {
+            $scope.dashboard = true;
+            $scope.$broadcast('scroll.refreshComplete');          
+            applyMarks(angular.fromJson(res.rows.item(0).value));
+          } else {
+            if(online) serverData(key);
+            else $scope.empty = true;
+          }
         })
       }
     } else {
@@ -395,8 +491,20 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       $scope.empty = true;
     }
   }
+  var serverData = function(key) {
+    $scope.dashboard = true;
+    console.log("Taking data from server", online);
+    $scope.loading = true;
+    Auth.getMarks(key+"/"+$stateParams.uid).$ref().on('value', function(fbdata) {
+      $scope.$broadcast('scroll.refreshComplete');
+      $scope.loading = false;
+      var fkey = fbdata.ref().parent().key() + "_" + fbdata.key();
+      var falldata = fbdata.val();
+      applyMarks(falldata, fkey);       
+    })
+  }
 
-  var applyMarks = function(marks) {
+  var applyMarks = function(marks, fkey) {
     console.log("marks", marks);
     var allsubjectData = [];
     for (var i = 0; i < marks.allSubjects.length; i++) {
@@ -449,8 +557,10 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       yAxis: {title: {text: null}, max:100},
       series: [{name: 'Attendance',data: attendance}]
     };
-  }
-  $scope.getMarksData(true);
+    dashboards["studentoverall"] = true;
+    if(online) Auth.saveLocal(fkey, marks).then(function(status) {console.log("Local save status", status);});
+  }  
+  $scope.getMarksData(dashboards["studentoverall"]);
   $scope.noexams = true;
   $ionicModal.fromTemplateUrl('templates/dashboardFilters.html', {
     scope: $scope,
@@ -477,145 +587,172 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   }
 })
 
-.controller("AllClassesCtrl", function($scope, myCache, Auth, $ionicLoading, $timeout) {
-  var allusers = myCache.get("allusers");
-  $scope.changeStatus = function() {$scope.filterStatus = !$scope.filterStatus;$timeout(function() {document.body.querySelector(".search").focus();}, 100);};
-  $scope.fetchData = function(refresh) {
-    Auth.getUsers().then(function(allusersfb) {
-      $scope.loading = false;
-      //$ionicLoading.hide();
-      if(refresh) $scope.$broadcast('scroll.refreshComplete');
-      if(allusersfb["allclasses"]) {
+.controller("AllClassesCtrl", function($scope, $rootScope, $cordovaSQLite, Auth, $timeout) {
+  var getData = function() {
+    $cordovaSQLite.execute(db, "SELECT value FROM mydata WHERE key = ?", ["allusers"]).then(function(res) {
+      if(res.rows.length) {
         $scope.status = true;
-        $scope.classes = allusersfb["allclasses"];
+        $scope.classes = angular.fromJson(res.rows.item(0).value)["allclasses"];
       } else {
-        $scope.status = false;        
+        $scope.fetchData(false);
       }
     })
   }
-  if(allusers) {
-    if(allusers["allclasses"]) {
-      $scope.status = true;
-      $scope.classes = allusers["allclasses"];    
+  getData();
+  $scope.changeStatus = function() {$scope.filterStatus = !$scope.filterStatus;$timeout(function() {document.body.querySelector(".search").focus();}, 100);};
+  $scope.fetchData = function(refresh) {
+    if(online) {
+      $scope.loading = true;
+      Auth.getUsers().then(function(allusersfb) {
+        console.log("loading");
+        $scope.loading = false;
+        if(refresh) $scope.$broadcast('scroll.refreshComplete');
+        if(allusersfb["allclasses"]) {
+          $scope.status = true;
+          $scope.classes = allusersfb["allclasses"];
+        } else {
+          $scope.status = false;        
+        }
+      })
     } else {
-      $scope.status = false;      
+      $scope.status = false;
     }
-  } else {
-    $scope.loading = true;
-    //$ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Fetching Classes...'});
-    $scope.fetchData(false);
   }
 })
 
-.controller("AllStudentsCtrl", function($scope, Auth, myCache, $ionicLoading, $timeout) {
-  $scope.title = "All Students";
-  $scope.changeStatus = function() {$scope.filterStatus = !$scope.filterStatus;$timeout(function() {document.body.querySelector(".search").focus();}, 100);};
-  $scope.fetchData = function(refresh) {
-    Auth.getUsers().then(function(allusersfb) {
-      $scope.loading = false;
-      if(refresh) $scope.$broadcast('scroll.refreshComplete');
-      if(allusersfb["allstudents"]) {
+.controller("AllStudentsCtrl", function($scope, $cordovaSQLite, Auth, $ionicLoading, $timeout) {
+  var getData = function() {
+    $cordovaSQLite.execute(db, "SELECT value FROM mydata WHERE key = ?", ["allusers"]).then(function(res) {
+      if(res.rows.length) {
         $scope.status = true;
-        $scope.students = allusersfb["allstudents"];
+        $scope.students = angular.fromJson(res.rows.item(0).value)["allstudents"];
       } else {
-        $scope.status = false;        
+        $scope.fetchData(false);
       }
     })
   }
-  var allusers = myCache.get("allusers");
-  if(allusers) {
-    if(allusers["allstudents"]) {
-      $scope.status = true;
-      $scope.students = allusers["allstudents"];    
-    } else {
-      $scope.status = false;      
-    }
-  } else {
+  getData();
+  $scope.changeStatus = function() {$scope.filterStatus = !$scope.filterStatus;$timeout(function() {document.body.querySelector(".search").focus();}, 100);};
+  $scope.fetchData = function(refresh) {
     $scope.loading = true;
-    $scope.fetchData(false);
+    Auth.getUsers().then(function(allusersfb) {
+      $scope.loading = false;
+      if(refresh) $scope.$broadcast('scroll.refreshComplete');
+      if(allusersfb["allstudents"]) {$scope.status = true; $scope.students = allusersfb["allstudents"];}
+      else {$scope.status = false;}
+    })
   }
 })
 
-.controller("AllTeachersCtrl", function($scope, myCache, Auth, $ionicLoading, $timeout) {
-  var allusers = myCache.get("allusers");
+.controller("AllTeachersCtrl", function($scope, $cordovaSQLite, Auth, $ionicLoading, $timeout) {
+  var getData = function() {
+    $cordovaSQLite.execute(db, "SELECT value FROM mydata WHERE key = ?", ["allusers"]).then(function(res) {
+      if(res.rows.length) {
+        $scope.status = true;
+        $scope.teachers = angular.fromJson(res.rows.item(0).value)["allteachers"];
+      } else {
+        $scope.fetchData(false);
+      }
+    })
+  }
+  getData();
   $scope.changeStatus = function() {$scope.filterStatus = !$scope.filterStatus;$timeout(function() {document.body.querySelector(".search").focus();}, 100);};
   $scope.fetchData = function(refresh) {
+    $scope.loading = true;
     Auth.getUsers().then(function(allusersfb) {
       $scope.loading = false;
-      //$ionicLoading.hide();
       if(refresh) $scope.$broadcast('scroll.refreshComplete');
       if(allusersfb["allteachers"]) {
         $scope.status = true;
         $scope.teachers = allusersfb["allteachers"];
-      } else {
-        $scope.status = false;        
-      }
+      } else {$scope.status = false;}
     })
-  } 
-  if(allusers) {
-    if(allusers["allteachers"]) {
-      $scope.status = true;
-      $scope.teachers = allusers["allteachers"];    
-    } else {
-      $scope.status = false;      
-    }
-  } else {
-    $scope.loading = true;
-    //$ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Fetching Teachers...'});
-    $scope.fetchData(true);
   }
 })
 
-.controller("MarkStudentsCtrl", function($scope, $stateParams, myCache, $timeout) {
+.controller("MarkStudentsCtrl", function($scope, $stateParams, myCache, $cordovaSQLite, $timeout) {
   $scope.changeStatus = function() {$scope.filterStatus = !$scope.filterStatus;$timeout(function() {document.body.querySelector(".search").focus();}, 100);};
-  var cache = myCache.get($stateParams.filter);
   var title = "";
   if($stateParams.type.indexOf("student") != -1) {
     var type = $stateParams.type.split("_");
-    var cache = cache[type[1]][type[2]];
+    var cache = $stateParams.filter +"_"+type[1]+"_"+type[2];
   }  else if ($stateParams.type.indexOf("class") != -1) {
     var type = $stateParams.type.split("_");
-    var cache = cache[type[0]][type[1]];
+    var key = $stateParams.filter +"_"+type[0]+"_"+type[1];
   } else {
-    var cache = cache[$stateParams.type];
+    var key = $stateParams.filter +"_"+$stateParams.type;
   }
-  var users = [];
-  if($stateParams.key == "passfail") {
-    users = cache[$stateParams.val];
-    title += $stateParams.val;
-  } else if (($stateParams.key == "Pass") || ($stateParams.key == "Fail")) {
-    users = cache["subject"+$stateParams.key+"Users"][$stateParams.val];
-    title += $stateParams.val + " " + $stateParams.key;
-  } else {
-    users = cache[$stateParams.key][$stateParams.val];
-    title += $stateParams.val;
-  }
-  $scope.title = title +" "+ $stateParams.filter.replace("_", " ") + " ";
-  if(users) {
-    $scope.allStudentsStatus = true;
-    $scope.users = users;
-  } else {
-    $scope.allStudentsStatus = false;
-  }
+  console.log("key", key);
+  $cordovaSQLite.execute(db, "SELECT value from mydata where key = ?", [key]).then(function(res) {
+    var ldata = angular.fromJson(res.rows.item(0).value);
+    console.log("ldata", ldata);
+    var users = [];
+    if($stateParams.key == "passfail") {
+      users = ldata[$stateParams.val];
+      title += $stateParams.val;
+    } else if (($stateParams.key == "Pass") || ($stateParams.key == "Fail")) {
+      users = ldata["subject"+$stateParams.key+"Users"][$stateParams.val];
+      title += $stateParams.val + " " + $stateParams.key;
+    } else {
+      users = ldata[$stateParams.key][$stateParams.val];
+      title += $stateParams.val;
+    }
+    $scope.title = title +" "+ $stateParams.filter.replace("_", " ") + " ";
+    if(users) {
+      $scope.allStudentsStatus = true;
+      $scope.users = users;
+    } else {
+      $scope.allStudentsStatus = false;
+    }
+  })
 })
 
-.controller('WallCtrl', function($scope, $state, $ionicModal, Auth, $ionicLoading) {
-  $scope.walls = Auth.wall(user.schoolid+'/wall');
-  $scope.empty = false;
-  $scope.loading = true;
-  $scope.walls.$loaded().then(function(wall) {
-    $scope.loading = false;
-    if(wall.length == 0) $scope.empty = true;
-  });
+.controller('WallCtrl', function($scope, $rootScope, $cordovaSQLite, $state, $ionicModal, Auth, $ionicLoading, $timeout) {
+  var getLocalData = function() {
+    $cordovaSQLite.execute(db, "SELECT * from mydata where key = ?", ["wall"]).then(function(res) {
+      $scope.loading = false;
+      if(res.rows.length > 0) {
+        $scope.walls = angular.fromJson(res.rows.item(0).value);
+      } else {
+        $scope.empty = true;
+      }
+    }, function(err) {
+      console.log("error", err);
+    });
+  }
+  $scope.getWall = function() {
+    $scope.loading = true;
+    console.log("connected", online);
+    if(online) {
+      $scope.walls = Auth.wall(user.schoolid+'/wall');
+      $scope.walls.$ref().on('value', function(swall) {
+        console.log("wall data", swall.val());
+        $scope.loading = false;
+        if(Object.keys(swall).length > 0) {
+          $scope.empty = false;
+          Auth.saveLocal("wall", $scope.walls).then(function(wallstatus) {console.log("wall status", wallstatus);});
+        } else {
+          $scope.empty = true;
+        }
+      })
+    } else {
+      if(db) {
+        getLocalData();
+      } else {
+        $timeout(function() {getLocalData()}, 2000);
+      }
+    }
+    $scope.$broadcast('scroll.refreshComplete');
+  }
+  $scope.getWall();
+
+
   $scope.uid = user.uid;
   $scope.addwall = true;
+
   if(user.role == 'parent') $scope.addwall = false;
   $scope.addpost = function() {
     $state.go('app.addpost', {});
-  }
-  $scope.getWall = function() {
-    $scope.walls = Auth.wall(user.schoolid+'/wall');
-    $scope.$broadcast('scroll.refreshComplete');
   }
 
   $scope.like = function(wallid, action) {
@@ -681,7 +818,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   }
 })
 
-.controller('MessagesCtrl', function($scope, $rootScope, $ionicLoading, $state, myCache, Auth, $timeout) {
+.controller('MessagesCtrl', function($scope, $rootScope, $ionicLoading, $state, $cordovaSQLite, Auth, $timeout) {
   $scope.title = "Chats";
   var allmessages = Auth.getUserChatRooms();
   $scope.changeStatus = function() {$scope.filterStatus = !$scope.filterStatus;$timeout(function() {document.body.querySelector(".search").focus();}, 200);};
@@ -702,7 +839,18 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       })
     })
   }
-  $scope.getUsers = function() {
+  var userFromServer = function(refresh) {
+    $scope.contactLoading = true;
+    Auth.getUsers().then(function(allusers) {
+      $scope.contactLoading = false;
+      if(refresh) $scope.$broadcast('scroll.refreshComplete');
+      if(allusers["chatcontacts"]) {
+        if(user.role == "teacher") allusers["chatcontacts"].push($scope.hm);
+        $scope.allcontacts = allusers["chatcontacts"];
+      }
+    })
+  }
+  $scope.getUsers = function(refresh) {
     $scope.title = "Contacts";
     contacts = [];
     if(user.role == "parent") {
@@ -722,38 +870,42 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       if($scope.hm) contacts.push($scope.hm);
       $scope.allcontacts = contacts;
     } else {
-      var allusers = myCache.get("allusers");
-      if(allusers) {
-        $scope.$broadcast('scroll.refreshComplete');
-        if(allusers["chatcontacts"]) {
-          $scope.allcontacts = allusers["chatcontacts"];
+      $cordovaSQLite.execute(db, "SELECT value FROM mydata WHERE key = ?", ["allusers"]).then(function(res) {
+        console.log("length", res.rows.length);
+        if(res.rows.length > 0) {
+          $scope.status = true;
+          $scope.allcontacts = angular.fromJson(res.rows.item(0).value)["chatcontacts"];
+        } else {
+          userFromServer(refresh);
         }
-      } else {
-        $scope.contactLoading = true;
-        Auth.getUsers().then(function(allusers) {
-          $scope.contactLoading = false;
-          $scope.$broadcast('scroll.refreshComplete');
-          if(allusers["chatcontacts"]) {
-            if(user.role == "teacher") allusers["chatcontacts"].push($scope.hm);
-            $scope.allcontacts = allusers["chatcontacts"];
-          }
-        })
-      }
+      })
     }
   }
 
-  $scope.getMessages = function() {
+  $scope.getMessages = function(refresh) {
     $scope.title = "Chats";
     $scope.chatLoading = true;
-    allmessages.on('value', function(frchatrooms) {
-      $scope.chatLoading = false;
-      var allmess = [];
-      frchatrooms.forEach(function(mess) {
-        allmess.push(mess.val());
+    if(online) {
+      allmessages.$ref().on('value', function(frchatrooms) {
+        $scope.chatLoading = false;
+        var allmess = frchatrooms.val();
+        $scope.chatrooms = allmess;
+        if(refresh) $scope.$broadcast('scroll.refreshComplete');
+        Auth.saveLocal("allmess", allmess);
+      });
+    } else {
+      $cordovaSQLite.execute(db, "SELECT value FROM mydata WHERE key = ?", ["allmess"]).then(function(mres) {
+        $scope.chatLoading = false;
+        console.log("length", mres.rows.length);
+        if(mres.rows.length > 0) {
+          $scope.chatEmpty = false;
+          console.log("message", mres.rows.item(0).value);
+          $scope.chatrooms = angular.fromJson(mres.rows.item(0).value);
+        } else {
+          $scope.chatEmpty = true;
+        }
       })
-      $scope.chatrooms = allmess;
-      $scope.$broadcast('scroll.refreshComplete');
-    });
+    }
   }
 
   $scope.toMessageBox = function(contact) {
@@ -813,7 +965,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     });
   }
 })
-.controller('MessageBoxCtrl', function($scope, $rootScope, $state, $stateParams, $ionicActionSheet, $ionicPopup, $ionicScrollDelegate, $timeout, $interval, Auth, myCache) {
+.controller('MessageBoxCtrl', function($scope, $rootScope, $state, $stateParams, $cordovaSQLite, $ionicActionSheet, $ionicPopup, $ionicScrollDelegate, $timeout, $interval, Auth, myCache) {
   var chatrooms = Auth.chatrooms();
   var allchats = Auth.getAllMessages($stateParams.chatid);
 
@@ -844,18 +996,30 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       }, 0);
 
     });
-
+    var processMessages = function(allmsg) {
+      $scope.messages = allmsg;
+      $timeout(function() {
+        viewScroll.scrollBottom();
+      }, 100);
+      Auth.saveLocal("chats_"+$stateParams.chatid, allmsg);
+    }
     var getMessages = function() {
-      allchats.child("messages").limitToLast(50).on('value', function(frmessages) {
-        $scope.messages = frmessages.val() || [];
-        if($rootScope.state == 'app.messagebox') {
-          var updatechatrooms = Auth.chatrooms();
-          updatechatrooms.child(user.uid).child($stateParams.chatid).child("notify").set(0);
-        }
-        $timeout(function() {
-          viewScroll.scrollBottom();
-        }, 100);
-      })
+      if(online) {
+        allchats.child("messages").limitToLast(50).on('value', function(frmessages) {
+          if($rootScope.state == 'app.messagebox') {
+            var updatechatrooms = Auth.chatrooms();
+            updatechatrooms.child(user.uid).child($stateParams.chatid).child("notify").set(0);
+          }
+          var allmm = frmessages.val() || [];
+          processMessages(allmm);
+        })
+      } else {
+        $cordovaSQLite.execute(db, "SELECT value from mydata WHERE key = ?", ["chats_"+$stateParams.chatid]).then(function(cres) {
+          if(cres.rows.length > 0) {
+            processMessages(angular.fromJson(cres.rows.item(0).value));
+          }
+        });
+      }
     }
 
   $scope.sendMessage = function(sendMessageForm) {
@@ -922,13 +1086,21 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
 .controller('AccountCtrl', function($scope) {
   $scope.user = user;
 })
-.controller('TimetableCtrl', function($scope, $ionicSideMenuDelegate, $stateParams, Auth, $ionicSlideBoxDelegate) {
-  $scope.empty = false;
-  $scope.getTimetable = function() {
-    var tref = Auth.getTimetable($stateParams.id);
-    tref.on('value', function(tdata) {
-      var timetable = tdata.val() || {};
-      if(!timetable) $scope.empty = true;
+.controller('TimetableCtrl', function($scope, $ionicSideMenuDelegate, $stateParams, Auth, $cordovaSQLite, $ionicSlideBoxDelegate) {
+  $scope.loading = true;
+  $scope.title = "Timetable";
+  $cordovaSQLite.execute(db, "SELECT value from mydata WHERE key = ?", ["tt_"+$stateParams.id]).then(function(tres) {
+    console.log("timetable length", tres.rows.length);
+    if(tres.rows.length > 0) {
+      processData(angular.fromJson(tres.rows.item(0).value));
+    } else {
+      if(online) timetableFromServer();
+      else $scope.empty = true;
+    }
+  })
+  var processData = function(timetable) {
+    $scope.loading = false;
+    if(timetable){
       $scope.data = {
         numViewableSlides : Object.keys(timetable).length,
         slideIndex : 0,
@@ -944,10 +1116,22 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
           first = false;
         }
       }
-      $scope.$apply();
+      if(online) Auth.saveLocal("tt_"+$stateParams.id, timetable);
+    } else {
+      $scope.empty = true;
+    }
+  }
+  var timetableFromServer = function() {
+    if(timetableref[$stateParams.id]) {
+      var ref = timetableref[$stateParams.id];
+    } else {
+      var ref = Auth.getTimetable($stateParams.id);
+    }
+    ref.on('value', function(tdata) {
+      var timetable = tdata.val() || {};
+      processData(timetable);
     })
   }
-  $scope.getTimetable();
   if($stateParams.id.indexOf("simplelogin") == -1) {
     $scope.classStatus = false;
   } else {
@@ -972,7 +1156,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     $scope.data.slideIndex = index;
     $scope.title = daysIndex(index);
   };
-  $ionicSideMenuDelegate.$getByHandle('my-handle').canDragContent(false);
+  //$ionicSideMenuDelegate.$getByHandle('my-handle').canDragContent(false);
 })
 .controller('AuthCtrl', function ($scope, $state, $rootScope, Auth, $ionicLoading, $ionicPopup, $ionicModal) {
   if(localStorage.getItem("user")) {
@@ -986,22 +1170,22 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   {
     title: 'Head Master',
     username: "8951572125",
-    password: '03jfko6r'
+    password: '4spuv7vi'
   },
   {
     title: 'Class Teacher',
     username: "9496255106",
-    password: "bwlba9k9"
+    password: "bemw8kt9"
   },
   {
     title: 'Subject Teacher',
     username: "9496255108",
-    password: "byrmgqfr"
+    password: "3wqoxbt9"
   },
   {
     title: "Parent",
     username: "9944711005",
-    password: "venopqfr"
+    password: "4aacq5mi"
   }];
   $scope.fillUser = function(modal, username, password) {
     modal.hide();
@@ -1025,9 +1209,12 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     $scope.user.email = $scope.user.username + "@ge.com";
     Auth.login($scope.user).then(function (user) {
       $ionicLoading.hide();
-      $state.go('app.wall', {}, {reload: true});
       var filters = Auth.filters(user.schoolid);
       filters.$bindTo($rootScope, 'filters');
+      filters.$loaded().then(function(fdata) {
+        localStorage.setItem("filters", angular.toJson(fdata));
+      });
+      $state.go('app.wall', {}, {reload: true});
     }, function (error) {
       $ionicLoading.hide();
       var msg = error;

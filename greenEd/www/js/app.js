@@ -5,26 +5,51 @@ if(luser) {
 } else {
   var user = {};
 }
+var wallref = '';
+var filtersref = '';
+var usersref = '';
+var marksref = '';
+var userchatroomsref = '';
+var db = null;
+var dashboards = {hm:false,class:false,teacher:false,student:false,overall:false};
+var timetableref = {};
 angular.module('starter', ['ionic', 'starter.controllers','firebase','ngCordova'])
+.constant('FIREBASE_URL', 'https://sizzling-fire-6207.firebaseio.com/')
 
-.run(function($ionicPlatform, $rootScope, Auth) {
+.run(function($ionicPlatform, $rootScope, Auth, FIREBASE_URL, $firebaseObject, $cordovaSQLite, $firebaseArray) {
   $ionicPlatform.ready(function() {
-    if (window.cordova && window.cordova.plugins.Keyboard) {
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-      cordova.plugins.Keyboard.disableScroll(true);
-
-    }
     if (window.StatusBar) {
       StatusBar.styleDefault();
     }
-    if(user && !$rootScope.filters) {
-      var filters = Auth.filters(user.schoolid);
-      filters.$bindTo($rootScope, 'filters');
+    if (window.cordova) {
+      db = $cordovaSQLite.openDB({ name: "my.db", bgType: 1 });
+      if(window.cordova.plugins.Keyboard) {
+        cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+        cordova.plugins.Keyboard.disableScroll(true);
+      }
+    } else {
+      db = openDatabase('mydb', '1.0', 'my first database', 2 * 1024 * 1024);
+    }
+    //$cordovaSQLite.execute(db, "DROP TABLE mydata");
+    $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS mydata (key text, value blob, unique (key))"); 
+    if(Object.keys(user).length > 0) {
+      wallref = $firebaseArray(ref.child(user.schoolid+"/wall"));
+      if(!$rootScope.filters) {var filterRef = $firebaseObject(ref.child(user.schoolid+"/filters")); filterRef.$bindTo($rootScope, 'filters'); console.log("rootScope filters", $rootScope.filters);}
+      userchatroomsref = $firebaseObject(ref.child(user.schoolid+"/chatrooms/"+user.uid));
+      if(user.role == 'parent') {
+        for (var i = 0; i < user.students.length; i++) {
+          timetableref[user.students[i].uid] = ref.child(user.schoolid+'/timetable/'+user.students[i].uid);
+        };
+      } else if (user.role == 'teacher') {
+        usersref = $firebaseObject(ref.child('users').orderByChild(user.alluserskey).equalTo(user.allusersval));
+        timetableref[user.uid] = ref.child(user.schoolid+'/timetable/'+user.uid);
+      } else {
+        usersref = $firebaseObject(ref.child('users').orderByChild(user.alluserskey).equalTo(user.allusersval));
+      }
     }
   });
 })
 
-.constant('FIREBASE_URL', 'https://greendev.firebaseio.com/')
 
 
 .directive('chart', function() {
