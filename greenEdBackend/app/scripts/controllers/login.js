@@ -114,8 +114,8 @@ angular.module('greenEdApp')
             'class': 'fa fa-home'
           },
           {
-            'title': 'Add Students',
-            'link': '/addstudents',
+            'title': 'Add Student',
+            'link': '/addstudent',
             'class': 'fa fa-user'
           }];
         } else {
