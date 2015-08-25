@@ -15,7 +15,7 @@
       <ion-refresher pulling-text="Pull to refresh" on-refresh="fetchData(true)"></ion-refresher>
       <div ng-show="loading" class="center padding"><ion-spinner icon="android"></ion-spinner></div>
       <div class="list" ng-if="status == true">
-         <a class="item item-icon-left positive" alt="teacher" collection-repeat="class in classes | filter:query.search.value" href="#/app/classdashboard/{{class.standard}}-{{class.division}}">
+         <a class="item item-icon-left positive" alt="teacher" collection-repeat="class in classes | filter:query.search.value" href="#/app/classdashboard/{{class.standard}}-{{class.division}}" item-height="53">
             <i class="icon ion-easel"></i>
             <h2>{{class.standard}}<span ng-hide="class.division == 'all'">{{class.division}}</span></h2>
          </a>

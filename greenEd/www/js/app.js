@@ -5,7 +5,6 @@ if(luser) {
 } else {
   var user = {};
 }
-var wallref = '';
 var filtersref = '';
 var usersref = '';
 var marksref = '';
@@ -16,8 +15,9 @@ var timetableref = {};
 angular.module('starter', ['ionic', 'starter.controllers','firebase','ngCordova'])
 .constant('FIREBASE_URL', 'https://sizzling-fire-6207.firebaseio.com/')
 
-.run(function($ionicPlatform, $rootScope, Auth, FIREBASE_URL, $firebaseObject, $cordovaSQLite, $firebaseArray) {
+.run(function($ionicPlatform, $http, $rootScope, Auth, FIREBASE_URL, $firebaseObject, $cordovaSQLite, $firebaseArray) {
   $ionicPlatform.ready(function() {
+    //$rootScope.walls = $firebaseArray(ref.child("-JwVp4kJ36Uv06GOEvlk/wall").limitToLast(25));
     if (window.StatusBar) {
       StatusBar.styleDefault();
     }
@@ -30,10 +30,16 @@ angular.module('starter', ['ionic', 'starter.controllers','firebase','ngCordova'
     } else {
       db = openDatabase('mydb', '1.0', 'my first database', 2 * 1024 * 1024);
     }
-    //$cordovaSQLite.execute(db, "DROP TABLE mydata");
+    $cordovaSQLite.execute(db, "DROP TABLE mydata");
     $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS mydata (key text, value blob, unique (key))"); 
     if(Object.keys(user).length > 0) {
-      wallref = $firebaseArray(ref.child(user.schoolid+"/wall"));
+      console.log("updating all refs");
+      $rootScope.updateMenu = true;
+      //$rootScope.walls = $firebaseArray(ref.child(user.schoolid+"/wall").limitToLast(25));
+      /*scrollRef = new Firebase.util.Scroll(ref.child(user.schoolid+"/wall"), '$priority');
+      scrollRef.scroll.next(1);
+      $rootScope.walls = $firebaseArray(scrollRef);
+      $rootScope.walls.scroll = scrollRef.scroll;*/
       if(!$rootScope.filters) {var filterRef = $firebaseObject(ref.child(user.schoolid+"/filters")); filterRef.$bindTo($rootScope, 'filters'); console.log("rootScope filters", $rootScope.filters);}
       userchatroomsref = $firebaseObject(ref.child(user.schoolid+"/chatrooms/"+user.uid));
       if(user.role == 'parent') {
@@ -49,9 +55,6 @@ angular.module('starter', ['ionic', 'starter.controllers','firebase','ngCordova'
     }
   });
 })
-
-
-
 .directive('chart', function() {
     return {
         restrict: 'E',
@@ -128,7 +131,6 @@ angular.module('starter', ['ionic', 'starter.controllers','firebase','ngCordova'
                   '</div>'
     };
 })
-
 .config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
   $ionicConfigProvider.views.forwardCache(true);
   $stateProvider
@@ -137,8 +139,10 @@ angular.module('starter', ['ionic', 'starter.controllers','firebase','ngCordova'
     templateUrl: 'templates/login.html',
     controller: 'AuthCtrl',
     resolve: {
-      user: function(Auth) {
-        return Auth.resolveUser();
+      user: function(Auth, $location) {
+        var uu = Auth.resolveUser();
+        if(uu) $location.path('/app/wall');
+        else return uu;
       }
     }
   })

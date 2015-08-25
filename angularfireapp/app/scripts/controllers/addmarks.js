@@ -307,6 +307,7 @@ angular.module('angularfireappApp')
 			                  sgrades[mark.marks[mm].teacherid].push(mark.marks[mm].grade);
 			                  var gtxt = {name: mark.marks[mm].grade, y:1};
 			                  if(mark.marks[mm].grade == "Grade F") gtxt.color = "#ff6c60";
+			                  if(mark.marks[mm].grade == "Grade A") gtxt.color = "#23b7e5";
 			                  dmarks[key][mark.marks[mm].teacherid].gradeData.push(gtxt);
 			                  dmarks[key][mark.marks[mm].teacherid].gradeUsers[mark.marks[mm].grade] = [{class:mark.class,uid:mark.studentid, name:mark.student}];
 			              } else {
@@ -329,6 +330,7 @@ angular.module('angularfireappApp')
 						  dmarks[key]["hm"].grades.push(mark.grade);
 						  var val = {name: mark.grade, y:1};
 						  if(mark.grade == "Grade F") val.color = "#ff6c60";
+						  if(mark.grade == "Grade A") val.color = "#23b7e5";
 						  dmarks[key]["hm"].gradeData.push(val);
 						  dmarks[key]["hm"].gradeUsers[mark.grade] = [{class:mark.class,uid:mark.studentid, name:mark.student}];
 						} else {
@@ -340,6 +342,7 @@ angular.module('angularfireappApp')
 						  dmarks[key][mark.class]["class"].grades.push(mark.grade);
 						  var yval = {name: mark.grade, y:1};
 						  if(mark.grade == "Grade F") yval.color = "#ff6c60";
+						  if(mark.grade == "Grade A") yval.color = "#23b7e5";
 						  dmarks[key][mark.class]["class"].gradeData.push(yval);
 						  dmarks[key][mark.class]["class"].gradeUsers[mark.grade] = [{class:mark.class,uid:mark.studentid, name:mark.student}];
 						} else {

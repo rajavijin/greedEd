@@ -15,7 +15,7 @@
       <ion-refresher pulling-text="Pull to refresh" on-refresh="fetchData(true)"></ion-refresher>
       <div ng-show="loading" class="center padding"><ion-spinner icon="android"></ion-spinner></div>
       <ion-list>
-         <ion-item collection-repeat="teacher in teachers | filter:query.search.value" class="item item-icon-left positive" href="#/app/teacherdashboard/{{teacher.uid}}/{{teacher.name}}">
+         <ion-item collection-repeat="teacher in teachers | filter:query.search.value" class="item item-icon-left positive" href="#/app/teacherdashboard/{{teacher.uid}}/{{teacher.name}}" item-height="53">
             <i class="icon ion-person"></i>
             <h2>{{teacher.name}}</h2>
          </ion-item>

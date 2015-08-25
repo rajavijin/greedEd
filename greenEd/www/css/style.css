@@ -327,7 +327,7 @@ a.autolinker {
   -webkit-justify-content: center;
   justify-content: center;
   -webkit-align-content: stretch;
-          align-content: stretch;
+  align-content: stretch;
   -webkit-align-items: center;
   align-items: center;
 }
@@ -340,3 +340,4 @@ a.autolinker {
 }
 .empty-slide .slider-pager {display: none;}
 .ttempty {margin-top: 42px;}
+.wall-final {height: 20px;}

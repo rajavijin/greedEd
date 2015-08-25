@@ -15,7 +15,7 @@
       <ion-refresher pulling-text="Pull to refresh" on-refresh="fetchData(true)"></ion-refresher>
       <div ng-show="loading" class="center padding"><ion-spinner icon="android"></ion-spinner></div>
       <ion-list>
-         <ion-item collection-repeat="student in students | filter:query.search.value | orderBy:['standard', 'studentid']" class="item item-icon-left positive" href="#/app/studentdashboard/{{student.standard}}-{{student.division}}/{{student.uid}}/{{student.name}}">
+         <ion-item collection-repeat="student in students | filter:query.search.value | orderBy:['standard', 'studentid']" class="item item-icon-left positive" href="#/app/studentdashboard/{{student.standard}}-{{student.division}}/{{student.uid}}/{{student.name}}" item-height="53">
             <i class="icon ion-person"></i>
             <h2>{{student.standard}}<span ng-hide="student.division == 'all'">{{student.division}}</span> : {{student.name}}</h2>
          </ion-item>

@@ -6,7 +6,6 @@
          <ion-nav-buttons side="left">
          <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
          </ion-nav-buttons>
-<!--          <ion-nav-buttons side="right"><button ng-show="filters" class="button button-icon button-clear ion-funnel" menu-toggle="right"></button></ion-nav-buttons> -->
       </ion-nav-bar>
       <ion-nav-view name="menuContent"></ion-nav-view>
    </ion-side-menu-content>
@@ -26,21 +25,4 @@
          </ion-list>
       </ion-content>
    </ion-side-menu>
-   <!-- <ion-side-menu ng-if="filters" side="right">
-      <ion-content drag-content="false">
-         <form>
-            <ion-list class="menu-list filters">
-               <ion-item class="item-icon-left positive"><i class="icon ion-clock"></i><strong>EducationYear</strong></ion-item>
-               <ion-radio class="item item-complex" name="year" ng-model="filtersData.educationyear" ng-repeat="(k,v) in filtersData.years" ng-value="{{k}}">{{v}}</ion-radio>
-               <ion-item class="item-icon-left positive" ng-hide="noexams"><i class="icon ion-clipboard"></i><strong>Exams</strong></ion-item>
-               <ion-radio class="item item-complex" name="exam" ng-hide="noexams" ng-if="v != 'NoAll'" ng-model="filtersData.typeofexam" ng-repeat="(k,v) in filtersData.typeofexams" ng-value="{{k}}">{{v}}</ion-radio>
-            <ion-item class="item submit first" ng-if="page == 'hmdashboard'"><button menu-close class="button icon-left ion-chevron-left button-block button-positive" ng-click="hmdashboardfilters()">Go</button></ion-item>
-            <ion-item class="item submit first" ng-if="page == 'dashboard'"><button menu-close class="button icon-left ion-chevron-left button-block button-positive" ng-click="dashboardfilters()">Go</button></ion-item>
-            <ion-item class="item submit first" ng-if="page == 'teacherdashboard'"><button menu-close class="button icon-left ion-chevron-left button-block button-positive" ng-click="teacherdashboardfilters()">Go</button></ion-item>
-            <ion-item class="item submit first" ng-if="page == 'studentdashboard'"><button menu-close class="button icon-left ion-chevron-left button-block button-positive" ng-click="studentdashboardfilters()">Go</button></ion-item>
-            <ion-item class="item submit first" ng-if="page == 'studentoveralldashboard'"><button menu-close class="button icon-left ion-chevron-left button-block button-positive" ng-click="studentoveralldashboardfilters()">Go</button></ion-item>            
-            </ion-list>
-         </form>
-      </ion-content>
-   </ion-side-menu> -->
 </ion-side-menus>

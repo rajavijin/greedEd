@@ -1,5 +1,7 @@
 var online = true;
 var ref = '';
+var wallref = '';
+var scrollRef = null;
 angular.module('starter.services', [])
 
 .factory('myCache', function($cacheFactory) {
@@ -8,8 +10,16 @@ angular.module('starter.services', [])
 
 .factory('Auth', function ( $firebaseAuth, $q, $firebaseObject, $ionicLoading, $cordovaSQLite, myCache, $firebaseArray, FIREBASE_URL, $state, $rootScope) {
   ref = new Firebase(FIREBASE_URL);
+  scrollRef = new Firebase.util.Scroll(ref.child("-JwVp4kJ36Uv06GOEvlk/wall"), '$priority');
+  $rootScope.walls = $firebaseArray(scrollRef);
+  scrollRef.scroll.next(2);
+  $rootScope.walls.scroll = scrollRef.scroll;
+  //$rootScope.walls = $firebaseArray(ref.child("-JwVp4kJ36Uv06GOEvlk/wall").limitToLast(25));
+  ref.child('.info/connected').on('value', function(csnap) {
+    online = csnap.val();
+    $rootScope.$emit("online", online);
+  });
   var auth = $firebaseAuth(ref);
-  ref.child('.info/connected').on('value', function(csnap) {console.log("online root", csnap.val()); online = csnap.val();});
   var Auth = {
     login: function (userdata) {
       var defer = $q.defer();
@@ -22,7 +32,6 @@ angular.module('starter.services', [])
           ref.child('users/'+userdatafb.uid).on('value', function(profilesnap) {
             user = profilesnap.val();
             delete user.pepper;
-            wallref = $firebaseArray(ref.child(user.schoolid+"/wall"));
             $rootScope.filters = $firebaseObject(ref.child(user.schoolid+"/filters"));
             user.uid = userdatafb.uid;
             userchatroomsref = $firebaseObject(ref.child(user.schoolid+"/chatrooms/"+user.uid));
@@ -70,8 +79,7 @@ angular.module('starter.services', [])
       return defer.promise;
     },
     logout: function() {
-      $cordovaSQLite.execute(db, "DROP TABLE mydata");
-      return ref.unauth();
+      auth.$unauth();
     },
     filters: function(schoolid) {
       return $firebaseObject(ref.child(schoolid+"/filters"));
@@ -115,9 +123,7 @@ angular.module('starter.services', [])
     getUsers: function() {
       var deferred = $q.defer();
       var steacherindex = {};
-      console.log("usersref", usersref);
       usersref.$ref().on('value', function(usnap) {
-        console.log("usnap", usnap);
         if(user.role == "hm") {
           var classes = {};
           var standard = {}
@@ -197,8 +203,7 @@ angular.module('starter.services', [])
             }
           });          
         }
-        Auth.saveLocal("allusers", allusers).then(function(status) {console.log("status", status);});
-        //myCache.put("allusers", allusers);
+        Auth.saveLocal("allusers", allusers);
         deferred.resolve(allusers);
       }, function(err) {
         deferred.reject(err);
@@ -225,17 +230,14 @@ angular.module('starter.services', [])
     saveLocal: function(lkey, lalldata) {
       var defer = $q.defer();
       $cordovaSQLite.execute(db, "SELECT value from mydata where key = ?", [lkey]).then(function(res) {
-        console.log("Local Data status", res.rows.length);
         if(res.rows.length > 0) {
           $cordovaSQLite.execute(db, "UPDATE mydata SET value = ? WHERE key = ?", [angular.toJson(lalldata),lkey]).then(function(ures) {
-            console.log("UPDATED ID -> " + ures);
             defer.resolve("updated");
           }, function (err) {
             defer.reject(err);
           }); 
         } else {
           $cordovaSQLite.execute(db, "INSERT INTO mydata (key, value) VALUES (?, ?)", [lkey, angular.toJson(lalldata)]).then(function(ires) {
-            console.log("INSERT ID -> " + ires.insertId);
             defer.resolve("Inserted");
           }, function (err) {
             console.error(err);
@@ -249,21 +251,25 @@ angular.module('starter.services', [])
       return ref.getAuth();
     },
     signedIn: function() {
-      return ref.getAuth();
+      var defer = $q.defer();
+      var authdata = ref.getAuth();
+      if(authdata.uid) {
+        defer.resolve("loggedin");
+      } else {
+        defer.reject("loggedout");
+      }
+      return defer.promise;
     }
   };
 
-  function authDataCallback(user) {
-    if(user) {
+  auth.$onAuth(function(authData) {
+    if(authData) {
       $rootScope.updateMenu = true;
     } else {
       $rootScope.updateMenu = false;
       localStorage.removeItem("user");
-      user = {};
-      $state.go('login', {}, {reload:true});
     }
-  }
-
-  ref.onAuth(authDataCallback);  
+  });
+  
   return Auth;
 })
