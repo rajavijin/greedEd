@@ -1,29 +1,28 @@
-<ion-view title="Teachers" hide-nav-bar="filterStatus">
-	<div class="bar bar-header item-input-inset header-search bar-positive padding" ng-show="filterStatus">
-    <span class="left-buttons">
-  <button class="button button-icon button-clear ion-android-arrow-back" ng-click="filterStatus = !filterStatus"></button>
-    </span>
-    <ion-search placeholder="Search" filter="query.search"></ion-search>
-    <div class="buttons buttons-right header-item">
-    </div>
-  </div>
-	<ion-nav-buttons side="right">
-	<button class="button button-icon button-clear ion-ios-search" ng-click="changeStatus()"></button>
-    </ion-nav-buttons>
-   <ion-content class="has-header">
-   	  <div ng-if="filterStatus" style="height:44px;"></div>
-      <ion-refresher pulling-text="Pull to refresh" on-refresh="fetchData(true)"></ion-refresher>
-      <div ng-show="loading" class="center padding"><ion-spinner icon="android"></ion-spinner></div>
-      <ion-list>
-         <ion-item collection-repeat="teacher in teachers | filter:query.search.value" class="item item-icon-left positive" href="#/app/teacherdashboard/{{teacher.uid}}/{{teacher.name}}" item-height="53">
+<ion-view view-title="Teachers">
+
+  <ion-nav-buttons side="secondary">
+    <button class="button button-icon icon ion-ios-search-strong" ng-click="showFilterBar()">
+    </button>
+  </ion-nav-buttons>
+
+  <ion-content direction="y" scrollbar-y="false">
+
+    <ion-refresher pulling-icon="ion-arrow-down-b" on-refresh="refreshItems()">
+    </ion-refresher>
+
+    <ion-list>
+      <ion-item collection-repeat="teacher in items" class="item item-icon-left positive" href="#/app/teacherdashboard/{{teacher.uid}}/{{teacher.name}}" item-height="53" item-width="100%">
             <i class="icon ion-person"></i>
             <h2>{{teacher.name}}</h2>
          </ion-item>
-      </ion-list>
-      <div class="list" ng-if="status == false">
-         <a class="item" href="#">
-            <p>No students found</p>
-         </a>
-      </div>
-   </ion-content>
+    </ion-list>
+
+    <div ng-if="items !== undefined && !items.length" class="no-results list">
+       <a class="item" href="#">
+          <p>No teacher found</p>
+       </a>
+    </div>
+
+  </ion-content>
+
 </ion-view>

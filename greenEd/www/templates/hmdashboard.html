@@ -1,9 +1,9 @@
-<ion-view title="{{title}}">
+<ion-view cache-view="false" title="{{title}}">
    <ion-nav-buttons side="right">
    <button ng-show="dashboard" class="button button-icon button-clear ion-funnel" ng-click="filterData()"></button>
    </ion-nav-buttons>
    <ion-content class="has-header" >
-      <ion-refresher pulling-text="Pull to refresh" on-refresh="getMarksData(false)"></ion-refresher>
+      <ion-refresher pulling-text="Pull to refresh" on-refresh="getMarksData()"></ion-refresher>
       <div ng-show="loading" class="center padding"><ion-spinner icon="android"></ion-spinner></div>
       <ion-list ng-show="empty">
          <ion-item class="item item-icon-left"><i class="icon ion-ios-list positive"></i>Dashboard is empty</ion-item>

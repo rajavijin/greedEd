@@ -2,6 +2,19 @@ var online = true;
 var ref = '';
 var wallref = '';
 var scrollRef = null;
+var luser = localStorage.getItem('user');
+if(luser) var user = JSON.parse(luser);
+else var user = {};
+var lfilter = localStorage.getItem('filters');
+if(lfilter) var filters = angular.fromJson(lfilter);
+else var filters = {};
+var usersref = '';
+var marksref = '';
+var userchatroomsref = '';
+var db = null;
+var dashboards = {hm:false,class:false,teacher:false,student:false,overall:false};
+var timetableref = {};
+var days = {"holidays":{}, "events":{}, "exams":{}};
 angular.module('starter.services', [])
 
 .factory('myCache', function($cacheFactory) {
@@ -10,15 +23,11 @@ angular.module('starter.services', [])
 
 .factory('Auth', function ( $firebaseAuth, $q, $firebaseObject, $ionicLoading, $cordovaSQLite, myCache, $firebaseArray, FIREBASE_URL, $state, $rootScope) {
   ref = new Firebase(FIREBASE_URL);
-  scrollRef = new Firebase.util.Scroll(ref.child("-JwVp4kJ36Uv06GOEvlk/wall"), '$priority');
-  $rootScope.walls = $firebaseArray(scrollRef);
-  scrollRef.scroll.next(2);
-  $rootScope.walls.scroll = scrollRef.scroll;
-  //$rootScope.walls = $firebaseArray(ref.child("-JwVp4kJ36Uv06GOEvlk/wall").limitToLast(25));
   ref.child('.info/connected').on('value', function(csnap) {
     online = csnap.val();
     $rootScope.$emit("online", online);
   });
+
   var auth = $firebaseAuth(ref);
   var Auth = {
     login: function (userdata) {
@@ -32,9 +41,7 @@ angular.module('starter.services', [])
           ref.child('users/'+userdatafb.uid).on('value', function(profilesnap) {
             user = profilesnap.val();
             delete user.pepper;
-            $rootScope.filters = $firebaseObject(ref.child(user.schoolid+"/filters"));
             user.uid = userdatafb.uid;
-            userchatroomsref = $firebaseObject(ref.child(user.schoolid+"/chatrooms/"+user.uid));
             var key = "usertype";
             var value = user.schoolid + '|student';
             if(user.role == 'teacher') {
@@ -62,6 +69,11 @@ angular.module('starter.services', [])
                   kid.uid = student.key();
                   user.students.push(kid);
                   timetableref[kid.uid] = ref.child(user.schoolid+'/timetable/'+kid.uid);
+                  var d = new Date();
+                  var cy = d.getFullYear();
+                  var st = kid.standard;
+                  if((kid.division.length > 1) && (kid.division != "all")) st = st+"-"+kid.division;
+                  days.exams[st] = $firebaseObject(ref.child(user.schoolid+"/exams/"+st+"/"+cy));
                 })
                 localStorage.setItem("user", JSON.stringify(user));
                 defer.resolve(user);
@@ -79,6 +91,7 @@ angular.module('starter.services', [])
       return defer.promise;
     },
     logout: function() {
+      $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Logging out...'});
       auth.$unauth();
     },
     filters: function(schoolid) {
@@ -91,7 +104,7 @@ angular.module('starter.services', [])
       return ref.child(user.schoolid+"/chatrooms");
     },
     getUserChatRooms: function() {
-      return userchatroomsref;
+      return $firebaseObject(ref.child(user.schoolid+"/chatrooms/"+user.uid));
     },
     getAllMessages: function(chatid) {
       return ref.child(user.schoolid+"/chats/"+chatid);
@@ -103,6 +116,7 @@ angular.module('starter.services', [])
       return $firebaseObject(ref.child(user.schoolid+'/marks'));
     },
     getMarks: function(key) {
+      console.log("getting marks", user.schoolid+'/marks/'+key);
       return $firebaseObject(ref.child(user.schoolid+'/marks/'+key));
     },
     getFilteredMarks: function(filter, key, sclass) {
@@ -120,17 +134,22 @@ angular.module('starter.services', [])
     getTimetable: function(key) {
       return ref.child(user.schoolid+'/timetable/'+key);
     },
+    getExams: function(key) {
+      var d = new Date();
+      var cy = d.getFullYear();
+      return ref.child(user.schoolid+"/exams/"+key+"/"+cy);
+    },
     getUsers: function() {
       var deferred = $q.defer();
       var steacherindex = {};
+      var classes = {};
+      var standard = {}
+      var parents = {};
+      var teachers = {};
+      var chatcontacts = {};
+      var allusers = {allclasses:[],allstudents:[],allteachers:[],chatcontacts:[],groups:{}};
       usersref.$ref().on('value', function(usnap) {
         if(user.role == "hm") {
-          var classes = {};
-          var standard = {}
-          var parents = {};
-          var teachers = {};
-          var chatcontacts = {};
-          var allusers = {allclasses:[],allstudents:[],allteachers:[],chatcontacts:[],groups:{}};
           usnap.forEach(function(iusnap) {
             var fbuser = iusnap.key();
             var fbusers = iusnap.val();
@@ -171,24 +190,20 @@ angular.module('starter.services', [])
                     teacher.role = "teacher";
                     teacher.type = "single";
                     allusers["chatcontacts"].push(teacher);
+                    allusers["groups"][fbusers.standard+'-'+fbusers.division].push(teacher);
                   }
-                  allusers["groups"][fbusers.standard+'-'+fbusers.division].push(teacher);
                 } 
               }
             }
           });
         } else if (user.role == "teacher") {
-          var classes = {};
-          var standard = {}
-          var parents = {};
-          var chatcontacts = {};
-          var allusers = {allstudents:[],chatcontacts:[],groups:{}};
           usnap.forEach(function(fbusers) {
             var fbuser = fbusers.key();
             var fbusers = fbusers.val();
             if(!allusers["groups"][fbusers.standard+'-'+fbusers.division]) allusers["groups"][fbusers.standard+'-'+fbusers.division] = [];
             if(!classes[fbusers.standard+'-'+fbusers.division]) {
               classes[fbusers.standard+'-'+fbusers.division] = true;
+              allusers["allclasses"].push({standard:fbusers.standard, division:fbusers.division});
               allusers["chatcontacts"].push({name: fbusers.standard+'-'+fbusers.division, role:"class", uid:fbusers.standard+'-'+fbusers.division,type:"group"})
             }
             allusers["allstudents"].push({name:fbusers.name, standard:fbusers.standard, division:fbusers.division, uid:fbuser});
@@ -201,7 +216,7 @@ angular.module('starter.services', [])
               allusers["groups"][fbusers.standard+'-'+fbusers.division].push({name: "Parent of "+fbusers.name, role:"parent", class:fbusers.standard+'-'+fbusers.division, uid:parent[2],type:"single"})
               chatcontacts[fbusers.name] = cci;
             }
-          });          
+          });       
         }
         Auth.saveLocal("allusers", allusers);
         deferred.resolve(allusers);
@@ -212,19 +227,21 @@ angular.module('starter.services', [])
     },
     getMenus: function() {
       if(user.role == "hm") {
-        return {"Links":[{"title":"Dashboard", "href":"/app/hmdashboard", "class":"ion-stats-bars"},{"title":"Classes", "href":"/app/allclasses", "class": "ion-easel"},{"title":"Students", "href":"/app/allstudents", "class": "ion-person-stalker"},{"title":"Teachers", "href":"/app/allteachers", "class": "ion-ios-body"}]};
+        return {"Links":[{"title":"Dashboard", "href":"/app/hmdashboard", "class":"ion-stats-bars"},{"title":"Classes", "href":"/app/allclasses", "class": "ion-easel"},{"title":"Students", "href":"/app/allstudents", "class": "ion-person-stalker"},{"title":"Teachers", "href":"/app/allteachers", "class": "ion-ios-body"},{"title":"Exams", "href":"/app/allclasses/exams", "class": "ion-clipboard"}]};
       } else if (user.role == "parent") {
         if(user.students.length > 1) {
           return {"Links":[{"title":"Dashboard", "href":"/app/studentdashboard", "class":"ion-stats-bars"},{"title":"Overall Dashboard", "href":"/app/studentoveralldashboard", "class":"ion-ios-pulse-strong"},{"title":"Class Dashboard", "href":"/app/classdashboard", "class":"ion-pie-graph"},{"title":"TimeTable", "href":"/app/timetable", "class":"ion-ios-time"}]};
         } else {
-          return {"Links":[{"title":"Dashboard", "href":"/app/studentdashboard/"+user.students[0].standard+"-"+user.students[0].division+"/"+user.students[0].uid+"/"+user.students[0].name, "class":"ion-stats-bars"},{"title":"Overall Dashboard", "href":"/app/studentoveralldashboard/"+user.students[0].uid+"/"+user.students[0].name, "class":"ion-ios-pulse-strong"},{"title":"Class Dashboard", "href":"/app/classdashboard/"+user.students[0].standard+"-"+user.students[0].division, "class":"ion-pie-graph"},{"title":"TimeTable", "href":"/app/timetable/"+user.students[0].standard+"-"+user.students[0].division, "class":"ion-ios-time"}]};
+          var st = user.students[0].standard;
+          if((user.students[0].division.length > 1) && (user.students[0].division != "all")) st = st+"-"+user.students[0].division;
+          return {"Links":[{"title":"Dashboard", "href":"/app/studentdashboard/"+user.students[0].standard+"-"+user.students[0].division+"/"+user.students[0].uid+"/"+user.students[0].name, "class":"ion-stats-bars"},{"title":"Overall Dashboard", "href":"/app/studentoveralldashboard/"+user.students[0].uid+"/"+user.students[0].name, "class":"ion-ios-pulse-strong"},{"title":"Class Dashboard", "href":"/app/classdashboard/"+user.students[0].standard+"-"+user.students[0].division, "class":"ion-pie-graph"},{"title":"TimeTable", "href":"/app/timetable/"+user.students[0].standard+"-"+user.students[0].division, "class":"ion-ios-time"},{"title":"Exams", "href":"/app/days/exams/"+st, "class":"ion-clipboard"}]};
         }
       } else {
-        if(user.class) {
-          return {"Links":[{"title":"Class Dashboard", "href":"/app/classdashboard/"+user.class, "class":"ion-stats-bars"},{"title":"Teacher Dashboard", "href":"/app/teacherdashboard/"+user.uid+"/"+user.name, "class":"ion-ios-pulse-strong"},{"title":"Students", "href":"/app/allstudents", "class": "ion-person-stalker"},{"title":"TimeTable", "href":"/app/timetable/"+user.uid, "class":"ion-ios-time"}]};
-        } else {
-          return {"Links":[{"title":"Dashboard", "href":"/app/teacherdashboard/"+user.uid+"/"+user.name, "class":"ion-stats-bars"},{"title":"Students", "href":"/app/allstudents", "class": "ion-person-stalker"},{"title":"TimeTable", "href":"/app/timetable/"+user.uid, "class":"ion-ios-time"}]};
-        }
+        // if(user.class) {
+        //   return {"Links":[{"title":"Class Dashboard", "href":"/app/classdashboard/"+user.class, "class":"ion-stats-bars"},{"title":"Teacher Dashboard", "href":"/app/teacherdashboard/"+user.uid+"/"+user.name, "class":"ion-ios-pulse-strong"},{"title":"Students", "href":"/app/allstudents", "class": "ion-person-stalker"},{"title":"Classes", "href":"/app/allclasses", "class": "ion-easel"},{"title":"TimeTable", "href":"/app/timetable/"+user.uid, "class":"ion-ios-time"},{"title":"Exams", "href":"/app/allclasses/exams", "class": "ion-clipboard"}]};
+        // } else {
+        return {"Links":[{"title":"Dashboard", "href":"/app/teacherdashboard/"+user.uid+"/"+user.name, "class":"ion-stats-bars"},{"title":"Students", "href":"/app/allstudents", "class": "ion-person-stalker"},{"title":"Classes", "href":"/app/allclasses", "class": "ion-easel"},{"title":"TimeTable", "href":"/app/timetable/"+user.uid, "class":"ion-ios-time"},{"title":"Exams", "href":"/app/allclasses/exams", "class": "ion-clipboard"}]};
+        //}
       }      
     },
     saveLocal: function(lkey, lalldata) {
@@ -273,3 +290,80 @@ angular.module('starter.services', [])
   
   return Auth;
 })
+
+angular.module('issue-9128-patch', [])
+    .config(['$provide', function($provide){
+      
+      $provide.decorator('$rootScope', ['$delegate', function($rootScope) {
+        var _proto
+          , _new
+          , nextUid = function() {
+              return ++$rootScope.$id;
+            }
+          , Scope = function() {
+              this.$id = nextUid();
+              this.$$phase = this.$parent = this.$$watchers = this.$$nextSibling = this.$$prevSibling = this.$$childHead = this.$$childTail = null;
+              this.$root = this;
+              this.$$destroyed = false;
+              this.$$listeners = {};
+              this.$$listenerCount = {};
+              this.$$isolateBindings = null;
+            };
+
+        _proto = Object.create(Object.getPrototypeOf($rootScope));
+        Scope.prototype = _proto;
+
+        _new = function(isolate, parent) {
+         var child;
+
+          parent = parent || this;
+
+          if (isolate) {
+            child = new Scope();
+            child.$root = this.$root;
+          } else {
+            // Only create a child scope class if somebody asks for one,
+            // but cache it to allow the VM to optimize lookups.
+
+            if(!this.$$ChildScope) {
+              this.$$ChildScope = function ChildScope() {
+                this['$$watchers'] = this['$$nextSibling'] = this['$$childHead'] = this['$$childTail'] = null;
+                this['$$listeners'] = {};
+                this['$$listenerCount'] = {};
+                this['$id'] = nextUid();
+                this['$$ChildScope'] = null;
+              };
+              this['$$ChildScope'].prototype = this;
+            }
+            child = new this.$$ChildScope();
+          }
+          child['$parent'] = parent;
+          child['$$prevSibling'] = parent.$$childTail;
+          if (parent.$$childHead) {
+            parent.$$childTail.$$nextSibling = child;
+            parent.$$childTail = child;
+          } else {
+            parent.$$childHead = parent.$$childTail = child;
+          }
+
+          // When the new scope is not isolated or we inherit from `this`, and
+          // the parent scope is destroyed, the property `$$destroyed` is inherited
+          // prototypically. In all other cases, this property needs to be set
+          // when the parent scope is destroyed.
+          // The listener needs to be added after the parent is set
+          if (isolate || parent != this) {
+            child.$on('$destroy', destroyChild);
+          }
+
+          return child;
+
+          function destroyChild() {
+            child.$$destroyed = true;
+          }
+        };
+
+        $rootScope.$new = _new;
+        return $rootScope;
+      }]);
+
+    }]);

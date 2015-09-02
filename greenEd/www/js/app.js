@@ -1,18 +1,16 @@
-// Ionic Starter App
-var luser = localStorage.getItem('user');
-if(luser) {
-  var user = JSON.parse(luser);
-} else {
-  var user = {};
-}
-var filtersref = '';
-var usersref = '';
-var marksref = '';
-var userchatroomsref = '';
-var db = null;
-var dashboards = {hm:false,class:false,teacher:false,student:false,overall:false};
-var timetableref = {};
-angular.module('starter', ['ionic', 'starter.controllers','firebase','ngCordova'])
+'use strict';
+
+/**
+ * @ngdoc overview
+ * @name Demo
+ * @description
+ * # Initializes main application and routing
+ *
+ * Main module of the application.
+ */
+
+var isIOS = ionic.Platform.isIOS();
+angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'starter.controllers','firebase','ngCordova'])
 .constant('FIREBASE_URL', 'https://sizzling-fire-6207.firebaseio.com/')
 
 .run(function($ionicPlatform, $http, $rootScope, Auth, FIREBASE_URL, $firebaseObject, $cordovaSQLite, $firebaseArray) {
@@ -31,19 +29,32 @@ angular.module('starter', ['ionic', 'starter.controllers','firebase','ngCordova'
       db = openDatabase('mydb', '1.0', 'my first database', 2 * 1024 * 1024);
     }
     $cordovaSQLite.execute(db, "DROP TABLE mydata");
-    $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS mydata (key text, value blob, unique (key))"); 
+    $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS mydata (key text, value blob, unique (key))");
+
+    scrollRef = new Firebase.util.Scroll(ref.child("-JwVp4kJ36Uv06GOEvlk/wall"), '$priority');
+    $rootScope.walls = $firebaseArray(scrollRef);
+    scrollRef.scroll.next(20);
+    $rootScope.walls.scroll = scrollRef.scroll;
+
+    ref.child("-JwVp4kJ36Uv06GOEvlk/filters").on('value', function(fsnap) {
+      filters = fsnap.val();
+      console.log("filters", filters);
+      localStorage.setItem("filters", angular.toJson(filters));
+    })
+    var d = new Date();
+    var cy = d.getFullYear();
+    console.log("cy", cy);
+    days.holidays = $firebaseObject(ref.child("-JwVp4kJ36Uv06GOEvlk/holidays/"+cy));
+    days.events = $firebaseObject(ref.child("-JwVp4kJ36Uv06GOEvlk/events/"+cy));
     if(Object.keys(user).length > 0) {
       console.log("updating all refs");
       $rootScope.updateMenu = true;
-      //$rootScope.walls = $firebaseArray(ref.child(user.schoolid+"/wall").limitToLast(25));
-      /*scrollRef = new Firebase.util.Scroll(ref.child(user.schoolid+"/wall"), '$priority');
-      scrollRef.scroll.next(1);
-      $rootScope.walls = $firebaseArray(scrollRef);
-      $rootScope.walls.scroll = scrollRef.scroll;*/
-      if(!$rootScope.filters) {var filterRef = $firebaseObject(ref.child(user.schoolid+"/filters")); filterRef.$bindTo($rootScope, 'filters'); console.log("rootScope filters", $rootScope.filters);}
       userchatroomsref = $firebaseObject(ref.child(user.schoolid+"/chatrooms/"+user.uid));
       if(user.role == 'parent') {
         for (var i = 0; i < user.students.length; i++) {
+          var st = user.students[i].standard;
+          if((user.students[i].division.length > 1) && (user.students[i].division != "all")) st = st+"-"+user.students[i].division;
+          days.exams[st] = $firebaseObject(ref.child(user.schoolid+"/exams/"+st+"/"+cy));
           timetableref[user.students[i].uid] = ref.child(user.schoolid+'/timetable/'+user.students[i].uid);
         };
       } else if (user.role == 'teacher') {
@@ -53,6 +64,7 @@ angular.module('starter', ['ionic', 'starter.controllers','firebase','ngCordova'
         usersref = $firebaseObject(ref.child('users').orderByChild(user.alluserskey).equalTo(user.allusersval));
       }
     }
+
   });
 })
 .directive('chart', function() {
@@ -265,7 +277,7 @@ angular.module('starter', ['ionic', 'starter.controllers','firebase','ngCordova'
     }
   })      
   .state('app.messagebox', {
-    url: "/messages/:chatid/:toUid/:to/:type",
+    url: "/messages/:chatid/:toUid/:to/:type/:notify",
     views: {
       'menuContent' :{
         templateUrl: "templates/messagebox.html",
@@ -279,6 +291,33 @@ angular.module('starter', ['ionic', 'starter.controllers','firebase','ngCordova'
       'menuContent' :{
         templateUrl: "templates/timetable.html",
         controller: 'TimetableCtrl'
+      }
+    }
+  })
+  .state('app.days', {
+    url: "/days/:type",
+    views: {
+      'menuContent' :{
+        templateUrl: "templates/days.html",
+        controller: 'DaysCtrl'
+      }
+    }
+  })
+  .state('app.daysexam', {
+    url: "/days/:type/:class",
+    views: {
+      'menuContent' :{
+        templateUrl: "templates/days.html",
+        controller: 'DaysCtrl'
+      }
+    }
+  })
+  .state('app.allexams', {
+    url: "/allclasses/:type",
+    views: {
+      'menuContent' :{
+        templateUrl: "templates/allclasses.html",
+        controller: 'AllClassesCtrl'
       }
     }
   })

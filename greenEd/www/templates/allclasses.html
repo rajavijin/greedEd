@@ -1,30 +1,28 @@
-<ion-view title="Classes" hide-nav-bar="filterStatus">
-<div class="bar bar-header item-input-inset header-search bar-positive padding" ng-show="filterStatus">
-    <span class="left-buttons">
-  <button class="button button-icon button-clear ion-android-arrow-back" ng-click="filterStatus = !filterStatus"></button>
-    </span>
-    <ion-search placeholder="Search" filter="query.search"></ion-search>
-    <div class="buttons buttons-right header-item">
+<ion-view view-title="{{title}}">
+
+  <ion-nav-buttons side="secondary">
+    <button class="button button-icon icon ion-ios-search-strong" ng-click="showFilterBar()">
+    </button>
+  </ion-nav-buttons>
+
+  <ion-content direction="y" scrollbar-y="false">
+
+    <ion-refresher pulling-icon="ion-arrow-down-b" on-refresh="refreshItems()">
+    </ion-refresher>
+
+    <ion-list>
+      <ion-item collection-repeat="class in items" class="item item-icon-left positive" ng-click="redirect(class.standard, class.division)"  item-height="53" item-width="100%">
+        <i class="icon ion-easel"></i>
+        <h2>{{class.standard}}<span ng-hide="class.division == 'all'">{{class.division}}</span></h2>
+       </ion-item>
+    </ion-list>
+
+    <div ng-if="items !== undefined && !items.length" class="no-results list">
+       <a class="item" href="#">
+          <p>No class found</p>
+       </a>
     </div>
-  </div>
-	<ion-nav-buttons side="right">
-	<button class="button button-icon button-clear ion-ios-search" ng-click="changeStatus()"></button>
-    </ion-nav-buttons>
-   <ion-content class="has-header">
-   	  <div ng-if="filterStatus" style="height:44px;"></div>
-      <ion-refresher pulling-text="Pull to refresh" on-refresh="fetchData(true)"></ion-refresher>
-      <div ng-show="loading" class="center padding"><ion-spinner icon="android"></ion-spinner></div>
-      <div class="list" ng-if="status == true">
-         <a class="item item-icon-left positive" alt="teacher" collection-repeat="class in classes | filter:query.search.value" href="#/app/classdashboard/{{class.standard}}-{{class.division}}" item-height="53">
-            <i class="icon ion-easel"></i>
-            <h2>{{class.standard}}<span ng-hide="class.division == 'all'">{{class.division}}</span></h2>
-         </a>
-      </div>
-      <div class="list" ng-if="status == false">
-         <a class="item" href="#">
-            <p>No class found</p>
-         </a>
-      </div>
-      <div id="cleanup"></div>
-   </ion-content>
+
+  </ion-content>
+
 </ion-view>

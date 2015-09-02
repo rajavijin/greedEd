@@ -1,6 +1,4 @@
-      <ion-view id="userMessagesView"
-          cache-view="false" 
-          view-title="<div class='msg-header-username'>{{toUser.name}}</div>">
+      <ion-view id="userMessagesView" title="<div class='msg-header-username'>{{toUser.name}}</div>">
         
         <div class="loader-center" ng-if="!doneLoading">
             <div class="loader">
@@ -8,11 +6,9 @@
             </div>
         </div>
       
-          <ion-content has-bouncing="true" class="has-header has-footer" 
-              delegate-handle="userMessageScroll">
+          <ion-content delegate-handle="userMessageScroll" class="stable-bg">
             
-              <div ng-repeat="message in messages" class="message-wrapper"
-                  on-hold="onMessageHold($event, $index, message)">
+              <div ng-repeat="message in messages" class="message-wrapper">
       
                   <div ng-if="user.uid !== message.userId">
 
@@ -30,10 +26,7 @@
                   </div>
       
                   <div ng-if="user.uid === message.userId">
-                    
-                       <img ng-click="viewProfile(message)" class="profile-pic right" 
-                          ng-src="{{user.pic}}" onerror="onProfilePicError(this)" />
-                    
+                                      
                       <div class="chat-bubble right">
       
                           <div class="message bold" ng-bind-html="message.text | nl2br">
@@ -52,12 +45,18 @@
       
               </div>
           </ion-content>
-      
-          <form name="sendMessageForm" ng-submit="sendMessage(sendMessageForm)" novalidate>
-             <div class="row bar bar-footer" keyboard-attach>
-                <input type="text" class="col col-80 add-post-text" placeholder="Send {{toUser.name}} a message" ng-model="input.message" maxlength="1500" msd-elastic>
+          <ion-footer-bar align-title="left">
+            <label class="title">
+              <input type="text" placeholder="Send {{toUser.name}} a message" ng-model="input.message" class="msg-input">
+            </label>
+            <button type="submit" class="send-button button button-icon icon-center button-clean ion-android-send" ng-click="sendMessage()" ng-disabled="!input.message || input.message === ''">
+            </button>
+          </ion-footer-bar>
+<!--           <form name="sendMessageForm" ng-submit="sendMessage(sendMessageForm)">
+             <div class="row bar bar-footer">
+                <input type="text" class="col col-80 add-post-text" placeholder="Send {{toUser.name}} a message" ng-model="input.message" maxlength="1500">
                 <button class="col send-button button button-icon icon-center button-clean ion-android-send" type="submit" ng-disabled="!input.message || input.message === ''"></button>
-          </div>
-          </form>
+            </div>
+          </form> -->
           
       </ion-view>

@@ -1,4 +1,4 @@
-<ion-view>
+<ion-view cache-view="false">
   <ion-nav-title class="title title-center">{{title}}</ion-nav-title>
   <ion-nav-buttons side="left">
     <button class="button button-icon button-clear ion-navicon show" menu-toggle="left"></button>
@@ -14,12 +14,12 @@
   <ion-slide-box ng-if="data" on-slide-changed="slideChanged(index)">
       <ion-slide ng-repeat="slide in data.slides">
       <div ng-show="loading" class="center padding"><ion-spinner icon="android"></ion-spinner></div>
-      <ion-list>
+      <ion-list class="filter-results">
         <ion-item ng-repeat="item in slide" class="item item-icon-left positive" href="#"><i class="icon ion-ios-book"></i><h2>{{item.time}} - {{item.subject}}<span ng-show="classStatus"> : {{item.class}}</span></h2></ion-item>
         </ion-list>
       </ion-slide>
   </ion-slide-box>
-    <ion-list ng-show="empty">
+    <ion-list ng-show="empty" class="filter-results">
     <ion-item class="item item-icon-left positive ttempty" href="#"><i class="icon ion-ios-book"></i><h2>No Timetable Found</h2></ion-item>
   </ion-list>
 </ion-view>
