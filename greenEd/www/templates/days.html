@@ -15,7 +15,7 @@
       <ion-slide ng-repeat="slide in data.slides">
       <div ng-show="loading" class="center padding"><ion-spinner icon="android"></ion-spinner></div>
       <ion-list class="filter-results days">
-        <ion-item ng-repeat="(ik,item) in slide" class="item item-icon-left positive" href="#" ng-class="{'single': ik.length == 1}"><i class="icon ion-ios-calendar-outline"><span class="icon day">{{ik}}</span></i><h2>{{item.title}}</h2><p class="assertive">{{item.day}}<span ng-if="item.time">, {{item.time}}</span></p></ion-item>
+        <ion-item ng-repeat="(ik,item) in slide.days" class="item item-icon-left positive" href="#" ng-class="{'single': ik.length == 1}"><i class="icon ion-ios-calendar-outline"><span class="icon day">{{ik}}</span></i><h2>{{item.title}}</h2><p class="assertive">{{item.day}}<span ng-if="item.time">, {{item.time}}</span></p></ion-item>
         </ion-list>
       </ion-slide>
   </ion-slide-box>

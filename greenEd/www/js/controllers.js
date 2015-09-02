@@ -1091,7 +1091,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       $timeout(function() {
         $scope.messages = allmsg;
         viewScroll.scrollBottom();
-      //Auth.saveLocal("chats_"+$stateParams.chatid, allmsg);
+        Auth.saveLocal("chats_"+$stateParams.chatid, allmsg);
       }, 0);
     }
     var getMessages = function() {
@@ -1280,21 +1280,20 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       }
     })
   }
-  var processData = function(timetable) {
+  var processData = function(daysData) {
     $scope.loading = false;
-    if(timetable){
-      if(timetable["$id"]) delete timetable["$id"];
-      if(timetable["$priority"]) delete timetable["$priority"];
-      if(timetable["$$conf"]) delete timetable["$$conf"];
+    if(daysData){
       $scope.data = {
-        numViewableSlides : Object.keys(timetable).length,
+        numViewableSlides : daysData.length,
         slideIndex : 0,
         initialInstruction : true,
         secondInstruction : false,
-        slides: timetable,
+        slides: daysData,
       };
-      $scope.title = months[Object.keys(timetable)[0] - 1] + " " + year;
-      if(online) Auth.saveLocal($stateParams.type+"/"+year, timetable);
+      console.log("data", $scope.data);
+      console.log("month index", parseInt(daysData[0].id.slice(-2)));
+      $scope.title = months[parseInt(daysData[0].id.substr(4)) - 1] + " " + daysData[0].id.substr(0,4);
+      if(online) Auth.saveLocal($stateParams.type, angular.copy(daysData));
     } else {
       $scope.empty = true;
     }
@@ -1303,13 +1302,15 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     // days[$stateParams.type].on('value', function(tdata) {
     //   var timetable = tdata.val() || {};
     // })
-console.log("server call", $stateParams.class);
+    console.log("server call", $stateParams.class);
     if($stateParams.class) {
       console.log("days", days.exams);
       if(days[$stateParams.type][$stateParams.class]) {
         processData(days[$stateParams.type][$stateParams.class]);
       } else {
-        Auth.getExams($stateParams.class).once('value', function(esnap) {
+        var start = parseInt(year +''+ ("0" + (month + 1)).slice(-2));
+        console.log("start", start);
+        Auth.getExams($stateParams.class, start).once('value', function(esnap) {
           console.log('esap', esnap.val());
           processData(esnap.val());
         })
@@ -1337,7 +1338,7 @@ console.log("server call", $stateParams.class);
   // Called each time the slide changes
   $scope.slideChanged = function(index) {
     $scope.data.slideIndex = index;
-    $scope.title = months[Object.keys($scope.data.slides)[index] - 1] + " " + year;
+    $scope.title = months[parseInt($scope.data.slides[index].id.substr(4)) - 1] + " " + $scope.data.slides[index].id.substr(0,4);
   };
   //$ionicSideMenuDelegate.$getByHandle('my-handle').canDragContent(false);
 })

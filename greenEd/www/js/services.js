@@ -14,7 +14,7 @@ var userchatroomsref = '';
 var db = null;
 var dashboards = {hm:false,class:false,teacher:false,student:false,overall:false};
 var timetableref = {};
-var days = {"holidays":{}, "events":{}, "exams":{}};
+var days = {"holidays":[], "events":[], "exams":[]};
 angular.module('starter.services', [])
 
 .factory('myCache', function($cacheFactory) {
@@ -70,10 +70,10 @@ angular.module('starter.services', [])
                   user.students.push(kid);
                   timetableref[kid.uid] = ref.child(user.schoolid+'/timetable/'+kid.uid);
                   var d = new Date();
-                  var cy = d.getFullYear();
+                  var start = parseInt(d.getFullYear() +''+ ("0" + (d.getMonth() + 1)).slice(-2));
                   var st = kid.standard;
                   if((kid.division.length > 1) && (kid.division != "all")) st = st+"-"+kid.division;
-                  days.exams[st] = $firebaseObject(ref.child(user.schoolid+"/exams/"+st+"/"+cy));
+                  days.exams[st] = $firebaseArray(ref.child(user.schoolid+"/exams/"+st).orderByChild("id").startAt(start));
                 })
                 localStorage.setItem("user", JSON.stringify(user));
                 defer.resolve(user);
@@ -134,10 +134,10 @@ angular.module('starter.services', [])
     getTimetable: function(key) {
       return ref.child(user.schoolid+'/timetable/'+key);
     },
-    getExams: function(key) {
-      var d = new Date();
-      var cy = d.getFullYear();
-      return ref.child(user.schoolid+"/exams/"+key+"/"+cy);
+    getExams: function(key, start) {
+      console.log("key", key);
+      console.log("start", start);
+      return ref.child(user.schoolid+"/exams/"+key).orderByChild("id").startAt(start);
     },
     getUsers: function() {
       var deferred = $q.defer();
@@ -244,8 +244,9 @@ angular.module('starter.services', [])
         //}
       }      
     },
-    saveLocal: function(lkey, lalldata) {
+    saveLocal: function(lkey, ldata) {
       var defer = $q.defer();
+      var lalldata = angular.copy(ldata);
       $cordovaSQLite.execute(db, "SELECT value from mydata where key = ?", [lkey]).then(function(res) {
         if(res.rows.length > 0) {
           $cordovaSQLite.execute(db, "UPDATE mydata SET value = ? WHERE key = ?", [angular.toJson(lalldata),lkey]).then(function(ures) {
