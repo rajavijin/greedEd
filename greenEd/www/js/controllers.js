@@ -662,21 +662,22 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       var key = $stateParams.filter +"_"+$stateParams.type;
     }
     $cordovaSQLite.execute(db, "SELECT value from mydata where key = ?", [key]).then(function(res) {
-      var ldata = angular.fromJson(res.rows.item(0).value);
       var users = [];
-      if($stateParams.key == "passfail") {
-        users = ldata[$stateParams.val];
-        title += $stateParams.val;
-      } else if (($stateParams.key == "Pass") || ($stateParams.key == "Fail")) {
-        users = ldata["subject"+$stateParams.key+"Users"][$stateParams.val];
-        title += $stateParams.val + " " + $stateParams.key;
-      } else {
-        users = ldata[$stateParams.key][$stateParams.val];
-        title += $stateParams.val;
+      if(res.rows.length > 0) {
+        var ldata = angular.fromJson(res.rows.item(0).value);
+        if($stateParams.key == "passfail") {
+          users = ldata[$stateParams.val];
+          title += $stateParams.val;
+        } else if (($stateParams.key == "Pass") || ($stateParams.key == "Fail")) {
+          users = ldata["subject"+$stateParams.key+"Users"][$stateParams.val];
+          title += $stateParams.val + " " + $stateParams.key;
+        } else {
+          users = ldata[$stateParams.key][$stateParams.val];
+          title += $stateParams.val;
+        }
       }
       $scope.title = title +" "+ $stateParams.filter.replace("_", " ") + " ";
-      if(users) $scope.items = users;
-      else $scope.items = [];
+      $scope.items = users;
     })
   }
   getItems();
