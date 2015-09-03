@@ -65,7 +65,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       $scope.$broadcast('scroll.refreshComplete');
       var falldata = fbdata.val();
       if(falldata) {
-        var fkey = fbdata.ref().parent().key() + "_" + fbdata.key();
+        var fkey = fbdata.ref().parent().key() + "/" + fbdata.key();
         save = true;
         applyMarks(falldata, fkey);
       } else { empty(); }
@@ -159,7 +159,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       $scope.loading = false;
       var falldata = fbdata.val();
       if(falldata) {
-        var fkey = fbdata.ref().parent().parent().key() + "_" + fbdata.ref().parent().key() + "_" + fbdata.key();
+        var fkey = fbdata.ref().parent().parent().key() + "/" + fbdata.ref().parent().key() + "/" + fbdata.key();
         applyMarks(falldata, fkey);       
       } else {empty();}
     })
@@ -247,7 +247,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       $scope.loading = false;
       var falldata = fbdata.val();
       if(falldata) {
-        var fkey = fbdata.ref().parent().key() + "_" + fbdata.key();
+        var fkey = fbdata.ref().parent().key() + "/" + fbdata.key();
         applyMarks(falldata, fkey);
       } else {empty();}
     })
@@ -330,7 +330,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       $scope.loading = false;
       var falldata = fbdata.val();
       if(falldata) {
-        var fkey = fbdata.ref().parent().parent().key() + "_" + fbdata.ref().parent().key() + "_" + fbdata.key();
+        var fkey = fbdata.ref().parent().parent().key() + "/" + fbdata.ref().parent().key() + "/" + fbdata.key();
         applyMarks(falldata, fkey);
       } else {empty();}
     })
@@ -428,7 +428,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       $scope.loading = false;
       var falldata = fbdata.val();
       if(falldata) {
-        var fkey = fbdata.ref().parent().key() + "_" + fbdata.key();
+        var fkey = fbdata.ref().parent().key() + "/" + fbdata.key();
         applyMarks(falldata, fkey);
       } else {empty();}
     })
