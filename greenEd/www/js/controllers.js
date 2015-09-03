@@ -5,7 +5,6 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     Auth.logout();
     $state.go("login");
   }
-  console.log("user", user);
   if(Object.keys(user).length > 0) {
     if($rootScope.updateMenu) {
       $scope.menuLinks = Auth.getMenus();
@@ -29,12 +28,8 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   $scope.getMarksData = function() {
     $scope.empty = false;
     $scope.dashboard = false;
-    console.log("filters", filters);
     if(filters) key = filters.educationyears[filters.educationyear] +'_'+ filters.typeofexams[filters.typeofexam];
     else key = false;
-    console.log("key", key);
-    console.log("online", online);
-    console.log("db", db);
     if(key) {
       $scope.title = filters.typeofexams[filters.typeofexam] +' '+ filters.educationyears[filters.educationyear];
       if(online) {
@@ -531,9 +526,6 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       items: $scope.items,
       update: function (filteredItems, filterText) {
         $scope.items = filteredItems;
-        if (filterText) {
-          console.log(filterText);
-        }
       }
     });
   };
@@ -557,12 +549,9 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     })
   }
   $scope.redirect = function(standard, division) {
-    console.log("item s", standard);
-    console.log("item d", division);
     if($stateParams.type == "exams") {
       var st = standard;
       if((division.length > 1) && (division != "all")) st = st+"-"+division;
-      console.log("st", st);
       $state.go('app.daysexam', {type:"exams",class:st});
     } else {
       var cc = standard +'-'+division;
@@ -591,9 +580,6 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       items: $scope.items,
       update: function (filteredItems, filterText) {
         $scope.items = filteredItems;
-        if (filterText) {
-          console.log(filterText);
-        }
       }
     });
   };
@@ -638,9 +624,6 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       items: $scope.items,
       update: function (filteredItems, filterText) {
         $scope.items = filteredItems;
-        if (filterText) {
-          console.log(filterText);
-        }
       }
     });
   };
@@ -702,9 +685,6 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       items: $scope.items,
       update: function (filteredItems, filterText) {
         $scope.items = filteredItems;
-        if (filterText) {
-          console.log(filterText);
-        }
       }
     });
   };
@@ -750,7 +730,6 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
         else $scope.loading = false;
       });
     } else {
-      console.log("getting Wall Local");
       if(refresh) $scope.$broadcast('scroll.refreshComplete');
       if(db) getLocalData();
       else $timeout(function() {getLocalData()}, 1000);
@@ -887,7 +866,6 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   }
   var serverContacts = function() {
     Auth.getUsers().then(function(allusers) {
-      console.log("allusers", allusers);
       if(allusers["chatcontacts"]) {
         if(user.role == "teacher") allusers["chatcontacts"].push($scope.hm);
         $scope.items = allusers["chatcontacts"];
@@ -954,14 +932,11 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   }
   var filterBarInstance;
   $scope.getItems = function(type) {
-    console.log("type", type);
     $scope.title = type;
     if(type == "chats") {
-      console.log("loading chats");
       if(online) serverChats();
       else localChats();
     } else {
-      console.log("role", user.role);
       if(user.role == "parent") {
         parentContacts();
       } else {      
@@ -974,9 +949,6 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       items: $scope.items,
       update: function (filteredItems, filterText) {
         $scope.items = filteredItems;
-        if (filterText) {
-          console.log(filterText);
-        }
       }
     });
   };
@@ -988,7 +960,6 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     }
 
     $timeout(function () {
-      console.log("type", type);
       if(type == "chats") {
         if(online) serverChats();
         else localChats();
@@ -1002,7 +973,6 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
 
 
   $scope.toMessageBox = function(contact) {
-    console.log("contact", contact);
     var chatrooms = Auth.chatrooms();
     var chatroom = {};
     var fromName = user.name;
@@ -1263,15 +1233,15 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
 })
 .controller('DaysCtrl', function($scope, $ionicSideMenuDelegate, $stateParams, Auth, $cordovaSQLite, $ionicSlideBoxDelegate) {
   var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  var keys = [];
   $scope.loading = true;
+  $scope.title = $stateParams.type;
   var d = new Date();
   var year = d.getFullYear();
   var month = d.getMonth();
-  console.log("year", year);
-  console.log("month", month);
-  //$scope.title = $stateParams.type;
+  var lkey = ($stateParams.class) ? user.uid + $stateParams.type + $stateParams.class : user.uid + $stateParams.type;
   if(db) {
-    $cordovaSQLite.execute(db, "SELECT value from mydata WHERE key = ?", [$stateParams.type+"/"+year]).then(function(tres) {
+    $cordovaSQLite.execute(db, "SELECT value from mydata WHERE key = ?", [lkey]).then(function(tres) {
       if(tres.rows.length > 0) {
         processData(angular.fromJson(tres.rows.item(0).value));
       } else {
@@ -1282,42 +1252,36 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   }
   var processData = function(daysData) {
     $scope.loading = false;
-    if(daysData){
+    keys = Object.keys(daysData);
+    if(keys.length > 0){
       $scope.data = {
-        numViewableSlides : daysData.length,
+        numViewableSlides : keys.length,
         slideIndex : 0,
         initialInstruction : true,
         secondInstruction : false,
         slides: daysData,
       };
-      console.log("data", $scope.data);
-      console.log("month index", parseInt(daysData[0].id.slice(-2)));
-      $scope.title = months[parseInt(daysData[0].id.substr(4)) - 1] + " " + daysData[0].id.substr(0,4);
-      if(online) Auth.saveLocal($stateParams.type, angular.copy(daysData));
+      var skey = keys[0].split("-");
+      $scope.title = months[parseInt(skey[1]) - 1] + " " + skey[0];
+      if(online) Auth.saveLocal(lkey, daysData);
     } else {
       $scope.empty = true;
     }
   }
   var timetableFromServer = function() {
-    // days[$stateParams.type].on('value', function(tdata) {
-    //   var timetable = tdata.val() || {};
-    // })
-    console.log("server call", $stateParams.class);
     if($stateParams.class) {
-      console.log("days", days.exams);
       if(days[$stateParams.type][$stateParams.class]) {
-        processData(days[$stateParams.type][$stateParams.class]);
+        var dref = days[$stateParams.type][$stateParams.class];
       } else {
-        var start = parseInt(year +''+ ("0" + (month + 1)).slice(-2));
-        console.log("start", start);
-        Auth.getExams($stateParams.class, start).once('value', function(esnap) {
-          console.log('esap', esnap.val());
-          processData(esnap.val());
-        })
+        var dref = Auth.getExams($stateParams.class, start);
       }
     } else {
-      processData(days[$stateParams.type]);
+      var dref = days[$stateParams.type];
     }
+    dref.on('value', function(tdata) {
+      var timetable = tdata.val() || {};
+      processData(timetable);
+    })
   }
 
   $scope.classStatus = true;
@@ -1338,7 +1302,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   // Called each time the slide changes
   $scope.slideChanged = function(index) {
     $scope.data.slideIndex = index;
-    $scope.title = months[parseInt($scope.data.slides[index].id.substr(4)) - 1] + " " + $scope.data.slides[index].id.substr(0,4);
+    $scope.title = months[parseInt(keys[index].split("-")[1]) - 1] + " " + keys[index].split("-")[0];
   };
   //$ionicSideMenuDelegate.$getByHandle('my-handle').canDragContent(false);
 })

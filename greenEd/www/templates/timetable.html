@@ -11,10 +11,11 @@
             ng-click="next()" ng-if="data.slideIndex  != (data.slides.length - 1)">
     </button>
   </ion-nav-buttons>
+  <ion-content>
   <ion-slide-box ng-if="data" on-slide-changed="slideChanged(index)">
       <ion-slide ng-repeat="slide in data.slides">
       <div ng-show="loading" class="center padding"><ion-spinner icon="android"></ion-spinner></div>
-      <ion-list class="filter-results">
+      <ion-list>
         <ion-item ng-repeat="item in slide" class="item item-icon-left positive" href="#"><i class="icon ion-ios-book"></i><h2>{{item.time}} - {{item.subject}}<span ng-show="classStatus"> : {{item.class}}</span></h2></ion-item>
         </ion-list>
       </ion-slide>
@@ -22,4 +23,5 @@
     <ion-list ng-show="empty" class="filter-results">
     <ion-item class="item item-icon-left positive ttempty" href="#"><i class="icon ion-ios-book"></i><h2>No Timetable Found</h2></ion-item>
   </ion-list>
+  </ion-content>
 </ion-view>

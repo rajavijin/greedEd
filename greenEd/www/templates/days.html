@@ -11,15 +11,17 @@
             ng-click="next()" ng-if="data.slideIndex  != (data.numViewableSlides - 1)">
     </button>
   </ion-nav-buttons>
+  <ion-content>
   <ion-slide-box ng-if="data" on-slide-changed="slideChanged(index)">
       <ion-slide ng-repeat="slide in data.slides">
       <div ng-show="loading" class="center padding"><ion-spinner icon="android"></ion-spinner></div>
-      <ion-list class="filter-results days">
-        <ion-item ng-repeat="(ik,item) in slide.days" class="item item-icon-left positive" href="#" ng-class="{'single': ik.length == 1}"><i class="icon ion-ios-calendar-outline"><span class="icon day">{{ik}}</span></i><h2>{{item.title}}</h2><p class="assertive">{{item.day}}<span ng-if="item.time">, {{item.time}}</span></p></ion-item>
+      <ion-list class="days">
+        <ion-item ng-repeat="(ik,item) in slide.days | orderBy:['ik']" class="item item-icon-left positive" href="#" ng-class="{'single': ik.length == 1}"><i class="icon ion-ios-calendar-outline"><span class="icon day">{{ik.substr(1)}}</span></i><h2>{{item.title}}</h2><p class="assertive">{{item.day}}<span ng-if="item.time">, {{item.time}}</span></p></ion-item>
         </ion-list>
       </ion-slide>
   </ion-slide-box>
-    <ion-list ng-show="empty" class="filter-results">
-    <ion-item class="item item-icon-left positive ttempty" href="#"><i class="icon ion-ios-calendar-outline"></i><h2>No Timetable Found</h2></ion-item>
+    <ion-list ng-show="empty">
+    <ion-item class="item item-icon-left positive" href="#"><i class="icon ion-ios-calendar-outline"></i><h2>No Data Found</h2></ion-item>
   </ion-list>
+  </ion-content>
 </ion-view>

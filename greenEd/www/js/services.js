@@ -70,10 +70,10 @@ angular.module('starter.services', [])
                   user.students.push(kid);
                   timetableref[kid.uid] = ref.child(user.schoolid+'/timetable/'+kid.uid);
                   var d = new Date();
-                  var start = parseInt(d.getFullYear() +''+ ("0" + (d.getMonth() + 1)).slice(-2));
+                  var start = parseInt(d.getFullYear() +'-'+ ("0" + (d.getMonth() + 1)).slice(-2));
                   var st = kid.standard;
                   if((kid.division.length > 1) && (kid.division != "all")) st = st+"-"+kid.division;
-                  days.exams[st] = $firebaseArray(ref.child(user.schoolid+"/exams/"+st).orderByChild("id").startAt(start));
+                  days.exams[st] = ref.child(user.schoolid+"/exams/"+st).orderByChild("id").startAt(start);
                 })
                 localStorage.setItem("user", JSON.stringify(user));
                 defer.resolve(user);
@@ -116,7 +116,6 @@ angular.module('starter.services', [])
       return $firebaseObject(ref.child(user.schoolid+'/marks'));
     },
     getMarks: function(key) {
-      console.log("getting marks", user.schoolid+'/marks/'+key);
       return $firebaseObject(ref.child(user.schoolid+'/marks/'+key));
     },
     getFilteredMarks: function(filter, key, sclass) {
@@ -135,8 +134,6 @@ angular.module('starter.services', [])
       return ref.child(user.schoolid+'/timetable/'+key);
     },
     getExams: function(key, start) {
-      console.log("key", key);
-      console.log("start", start);
       return ref.child(user.schoolid+"/exams/"+key).orderByChild("id").startAt(start);
     },
     getUsers: function() {
@@ -230,23 +227,30 @@ angular.module('starter.services', [])
         return {"Links":[{"title":"Dashboard", "href":"/app/hmdashboard", "class":"ion-stats-bars"},{"title":"Classes", "href":"/app/allclasses", "class": "ion-easel"},{"title":"Students", "href":"/app/allstudents", "class": "ion-person-stalker"},{"title":"Teachers", "href":"/app/allteachers", "class": "ion-ios-body"},{"title":"Exams", "href":"/app/allclasses/exams", "class": "ion-clipboard"}]};
       } else if (user.role == "parent") {
         if(user.students.length > 1) {
-          return {"Links":[{"title":"Dashboard", "href":"/app/studentdashboard", "class":"ion-stats-bars"},{"title":"Overall Dashboard", "href":"/app/studentoveralldashboard", "class":"ion-ios-pulse-strong"},{"title":"Class Dashboard", "href":"/app/classdashboard", "class":"ion-pie-graph"},{"title":"TimeTable", "href":"/app/timetable", "class":"ion-ios-time"}]};
+          return {"Links":[{"title":"Dashboard", "href":"/app/studentdashboard", "class":"ion-stats-bars"},{"title":"Class Dashboard", "href":"/app/classdashboard", "class":"ion-pie-graph"},{"title":"TimeTable", "href":"/app/timetable", "class":"ion-ios-time"}]};
         } else {
           var st = user.students[0].standard;
           if((user.students[0].division.length > 1) && (user.students[0].division != "all")) st = st+"-"+user.students[0].division;
-          return {"Links":[{"title":"Dashboard", "href":"/app/studentdashboard/"+user.students[0].standard+"-"+user.students[0].division+"/"+user.students[0].uid+"/"+user.students[0].name, "class":"ion-stats-bars"},{"title":"Overall Dashboard", "href":"/app/studentoveralldashboard/"+user.students[0].uid+"/"+user.students[0].name, "class":"ion-ios-pulse-strong"},{"title":"Class Dashboard", "href":"/app/classdashboard/"+user.students[0].standard+"-"+user.students[0].division, "class":"ion-pie-graph"},{"title":"TimeTable", "href":"/app/timetable/"+user.students[0].standard+"-"+user.students[0].division, "class":"ion-ios-time"},{"title":"Exams", "href":"/app/days/exams/"+st, "class":"ion-clipboard"}]};
+          return {"Links":[{"title":"Dashboard", "href":"/app/studentdashboard/"+user.students[0].standard+"-"+user.students[0].division+"/"+user.students[0].uid+"/"+user.students[0].name, "class":"ion-stats-bars"},{"title":"Class Dashboard", "href":"/app/classdashboard/"+user.students[0].standard+"-"+user.students[0].division, "class":"ion-pie-graph"},{"title":"Exams", "href":"/app/days/exams/"+st, "class":"ion-clipboard"},{"title":"TimeTable", "href":"/app/timetable/"+user.students[0].standard+"-"+user.students[0].division, "class":"ion-ios-time"}]};
         }
       } else {
         // if(user.class) {
         //   return {"Links":[{"title":"Class Dashboard", "href":"/app/classdashboard/"+user.class, "class":"ion-stats-bars"},{"title":"Teacher Dashboard", "href":"/app/teacherdashboard/"+user.uid+"/"+user.name, "class":"ion-ios-pulse-strong"},{"title":"Students", "href":"/app/allstudents", "class": "ion-person-stalker"},{"title":"Classes", "href":"/app/allclasses", "class": "ion-easel"},{"title":"TimeTable", "href":"/app/timetable/"+user.uid, "class":"ion-ios-time"},{"title":"Exams", "href":"/app/allclasses/exams", "class": "ion-clipboard"}]};
         // } else {
-        return {"Links":[{"title":"Dashboard", "href":"/app/teacherdashboard/"+user.uid+"/"+user.name, "class":"ion-stats-bars"},{"title":"Students", "href":"/app/allstudents", "class": "ion-person-stalker"},{"title":"Classes", "href":"/app/allclasses", "class": "ion-easel"},{"title":"TimeTable", "href":"/app/timetable/"+user.uid, "class":"ion-ios-time"},{"title":"Exams", "href":"/app/allclasses/exams", "class": "ion-clipboard"}]};
+        return {"Links":[{"title":"Dashboard", "href":"/app/teacherdashboard/"+user.uid+"/"+user.name, "class":"ion-stats-bars"},{"title":"Students", "href":"/app/allstudents", "class": "ion-person-stalker"},{"title":"Classes", "href":"/app/allclasses", "class": "ion-easel"},{"title":"Exams", "href":"/app/allclasses/exams", "class": "ion-clipboard"},{"title":"TimeTable", "href":"/app/timetable/"+user.uid, "class":"ion-ios-time"}]};
         //}
       }      
     },
     saveLocal: function(lkey, ldata) {
       var defer = $q.defer();
-      var lalldata = angular.copy(ldata);
+      if(ldata["$$conf"]) {
+        delete ldata["$$conf"];
+        delete ldata["$priority"];
+        delete ldata["$id"];
+        var lalldata = ldata;
+      } else {
+        var lalldata = angular.copy(ldata);
+      }
       $cordovaSQLite.execute(db, "SELECT value from mydata where key = ?", [lkey]).then(function(res) {
         if(res.rows.length > 0) {
           $cordovaSQLite.execute(db, "UPDATE mydata SET value = ? WHERE key = ?", [angular.toJson(lalldata),lkey]).then(function(ures) {

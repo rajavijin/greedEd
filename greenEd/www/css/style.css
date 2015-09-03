@@ -160,24 +160,16 @@ text {
   font-size: 104px;
 }
 .bar-footer .add-post-text {
-  border: 1px solid #f6f6f6;
-  margin: 0 0 0px 5px;
-  padding: 5px 0px 0 5px;
-  height: 90%;
-  border-radius: 5px;
-  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+  width: 90%;
+  padding-top: 10px;
 }
 .bar .button.send-button {
   margin: 0px 0px 4px;
   border-radius: 0;
   box-shadow: none;
 }
-.slider { height: 100%; text-align: center }
+.slider { height: 100%; text-align: left }
 .scroll { height: 100% }
-.slider-slide {
-  padding-top: 42px;
-  text-align: left;
-}
 #logo h1 {font-size: 70px;}
 #logo h4 {margin: 0;}
 .pane.tab-content {top: 92px;}

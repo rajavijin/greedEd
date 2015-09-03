@@ -38,24 +38,20 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'starter.controller
 
     ref.child("-JwVp4kJ36Uv06GOEvlk/filters").on('value', function(fsnap) {
       filters = fsnap.val();
-      console.log("filters", filters);
       localStorage.setItem("filters", angular.toJson(filters));
     })
     var d = new Date();
-    var start = parseInt(d.getFullYear() +''+ ("0" + (d.getMonth() + 1)).slice(-2));
-    days.holidays = $firebaseArray(ref.child("-JwVp4kJ36Uv06GOEvlk/holidays").orderByChild("id").startAt(start));
-    days.events = $firebaseArray(ref.child("-JwVp4kJ36Uv06GOEvlk/events").orderByChild("id").startAt(start));
+    var start = parseInt(d.getFullYear() +'-'+ ("0" + (d.getMonth() + 1)).slice(-2));
+    days.holidays = ref.child("-JwVp4kJ36Uv06GOEvlk/holidays").orderByChild("id").startAt(start);
+    days.events = ref.child("-JwVp4kJ36Uv06GOEvlk/events").orderByChild("id").startAt(start);
     if(Object.keys(user).length > 0) {
-      console.log("updating all refs");
       $rootScope.updateMenu = true;
       userchatroomsref = $firebaseObject(ref.child(user.schoolid+"/chatrooms/"+user.uid));
-      console.log('userchatroomsref', userchatroomsref);
-      console.log('userchatroomsref', days.events);
       if(user.role == 'parent') {
         for (var i = 0; i < user.students.length; i++) {
           var st = user.students[i].standard;
           if((user.students[i].division.length > 1) && (user.students[i].division != "all")) st = st+"-"+user.students[i].division;
-          days.exams[st] = $firebaseObject(ref.child(user.schoolid+"/exams/"+st).startAt(start));
+          days.exams[st] = ref.child(user.schoolid+"/exams/"+st).orderByChild("id").startAt(start);
           timetableref[user.students[i].uid] = ref.child(user.schoolid+'/timetable/'+user.students[i].uid);
         };
       } else if (user.role == 'teacher') {
