@@ -1273,6 +1273,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       if(days[$stateParams.type][$stateParams.class]) {
         var dref = days[$stateParams.type][$stateParams.class];
       } else {
+        var start = parseInt(year +''+ ("0" + (month + 1)).slice(-2));
         var dref = Auth.getExams($stateParams.class, start);
       }
     } else {
