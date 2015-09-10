@@ -8830,7 +8830,7 @@ ionic.views.Slider = ionic.views.View.inherit({
  * (c) 2010-2015 Google, Inc. http://angularjs.org
  * License: MIT
  */
-(function(window, document, undefined) {'use strict';
+(function(window, document, undefined) {//'use strict';
 
 /**
  * @description
@@ -23941,40 +23941,76 @@ function $RootScopeProvider() {
        * @returns {Object} The newly created child scope.
        *
        */
-      $new: function(isolate, parent) {
+       $new: function(isolate) {
         var child;
-
-        parent = parent || this;
 
         if (isolate) {
           child = new Scope();
           child.$root = this.$root;
+          // ensure that there is just one async queue per $rootScope and its children
+          child.$$asyncQueue = this.$$asyncQueue;
+          child.$$postDigestQueue = this.$$postDigestQueue;
         } else {
           // Only create a child scope class if somebody asks for one,
           // but cache it to allow the VM to optimize lookups.
           if (!this.$$ChildScope) {
-            this.$$ChildScope = createChildScopeClass(this);
+            this.$$ChildScope = function ChildScope() {
+              this['$$watchers'] = this['$$nextSibling'] =
+                  this['$$childHead'] = this['$$childTail'] = null;
+              this['$$listeners'] = {};
+              this['$$listenerCount'] = {};
+              this['$id'] = nextUid();
+              this['$$ChildScope'] = null;
+            };
+            this.$$ChildScope.prototype = this;
           }
           child = new this.$$ChildScope();
         }
-        child.$parent = parent;
-        child.$$prevSibling = parent.$$childTail;
-        if (parent.$$childHead) {
-          parent.$$childTail.$$nextSibling = child;
-          parent.$$childTail = child;
+        child['this'] = child;
+        child['$parent'] = this;
+        child['$$prevSibling'] = this.$$childTail;
+        if (this.$$childHead) {
+          this.$$childTail.$$nextSibling = child;
+          this.$$childTail = child;
         } else {
-          parent.$$childHead = parent.$$childTail = child;
+          this.$$childHead = this.$$childTail = child;
         }
-
-        // When the new scope is not isolated or we inherit from `this`, and
-        // the parent scope is destroyed, the property `$$destroyed` is inherited
-        // prototypically. In all other cases, this property needs to be set
-        // when the parent scope is destroyed.
-        // The listener needs to be added after the parent is set
-        if (isolate || parent != this) child.$on('$destroy', destroyChildScope);
-
         return child;
       },
+      // $new: function(isolate, parent) {
+      //   var child;
+
+      //   parent = parent || this;
+
+      //   if (isolate) {
+      //     child = new Scope();
+      //     child.$root = this.$root;
+      //   } else {
+      //     // Only create a child scope class if somebody asks for one,
+      //     // but cache it to allow the VM to optimize lookups.
+      //     if (!this.$$ChildScope) {
+      //       this.$$ChildScope = createChildScopeClass(this);
+      //     }
+      //     child = new this.$$ChildScope();
+      //   }
+      //   child.$parent = parent;
+      //   child.$$prevSibling = parent.$$childTail;
+      //   if (parent.$$childHead) {
+      //     parent.$$childTail.$$nextSibling = child;
+      //     parent.$$childTail = child;
+      //   } else {
+      //     parent.$$childHead = parent.$$childTail = child;
+      //   }
+
+      //   // When the new scope is not isolated or we inherit from `this`, and
+      //   // the parent scope is destroyed, the property `$$destroyed` is inherited
+      //   // prototypically. In all other cases, this property needs to be set
+      //   // when the parent scope is destroyed.
+      //   // The listener needs to be added after the parent is set
+      //   if (isolate || parent != this) child.$on('$destroy', destroyChildScope);
+
+      //   return child;
+      // },
 
       /**
        * @ngdoc method

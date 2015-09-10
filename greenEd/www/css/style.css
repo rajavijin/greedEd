@@ -163,6 +163,9 @@ text {
   width: 90%;
   padding-top: 10px;
 }
+.custom-chatbox {
+  background: #EDE6DC;
+}
 .bar .button.send-button {
   margin: 0px 0px 4px;
   border-radius: 0;

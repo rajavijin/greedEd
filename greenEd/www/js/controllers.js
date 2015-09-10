@@ -654,12 +654,12 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   var getItems = function() {
     if($stateParams.type.indexOf("student") != -1) {
       var type = $stateParams.type.split("_");
-      var cache = $stateParams.filter +"_"+type[1]+"_"+type[2];
+      var key = $stateParams.filter +"/"+type[1]+"/"+type[2];
     }  else if ($stateParams.type.indexOf("class") != -1) {
       var type = $stateParams.type.split("_");
-      var key = $stateParams.filter +"_"+type[0]+"_"+type[1];
+      var key = $stateParams.filter +"/"+type[0]+"/"+type[1];
     } else {
-      var key = $stateParams.filter +"_"+$stateParams.type;
+      var key = $stateParams.filter +"/"+$stateParams.type;
     }
     $cordovaSQLite.execute(db, "SELECT value from mydata where key = ?", [key]).then(function(res) {
       var users = [];
@@ -701,9 +701,6 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       $scope.$broadcast('scroll.refreshComplete');
     }, 1000);
   };
-
-  $scope.changeStatus = function() {$scope.filterStatus = !$scope.filterStatus;$timeout(function() {document.body.querySelector(".search").focus();}, 100);};
-
 })
 
 .controller('WallCtrl', function($scope, $rootScope, $firebaseArray, $cordovaSQLite, $state, FIREBASE_URL, $ionicModal, Auth, $ionicLoading, $timeout) {
@@ -712,6 +709,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     $cordovaSQLite.execute(db, "SELECT * from mydata where key = ?", ["wall"]).then(function(res) {
       $scope.loading = false;
       if(res.rows.length > 0) {
+        $scope.empty = false;
         $rootScope.walls = angular.fromJson(res.rows.item(0).value);
       } else {
         $scope.empty = true;
@@ -726,6 +724,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       $rootScope.walls.$loaded().then(function(data) {
         if($rootScope.walls.length > 0) {
           $scope.empty = false;
+          Auth.saveLocal("wall", $rootScope.walls);
         }
         if(refresh) $scope.$broadcast('scroll.refreshComplete');
         else $scope.loading = false;
@@ -917,7 +916,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       angular.forEach(allmess, function(val, k) {ii++;allm.push(val);});
       if(ii > 0) $scope.chatEmpty = false;
       $scope.items = allm;
-      //Auth.saveLocal(user.uid+"allmess", allm);
+      Auth.saveLocal(user.uid+"allmess", allm);
     });
   }
   var localChats = function() {

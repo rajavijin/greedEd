@@ -1,0 +1,31 @@
+<ion-side-menus cache-view="false" enable-menu-with-back-views="true" ng-init="AppCtrl" delegate-handle="right-menu">
+   <ion-side-menu-content>
+      <ion-nav-bar class="bar-positive">
+      <ion-nav-back-button>
+      </ion-nav-back-button>
+         <ion-nav-buttons side="left">
+         <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
+         </ion-nav-buttons>
+      </ion-nav-bar>
+      <ion-nav-view name="menuContent"></ion-nav-view>
+   </ion-side-menu-content>
+   <ion-side-menu side="left">
+      <ion-content>
+         <ion-list ng-init="linkItem = {}">
+            <ion-item nav-clear class="center menu-logo"><h2><i class="icon ion-person positive" style="font-size:60px"></i></h2><h2>Welcome {{user.name}}</h2></ion-item>
+            <ion-item nav-clear menu-close class="item-icon-left" href="#/app/wall"><i class="icon ion-ios-list positive"></i><h2>Wall</h2></ion-item>
+            <ion-item nav-clear menu-close class="item-icon-left" href="#/app/messages"><i class="icon ion-chatboxes positive"></i><h2>Messages</h2></ion-item> 
+            <ion-item nav-clear menu-close class="item-icon-left" href="#/app/bustracking"><i class="icon ion-android-bus positive"></i><h2>Bus Tracking</h2></ion-item>            
+            <div ng-repeat="link in menuLinks.Links">
+               <ion-item ng-click="linkItem[link.index] = !linkItem[link.index]" ng-init="linkItem[link.index] = true" ng-class="link.expand ? 'show': 'hide'" ng-if="link.header == 'header'" nav-clear class="menu-header item-icon-right item-icon-left" href="#{{link.href}}"><i class="icon {{link.class}} positive"></i> <h2>{{link.title}}</h2><i ng-class="linkItem[link.index] ? 'ion-ios-minus': 'ion-ios-plus'" class="icon positive"></i></ion-item>
+<ion-item ng-show="linkItem[link.index]" ng-if="link.header == 'submenu'" nav-clear menu-close class="item-icon-left sub" href="#{{link.href}}"><i class="icon {{link.class}} positive"></i> <h2>{{link.title}}</h2></ion-item>
+               <ion-item ng-if="!link.header" nav-clear menu-close class="item-icon-left" href="#{{link.href}}"><i class="icon {{link.class}} positive"></i><h2>{{linkItem[link.index]}} {{link.title}}</h2></ion-item>
+            </div>
+            <ion-item nav-clear menu-close class="item-icon-left" href="#/app/days/events"><i class="icon ion-calendar positive"></i><h2>Events</h2></ion-item> 
+            <ion-item nav-clear menu-close class="item-icon-left" href="#/app/days/holidays"><i class="icon ion-happy positive"></i><h2>Holidays</h2></ion-item>
+            <ion-item nav-clear menu-close class="item-icon-left" href="#/app/account"><i class="icon ion-person positive"></i><h2>Account</h2></ion-item>            
+            <ion-item nav-clear class="item-icon-left" ng-click="logout()"><i class="icon ion-log-out positive"></i><h2>Logout</h2></ion-item>
+         </ion-list>
+      </ion-content>
+   </ion-side-menu>
+</ion-side-menus>
