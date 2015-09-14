@@ -412,10 +412,6 @@ font-size: 52px;
     text-indent: 0; }
 .platform-android .filter-bar .filter-bar-stable .item-input-wrapper .filter-bar-clear:before {
     color: #444; }
-.platform-android .filter-bar .filter-bar-positive .item-input-wrapper {
-    border-bottom: 1px solid #0c60ee; }
-.platform-android .filter-bar .filter-bar-positive .item-input-wrapper input[type="search"] {
-    color: #fff; }
 .platform-android .filter-bar .filter-bar-positive .item-input-wrapper input[type="search"]::-moz-placeholder {
     color: white; }
 .platform-android .filter-bar .filter-bar-positive .item-input-wrapper input[type="search"]:-ms-input-placeholder {

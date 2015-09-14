@@ -1169,13 +1169,14 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     })
   }
 })
-.controller('DaysCtrl', function($scope, $stateParams, Auth, $timeout, $cordovaSQLite, $ionicSlideBoxDelegate) {
+.controller('DaysCtrl', function($scope, $rootScope, $stateParams, Auth, $timeout, $cordovaSQLite, $ionicSlideBoxDelegate) {
+  $scope.empty = false;
   var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   $scope.next = function() {$ionicSlideBoxDelegate.next();};
   $scope.previous = function() {$ionicSlideBoxDelegate.previous();};
   $scope.slideChanged = function(index, slides) {
     $scope.slideIndex = index;
-    $scope.title = months[parseInt(slides[index].id.split("-")[1]) - 1] + " " + slides[index].id.split("-")[0] + " " + $stateParams.type;
+    $scope.title = ($stateParams.class) ? slides[index].id.replace("_", " ") + " " + $stateParams.type : months[parseInt(slides[index].id.split("-")[1]) - 1] + " " + slides[index].id.split("-")[0] + " " + $stateParams.type;
   };
   $scope.title = $stateParams.type;
   var lkey = ($stateParams.class) ? user.uid + $stateParams.type + $stateParams.class : user.uid + $stateParams.type;
@@ -1188,18 +1189,14 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
         else $scope.empty = true;
       }
     })
-  }
+  } else {$scope.empty = true;}
   var processData = function(daysData) {
-    if(daysData.length > 0){
-        $timeout(function() {
-          $scope.slides = daysData;
-          var skey = daysData[0].id.split("-");
-          $scope.title = months[parseInt(skey[1]) - 1] + " " + skey[0] + " " + $stateParams.type;
-          if(online) Auth.saveLocal(lkey, daysData);
-        },0);
-    } else {
-      $scope.empty = true;
-    }
+    $timeout(function() {
+      $scope.slides = daysData;
+      var skey = daysData[0].id.split("-");
+      $scope.title = ($stateParams.class) ? daysData[0].id.replace("_"," ") + " " + $stateParams.type : months[parseInt(skey[1]) - 1] + " " + skey[0] + " " + $stateParams.type;
+      if(online) Auth.saveLocal(lkey, daysData);
+    },0);
   }
   var timetableFromServer = function() {
     if($stateParams.class) {
@@ -1215,9 +1212,18 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     }
     dref.on('value', function(tdata) {
       var timetable = tdata.val() || {};
-      processData(timetable);
+      if(timetable.length > 0){
+        processData(timetable);
+      } else {
+        $scope.empty = true;
+      }
     })
   }
+  $rootScope.$on('online', function (event, data) {
+    if($scope.empty) {
+      timetableFromServer();
+    }
+  });
 })
 
 .controller('BusTrackingCtrl', function($scope, $ionicLoading, S_ID) {

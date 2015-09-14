@@ -227,11 +227,11 @@ angular.module('starter.services', [])
         return {"Links":[{"title":"Dashboard", "href":"/app/hmdashboard", "class":"ion-stats-bars"},{"title":"Classes", "href":"/app/allclasses", "class": "ion-easel"},{"title":"Students", "href":"/app/allstudents", "class": "ion-person-stalker"},{"title":"Teachers", "href":"/app/allteachers", "class": "ion-ios-body"},{"title":"Exams", "href":"/app/allclasses/exams", "class": "ion-clipboard"}]};
       } else if (user.role == "parent") {
         if(user.students.length > 1) {
-          return {"Links":[{"title":"Dashboard", "href":"/app/studentdashboard", "class":"ion-stats-bars"},{"title":"Class Dashboard", "href":"/app/classdashboard", "class":"ion-pie-graph"},{"title":"TimeTable", "href":"/app/timetable", "class":"ion-ios-time"}]};
+          return {"Links":[{"title":"Dashboard", "href":"/app/studentdashboard", "class":"ion-stats-bars"},{"title":"Class Dashboard", "href":"/app/classdashboard", "class":"ion-pie-graph"},{"title":"Bus tracking", "href":"/app/bustracking", "class":"ion-android-bus"},{"title":"TimeTable", "href":"/app/timetable", "class":"ion-ios-time"}]};
         } else {
           var st = user.students[0].standard;
           if((user.students[0].division.length > 1) && (user.students[0].division != "all")) st = st+"-"+user.students[0].division;
-          return {"Links":[{"title":"Dashboard", "href":"/app/studentdashboard/"+user.students[0].standard+"-"+user.students[0].division+"/"+user.students[0].uid+"/"+user.students[0].name, "class":"ion-stats-bars"},{"title":"Class Dashboard", "href":"/app/classdashboard/"+user.students[0].standard+"-"+user.students[0].division, "class":"ion-pie-graph"},{"title":"Exams", "href":"/app/days/exams/"+st, "class":"ion-clipboard"},{"title":"TimeTable", "href":"/app/timetable/"+user.students[0].standard+"-"+user.students[0].division, "class":"ion-ios-time"}]};
+          return {"Links":[{"title":"Dashboard", "href":"/app/studentdashboard/"+user.students[0].standard+"-"+user.students[0].division+"/"+user.students[0].uid+"/"+user.students[0].name, "class":"ion-stats-bars"},{"title":"Class Dashboard", "href":"/app/classdashboard/"+user.students[0].standard+"-"+user.students[0].division, "class":"ion-pie-graph"},{"title":"Bus tracking", "href":"/app/bustracking", "class":"ion-android-bus"},{"title":"Exams", "href":"/app/days/exams/"+st, "class":"ion-clipboard"},{"title":"TimeTable", "href":"/app/timetable/"+user.students[0].standard+"-"+user.students[0].division, "class":"ion-ios-time"}]};
         }
       } else {
         // if(user.class) {
