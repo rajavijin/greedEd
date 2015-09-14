@@ -13,8 +13,8 @@ var isIOS = ionic.Platform.isIOS();
 var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'starter.controllers','firebase','ngCordova'])
 .constant('FIREBASE_URL', 'https://sizzling-fire-6207.firebaseio.com/')
-
-.run(function($ionicPlatform, $http, $rootScope, Auth, FIREBASE_URL, $firebaseObject, $cordovaSQLite, $firebaseArray) {
+.constant('S_ID', '-JwVp4kJ36Uv06GOEvlk')
+.run(function($ionicPlatform, $http, $rootScope, Auth, FIREBASE_URL, S_ID, $firebaseObject, $cordovaSQLite, $firebaseArray) {
   $ionicPlatform.ready(function() {
     //$rootScope.walls = $firebaseArray(ref.child("-JwVp4kJ36Uv06GOEvlk/wall").limitToLast(25));
     if (window.StatusBar) {
@@ -32,20 +32,20 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'starter.controller
     //$cordovaSQLite.execute(db, "DROP TABLE mydata");
     $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS mydata (key text, value blob, unique (key))");
 
-    scrollRef = new Firebase.util.Scroll(ref.child("-JwVp4kJ36Uv06GOEvlk/wall"), '$priority');
+    scrollRef = new Firebase.util.Scroll(ref.child(S_ID+"/wall"), '$priority');
     $rootScope.walls = $firebaseArray(scrollRef);
     scrollRef.scroll.next(20);
     $rootScope.walls.scroll = scrollRef.scroll;
 
-    ref.child("-JwVp4kJ36Uv06GOEvlk/filters").on('value', function(fsnap) {
+    ref.child(S_ID+"/filters").on('value', function(fsnap) {
       filters = fsnap.val();
       localStorage.setItem("filters", angular.toJson(filters));
     })
     $rootScope.hm = $firebaseObject(ref.child('users').orderByChild("role").equalTo("hm"));
     var d = new Date();
     var start = parseInt(d.getFullYear() +'-'+ ("0" + (d.getMonth() + 1)).slice(-2));
-    days.holidays = ref.child("-JwVp4kJ36Uv06GOEvlk/holidays").orderByChild("id").startAt(start);
-    days.events = ref.child("-JwVp4kJ36Uv06GOEvlk/events").orderByChild("id").startAt(start);
+    days.holidays = ref.child(S_ID+"/holidays").orderByChild("id").startAt(start);
+    days.events = ref.child(S_ID+"/events").orderByChild("id").startAt(start);
     if(Object.keys(user).length > 0) {
       $rootScope.updateMenu = true;
       userchatroomsref = $firebaseObject(ref.child(user.schoolid+"/chatrooms/"+user.uid));
@@ -75,8 +75,9 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'starter.controller
     },
     link: function ($scope, $element, $attr) {
       function initialize() {
+        console.log("CURRENT USER", user);
         var mapOptions = {
-          center: new google.maps.LatLng(12.917147, 77.622798),
+          center: new google.maps.LatLng(user.students[0].lat, user.students[0].lng),
           zoom: 16,
           mapTypeId: google.maps.MapTypeId.ROADMAP
         };

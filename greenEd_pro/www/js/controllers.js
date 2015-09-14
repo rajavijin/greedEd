@@ -1219,7 +1219,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   }
 })
 
-.controller('BusTrackingCtrl', function($scope, $ionicLoading) {
+.controller('BusTrackingCtrl', function($scope, $ionicLoading, S_ID) {
   console.log("tracking bus");
  // Set the center as Firebase HQ
   var locations = {
@@ -1232,12 +1232,11 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   var radiusInKm = 5;
 
   // Get a reference to the Firebase public transit open data set
-  var transitFirebaseRef = new Firebase("https://sizzling-fire-6207.firebaseio.com/tracking/-JwVp4kJ36Uv06GOEvlk/");
+  var transitFirebaseRef = ref.child('tracking/'+S_ID);
 
   // Create a new GeoFire instance, pulling data from the public transit data
   var geoFire = new GeoFire(transitFirebaseRef.child("_geofire"));
 
-  geoFire.set('-JwVp4kJ36Uv06GOEvlk:21', [12.917147, 77.622798]);
   /*************/
   /*  GEOQUERY */
   /*************/
@@ -1251,18 +1250,18 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
 
   $scope.mapCreated = function(map) {
     $scope.map = map;
-// Create a draggable circle centered on the map
-        var circle = new google.maps.Circle({
-          strokeColor: "#6D3099",
-          strokeOpacity: 0.7,
-          strokeWeight: 0,
-          fillColor: "#B650FF",
-          fillOpacity: 0,
-          map: map,
-          center: new google.maps.LatLng(12.917147, 77.622798),
-          radius: ((5) * 1000),
-          draggable: true
-        });
+    // Create a draggable circle centered on the map
+    var circle = new google.maps.Circle({
+      strokeColor: "#6D3099",
+      strokeOpacity: 0.7,
+      strokeWeight: 0,
+      fillColor: "#B650FF",
+      fillOpacity: 0,
+      map: map,
+      center: new google.maps.LatLng(user.students[0].lat, user.students[0].lng),
+      radius: ((5) * 1000),
+      draggable: true
+    });
     //Update the query's criteria every time the circle is dragged
     var updateCriteria = _.debounce(function() {
       var latLng = circle.getCenter();
@@ -1272,7 +1271,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       });
     }, 10);
     google.maps.event.addListener(circle, "drag", updateCriteria);
-
+    var currentLocationMarker = createStudentMarker(user.students[0].lat, user.students[0].lng);
     /* Adds new vehicle markers to the map when they enter the query */
     geoQuery.on("key_entered", function(vehicleId, vehicleLocation) {
       console.log("key entered", vehicleId, vehicleLocation);
@@ -1289,10 +1288,12 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
         // Set, add it to the map
         if (vehicle !== null && vehiclesInQuery[vehicleId] === true) {
           // Add the vehicle to the list of vehicles in the query
-          vehiclesInQuery[vehicleId] = vehicle;
           console.log("creating vehicle marker");
+          vehiclesInQuery[vehicleId] = vehicle;
+          console.log("vehicleLocation lat", vehicleLocation[0]);
+          console.log("Long", vehicleLocation[1]);
           // Create a new marker for the vehicle
-          vehicle.marker = createVehicleMarker(vehicle, getVehicleColor(vehicle));
+          vehicle.marker = createVehicleMarker(vehicleLocation[0], vehicleLocation[1], vehicle);
         }
       });
     });
@@ -1338,12 +1339,11 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     /*  HELPER FUNCTIONS  */
     /**********************/
     /* Adds a marker for the inputted vehicle to the map */
-    function createVehicleMarker(vehicle, vehicleColor) {
-      console.log("vehicle on create",vehicle);
+    function createVehicleMarker(latitude, longitude, vehicle) {
       var marker = new google.maps.Marker({
-        icon: "https://chart.googleapis.com/chart?chst=d_bubble_icon_text_small&chld=" + vehicle.vtype + "|bbT|" + vehicle.routeTag + "|" + vehicleColor + "|eee",
+        icon: "https://chart.googleapis.com/chart?chst=d_bubble_icon_text_small&chld=bus|bb|"+vehicle.routeTag+"|F75C50|FFFFFF",
         //icon: "https://lh4.googleusercontent.com/-UjKiveTyTUI/VKJ3RyUC0LI/AAAAAAAAAGc/zxBS9koEx6c/w800-h800/nnkjn.png&chld=" + vehicle.vtype + "|bbT|" + vehicle.routeTag + "|" + vehicleColor + "|eee",
-        position: new google.maps.LatLng(12.917147, 77.622798),
+        position: new google.maps.LatLng(latitude, longitude),
         optimized: true,
         map: map
       });
@@ -1351,6 +1351,17 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       return marker;
     }
 
+    function createStudentMarker(latitude, longitude) {
+      console.log("creating a parent",latitude, longitude);
+      var marker = new google.maps.Marker({
+        zIndex: 10,
+        position: new google.maps.LatLng(latitude, longitude),
+        optimized: true,
+        map: map
+      });
+
+      return marker;
+    }
     /* Returns a blue color code for outbound vehicles or a red color code for inbound vehicles */
     function getVehicleColor(vehicle) {
       return ((vehicle.dirTag && vehicle.dirTag.indexOf("OB") > -1) ? "50B1FF" : "FF6450");
