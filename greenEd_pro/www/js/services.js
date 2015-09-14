@@ -292,6 +292,7 @@ angular.module('starter.services', [])
     } else {
       $rootScope.updateMenu = false;
       localStorage.removeItem("user");
+      if(db) $cordovaSQLite.execute(db, "DROP TABLE mydata");
     }
   });
   
