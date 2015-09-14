@@ -293,7 +293,8 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     if(filters) key = filters.educationyears[filters.educationyear] +'_'+ filters.typeofexams[filters.typeofexam];
     else key = false;
     if(key) {
-      $scope.title = filters.typeofexams[filters.typeofexam] +' '+ filters.educationyears[filters.educationyear];
+      console.log("StateParams", $stateParams);
+      $scope.title = $stateParams.name +' '+ filters.typeofexams[filters.typeofexam] +' '+ filters.educationyears[filters.educationyear];
       if(online) {
         serverData(key);
       } else {
@@ -391,7 +392,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     if(filters) key = filters.educationyears[filters.educationyear];
     else key = false;
     if(key) {
-      $scope.title = filters.educationyears[filters.educationyear];
+      $scope.title = $stateParams.name +' '+ filters.educationyears[filters.educationyear];
       if(online) {
         serverData(key);
       } else {
