@@ -36,6 +36,7 @@ angular.module('starter.services', [])
         if(err) {
           defer.reject(err);
         } else {
+          console.log("user data", userdatafb);
           $ionicLoading.hide();
           $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Fetching user data...'});
           ref.child('users/'+userdatafb.uid).on('value', function(profilesnap) {
@@ -138,14 +139,14 @@ angular.module('starter.services', [])
     },
     getUsers: function() {
       var deferred = $q.defer();
-      var steacherindex = {};
-      var classes = {};
-      var standard = {}
-      var parents = {};
-      var teachers = {};
-      var chatcontacts = {};
-      var allusers = {allclasses:[],allstudents:[],allteachers:[],chatcontacts:[],groups:{}};
       usersref.$ref().on('value', function(usnap) {
+        var steacherindex = {};
+        var classes = {};
+        var standard = {}
+        var parents = {};
+        var teachers = {};
+        var chatcontacts = {};
+        var allusers = {allclasses:[],allstudents:[],allteachers:[],chatcontacts:[],groups:{}};
         if(user.role == "hm") {
           usnap.forEach(function(iusnap) {
             var fbuser = iusnap.key();
@@ -162,7 +163,7 @@ angular.module('starter.services', [])
                 standard[fbusers.standard] = true;
                 allusers["allclasses"].push({standard:fbusers.standard, division:"all"});
               }
-              allusers["allstudents"].push({name:fbusers.name, studentid:fbusers.studentid, standard:fbusers.standard, division:fbusers.division, uid:fbuser});
+              allusers["allstudents"].push({name:fbusers.name, studentid:fbusers.studentid, standard:fbusers.standard, division:fbusers.division, uid:fbuser, sex:fbusers.sex});
               var parent = fbusers.parentkids.split("|");
               if(chatcontacts[fbusers.name]) {
                 allusers["chatcontacts"][chatcontacts[fbusers.name] - 1].name += ","+fbusers.name;
@@ -203,7 +204,7 @@ angular.module('starter.services', [])
               allusers["allclasses"].push({standard:fbusers.standard, division:fbusers.division});
               allusers["chatcontacts"].push({name: fbusers.standard+'-'+fbusers.division, role:"class", uid:fbusers.standard+'-'+fbusers.division,type:"group"})
             }
-            allusers["allstudents"].push({name:fbusers.name, standard:fbusers.standard, division:fbusers.division, uid:fbuser});
+            allusers["allstudents"].push({name:fbusers.name, standard:fbusers.standard, division:fbusers.division, uid:fbuser, sex:fbusers.sex});
             var parent = fbusers.parentkids.split("|");
             if(chatcontacts[fbusers.name]) {
               allusers["chatcontacts"][chatcontacts[fbusers.name] - 1].name += ","+fbusers.name;
@@ -231,7 +232,7 @@ angular.module('starter.services', [])
         } else {
           var st = user.students[0].standard;
           if((user.students[0].division.length > 1) && (user.students[0].division != "all")) st = st+"-"+user.students[0].division;
-          return {"Links":[{"title":"Dashboard", "href":"/app/studentdashboard/"+user.students[0].standard+"-"+user.students[0].division+"/"+user.students[0].uid+"/"+user.students[0].name, "class":"ion-stats-bars"},{"title":"Class Dashboard", "href":"/app/classdashboard/"+user.students[0].standard+"-"+user.students[0].division, "class":"ion-pie-graph"},{"title":"Bus tracking", "href":"/app/bustracking", "class":"ion-android-bus"},{"title":"Exams", "href":"/app/days/exams/"+st, "class":"ion-clipboard"},{"title":"TimeTable", "href":"/app/timetable/"+user.students[0].standard+"-"+user.students[0].division, "class":"ion-ios-time"}]};
+          return {"Links":[{"title":"Dashboard", "href":"/app/studentdashboard/"+user.students[0].standard+"-"+user.students[0].division+"/"+user.students[0].uid+"/"+user.students[0].name, "class":"ion-stats-bars"},{"title":"Class Dashboard", "href":"/app/classdashboard/"+user.students[0].standard+"-"+user.students[0].division, "class":"ion-pie-graph"},{"title":"Bus tracking", "href":"/app/bustracking", "class":"ion-android-bus"},{"title":"Exams", "href":"/app/days/exams/"+st, "class":"ion-clipboard"},{"title":"TimeTable", "href":"/app/timetable/"+user.students[0].standard+"-"+user.students[0].division, "class":"ion-ios-time"},{"title":"Favourite Teacher", "href":"/app/favteacher/0", "class":"ion-thumbsup"}]};
         }
       } else {
         // if(user.class) {

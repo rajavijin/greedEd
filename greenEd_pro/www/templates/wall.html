@@ -13,7 +13,7 @@
    </div>
   <div class="list card" ng-repeat="(wk,wall) in walls">
   <div class="item item-avatar">
-    <i class="icon ion-person wall-title positive"></i>
+    <img ng-src="https://randomuser.me/api/portraits/thumb/{{(wall.sex == 'male') ? 'men':'women'}}/{{wall.uid.split(':')[1] - 1}}.jpg">
     <h2>{{wall.name}}</h2>
     <p>{{wall.date| date:'hh:mm a, MMM dd yyyy'}}</p>
   </div>

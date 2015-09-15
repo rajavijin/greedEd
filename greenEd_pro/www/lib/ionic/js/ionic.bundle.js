@@ -1151,7 +1151,7 @@ window.ionic.version = '1.1.0';
      * also used for cloning when dest is an empty object
      * @param   {Object}    dest
      * @param   {Object}    src
-     * @param {Boolean} merge   do a merge
+     * @param	{Boolean}	merge		do a merge
      * @returns {Object}    dest
      */
     extend: function extend(dest, src, merge) {
@@ -23811,12 +23811,8 @@ function $RootScopeProvider() {
 
   function createChildScopeClass(parent) {
     function ChildScope() {
-      // this.$$watchers = this.$$nextSibling =
-      //     this.$$childHead = this.$$childTail = null;
-      this.$$childTail = null;
-      this.$$childHead = null;
-      this.$$nextSibling = null;
-      this.$$watchers = null;
+      this.$$watchers = this.$$nextSibling =
+          this.$$childHead = this.$$childTail = null;
       this.$$listeners = {};
       this.$$listenerCount = {};
       this.$$watchersCount = 0;
@@ -23945,42 +23941,6 @@ function $RootScopeProvider() {
        * @returns {Object} The newly created child scope.
        *
        */
-      //  $new: function(isolate) {
-      //   var child;
-
-      //   if (isolate) {
-      //     child = new Scope();
-      //     child.$root = this.$root;
-      //     // ensure that there is just one async queue per $rootScope and its children
-      //     child.$$asyncQueue = this.$$asyncQueue;
-      //     child.$$postDigestQueue = this.$$postDigestQueue;
-      //   } else {
-      //     // Only create a child scope class if somebody asks for one,
-      //     // but cache it to allow the VM to optimize lookups.
-      //     if (!this.$$ChildScope) {
-      //       this.$$ChildScope = function ChildScope() {
-      //         this['$$watchers'] = this['$$nextSibling'] =
-      //             this['$$childHead'] = this['$$childTail'] = null;
-      //         this['$$listeners'] = {};
-      //         this['$$listenerCount'] = {};
-      //         this['$id'] = nextUid();
-      //         this['$$ChildScope'] = null;
-      //       };
-      //       this.$$ChildScope.prototype = this;
-      //     }
-      //     child = new this.$$ChildScope();
-      //   }
-      //   child['this'] = child;
-      //   child['$parent'] = this;
-      //   child['$$prevSibling'] = this.$$childTail;
-      //   if (this.$$childHead) {
-      //     this.$$childTail.$$nextSibling = child;
-      //     this.$$childTail = child;
-      //   } else {
-      //     this.$$childHead = this.$$childTail = child;
-      //   }
-      //   return child;
-      // },
       $new: function(isolate, parent) {
         var child;
 
@@ -37241,7 +37201,7 @@ var minlengthDirective = function() {
  * (c) 2010-2015 Google, Inc. http://angularjs.org
  * License: MIT
  */
-(function(window, angular, undefined) {//'use strict';
+(function(window, angular, undefined) {'use strict';
 
 /* jshint ignore:start */
 var noop        = angular.noop;
@@ -47148,7 +47108,7 @@ function($rootScope, $state, $location, $window, $timeout, $ionicViewSwitcher, $
     /**
      * @ngdoc method
      * @name $ionicHistory#clearCache
-   * @return promise
+	 * @return promise
      * @description Removes all cached views within every {@link ionic.directive:ionNavView}.
      * This both removes the view element from the DOM, and destroy it's scope.
      */

@@ -11,7 +11,7 @@
 
 var isIOS = ionic.Platform.isIOS();
 var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'starter.controllers','firebase','ngCordova'])
+angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'starter.controllers','firebase','ngCordova', 'ionic.contrib.ui.tinderCards'])
 .constant('FIREBASE_URL', 'https://sizzling-fire-6207.firebaseio.com/')
 .constant('S_ID', '-JwVp4kJ36Uv06GOEvlk')
 .run(function($ionicPlatform, $http, $rootScope, Auth, FIREBASE_URL, S_ID, $firebaseObject, $cordovaSQLite, $firebaseArray) {
@@ -29,7 +29,7 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'starter.controller
     } else {
       db = openDatabase('mydb', '1.0', 'my first database', 2 * 1024 * 1024);
     }
-    //$cordovaSQLite.execute(db, "DROP TABLE mydata");
+    $cordovaSQLite.execute(db, "DROP TABLE mydata");
     $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS mydata (key text, value blob, unique (key))");
 
     scrollRef = new Firebase.util.Scroll(ref.child(S_ID+"/wall"), '$priority');
@@ -360,6 +360,26 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'starter.controller
       'menuContent': {
         templateUrl: 'templates/bustracking.html',
         controller: 'BusTrackingCtrl'
+      }
+    }
+  })
+  .state('app.favteacher', {
+    url: '/favteacher/:id',
+    cache: false,
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/favteacher.html',
+        controller: 'FavTeacherCtrl'
+      }
+    }
+  })
+  .state('app.favteachercard', {
+    url: '/favteachercard/:student',
+    cache: false,
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/favteachercard.html',
+        controller: 'FavTeacherCardCtrl'
       }
     }
   })

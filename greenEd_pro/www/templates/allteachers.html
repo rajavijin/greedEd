@@ -9,14 +9,12 @@
 
     <ion-refresher pulling-icon="ion-arrow-down-b" on-refresh="refreshItems()">
     </ion-refresher>
-
-    <ion-list>
-      <ion-item collection-repeat="teacher in items" class="item item-icon-left positive" href="#/app/teacherdashboard/{{teacher.uid}}/{{teacher.name}}" item-height="53" item-width="100%">
-            <i class="icon ion-person"></i>
+    <div class="list" ng-if="items.length > 0">
+        <a ng-repeat="(k, teacher) in items" class="item item-icon-left  item-avatar custom-avatar positive" href="#/app/teacherdashboard/{{teacher.uid}}/{{teacher.name}}">
+            <img ng-src="https://randomuser.me/api/portraits/thumb/women/{{teacher.uid.split(':')[1] - 1}}.jpg">
             <h2>{{teacher.name}}</h2>
-         </ion-item>
-    </ion-list>
-
+        </a>
+    </div>
     <div ng-if="items !== undefined && !items.length" class="no-results list">
        <a class="item" href="#">
           <p>No teacher found</p>

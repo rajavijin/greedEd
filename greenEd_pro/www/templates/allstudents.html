@@ -9,13 +9,12 @@
 
     <ion-refresher pulling-icon="ion-arrow-down-b" on-refresh="refreshItems()">
     </ion-refresher>
-
-    <ion-list>
-      <ion-item collection-repeat="student in items | orderBy:['standard', 'studentid']" class="item item-icon-left positive" href="#/app/studentdashboard/{{student.standard}}-{{student.division}}/{{student.uid}}/{{student.name}}" item-height="53" item-width="100%">
-          <i class="icon ion-person"></i>
-          <h2>{{student.standard}}<span ng-hide="student.division == 'all'">{{student.division}}</span> : {{student.name}}</h2>
-       </ion-item>
-    </ion-list>
+    <div class="list" ng-if="items.length > 0">
+        <a collection-repeat="student in items | orderBy:['standard', 'studentid']" class="item item-icon-left  item-avatar custom-avatar positive" href="#/app/studentdashboard/{{student.standard}}-{{student.division}}/{{student.uid}}/{{student.name}}" item-height="53" item-width="100%">
+            <img ng-src="http://res.cloudinary.com/dnzljpk6o/image/upload/v1442348003/{{student.uid.split(':')[1]}}.png">
+            <h2>{{student.standard}}<span ng-hide="student.division == 'all'">{{student.division}}</span> : {{student.name}}</h2>
+        </a>
+    </div>
 
     <div ng-if="items !== undefined && !items.length" class="no-results list">
        <a class="item" href="#">

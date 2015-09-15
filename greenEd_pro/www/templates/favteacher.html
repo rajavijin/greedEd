@@ -1,0 +1,22 @@
+<ion-view cache-view="false" view-title="Favourite Teacher" ng-init="loadData()">
+<ion-pane>
+  <td-cards delegate-handle="teachers">
+    <td-card id="td-card" ng-repeat="card in cards" on-destroy="cardDestroyed($index)"
+          on-swipe-left="cardSwipedLeft($index)" on-swipe-right="cardSwipedRight($index)"
+          on-partial-swipe="cardPartialSwipe(amt)">
+
+              <div class="image">
+                <div class="yes-text overlayBox"><div class="yesBox boxed" id="centerMe">Yes</div></div>
+                  <div class="no-text overlayBox"><div class="noBox boxed">No</div></div>
+                  <img ng-src="{{card.img}}">
+                  <div class="username center dark">{{card.name}}</div>
+
+              </div>
+    </td-card>
+  </td-cards>
+  <div class="buttondesc">
+    <button ng-click="noCard()" class="button button-outline button-assertive ion-thumbsdown"></button>
+    <button ng-click="yesCard()" class="button button-outline button-balanced ion-thumbsup"></button>
+  </div>
+</ion-pane>
+</ion-view>

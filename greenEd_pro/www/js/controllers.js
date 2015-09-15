@@ -704,15 +704,17 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
 .controller('WallCtrl', function($scope, $rootScope, $firebaseArray, $cordovaSQLite, $state, FIREBASE_URL, $ionicModal, Auth, $ionicLoading, $timeout) {
   $scope.moredata = false;
   var getLocalData = function() {
-    $cordovaSQLite.execute(db, "SELECT * from mydata where key = ?", ["wall"]).then(function(res) {
-      $scope.loading = false;
-      if(res.rows.length > 0) {
-        $scope.empty = false;
-        $rootScope.walls = angular.fromJson(res.rows.item(0).value);
-      } else {
-        $scope.empty = true;
-      }
-    });
+    if(db) {
+      $cordovaSQLite.execute(db, "SELECT * from mydata where key = ?", ["wall"]).then(function(res) {
+        $scope.loading = false;
+        if(res.rows.length > 0) {
+          $scope.empty = false;
+          $rootScope.walls = angular.fromJson(res.rows.item(0).value);
+        } else {
+          $scope.empty = true;
+        }
+      });
+    }
   }
   $scope.getWall = function(refresh) {
     if(!refresh) $scope.loading = true;
@@ -1406,7 +1408,95 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   };
 
 })
+.controller('FavTeacherCtrl', function ($scope, $stateParams, $state, $timeout, $ionicLoading, $ionicSideMenuDelegate, TDCardDelegate) {
+  console.log('CARDS CTRL', user);
+  $ionicSideMenuDelegate.canDragContent(false);
+  $scope.loadData = function() {
+    $ionicLoading.show();
+    $scope.selectedCard = false;
+    cards = [];
+    $scope.cards = [];
+    $scope.indexItem = false;
+    var lastitem = Object.keys(user.students[$stateParams.id]).length;
+    var i = 0;
+    var j = 20;
+    angular.forEach(user.students[$stateParams.id], function(teacher, tk) {
+      i++;
+      if(tk.indexOf("simplelogin") != -1) {
+        ref.child("users/"+tk).once('value', function(tsnap) {
+          console.log("teacher", tsnap.val());
+          var newcard = tsnap.val();
+          if(newcard.sex == "male") var sex = "men";
+          else var sex = "women";
+          newcard.img = "https://randomuser.me/api/portraits/med/"+sex+"/"+j+".jpg";
+          cards.push(newcard);
+          j++;
+        });
+      }
+      $timeout(function() {$ionicLoading.hide(); $scope.cards = cards}, 2000);
+    });
+  }
 
+  var selected = function(index) {
+    if(index) $scope.selectedCard = $scope.cards[index];
+    else $scope.selectedCard = {};
+    console.log("selected card", $scope.selectedCard);
+    localStorage.setItem("selectedTeacher", angular.toJson($scope.selectedCard));
+    $state.go('app.favteachercard', {student:$stateParams.id});
+  }
+  //$scope.cards = Array.prototype.slice.call(cardTypes, 0);
+
+  $scope.cardDestroyed = function(index) {
+    $scope.cards.splice(index, 1);
+  };
+
+  $scope.addCard = function() {
+    var newCard = cardTypes[Math.floor(Math.random() * cardTypes.length)];
+    newCard.id = Math.random();
+    $scope.cards.push(angular.extend({}, newCard));
+  }
+
+  $scope.yesCard = function() {
+    if(!$scope.indexItem) $scope.indexItem = $scope.cards.length - 1;
+    else $scope.indexItem--;
+    console.log('YES', $scope.indexItem);
+    selected($scope.indexItem);
+  };
+
+  $scope.noCard = function() {   
+  console.log("index on No", $scope.indexItem); 
+    if(!$scope.indexItem) {
+      $scope.indexItem = $scope.cards.length - 1;
+      TDCardDelegate.$getByHandle('teachers').cardInstances[$scope.indexItem].swipe('left');
+    } else {
+      $scope.indexItem--;
+      TDCardDelegate.$getByHandle('teachers').cardInstances[$scope.indexItem].swipe('left');
+      if($scope.indexItem == 0) selected(false);
+    }
+  };
+  $scope.cardSwipedLeft = function(index) {
+    console.log('LEFT SWIPE');
+    console.log("index", index);
+    $scope.indexItem = index;
+    if(index == 0) selected(false);
+  };
+  $scope.cardSwipedRight = function(index) {
+    console.log('RIGHT SWIPE');
+    console.log("index", index);
+    selected(index);
+  };
+})
+.controller('FavTeacherCardCtrl', function($scope, $state, $stateParams) {
+  var d = new Date();
+  $scope.year = d.getFullYear();
+  $scope.month = months[d.getMonth()];
+  var teacher = angular.fromJson(localStorage.getItem("selectedTeacher"));
+  console.log("teacher", teacher);
+  $scope.teacher = (Object.keys(teacher).length > 0) ? teacher : false;
+  $scope.redirect = function() {
+    $state.go('app.favteacher', {id:$stateParams.student});
+  }
+})
 .controller('AuthCtrl', function ($scope, $state, $rootScope, Auth, $ionicLoading, $ionicPopup, $ionicModal) {
   if(localStorage.getItem("user")) {
     //$state.go('app.wall', {}, {reload:true});
