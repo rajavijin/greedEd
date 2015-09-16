@@ -851,7 +851,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     Auth.getUsers().then(function(allusers) {
       if(allusers["chatcontacts"]) {
         if(user.role == "teacher") hmcontact();
-        $scope.items = allusers["chatcontacts"];
+        if($scope.title == 'contacts') $scope.items = allusers["chatcontacts"];
       } else {$scope.items = [];}
     })
   }
@@ -902,9 +902,10 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   var serverChats = function() {
     $scope.chatLoading = true;
     Auth.getUserChatRooms().$ref().on('value', function(frchatrooms) {
+      console.log("server chats");
       $scope.chatLoading = false;
       var allmess = frchatrooms.val();
-      $scope.items = allmess;
+      //if($scope.title = "chats") $scope.items = allmess;
       var allm = []; var ii = 0;
       angular.forEach(allmess, function(val, k) {ii++;allm.push(val);});
       if(ii > 0) $scope.chatEmpty = false;
