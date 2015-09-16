@@ -686,3 +686,11 @@ left: 84px;
   padding-top: 2px;
   margin-left: 4px;
 }
+.item span.badge.custom-badge {top: 10px;}
+.item span.badge.custom-badge-msg {top: 36px;}
+.item .chat-desc {
+  font-size: 12px;
+  position: absolute;
+  right: 5px;
+  color: #444;
+}

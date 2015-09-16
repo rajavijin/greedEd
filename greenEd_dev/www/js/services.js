@@ -11,6 +11,7 @@ else var filters = {};
 var usersref = '';
 var marksref = '';
 var userchatroomsref = '';
+var chatrooms = null;
 var db = null;
 var dashboards = {hm:false,class:false,teacher:false,student:false,overall:false};
 var timetableref = {};
@@ -45,6 +46,7 @@ angular.module('starter.services', [])
             user.uid = userdatafb.uid;
             var key = "usertype";
             var value = user.schoolid + '|student';
+            userchatroomsref = $firebaseObject(ref.child(user.schoolid+"/chatrooms/"+user.uid));
             if(user.role == 'teacher') {
               key = user.uid;
               for (var i = 0; i < user.subjects.length; i++) {
@@ -105,7 +107,8 @@ angular.module('starter.services', [])
       return ref.child(user.schoolid+"/chatrooms");
     },
     getUserChatRooms: function() {
-      return $firebaseObject(ref.child(user.schoolid+"/chatrooms/"+user.uid));
+      if(userchatroomsref) return userchatroomsref;
+      else return $firebaseObject(ref.child(user.schoolid+"/chatrooms/"+user.uid));
     },
     getAllMessages: function(chatid) {
       return ref.child(user.schoolid+"/chats/"+chatid);

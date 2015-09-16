@@ -9,12 +9,15 @@
                   <ion-refresher pulling-icon="ion-arrow-down-b" on-refresh="refreshItems('chats')"></ion-refresher>
                   <div ng-show="chatLoading" class="center padding"><ion-spinner icon="android"></ion-spinner></div>
                   <div class="list">
-                  <a class="item item-avatar item-icon-left custom-avatar" href="#/app/messages/{{m.chatid}}/{{m.uid}}/{{m.name}}/{{m.type}}/{{m.notify}}" ng-repeat="m in items | orderBy:['-notify']">
+                  <a ng-if="m.text" class="item item-avatar item-icon-left" href="#/app/messages/{{m.chatid}}/{{m.uid}}/{{m.name}}/{{m.type}}/{{m.notify}}" ng-repeat="m in items | orderBy:['-notify']">
                     <img ng-if="m.type == 'group'" src="http://res.cloudinary.com/dnzljpk6o/image/upload/v1442350191/group.jpg"></i>
-                    <img ng-if="m.type == 'single'" ng-src="https://randomuserme/api/portraits/thumb/{{(m.name.indexOf('Parent') == -1) ? 'women' : 'men'}}/{{(m.name.indexOf('Parent') == -1) ? m.uid.split(':')[1] - 1 : m.uid.split(':')[1] - 20}}.jpg">
+                    <img ng-if="m.type == 'single'" ng-src="https://randomuser.me/api/portraits/thumb/{{(m.name.indexOf('Parent') == -1) ? 'women' : 'men'}}/{{(m.name.indexOf('Parent') == -1) ? m.uid.split(':')[1] - 1 : m.uid.split(':')[1] - 20}}.jpg">
                     <h2>{{m.name}}
-                    <span ng-hide="m.notify == 0" class="badge badge-assertive">{{m.notify}}</span>
+                    <span ng-hide="m.notify == 0" class="custom-badge-msg badge badge-assertive">{{m.notify}}</span>
+                    <span class="chat-desc" am-time-ago="m.date"></span>
+                   
                   </h2>
+                  <p>{{m.text}} <span class="badge custom-badge-msg badge-assertive">8</span></p>
                   </a>
                   </div>
                 </ion-content>
@@ -25,10 +28,11 @@
                   <ion-refresher pulling-icon="ion-arrow-down-b" on-refresh="refreshItems('contacts')"></ion-refresher>
                   <div ng-show="contactLoading" class="center padding"><ion-spinner icon="android"></ion-spinner></div>
                   <div class="list">
-                    <a ng-click="toMessageBox(contact)" class="item item-icon-left item-avatar custom-avatar" ng-repeat="(ck, contact) in items | orderBy:['role','name']">
+                    <a ng-click="toMessageBox(contact)" class="item item-icon-left item-avatar custom-avatar" ng-disabled="processing[contact.uid]" ng-repeat="(ck, contact) in items | orderBy:['role','name']">
                         <img ng-if="contact.type == 'group'" src="http://res.cloudinary.com/dnzljpk6o/image/upload/v1442350191/group.jpg"></i>
                         <img ng-if="contact.type == 'single'" ng-src="https://randomuser.me/api/portraits/thumb/{{(contact.role == 'parent' || contact.sex == 'male') ? 'men' : 'women'}}/{{(contact.role == 'parent') ? contact.uid.split(':')[1] - 20 : contact.uid.split(':')[1] - 1}}.jpg">
                       <h2>{{contact.name}}</h2>
+                      <span ng-if="processing[contact.uid]" class="badge custom-badge"><ion-spinner icon="android"></ion-spinner></span>
                     </a>
                   </div>
                 </ion-content>

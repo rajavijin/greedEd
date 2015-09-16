@@ -31,7 +31,6 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'starter.controller
     }
     $cordovaSQLite.execute(db, "DROP TABLE mydata");
     $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS mydata (key text, value blob, unique (key))");
-
     scrollRef = new Firebase.util.Scroll(ref.child(S_ID+"/wall"), '$priority');
     $rootScope.walls = $firebaseArray(scrollRef);
     scrollRef.scroll.next(20);
@@ -41,6 +40,7 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'starter.controller
       filters = fsnap.val();
       localStorage.setItem("filters", angular.toJson(filters));
     })
+    chatrooms = $firebaseObject(ref.child(user.schoolid+"/chatrooms"));
     $rootScope.hm = $firebaseObject(ref.child('users').orderByChild("role").equalTo("hm"));
     var d = new Date();
     var start = parseInt(d.getFullYear() +'-'+ ("0" + (d.getMonth() + 1)).slice(-2));

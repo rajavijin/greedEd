@@ -11,7 +11,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     $state.go("login");
   }
   $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams, rejection){
-    $rootScope.state = toState.name;
+    $rootScope.fromState = fromState.name;
     if(toState.name == "login") {
       $timeout(function() { $ionicLoading.hide();$window.location.reload(true);}, 1500);
     }
@@ -922,6 +922,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   }
   var filterBarInstance;
   $scope.getItems = function(type) {
+    console.log("type", type);
     $scope.title = type;
     if(type == "chats") {
       if(online) serverChats();
@@ -963,10 +964,12 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       $scope.$broadcast('scroll.refreshComplete');
     }, 0);
   };
-
-
+  $scope.processing = {};
+  $scope.$on('$ionicView.enter', function() {
+    console.log("from", $rootScope.fromState);
+    if($rootScope.fromState == 'app.messagebox') $scope.getItems($scope.title);
+  });
   $scope.toMessageBox = function(contact, action) {
-      var chatrooms = Auth.chatrooms();
       var chatroom = {};
       var fromName = user.name;
       if(user.role == "parent") {
@@ -984,37 +987,41 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
         'type': contact.type,
       }
       var NewChat = function() {
-        Auth.chats().$add(message).then(function(msnap) {
-          var chatid = msnap.key();
-          var rooms = {};
-          froom = {chatid:chatid, notify:0, name: message.to, uid:message.toUid, type:message.type};
-          chatrooms.child(message.fromUid).child(chatid).set(froom);
-          if(message.type == "group") {
-            if(db) {
-              $cordovaSQLite.execute(db, "SELECT value FROM mydata WHERE key = ?", ["allusers"]).then(function(res) {
-                if(res.rows.length > 0) {
-                  if(user.role != "hm") {
-                    hm = {chatid:chatid, notify:0, name: message.to, uid:message.toUid, type:message.type};
-                    chatrooms.child($scope.hm.uid).child(chatid).set(hm);
+        if(!$scope.processing[contact.uid]) {
+          $scope.processing[contact.uid] = true;
+          Auth.chats().$add(message).then(function(msnap) {
+            var chatid = msnap.key();
+            var rooms = {};
+            froom = {chatid:chatid, notify:0, name: message.to, uid:message.toUid, type:message.type};
+            chatrooms.$ref().child(message.fromUid).child(chatid).set(froom);
+            if(message.type == "group") {
+              if(db) {
+                $cordovaSQLite.execute(db, "SELECT value FROM mydata WHERE key = ?", ["allusers"]).then(function(res) {
+                  if(res.rows.length > 0) {
+                    if(user.role != "hm") {
+                      hm = {chatid:chatid, notify:0, name: message.to, uid:message.toUid, type:message.type};
+                      chatrooms.$ref().child($scope.hm.uid).child(chatid).set(hm);
+                    }
+                    var allusers = angular.fromJson(res.rows.item(0).value);
+                    for (var i = 0; i < allusers["groups"][message.toUid].length; i++) {
+                      var classStudent = allusers["groups"][message.toUid][i];
+                      rooms = {chatid:chatid, notify:0, name: message.to, uid:message.toUid, type:message.type};
+                      chatrooms.$ref().child(classStudent.uid).child(chatid).set(rooms);
+                    };
                   }
-                  var allusers = angular.fromJson(res.rows.item(0).value);
-                  for (var i = 0; i < allusers["groups"][message.toUid].length; i++) {
-                    var classStudent = allusers["groups"][message.toUid][i];
-                    rooms = {chatid:chatid, notify:0, name: message.to, uid:message.toUid, type:message.type};
-                    chatrooms.child(classStudent.uid).child(chatid).set(rooms);
-                  };
-                }
-              })
+                })
+              }
+            } else {
+              rooms = {chatid:chatid, notify:0, name: message.from, uid: message.fromUid, type:message.type};
+              chatrooms.$ref().child(message.toUid).child(chatid).set(rooms);
             }
-          } else {
-            rooms = {chatid:chatid, notify:0, name: message.from, uid: message.fromUid, type:message.type};
-            chatrooms.child(message.toUid).child(chatid).set(rooms);
-          }
-          $state.go('app.messagebox', {chatid:chatid, to:contact.name, toUid:contact.uid,  type:message.type, notify:0});
-        })
+            $scope.processing[contact.uid] = false;
+            $state.go('app.messagebox', {chatid:chatid, to:contact.name, toUid:contact.uid,  type:message.type, notify:0});
+          })
+        }
       }
 
-      chatrooms.child(message.fromUid).orderByChild("uid").equalTo(message.toUid).once('value', function(data) {
+      chatrooms.$ref().child(message.fromUid).orderByChild("uid").equalTo(message.toUid).once('value', function(data) {
         if(!data.val()) {
           NewChat();
         } else {
@@ -1032,7 +1039,6 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   }
 })
 .controller('MessageBoxCtrl', function($scope, $rootScope, $state, $stateParams, $cordovaSQLite, $ionicPopup, $ionicScrollDelegate, $timeout, Auth) {
-  var chatrooms = Auth.chatrooms();
   var allchats = Auth.getAllMessages($stateParams.chatid);
 
   $scope.toUser = {uid:$stateParams.toUid, name:$stateParams.to};
@@ -1090,23 +1096,29 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     message.type = $stateParams.type;
 
     allchats.child("messages").push(message);
+    var roomupdate = {
+      text:message.text,
+      date:moment().valueOf()
+    }
     if(message.type == "group") {
-      chatrooms.orderByChild($stateParams.chatid).once('value', function(chatdata) {
+      chatrooms.$ref().orderByChild($stateParams.chatid).once('value', function(chatdata) {
         chatdata.forEach(function(chatroomdata) {
           var ckey = chatroomdata.key();          
           if(user.uid != ckey) {
             var val = chatroomdata.val();
             val[$stateParams.chatid].notify++;
-            chatrooms.child(ckey).update(val);
+            chatrooms.$ref().child(ckey).update(val);
           }
+          chatrooms.$ref().child(ckey).update(roomupdate);
         })
       });
     } else {
-      chatrooms.child(message.toUid).child($stateParams.chatid).once('value', function(data) {
+      chatrooms.$ref().child(message.toUid).child($stateParams.chatid).once('value', function(data) {
         var roomdata = data.val();
         roomdata.notify++;
-        chatrooms.child($scope.toUser.uid).child($stateParams.chatid).set(roomdata);
+        chatrooms.$ref().child($scope.toUser.uid).child($stateParams.chatid).set(roomdata);
       })
+      chatrooms.$ref().child(message.userId).child($stateParams.chatid).update(roomupdate);
     }
 
     $timeout(function() {
