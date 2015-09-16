@@ -857,8 +857,10 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   var localContacts = function() {
     if(db) {
       $cordovaSQLite.execute(db, "SELECT value FROM mydata WHERE key = ?", ["allusers"]).then(function(res) {
+        console.log("allusers", res.rows.length);
         if(res.rows.length > 0) {
           $scope.items = angular.fromJson(res.rows.item(0).value)["chatcontacts"];
+          console.log("items", $scope.items);
         } else {
           if(online) serverContacts();
           else $scope.items = [];
@@ -1104,15 +1106,11 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       chatrooms.$ref().orderByChild($stateParams.chatid).once('value', function(chatdata) {
         chatdata.forEach(function(chatroomdata) {
           var ckey = chatroomdata.key();          
-          if(user.uid != ckey) {
-            var val = chatroomdata.val();
-            val[$stateParams.chatid].notify++;
-            val[$stateParams.chatid].text = message.text;
-            val[$stateParams.chatid].date = moment().valueOf();
-            chatrooms.$ref().child(ckey).update(val);
-          } else {
-            chatrooms.$ref().child(ckey).update(roomupdate);
-          }
+          var val = chatroomdata.val();
+          val[$stateParams.chatid].text = message.text;
+          val[$stateParams.chatid].date = moment().valueOf();
+          if(user.uid != ckey) val[$stateParams.chatid].notify++;
+          chatrooms.$ref().child(ckey).update(val);
         })
       });
     } else {
