@@ -12,6 +12,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   }
   $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams, rejection){
     $rootScope.fromState = fromState.name;
+    $rootScope.currentState = toState.name;
     if(toState.name == "login") {
       $timeout(function() { $ionicLoading.hide();$window.location.reload(true);}, 1500);
     }
@@ -907,7 +908,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       var allm = []; var ii = 0;
       angular.forEach(allmess, function(val, k) {ii++;allm.push(val);});
       if(ii > 0) $scope.chatEmpty = false;
-      $scope.items = allm;
+      if($scope.title = "chats") $scope.items = allm;
       Auth.saveLocal(user.uid+"allmess", allm);
     });
   }
@@ -970,7 +971,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   $scope.processing = {};
   $scope.$on('$ionicView.enter', function() {
     console.log("from", $rootScope.fromState);
-    if($rootScope.fromState == 'app.messagebox') $scope.getItems($scope.title);
+    //if($rootScope.fromState == 'app.messagebox') $scope.getItems($scope.title);
   });
   $scope.toMessageBox = function(contact, action) {
       var chatroom = {};
@@ -1065,11 +1066,13 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   var getMessages = function() {
     if(online) {
       allchats.child("messages").limitToLast(50).on('value', function(frmessages) {
-        if($stateParams.notify > 0) {
-          Auth.chatrooms().child(user.uid).child($stateParams.chatid).child("notify").set(0);
+        if($rootScope.currentState == 'app.messagebox') {
+          if($stateParams.notify > 0) {
+            chatrooms.$ref().child(user.uid).child($stateParams.chatid).child("notify").set(0);
+          }
+          var allmm = frmessages.val() || [];
+          processMessages(allmm);
         }
-        var allmm = frmessages.val() || [];
-        processMessages(allmm);
       })
     } else {
       if(db) {
@@ -1104,6 +1107,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       date:moment().valueOf()
     }
     if(message.type == "group") {
+      var update = {};
       chatrooms.$ref().orderByChild($stateParams.chatid).once('value', function(chatdata) {
         chatdata.forEach(function(chatroomdata) {
           var ckey = chatroomdata.key();          
@@ -1111,8 +1115,9 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
           if(user.uid != ckey) val[$stateParams.chatid].notify++;
           val[$stateParams.chatid].text = message.text;
           val[$stateParams.chatid].date = moment().valueOf();
-          chatrooms.$ref().child(ckey).update(val);
+          update[ckey] = val;
         })
+        chatrooms.$ref().update(update);
       });
     } else {
       chatrooms.$ref().child(message.toUid).child($stateParams.chatid).once('value', function(data) {
