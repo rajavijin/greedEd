@@ -40,7 +40,7 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'starter.controller
       filters = fsnap.val();
       localStorage.setItem("filters", angular.toJson(filters));
     })
-    chatrooms = $firebaseObject(ref.child(user.schoolid+"/chatrooms"));
+    chatrooms = $firebaseObject(ref.child(S_ID+"/chatrooms"));
     $rootScope.hm = $firebaseObject(ref.child('users').orderByChild("role").equalTo("hm"));
     var d = new Date();
     var start = parseInt(d.getFullYear() +'-'+ ("0" + (d.getMonth() + 1)).slice(-2));

@@ -13,11 +13,9 @@
                     <img ng-if="m.type == 'group'" src="http://res.cloudinary.com/dnzljpk6o/image/upload/v1442350191/group.jpg"></i>
                     <img ng-if="m.type == 'single'" ng-src="https://randomuser.me/api/portraits/thumb/{{(m.name.indexOf('Parent') == -1) ? 'women' : 'men'}}/{{(m.name.indexOf('Parent') == -1) ? m.uid.split(':')[1] - 1 : m.uid.split(':')[1] - 20}}.jpg">
                     <h2>{{m.name}}
-                    <span ng-hide="m.notify == 0" class="custom-badge-msg badge badge-assertive">{{m.notify}}</span>
                     <span class="chat-desc" am-time-ago="m.date"></span>
-                   
-                  </h2>
-                  <p>{{m.text}} <span class="badge custom-badge-msg badge-assertive">8</span></p>
+                    </h2>
+                    <p>{{m.text}} <span ng-hide="m.notify == 0" class="badge custom-badge-msg badge-assertive">{{m.notify}}</span></p>
                   </a>
                   </div>
                 </ion-content>
