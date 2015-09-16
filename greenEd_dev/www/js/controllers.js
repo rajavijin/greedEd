@@ -1107,15 +1107,20 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
           if(user.uid != ckey) {
             var val = chatroomdata.val();
             val[$stateParams.chatid].notify++;
+            val[$stateParams.chatid].text = message.text;
+            val[$stateParams.chatid].date = moment().valueOf();
             chatrooms.$ref().child(ckey).update(val);
+          } else {
+            chatrooms.$ref().child(ckey).update(roomupdate);
           }
-          chatrooms.$ref().child(ckey).update(roomupdate);
         })
       });
     } else {
       chatrooms.$ref().child(message.toUid).child($stateParams.chatid).once('value', function(data) {
         var roomdata = data.val();
         roomdata.notify++;
+        roomdata.text = message.text;
+        roomdata.date = moment().valueOf();
         chatrooms.$ref().child($scope.toUser.uid).child($stateParams.chatid).set(roomdata);
       })
       chatrooms.$ref().child(message.userId).child($stateParams.chatid).update(roomupdate);
