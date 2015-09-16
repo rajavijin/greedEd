@@ -1,0 +1,22 @@
+<ion-view title="{{title}}">
+   <ion-nav-buttons side="right">
+   <button ng-show="dashboard" class="button button-icon button-clear ion-funnel" ng-click="filterData()"></button>
+   </ion-nav-buttons>
+   <ion-content class="has-header" >
+      <ion-refresher pulling-text="Pull to refresh" on-refresh="getMarksData()"></ion-refresher>
+      <div ng-show="loading" class="center padding"><ion-spinner icon="android"></ion-spinner></div>
+      <ion-list ng-show="empty">
+         <ion-item class="item item-icon-left"><i class="icon ion-ios-list positive"></i>Dashboard is empty</ion-item>
+      </ion-list>
+      <chart id="tpassfailstatus" config="tpassfailConfig" class="noclick"></chart>
+      <chart id="tsubjects" config="tsubjectsConfig"></chart>
+      <div class="list" ng-show="dashboard">
+         <div class="collection-repeat-container"><a class="item item-icon-left" href="#"><i class="icon ion-trophy positive"></i> <h2><span style="color:#aaa;font-weight:bold">Class - Topper</span> <span class="badge">Total</span></h2></a></div>
+         <span ng-repeat="(k, stoppers) in toppers">
+         <a ng-repeat="v in stoppers" href="#/app/studentdashboard/{{v.class}}/{{v.studentid}}/{{v.student}}" class="item item-icon-left item-avatar custom-avatar positive">
+            <img ng-src="http://res.cloudinary.com/dnzljpk6o/image/upload/v1442348003/{{v.studentid.split(':')[1]}}.png"><h2>{{k.replace("_", " ")}} - {{v.student}} <span class="badge badge-positive">{{v.mark}}</span></h2>
+        </a>
+         </span>
+    </div>
+   </ion-content>
+</ion-view>

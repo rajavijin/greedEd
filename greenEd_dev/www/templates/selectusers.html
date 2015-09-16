@@ -1,0 +1,11 @@
+ <ion-view class="modal">
+  <ion-content>
+    <ion-list>
+      <ion-item class="bar bar-header bar-positive">
+        <h1 class="title">Select a Demo user to Login</h1>
+        <div class="button button-clear" ng-click="modal.hide()"><span class="icon ion-close"></span></div>
+      </ion-item>
+      <ion-item ng-click="fillUser(modal, user.username,user.password)" class="item item-icon-left positive" ng-repeat="user in users"><i class="icon ion-person"></i><h2>{{user.title}}</h2></ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

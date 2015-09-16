@@ -1,0 +1,23 @@
+<ion-view title="{{title}}">
+   <ion-nav-buttons side="right">
+   <button ng-show="dashboard" class="button button-icon button-clear ion-funnel" ng-click="filterData()"></button>
+   </ion-nav-buttons>
+   <ion-content class="has-header" >
+      <ion-refresher pulling-text="Pull to refresh" on-refresh="getMarksData()"></ion-refresher>
+      <div ng-show="loading" class="center padding"><ion-spinner icon="android"></ion-spinner></div>
+      <ion-list ng-show="empty">
+         <ion-item class="item item-icon-left"><i class="icon ion-ios-list positive"></i>Dashboard is empty</ion-item>
+      </ion-list>
+      <chart id="passfailstatus" config="passfailConfig" class="noclick"></chart>
+      <div class="padding"></div>
+      <chart id="subjects" config="subjectsConfig"></chart>
+      <chart id="grades" config="gradeConfig"></chart>
+      <div class="list" ng-show="dashboard">
+         <div class="collection-repeat-container"><ion-item class="item-icon-left" href="#"><i class="icon ion-trophy positive"></i> <h2><span style="color:#aaa;font-weight:bold">Class - Topper</span> <span class="badge">Total</span></h2></ion-item></div>
+         <a ng-repeat="v in toppers" href="#/app/studentdashboard/{{v.class}}/{{v.studentid}}/{{v.student}}" class="item item-icon-left item-avatar custom-avatar positive">
+            <img ng-src="http://res.cloudinary.com/dnzljpk6o/image/upload/v1442348003/{{v.studentid.split(':')[1]}}.png"><h2>{{v.class}} - {{v.student}} <span class="badge badge-positive">{{v.total}}</span></h2>
+        </a>
+    </div>
+      </ion-list>
+   </ion-content>
+</ion-view>
