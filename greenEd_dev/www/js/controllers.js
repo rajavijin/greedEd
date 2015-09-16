@@ -932,8 +932,9 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     } else {
       if(user.role == "parent") {
         parentContacts();
-      } else {      
-        localContacts();
+      } else {
+        if(online) serverContacts();    
+        else localContacts();
       }
     }
   }
@@ -1107,9 +1108,9 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
         chatdata.forEach(function(chatroomdata) {
           var ckey = chatroomdata.key();          
           var val = chatroomdata.val();
+          if(user.uid != ckey) val[$stateParams.chatid].notify++;
           val[$stateParams.chatid].text = message.text;
           val[$stateParams.chatid].date = moment().valueOf();
-          if(user.uid != ckey) val[$stateParams.chatid].notify++;
           chatrooms.$ref().child(ckey).update(val);
         })
       });
