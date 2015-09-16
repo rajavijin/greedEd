@@ -9,7 +9,7 @@
                   <ion-refresher pulling-icon="ion-arrow-down-b" on-refresh="refreshItems('chats')"></ion-refresher>
                   <div ng-show="chatLoading" class="center padding"><ion-spinner icon="android"></ion-spinner></div>
                   <div class="list">
-                  <a ng-if="m.text" class="item item-avatar item-icon-left" href="#/app/messages/{{m.chatid}}/{{m.uid}}/{{m.name}}/{{m.type}}/{{m.notify}}" ng-repeat="m in items.chats | orderBy:['-notify']">
+                  <a ng-if="m.text" class="item item-avatar item-icon-left" href="#/app/messages/{{m.chatid}}/{{m.uid}}/{{m.name}}/{{m.type}}/{{m.notify}}" ng-repeat="m in items.chats | orderBy:['-date']">
                     <img ng-if="m.type == 'group'" src="http://res.cloudinary.com/dnzljpk6o/image/upload/v1442350191/group.jpg"></i>
                     <img ng-if="m.type == 'single'" ng-src="https://randomuser.me/api/portraits/thumb/{{(m.name.indexOf('Parent') == -1) ? 'women' : 'men'}}/{{(m.name.indexOf('Parent') == -1) ? m.uid.split(':')[1] - 1 : m.uid.split(':')[1] - 20}}.jpg">
                     <h2>{{m.name}}
