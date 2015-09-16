@@ -846,13 +846,14 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
 })
 
 .controller('MessagesCtrl', function($scope, $rootScope, $ionicLoading, $state, $cordovaSQLite, Auth, $ionicFilterBar, $timeout) {
-  $scope.title = "Chats";
+  $scope.title = "chats";
+  $scope.items = {chats:[],contacts:[]};
   var serverContacts = function() {
     Auth.getUsers().then(function(allusers) {
       if(allusers["chatcontacts"]) {
         if(user.role == "teacher") hmcontact();
-        if($scope.title == 'contacts') $scope.items = allusers["chatcontacts"];
-      } else {$scope.items = [];}
+        $scope.items.contacts = allusers["chatcontacts"];
+      } else {$scope.items[$scope.title] = [];}
     })
   }
   var localContacts = function() {
@@ -860,23 +861,23 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       $cordovaSQLite.execute(db, "SELECT value FROM mydata WHERE key = ?", ["allusers"]).then(function(res) {
         console.log("allusers", res.rows.length);
         if(res.rows.length > 0) {
-          $scope.items = angular.fromJson(res.rows.item(0).value)["chatcontacts"];
+          $scope.items.contacts = angular.fromJson(res.rows.item(0).value)["chatcontacts"];
           console.log("items", $scope.items);
         } else {
           if(online) serverContacts();
-          else $scope.items = [];
+          else $scope.items.contacts = [];
         }
       })
     } else {
       if(online) serverContacts();
-      else $scope.items = [];
+      else $scope.items.contacts = [];
     }
   }
   var hmcontact = function() {
     $rootScope.hm.$loaded().then(function(hsnap) {
       for(var hh in $rootScope.hm) {
         if(hh.indexOf("simplelogin") != -1) {
-          $scope.items.push({uid:hh,role:"hm",name:"Head Master",type:"single"});
+          $scope.items.contacts.push({uid:hh,role:"hm",name:"Head Master",type:"single"});
         }
       }
     })
@@ -897,19 +898,18 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
         }
       }
     };
-    $scope.items = contacts;
+    $scope.items.contacts = contacts;
   }
   var serverChats = function() {
     $scope.chatLoading = true;
     Auth.getUserChatRooms().$ref().on('value', function(frchatrooms) {
-      console.log("server chats");
       $scope.chatLoading = false;
       var allmess = frchatrooms.val();
       //if($scope.title = "chats") $scope.items = allmess;
       var allm = []; var ii = 0;
       angular.forEach(allmess, function(val, k) {ii++;allm.push(val);});
       if(ii > 0) $scope.chatEmpty = false;
-      if($scope.title = "chats") $scope.items = allm;
+      $scope.items.chats = allm;
       Auth.saveLocal(user.uid+"allmess", allm);
     });
   }
@@ -917,12 +917,12 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     if(db) {
       $cordovaSQLite.execute(db, "SELECT value FROM mydata WHERE key = ?", [user.uid+"allmess"]).then(function(mres) {
         if(mres.rows.length > 0) {
-          $scope.items = angular.fromJson(mres.rows.item(0).value);
+          $scope.items.chats = angular.fromJson(mres.rows.item(0).value);
         } else {
-          $scope.items = [];
+          $scope.items.chats = [];
         }
       });
-    } else {$scope.items = []};
+    } else {$scope.items.chats = []};
   }
   var filterBarInstance;
   $scope.getItems = function(type) {
@@ -942,9 +942,9 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   }
   $scope.showFilterBar = function () {
     filterBarInstance = $ionicFilterBar.show({
-      items: $scope.items,
+      items: $scope.items[$scope.title],
       update: function (filteredItems, filterText) {
-        $scope.items = filteredItems;
+        $scope.items[$scope.title] = filteredItems;
       }
     });
   };
