@@ -1432,7 +1432,6 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
 })
 .controller('FavTeacherCtrl', function ($scope, $stateParams, $state, $timeout, $ionicLoading, $ionicSideMenuDelegate, TDCardDelegate) {
   console.log('CARDS CTRL', user);
-  $ionicSideMenuDelegate.canDragContent(false);
   $scope.loadData = function() {
     $ionicLoading.show();
     $scope.selectedCard = false;
@@ -1450,7 +1449,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
           var newcard = tsnap.val();
           if(newcard.sex == "male") var sex = "men";
           else var sex = "women";
-          newcard.img = "https://randomuser.me/api/portraits/med/"+sex+"/"+j+".jpg";
+          newcard.img = "https://randomuser.me/api/portraits/med/"+sex+"/"+(tk.split(':')[1] - 1) +".jpg";
           cards.push(newcard);
           j++;
         });

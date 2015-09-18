@@ -207,7 +207,7 @@ angular.module('starter.services', [])
               allusers["allclasses"].push({standard:fbusers.standard, division:fbusers.division});
               allusers["chatcontacts"].push({name: fbusers.standard+'-'+fbusers.division, role:"class", uid:fbusers.standard+'-'+fbusers.division,type:"group"})
             }
-            allusers["allstudents"].push({name:fbusers.name, standard:fbusers.standard, division:fbusers.division, uid:fbuser, sex:fbusers.sex});
+            allusers["allstudents"].push({name:fbusers.name, standard:fbusers.standard, division:fbusers.division, uid:fbuser, studentid:fbusers.studentid, sex:fbusers.sex});
             var parent = fbusers.parentkids.split("|");
             if(chatcontacts[fbusers.name]) {
               allusers["chatcontacts"][chatcontacts[fbusers.name] - 1].name += ","+fbusers.name;
