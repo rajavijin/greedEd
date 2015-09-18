@@ -1,9 +1,0 @@
-<div id="main-wrapper"><input type="checkbox" id="sidenav-toggle" /><main><header><h1>Namespace goog.async.nextTick.<code class="type">&lt;SCOPE&gt;</code></h1><a class="source" href="source/lib/goog/async/nexttick.js.src.html#l58">code &raquo;</a></header><section><p>Fires the provided callbacks as soon as possible after the current JS
- execution context. setTimeout(…, 0) takes at least 4ms when called from
- within another setTimeout(…, 0) for legacy reasons.
-
- This will not schedule the callback as a microtask (i.e. a task that can
- preempt user input or networking callbacks). It is meant to emulate what
- setTimeout(_, 0) would do if it were not throttled. If you desire microtask
- behavior, use goog.Promise instead.<h2>Main</h2><div class="ctor wrap-details public"><div><div class="ctor"><code class="type">&lt;SCOPE&gt;</code> <span class="member">nextTick <span class="args">( callback, opt_context )</span></span></div><div class="info"><table><tbody><tr><th>Parameters<tr><td><dl><dt>callback: <code class="type">function(this: SCOPE)</code><dd>Callback function to fire as soon as
-     possible.<dt>opt_context: <code class="type">SCOPE=</code><dd>Object in whose scope to call the listener.</dl></table></div></div></div></section>

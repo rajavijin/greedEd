@@ -92,6 +92,22 @@ angular.module('greenEdApp')
         templateUrl: 'views/addstudent.html',
         controller: 'AddstudentCtrl'
       })
+      .when('/contact', {
+        templateUrl: 'views/contact.html',
+        controller: 'ContactCtrl'
+      })
+      .whenAuthenticated('/teachers', {
+        templateUrl: 'views/teachers.html',
+        controller: 'TeachersCtrl'
+      })
+      .whenAuthenticated('/class', {
+        templateUrl: 'views/class.html',
+        controller: 'ClassCtrl'
+      })
+      .whenAuthenticated('/student', {
+        templateUrl: 'views/student.html',
+        controller: 'StudentCtrl'
+      })
       .otherwise({redirectTo: '/'});
   }])
 

@@ -1,9 +1,0 @@
-<div id="main-wrapper"><input type="checkbox" id="sidenav-toggle" /><main><header><h1>Class goog.structs.Set.<code class="type">&lt;T&gt;</code></h1><a class="source" href="source/lib/goog/structs/set.js.src.html#l52">code &raquo;</a><dl><dt>All implemented interfaces:<dd><code><a href="">goog.structs.Collection.&lt;(T|null)&gt;</a></code></dl></header><section><p>A set that can contain both primitives and objects.  Adding and removing
- elements is O(1).  Primitives are treated as identical if they have the same
- type and convert to the same string.  Objects are treated as identical only
- if they are references to the same object.  WARNING: A goog.structs.Set can
- contain both 1 and (new Number(1)), because they are not the same.  WARNING:
- Adding (new Number(1)) twice will yield two distinct elements, because they
- are two different objects.  WARNING: Any object that is added to a
- goog.structs.Set will be modified!  Because goog.getUid() is used to
- identify objects, every object in the set will be mutated.<h2>Constructor</h2><div class="ctor wrap-details public"><div><div class="ctor"><span class="member">goog.structs.Set <span class="args">( opt_values )</span></span></div><div class="info"><table><tbody><tr><th>Parameters<tr><td><dl><dt>opt_values: <code class="type">(<a href="http://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Global_Objects/Array">Array</a>.&lt;T&gt;|<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)=</code><dd>Initial values to start with.</dl></table></div></div></div></section>
