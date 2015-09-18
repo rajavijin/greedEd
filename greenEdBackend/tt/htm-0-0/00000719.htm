@@ -1,0 +1,40 @@
+<div id="hero2" hero-id="bar" hero></div>
+    </template>
+    </polymer-element>
+
+    <polymer-element name="x-page-2" noscript>
+    <template>
+      <style>
+        #hero1 {
+          position: absolute;
+          top: 200px;
+          left: 300px;
+          width: 300px;
+          height: 300px;
+          background-color: orange;
+        }
+        #hero2 {
+          background-color: blue;
+          height: 150px;
+          width: 400px;
+        }
+      </style>
+      // The below element is one level of shadow from the core-animated-pages and will
+      // be transitioned.
+      <div id="hero1" hero-id="foo" hero></div>
+      // The below element contains a hero inside its shadowRoot making it two levels away
+      // from the core-animated-pages, and will not be transitioned.
+      <x-el></x-el>
+    </template>
+    </polymer-element>
+
+    <core-animated-pages transitions="hero-transition">
+      <x-page-1></x-page-1>
+      <x-page-2></x-page-2>
+    </core-animated-pages>
+
+Note that the container element of the page does not participate in the transition.
+
+    // This does not work
+    <core-animated-pages transitions="cross-fade">
+      <section cross-fade></section>

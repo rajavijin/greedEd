@@ -1,0 +1,29 @@
+<div class="container <?php print $grid; ?>">
+      <div class="container-inner clearfix">
+
+        <div class="<?php print nucleus_group_class("content, sidebar_first");?>">
+          <!-- MAIN CONTENT -->
+          <section id="main-content" class="tb-main-box <?php print $content_width;?> section">
+            <div class="grid-inner clearfix">
+              <?php if ($tabs = render($tabs)): ?>
+                <div class="tabs"><?php print $tabs; ?></div>
+              <?php endif; ?>
+
+              <?php if ($highlighted = render($page['highlighted'])): print $highlighted; endif; ?>
+
+              <?php print render($title_prefix); ?>
+              <?php if ($title): ?>
+                <h1 id="page-title"><?php print $title; ?></h1>
+              <?php endif; ?>
+
+              <?php print render($title_suffix); ?>
+
+              <?php if ($action_links = render($action_links)): ?>
+                <ul class="action-links"><?php print $action_links; ?></ul>
+              <?php endif; ?>
+
+              <?php if ($content = render($page['content'])): print $content; endif; ?>
+
+              <?php print $feed_icons; ?>
+            </div>
+          </section>

@@ -1,0 +1,55 @@
+<div ng-switch="step">
+					      <div ng-switch-when="1">
+		                  	<div>
+		                        <legend>Enter Student Name And Id</legend>
+		                        <div class="row">
+								  <div class="col-md-6"><input placeholder="Name" ng-model="student.name" type="text"></div>
+								  <div class="col-md-6"><input placeholder="Id" ng-model="student.id" type="text"></div>
+								</div>
+		                     </div>
+					      </div>
+					      <div ng-switch-when="2">
+		                     <div>
+		                        <legend> Enter Student Sex</legend>
+		                        <input type="radio" name="sex" ng-model="student.male"value="male">Male<br>
+                                <input type="radio" name="sex" ng-model="student.female"value="female">Female
+		                     </div>
+					      </div>
+					      <div ng-switch-when="3">
+		                  	<div>
+		                        <legend>Enter Student Address</legend>
+								<input ng-model="student.address" placeholder="Enter student adress" type="text">
+		                    </div>
+					      </div>
+					      <div ng-switch-when="4">
+		                     <div>
+		                        <legend> Enter parent name</legend>
+		                        <input ng-model="student.parent" placeholder="Enter parent name" type="text">
+		                     </div>
+					      </div>
+					      <div ng-switch-when="5">
+		                     <div>
+		                        <legend> Enter parent phone number</legend>
+		                        <input ng-model="student.parentphone" placeholder="Enter parent phone number" type="text">
+		                     </div>
+					      </div>
+					      <div ng-switch-when="6">
+		                  	<div>
+		                        <legend>Enter Common Subjects</legend>
+		    
+								  <div class="col-md-6"><input placeholder="Teacher" ng-model="student.teacher" type="text"></div>
+								</div>
+		                     </div>
+					      </div>
+					   </div>
+	                  </div>
+	                  <button id="nextBtn" class="fbtn fa fa-arrow-circle-o-right" ng-click="next(step)"></button>
+	                  <button ng-if="step != 1" id="backBtn" class="fbtn fa fa-arrow-circle-o-left" ng-click="previous(step)"></button>
+	               </form>
+	            </div>
+	            </span>
+	         </div>
+	      </div>
+	   </div>
+	</div>
+	</section>

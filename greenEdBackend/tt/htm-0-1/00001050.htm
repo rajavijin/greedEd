@@ -1,0 +1,24 @@
+<div class="col-xs-6 no-padding">
+							 <div class="form-group">	
+                                 <label  for="enquiry" class="white">CAPTCHA*</label>		<br/>					
+														
+		            			       <img width="175px" src="http://www.corporatekeysaustralia.com.au/captcha/captcha.php" id="captcha" style="width:100%"/>     		
+							</div>
+							
+
+		
+		<span style="color:red;"></span>
+							</div>
+							<div class="col-xs-6 padding-left">
+							<br/>										
+								 <a href="#" onclick="document.getElementById('captcha').src='captcha/captcha.php?'+Math.random();document.getElementById('captcha-form').focus();" id="change-image" class="text2">Not readable? Change text.</a><br/><br/>
+							
+
+							</div>
+						  <input type="text" class="form-control" name="captcha" id="captcha-form">	
+						  
+				            <div class="option-bar" style="margin-top:15px">
+				                <input class="btn-ck-primary btn btn-block no-border-radius white" id="btnSubmit" name="btnSubmit"
+				                type="submit" value="SUBMIT">
+				            </div>
+						</section>

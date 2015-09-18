@@ -1,0 +1,75 @@
+<div class="action-area">
+    <div class="button-strip">
+      <button id="content-settings-overlay-confirm" class="default-button"
+          i18n-content="done">
+      </button>
+    </div>
+  </div>
+</div>
+
+  <div id="content-settings-page2" class="page" hidden>
+  <div class="close-button"></div>
+  <h1 i18n-content="contentSettingsPage"></h1>
+  <div class="content-area">
+    This space intentionally left blank.
+  </div>
+  <div class="action-area">
+    <div class="button-strip">
+      <button id="content-settings-overlay-confirm2" i18n-content="done">
+      </button>
+    </div>
+  </div>
+</div>
+
+  <div id="do-not-track-confirm-overlay" class="page" hidden>
+  <div class="close-button"></div>
+  <h1 i18n-content="doNotTrackConfirmOverlay"></h1>
+  <div class="content-area">
+    <span id="do-not-track-confirm-text"
+        i18n-content="doNotTrackConfirmMessage">
+    </span>
+    <a target="_blank" i18n-content="learnMore"
+        i18n-values="href:doNotTrackLearnMoreURL">
+    </a>
+  </div>
+  <div class="action-area">
+    <div class="button-strip">
+      <button id="do-not-track-confirm-ok" class="default-button"
+          i18n-content="doNotTrackConfirmEnable">
+      </button>
+      <button id="do-not-track-confirm-cancel"
+          i18n-content="doNotTrackConfirmDisable"
+          class="cancel-button">
+      </button>
+    </div>
+  </div>
+</div>
+
+  <div id="font-settings" class="page" hidden>
+  <div class="close-button"></div>
+  <h1 i18n-content="fontSettingsPage"></h1>
+  <div class="content-area">
+    <section>
+      <h3 i18n-content="fontSettingsStandard"></h3>
+      <div class="font-setting-container">
+        <div class="font-input-div">
+          <div>
+            <select id="standard-font-family" class="font-input"
+                data-type="string" metric="Options_ChangeStandardFont"
+                pref="webkit.webprefs.fonts.standard.Zyyy">
+            </select>
+          </div>
+          <div>
+            <input id="standard-font-size" type="range" min="0" max="24"
+                pref="webkit.webprefs.default_font_size">
+            <div>
+              <span i18n-content="fontSettingsSizeTiny"></span>
+              <span i18n-content="fontSettingsSizeHuge"
+                  class="font-settings-huge">
+              </span>
+            </div>
+          </div>
+        </div>
+        <div id="standard-font-sample" class="font-sample-div"></div>
+      </div>
+    </section>

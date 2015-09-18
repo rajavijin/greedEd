@@ -1,0 +1,51 @@
+<div role="main" class="document">
+            
+  <div class="section" id="troubleshooting">
+<h1>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h1>
+<p>If you find that no matter what you put in your URL only your default
+page is loading, it might be that your server does not support the
+REQUEST_URI variable needed to serve search-engine friendly URLs. As a
+first step, open your application/config/config.php file and look for
+the URI Protocol information. It will recommend that you try a couple
+alternate settings. If it still doesn&#8217;t work after you&#8217;ve tried this
+you&#8217;ll need to force CodeIgniter to add a question mark to your URLs. To
+do this open your <strong>application/config/config.php</strong> file and change this:</p>
+<div class="highlight-ci"><div class="highlight"><pre><span class="nv">$config</span><span class="p">[</span><span class="s1">&#39;index_page&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;index.php&quot;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>To this:</p>
+<div class="highlight-ci"><div class="highlight"><pre><span class="nv">$config</span><span class="p">[</span><span class="s1">&#39;index_page&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;index.php?&quot;</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../general/index.html" class="btn btn-neutral float-right" title="General Topics">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="upgrade_b11.html" class="btn btn-neutral" title="Upgrading From Beta 1.0 to Beta 1.1"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014 - 2015, British Columbia Institute of Technology.
+      Last updated on Apr 14, 2015.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>

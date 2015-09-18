@@ -1,0 +1,49 @@
+<div id="divLoading">
+                <img src="http://emailnotifier.webapps.conduitapps.com/icon-loader.gif" style="margin-top: 80px" />
+            </div>
+            <div class="tabcontent" id="uiTabContent">
+                <div class="scroll-pane" style="height:100%; outline: none">
+                    <div id="divMailContainer" style="height:100%">
+                        <!-- Dynamic text here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footerContent">
+            <table style="position: relative; top: -5px">
+                <tr>
+                    <td>
+                        <span id="spanRetreive" transkey="SB_EMAIL_NOTIFIER_RETREIEVE_INTERVAL_LABEL" >Retreive E-mails every</span>&nbsp;
+                    </td>
+                    <td>
+                        <select id="cmbInterval">
+                            <option value="5">5</option>
+                            <option value="10" selected="selected">10</option>
+                            <option value="15">15</option>
+                            <option value="20">20</option>
+                            <option value="25">25</option>
+                            <option value="30">30</option>
+                            <option value="35">35</option>
+                            <option value="40">40</option>
+                            <option value="45">45</option>
+                            <option value="50">50</option>
+                        </select>
+                    </td>
+                    <td>
+                        &nbsp;<span id="spanMinutes" transkey="SB_EMAIL_NOTIFIER_RETREIEVE_INTERVAL_MINUTES">minutes </span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+</div>
+
+</div>
+<div id='uiGlassPane' data-a10n-glasspanel="glasspane" class="glassPanel">
+    <article id='uiDialog' class='dialog' data-a10n-dialog="dialog">
+        <header data-a10n-dialog-header="header">
+            <label data-a10n-dialog-header="title"></label>
+            <section class="icons">
+                <a data-a10n-dialog-header-action="close" class='icon close'></a>
+            </section>

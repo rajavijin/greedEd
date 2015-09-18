@@ -1,0 +1,20 @@
+<div class="settings-row">
+        <button id="cloudPrintDevicesPageButton"
+            i18n-content="cloudPrintDevicesPageButton"></button>
+      </div>
+
+      <div class="settings-row checkbox controlled-setting-with-label"
+           i18n-values=".hidden: cloudPrintHideNotificationsCheckbox">
+        <label>
+          <input id="local-discovery-notifications-enabled"
+              pref="local_discovery.notifications_enabled"
+              type="checkbox"
+              metric="LocalDiscoveryNotificationsDisabled_Settings">
+          <span>
+            <span i18n-content="cloudPrintEnableNotificationsLabel"></span>
+            <span class="controlled-setting-indicator"
+                  pref="local_discovery.notifications_enabled"></span>
+          </span>
+        </label>
+      </div>
+    </section>

@@ -1,0 +1,51 @@
+<div class="text">
+      <p>
+        <span i18n-values=".innerHTML:automaticSettingsResetBannerText">
+        </span>
+        <a id="automatic-settings-reset-learn-more" class="nowrap"
+           i18n-values="href:automaticSettingsResetLearnMoreUrl"
+           i18n-content="learnMore" target="_blank"></a>
+      </p>
+    </div>
+  </div>
+</div>
+
+
+<section id="sync-section">
+  <h3 i18n-content="sectionTitleSync"></h3>
+
+
+  <div id="sync-overview" class="settings-row" hidden>
+    <p i18n-content="syncOverview"></p>
+    <a i18n-values="href:syncLearnMoreURL" i18n-content="learnMore"
+        target="_blank"></a>
+  </div>
+
+  <!-- pp_ifdef('chromeos') -->
+
+    <div id="sync-status" class="settings-row" hidden>
+      <span id="sync-status-text"></span>
+      <button id="sync-action-link" class="link-button"></button>
+    </div>
+
+  <!-- pp_ifdef('chromeos') -->
+
+  <div id="sync-buttons" class="settings-row">
+    <button id="start-stop-sync" hidden></button>
+    <span id="start-stop-sync-indicator"
+        class="controlled-setting-indicator" hidden>
+    </span>
+    <button id="customize-sync" i18n-content="customizeSync"
+        pref="sync.managed" hidden>
+    </button>
+  <!-- pp_ifdef('chromeos') -->
+    <div id="enable-auto-login-checkbox" class="checkbox" hidden>
+      <label>
+        <input id="enable-auto-login" pref="autologin.enabled"
+            metric="Options_Autologin" type="checkbox">
+        <span i18n-content="autologinEnabled"></span>
+      </label>
+    </div>
+  </div>
+
+</section>

@@ -1,0 +1,34 @@
+<div class="replace-with-website-settings">
+        <div class="radio controlled-setting-with-label">
+          <label>
+            <input type="radio" name="javascript" value="allow">
+            <span>
+              <span i18n-content="javascriptAllow"></span>
+              <span class="controlled-setting-indicator"
+                  content-setting="javascript" value="allow"></span>
+            </span>
+          </label>
+        </div>
+        <div class="radio controlled-setting-with-label">
+          <label>
+            <input type="radio" name="javascript" value="block">
+            <span>
+              <span i18n-content="javascriptBlock"></span>
+              <span class="controlled-setting-indicator"
+                  content-setting="javascript" value="block"></span>
+            </span>
+          </label>
+        </div>
+        <div class="settings-row">
+          <button class="exceptions-list-button" contentType="javascript"
+              i18n-content="manageExceptions"></button>
+        </div>
+      </div>
+      <div class="experimental-website-settings" hidden>
+        <span id="javascript-default-string"></span>
+        <div class="settings-row">
+          <button class="website-settings-permission-button"
+              contentType="javascript" i18n-content="websitesManage"></button>
+        </div>
+      </div>
+    </section>

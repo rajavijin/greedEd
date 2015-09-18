@@ -1,0 +1,11 @@
+<div id="main-wrapper"><input type="checkbox" id="sidenav-toggle" /><main><header><h1>Class goog.debug.Logger</h1><a class="source" href="source/lib/goog/debug/logger.js.src.html#l65">code &raquo;</a></header><section><p>The Logger is an object used for logging debug messages. Loggers are
+ normally named, using a hierarchical dot-separated namespace. Logger names
+ can be arbitrary strings, but they should normally be based on the package
+ name or class name of the logged component, such as goog.net.BrowserChannel.
+
+ The Logger object is loosely based on the java class
+ java.util.logging.Logger. It supports different levels of filtering for
+ different loggers.
+
+ The logger object should never be instantiated by application code. It
+ should always use the goog.debug.Logger.getLogger function.<h2>Constructor</h2><div class="ctor wrap-details public"><div><div class="ctor"><span class="member">goog.debug.Logger <span class="args">( name )</span></span></div><div class="info"><table><tbody><tr><th>Parameters<tr><td><dl><dt>name: <code class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></code><dd>The name of the Logger.</dl></table></div></div></div></section>

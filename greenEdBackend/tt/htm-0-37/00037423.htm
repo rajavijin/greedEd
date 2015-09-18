@@ -1,0 +1,30 @@
+<div><a class="source" href="source/lib/webdriver/promise.js.src.html#l1133">code &raquo;</a><span class="member"><a name="numAbortedFrames_">numAbortedFrames_</a> : <code class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></code></span></div><p>The number of aborted frames since the last time a task was executed or a
+ frame completed successfully.</summary></details></div></div><div class="wrap-details private"><div><details><summary><div><a class="source" href="source/lib/webdriver/promise.js.src.html#l1126">code &raquo;</a><span class="member"><a name="pendingRejections_">pendingRejections_</a> : <code class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></code></span></div><p>The number of "pending" promise rejections.
+
+ <p>Each time a promise is rejected and is not handled by a listener, it
+ will schedule a 0-based timeout to check if it is still unrejected in the
+ next turn of the JS-event loop. This allows listeners to attach to, and
+ handle, the rejected promise at any point in same turn of the event loop
+ that the promise was rejected.
+
+ <p>When this flow's own event loop triggers, it will not run if there
+ are any outstanding promise rejections. This allows unhandled promises to
+ be reported before a new task is started, ensuring the error is reported
+ to the current task queue.</summary></details></div></div><div class="wrap-details private"><div><details><summary><div><a class="source" href="source/lib/webdriver/promise.js.src.html#l1082">code &raquo;</a><span class="member"><a name="schedulingFrame_">schedulingFrame_</a> : <code class="type"><a href="class_webdriver_promise_Frame_.html">webdriver.promise.Frame_</a></code></span></div><p>A reference to the frame in which new tasks should be scheduled. If
+ <code >null</code>, tasks will be scheduled within the active frame. When forcing
+ a function to run in the context of a new frame, this pointer is used to
+ ensure tasks are scheduled within the newly created frame, even though it
+ won't be active yet.</summary></details></div></div><div class="wrap-details private"><div><details><summary><div><a class="source" href="source/lib/webdriver/promise.js.src.html#l1102">code &raquo;</a><span class="member"><a name="shutdownId_">shutdownId_</a> : <code class="type">?<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></code></span></div><p>Timeout ID set when the flow is about to shutdown without any errors
+ being detected. Upon shutting down, the flow will emit an
+ <code  class="type"><a href="enum_webdriver_promise_ControlFlow_EventType.html#webdriver.promise.ControlFlow.EventType.IDLE">webdriver.promise.ControlFlow.EventType.IDLE</a></code> event. Idle events
+ always follow a brief timeout in order to catch latent errors from the last
+ completed task. If this task had a callback registered, but no errback, and
+ the task fails, the unhandled failure would not be reported by the promise
+ system until the next turn of the event loop:
+
+   // Schedule 1 task that fails.
+   var result = webriver.promise.controlFlow().schedule('example',
+       function() { return webdriver.promise.rejected('failed'); });
+   // Set a callback on the result. This delays reporting the unhandled
+   // failure for 1 turn of the event loop.
+   result.then(goog.nullFunction);</summary></details></div></div><div class="wrap-details public"><div><details><summary><div><a class="source" href="source/lib/webdriver/promise.js.src.html#l1055">code &raquo;</a><span class="member"><a name="timer">timer</a> : <code class="type"><a href="class_webdriver_promise_ControlFlow.html#webdriver.promise.ControlFlow.Timer">webdriver.promise.ControlFlow.Timer</a></code></span></div><p>The timer used by this instance.</summary></details></div></div><h3>Defined in <code class="type"><a href="class_webdriver_EventEmitter.html">webdriver.EventEmitter</a></code></h3><div class="wrap-details private"><div><details><summary><div><a class="source" href="source/lib/webdriver/events.js.src.html#l35">code &raquo;</a><span class="member"><a name="events_">events_</a> : <code class="type">!<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></code></span></div><p>Map of events to registered listeners.</summary></details></div></div></section>

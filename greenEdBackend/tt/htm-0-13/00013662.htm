@@ -1,0 +1,28 @@
+<div class="navTag"></noscript> <![endif]--> <nav> <ul> <li><a class="esSwitch OneLinkNoTx" lang="es" xml:lang="es" hreflang="es" href="http://descargar.cnet.com">Espa&ntilde;ol</a></li> <li><a class="deSwitch OneLinkNoTx" lang="de" xml:lang="de" hreflang="de" href="http://de.download.cnet.com">Deutsch</a></li> <li><a class="frSwitch OneLinkNoTx" lang="fr" xml:lang="fr" hreflang="fr" href="http://telecharger.cnet.com">Fran&ccedil;ais</a></li> </ul> </nav> <!--[if lt IE 9]> <noscript></div></noscript> <![endif]--> </div>
+</li> <script type="text/javascript">
+    function switchLanguage(e, _this, locale) {
+        e.stop();
+        Cookie.write("DL_Lang", locale, {
+            path: '/',
+            domain: '.cnet.com',
+            duration: 9999
+        });
+        var domain = $(_this).getProperty('href');
+        var path = window.location.pathname;
+        var paramQuery = window.location.search;
+        window.location = domain + path + paramQuery;
+    }
+
+    $$('.enSwitch').addEvent('click', function(e) {
+        switchLanguage(e, this, 'en');
+    });
+    $$('.esSwitch').addEvent('click', function(e) {
+        switchLanguage(e, this, 'es');
+    });
+    $$('.deSwitch').addEvent('click', function(e) {
+        switchLanguage(e, this, 'de');
+    });
+    $$('.frSwitch').addEvent('click', function(e) {
+        switchLanguage(e, this, 'fr');
+    });
+</script> </ul> </div> </section>

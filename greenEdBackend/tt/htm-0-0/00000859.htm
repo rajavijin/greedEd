@@ -1,0 +1,43 @@
+<div class="content-area">
+    <p id="easy-unlock-turn-off-messagee" class="settings-row"
+        i18n-content="easyUnlockTurnOffDescription"></p>
+  </div>
+  <div class="action-area button-strip">
+    <button id="easy-unlock-turn-off-dismiss" i18n-content="cancel">
+    </button>
+    <button id="easy-unlock-turn-off-confirm" class="default-button"
+        i18n-content="easyUnlockTurnOffButton">
+    </button>
+    <div class="stretch"></div>
+    <div id="easy-unlock-turn-off-spinner" class="spinner" hidden></div>
+  </div>
+</div>
+
+  <div id="font-settings" class="page" hidden>
+  <div class="close-button"></div>
+  <h1 i18n-content="fontSettingsPage"></h1>
+  <div class="content-area">
+    <section>
+      <h3 i18n-content="fontSettingsStandard"></h3>
+      <div class="font-setting-container">
+        <div class="font-input-div">
+          <div>
+            <select id="standard-font-family" class="font-input"
+                data-type="string" metric="Options_ChangeStandardFont"
+                pref="webkit.webprefs.fonts.standard.Zyyy">
+            </select>
+          </div>
+          <div>
+            <input id="standard-font-size" type="range" min="0" max="24"
+                pref="webkit.webprefs.default_font_size">
+            <div>
+              <span i18n-content="fontSettingsSizeTiny"></span>
+              <span i18n-content="fontSettingsSizeHuge"
+                  class="font-settings-huge">
+              </span>
+            </div>
+          </div>
+        </div>
+        <div id="standard-font-sample" class="font-sample-div"></div>
+      </div>
+    </section>

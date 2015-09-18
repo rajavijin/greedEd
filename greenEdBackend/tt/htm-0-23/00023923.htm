@@ -1,0 +1,75 @@
+<div><a class="source" href="source/lib/goog/uri/utils.js.src.html#l873">code &raquo;</a><span class="member"><a name="goog.uri.utils.hashOrEndRe_">goog.uri.utils.hashOrEndRe_</a> : <code class="type"><a href="http://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Global_Objects/RegExp">RegExp</a></code></span></div><p>Regular expression for finding a hash mark or end of string.</summary></details></div></div><div class="wrap-details private"><div><details><summary><div><a class="source" href="source/lib/goog/uri/utils.js.src.html#l270">code &raquo;</a><span class="member"><a name="goog.uri.utils.needsPhishingProtection_">goog.uri.utils.needsPhishingProtection_</a> : <code class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></code></span></div><p>Safari has a nasty bug where if you have an http URL with a username, e.g.,
+ http://evil.com%2F@google.com/
+ Safari will report that window.location.href is
+ http://evil.com/google.com/
+ so that anyone who tries to parse the domain of that URL will get
+ the wrong domain. We've seen exploits where people use this to trick
+ Safari into loading resources from evil domains.
+
+ To work around this, we run a little "Safari phishing check", and throw
+ an exception if we see this happening.
+
+ There is no convenient place to put this check. We apply it to
+ anyone doing URI parsing on Webkit. We're not happy about this, but
+ it fixes the problem.
+
+ This should be removed once Safari fixes their bug.
+
+ Exploit reported by Masato Kinugawa.</summary></details></div></div><div class="wrap-details private"><div><details><summary><div><a class="source" href="source/lib/goog/uri/utils.js.src.html#l189">code &raquo;</a><span class="member"><a name="goog.uri.utils.splitRe_">goog.uri.utils.splitRe_</a> : <code class="type">!<a href="http://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Global_Objects/RegExp">RegExp</a></code></span></div><p>A regular expression for breaking a URI into its component parts.
+
+ <code  class="type"><a class="unresolved-link">http://www.ietf.org/rfc/rfc3986.txt</a></code> says in Appendix B
+ As the "first-match-wins" algorithm is identical to the "greedy"
+ disambiguation method used by POSIX regular expressions, it is natural and
+ commonplace to use a regular expression for parsing the potential five
+ components of a URI reference.
+
+ The following line is the regular expression for breaking-down a
+ well-formed URI reference into its components.
+
+ <pre>
+ ^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?
+  12            3  4          5       6  7        8 9
+ </pre>
+
+ The numbers in the second line above are only to assist readability; they
+ indicate the reference points for each subexpression (i.e., each paired
+ parenthesis). We refer to the value matched for subexpression <n> as $<n>.
+ For example, matching the above expression to
+ <pre>
+     http://www.ics.uci.edu/pub/ietf/uri/#Related
+ </pre>
+ results in the following subexpression matches:
+ <pre>
+    $1 = http:
+    $2 = http
+    $3 = //www.ics.uci.edu
+    $4 = www.ics.uci.edu
+    $5 = /pub/ietf/uri/
+    $6 = <undefined>
+    $7 = <undefined>
+    $8 = #Related
+    $9 = Related
+ </pre>
+ where <undefined> indicates that the component is not present, as is the
+ case for the query component in the above example. Therefore, we can
+ determine the value of the five components as
+ <pre>
+    scheme    = $2
+    authority = $4
+    path      = $5
+    query     = $7
+    fragment  = $9
+ </pre>
+
+ The regular expression has been modified slightly to expose the
+ userInfo, domain, and port separately from the authority.
+ The modified version yields
+ <pre>
+    $1 = http              scheme
+    $2 = <undefined>       userInfo -\
+    $3 = www.ics.uci.edu   domain     | authority
+    $4 = <undefined>       port     -/
+    $5 = /pub/ietf/uri/    path
+    $6 = <undefined>       query without ?
+    $7 = Related           fragment without #
+ </pre></summary></details></div></div><div class="wrap-details private"><div><details><summary><div><a class="source" href="source/lib/goog/uri/utils.js.src.html#l960">code &raquo;</a><span class="member"><a name="goog.uri.utils.trailingQueryPunctuationRe_">goog.uri.utils.trailingQueryPunctuationRe_</a> : <code class="type"><a href="http://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Global_Objects/RegExp">RegExp</a></code></span></div><p>Regexp to find trailing question marks and ampersands.</summary></details></div></div></section>

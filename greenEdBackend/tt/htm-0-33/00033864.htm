@@ -1,0 +1,27 @@
+<div id="main-wrapper"><input type="checkbox" id="sidenav-toggle" /><main><header><h1>Class goog.events.EventTarget</h1><a class="source" href="source/lib/goog/events/eventtarget.js.src.html#l70">code &raquo;</a><pre><code><a href="class_goog_Disposable.html">goog.Disposable</a>
+  &#x2514; goog.events.EventTarget</code></pre><dl><dt>All implemented interfaces:<dd><code><a href="interface_goog_disposable_IDisposable.html">goog.disposable.IDisposable</a></code>, <code><a href="interface_goog_events_Listenable.html">goog.events.Listenable</a></code></dl></header><section><p>An implementation of <code >goog.events.Listenable</code> with full W3C
+ EventTarget-like support (capture/bubble mechanism, stopping event
+ propagation, preventing default actions).
+
+ You may subclass this class to turn your class into a Listenable.
+
+ Unless propagation is stopped, an event dispatched by an
+ EventTarget will bubble to the parent returned by
+ <code >getParentEventTarget</code>. To set the parent, call
+ <code >setParentEventTarget</code>. Subclasses that don't support
+ changing the parent can override the setter to throw an error.
+
+ Example usage:
+ <pre>
+   var source = new goog.events.EventTarget();
+   function handleEvent(e) {
+     alert('Type: ' + e.type + '; Target: ' + e.target);
+   }
+   source.listen('foo', handleEvent);
+   // Or: goog.events.listen(source, 'foo', handleEvent);
+   ...
+   source.dispatchEvent('foo');  // will call handleEvent
+   ...
+   source.unlisten('foo', handleEvent);
+   // Or: goog.events.unlisten(source, 'foo', handleEvent);
+ </pre><h2>Constructor</h2><div class="ctor wrap-details public"><div><div class="ctor"><span class="member">goog.events.EventTarget <span class="args">( )</span></span></div></div></div></section>

@@ -1,0 +1,84 @@
+<div class="close-button"></div>
+  <h1 i18n-content="certificateRestorePasswordDescription"></h1>
+  <div class="content-area">
+    <label id="certificateRestorePasswordLabel">
+      <span i18n-content="certificatePasswordLabel"></span>
+      <input id="certificateRestorePassword" type="password">
+    </label>
+  </div>
+  <div class="action-area">
+    <div class="button-strip">
+      <button id="certificateRestoreCancelButton" type="reset"
+          i18n-content="cancel"></button>
+      <button id="certificateRestoreOkButton" class="default-button"
+          type="submit" i18n-content="ok">
+      </button>
+    </div>
+  </div>
+</div>
+
+  <div id="certificateBackupOverlay" class="page" hidden>
+  <div class="close-button"></div>
+  <h1 i18n-content="certificateExportPasswordDescription"></h1>
+  <div class="content-area">
+    <table>
+      <tr>
+        <td id="certificate-backup-password-label"
+            i18n-content="certificatePasswordLabel"></td>
+        <td>
+          <input id="certificateBackupPassword" type="password"
+              aria-labelledby="certificate-backup-password-label">
+        </td>
+      </tr>
+      <tr>
+        <td id="certificate-backup-password-2-label"
+            i18n-content="certificateConfirmPasswordLabel"></td>
+        <td>
+          <input id="certificateBackupPassword2" type="password"
+              aria-labelledby="certificate-backup-password-2-label">
+        </td>
+      </tr>
+    </table>
+    <p>
+      <span i18n-content="certificateExportPasswordHelp"></span>
+    </p>
+  </div>
+  <div class="action-area">
+    <div class="button-strip">
+      <button id="certificateBackupCancelButton" type="reset"
+          i18n-content="cancel"></button>
+      <button id="certificateBackupOkButton" class="default-button"
+          type="submit" i18n-content="ok" disabled>
+      </button>
+    </div>
+  </div>
+</div>
+
+  <div id="certificateEditCaTrustOverlay" class="page" hidden>
+  <h1><span i18n-content="certificateEditCaTitle"></span></h1>
+  <div class="close-button"></div>
+  <div class="content-area">
+    <div>
+      <span id="certificateEditCaTrustDescription"></span>
+    </div>
+    <section>
+      <h3><span i18n-content="certificateEditTrustLabel"></span></h3>
+      <div class="checkbox">
+        <label id="certificateCaTrustSSLLabel">
+          <input id="certificateCaTrustSSLCheckbox" type="checkbox">
+          <span i18n-content="certificateCaTrustSSLLabel"></span>
+        </label>
+      </div>
+      <div class="checkbox">
+        <label id="certificateCaTrustEmailLabel">
+          <input id="certificateCaTrustEmailCheckbox" type="checkbox">
+          <span i18n-content="certificateCaTrustEmailLabel"></span>
+        </label>
+      </div>
+      <div class="checkbox">
+        <label id="certificateCaTrustObjSignLabel">
+          <input id="certificateCaTrustObjSignCheckbox" type="checkbox">
+          <span i18n-content="certificateCaTrustObjSignLabel"></span>
+        </label>
+      </div>
+    </section>

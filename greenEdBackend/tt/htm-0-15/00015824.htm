@@ -1,0 +1,59 @@
+<div class="widget-wrapper">
+	         <div class="content-wrapper">
+	         	<div class="form-wrapper" ng-show="import">
+					<form role="form" ng-submit="csvImport(csv.result)">   	   
+					   <legend><center>Import Teachers</center></legend>
+					    <ng-csv-import content="csv.content" header="true" separator=";" result="csv.result"></ng-csv-import><br>
+					    <center><button type="submit" class="btn btn-info"><i class="fa fa-download"></i> Import</button></center>
+					</form>
+	         	</div>
+	         	<div class="message center" ng-if="msg != ''">
+				  <h1>{{msg}}</h1>
+				  <button ng-if="msg != 'Creating Teacher...'" type="button" class="btn btn-info" ng-click="reset()"><i class="fa fa-user"></i> Add another Teacher</button>
+	         	</div>
+	         	<span ng-if="msg == ''" ng-hide="import">
+	            <div class="breadcrumb-wrapper" style="">
+	               <ul class="breadcrumb clearfix">
+	               <li ng-if="teacher.name">{{teacher.name}}</li>
+	               <li ng-if="teacher.phone">{{teacher.phone}}</li>
+	               </ul>
+	               <div class="steps">{{step}}/3</div>
+	            </div>
+	            <div class="form-wrapper">
+	               <form>
+	                  <div class="form-content">
+			            <div ng-switch="step">
+					      <div ng-switch-when="1">
+		                  	<div>
+		                        <legend>Enter Teacher Name</legend>
+		                        <input type="text" placeholder="" ng-model="teacher.name">
+		                     </div>
+					      </div>
+					      <div ng-switch-when="2">
+		                     <div>
+		                        <legend> Enter your phone number</legend>
+		                        <input ng-model="teacher.phone" type="text">
+		                     </div>
+					      </div>
+					      <div ng-switch-when="3">
+		                  	<div>
+		                        <legend>Enter Teacher's Subject and Class</legend>
+								<div class="row" ng-repeat="(k,v) in teacher.subjects">
+								  <div class="col-md-1"><button class="fbtn ibtn fa" ng-class="{ 'fa-plus-square-o' : k == 0, 'fa-trash-o' : k !== 0}" ng-click="(k == 0) ? createSubject(): removeSubject(k)"></button></div>
+								  <div class="col-md-6"><input placeholder="Subject" ng-model="teacher.subjects[k].subject" type="text"></div>
+								  <div class="col-md-5"><input placeholder="Class" ng-model="teacher.subjects[k].class" type="text"></div>
+								</div>
+		                    </div>
+					      </div>
+					   </div>
+	                  </div>
+	                  <button id="nextBtn" class="fbtn fa fa-arrow-circle-o-right" ng-click="next(step)"></button>
+	                  <button ng-if="step != 1" id="backBtn" class="fbtn fa fa-arrow-circle-o-left" ng-click="previous(step)"></button>
+	               </form>
+	            </div>
+	            </span>
+	         </div>
+	      </div>
+	   </div>
+	</div>
+	</section>

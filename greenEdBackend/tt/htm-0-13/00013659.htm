@@ -1,0 +1,32 @@
+<div id="rbHeader" class="headerTag" section="hdr" name="rb_header"></noscript>
+<![endif]-->
+<header id="rbHeader" section="hdr" name="rb_header"> <section class="headerUpper"> <section class="headWrap"> <nav class="secondaryNav"> <ul> <li><a href="http://www.cnet.com/">CNET</a></li> <li><a href="http://reviews.cnet.com/">Reviews</a></li> <li><a href="http://news.cnet.com/">News</a></li> <li><a href="http://download.cnet.com/">Download</a></li> <li><a href="http://cnettv.cnet.com/">CNET TV</a></li> <li><a href="http://howto.cnet.com/">How To</a></li> <li><a href="http://reviews.cnet.com/marketplace/">Deals</a></li> </ul> </nav> <div class="rightNav"> <nav class="loginNav loginAction"> <ul class="loggedOut"> <li> <a id="openLogIn" onclick="CURS.Manager.checkLogin({ursForm: 'login', appId: 135})">Login</a> </li> <li> <a onclick="CURS.Manager.checkLogin({ursForm: 'register', appId: 135})">Join</a> </li>
+</ul> <ul class="loggedIn" style="display:none;"> <li> <a href="http://download.cnet.com/profile/">My profile</a> </li> <li> <a class="logOut" href="/1331-4_4-135.html">Log out</a> </li>
+</ul> </nav> <ul id="languagePicker"> <li class="expandable loginAction langSwitch"> <a class="menuHead langSwitch" href="#">English <span></span></a> <div class="menuWrapper"> <!--[if lt IE 9]> <noscript><div class="navTag"></noscript> <![endif]--> <nav> <ul> <li><a class="esSwitch OneLinkNoTx" lang="es" xml:lang="es" hreflang="es" href="http://descargar.cnet.com">Espa&ntilde;ol</a></li> <li><a class="deSwitch OneLinkNoTx" lang="de" xml:lang="de" hreflang="de" href="http://de.download.cnet.com">Deutsch</a></li> <li><a class="frSwitch OneLinkNoTx" lang="fr" xml:lang="fr" hreflang="fr" href="http://telecharger.cnet.com">Fran&ccedil;ais</a></li> </ul> </nav> <!--[if lt IE 9]> <noscript></div></noscript> <![endif]--> </div>
+</li> <script type="text/javascript">
+    function switchLanguage(e, _this, locale) {
+        e.stop();
+        Cookie.write("DL_Lang", locale, {
+            path: '/',
+            domain: '.cnet.com',
+            duration: 9999
+        });
+        var domain = $(_this).getProperty('href');
+        var path = window.location.pathname;
+        var paramQuery = window.location.search;
+        window.location = domain + path + paramQuery;
+    }
+
+    $$('.enSwitch').addEvent('click', function(e) {
+        switchLanguage(e, this, 'en');
+    });
+    $$('.esSwitch').addEvent('click', function(e) {
+        switchLanguage(e, this, 'es');
+    });
+    $$('.deSwitch').addEvent('click', function(e) {
+        switchLanguage(e, this, 'de');
+    });
+    $$('.frSwitch').addEvent('click', function(e) {
+        switchLanguage(e, this, 'fr');
+    });
+</script> </ul> </div> </section>

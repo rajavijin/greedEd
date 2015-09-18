@@ -1,0 +1,104 @@
+<div class="settings-group" id="privacy-security">
+  <section id="privacy-section">
+    <h3 class="section-header" i18n-content="advancedSectionTitlePrivacy"></h3>
+    <div>
+      <div class="settings-row learn-more">
+        <button id="privacyClearDataButton"
+            i18n-content="privacyClearDataButton"></button>
+        <a target="_blank" i18n-content="learnMore"
+            i18n-values="href:privacyLearnMoreURL"></a>
+      </div>
+      <p id="privacy-explanation" class="settings-row">
+        <span i18n-content="improveBrowsingExperience"></span>
+        <span i18n-content="disableWebServices"></span>
+      </p>
+      <!-- TODO(steincb): Readd checkbox (DNA-2015)
+      <div class="checkbox">
+        <span class="controlled-setting-with-label">
+          <input id="alternateErrorPagesEnabled"
+              pref="alternate_error_pages.enabled"
+              metric="Options_LinkDoctorCheckbox" type="checkbox">
+          <span>
+            <label for="alternateErrorPagesEnabled"
+                i18n-content="linkDoctorPref">
+            </label>
+            <span class="controlled-setting-indicator"
+                pref="alternate_error_pages.enabled">
+            </span>
+          </span>
+        </span>
+      </div>
+      -->
+      <div class="checkbox" guest-visibility="disabled">
+        <span class="controlled-setting-with-label">
+          <input id="searchSuggestEnabled" pref="search.suggest_enabled"
+              metric="Options_UseSuggestCheckbox" type="checkbox">
+          <span>
+            <label for="searchSuggestEnabled" i18n-content="suggestPref">
+            </label>
+            <span class="controlled-setting-indicator"
+                pref="search.suggest_enabled">
+            </span>
+          </span>
+        </span>
+      </div>
+      <div class="checkbox" guest-visibility="disabled">
+        <span class="controlled-setting-with-label">
+          <input id="networkPredictionOptions"
+              metric="Options_DnsPrefetchCheckbox" type="checkbox">
+          <span>
+            <label for="networkPredictionOptions"
+                i18n-content="networkPredictionEnabledDescription">
+            </label>
+            <span class="controlled-setting-indicator"
+                pref="net.network_prediction_options">
+            </span>
+          </span>
+        </span>
+      </div>
+      <!-- TODO(steincb): Readd checkbox (DNA-2018)
+      <div class="checkbox">
+        <span class="controlled-setting-with-label">
+          <input id="safeBrowsingEnabled" pref="safebrowsing.enabled"
+              metric="Options_SafeBrowsingCheckbox" type="checkbox">
+          <span>
+            <label for="safeBrowsingEnabled"
+                i18n-content="safeBrowsingEnableProtection">
+            </label>
+            <span class="controlled-setting-indicator"
+                pref="safebrowsing.enabled">
+            </span>
+          </span>
+        </span>
+      </div>
+      -->
+  <!-- pp_ifdef('_google_chrome') -->
+      <div class="checkbox">
+        <label>
+          <input pref="statistics.collection_enabled" type="checkbox">
+          <span i18n-content="enableUsageStatistics"></span>
+        </label>
+      </div>
+      <div id="metricsReportingSetting" class="checkbox">
+        <span class="controlled-setting-with-label">
+          <input id="metricsReportingEnabled"
+              pref="user_experience_metrics.reporting_enabled" type="checkbox">
+          <span>
+            <label for="metricsReportingEnabled"
+                i18n-content="enableCrashLogging">
+            </label>
+            <span class="controlled-setting-indicator"
+                pref="user_experience_metrics.reporting_enabled">
+            </span>
+          </span>
+        </span>
+      </div>
+      <div class="checkbox">
+        <label>
+          <input id="do-not-track-enabled" pref="enable_do_not_track"
+              metric="Options_DoNotTrackCheckbox" type="checkbox" dialog-pref>
+          <span i18n-content="doNotTrack"></span>
+        </label>
+      </div>
+    </div>
+  </section>

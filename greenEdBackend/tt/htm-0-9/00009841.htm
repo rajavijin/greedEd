@@ -1,0 +1,111 @@
+<div id="advanced-settings" hidden>
+<div id="advanced-settings-container">
+
+  <section id="privacy-section">
+    <h3 i18n-content="advancedSectionTitlePrivacy"></h3>
+    <div>
+      <div class="settings-row">
+        <button id="privacyContentSettingsButton"
+            i18n-content="privacyContentSettingsButton"></button>
+        <button id="privacyClearDataButton"
+            i18n-content="privacyClearDataButton"></button>
+      </div>
+      <p id="privacy-explanation" class="settings-row">
+        <span i18n-content="improveBrowsingExperience"></span>
+        <span i18n-content="disableWebServices"></span>
+        <a target="_blank" i18n-content="learnMore"
+            i18n-values="href:privacyLearnMoreURL"></a>
+      </p>
+      <div class="checkbox">
+        <span class="controlled-setting-with-label">
+          <input id="alternateErrorPagesEnabled"
+              pref="alternate_error_pages.enabled"
+              metric="Options_LinkDoctorCheckbox" type="checkbox">
+          <span>
+            <label for="alternateErrorPagesEnabled"
+                i18n-content="linkDoctorPref">
+            </label>
+            <span class="controlled-setting-indicator"
+                pref="alternate_error_pages.enabled">
+            </span>
+          </span>
+        </span>
+      </div>
+      <div class="checkbox" guest-visibility="disabled">
+        <span class="controlled-setting-with-label">
+          <input id="searchSuggestEnabled" pref="search.suggest_enabled"
+              metric="Options_UseSuggestCheckbox" type="checkbox">
+          <span>
+            <label for="searchSuggestEnabled" i18n-content="suggestPref">
+            </label>
+            <span class="controlled-setting-indicator"
+                pref="search.suggest_enabled">
+            </span>
+          </span>
+        </span>
+      </div>
+      <div class="checkbox" guest-visibility="disabled">
+        <span class="controlled-setting-with-label">
+          <input id="dnsPrefetchingEnabled" pref="dns_prefetching.enabled"
+              metric="Options_DnsPrefetchCheckbox" type="checkbox">
+          <span>
+            <label for="dnsPrefetchingEnabled"
+                i18n-content="networkPredictionEnabledDescription">
+            </label>
+            <span class="controlled-setting-indicator"
+                pref="dns_prefetching.enabled">
+            </span>
+          </span>
+        </span>
+      </div>
+      <div class="checkbox">
+        <span class="controlled-setting-with-label">
+          <input id="safeBrowsingEnabled" pref="safebrowsing.enabled"
+              metric="Options_SafeBrowsingCheckbox" type="checkbox">
+          <span>
+            <label for="safeBrowsingEnabled"
+                i18n-content="safeBrowsingEnableProtection">
+            </label>
+            <span class="controlled-setting-indicator"
+                pref="safebrowsing.enabled">
+            </span>
+          </span>
+        </span>
+      </div>
+<div class="checkbox">
+        <span class="controlled-setting-with-label">
+          <input id="spelling-enabled-control" type="checkbox"
+              pref="spellcheck.use_spelling_service" dialog-pref>
+          <span>
+            <label for="spelling-enabled-control" i18n-content="spellingPref">
+            </label>
+            <span id="spelling-enabled-indicator"
+                class="controlled-setting-indicator"
+                pref="spellcheck.use_spelling_service" dialog-pref>
+            </span>
+          </span>
+        </span>
+      </div>
+      <div id="metricsReportingSetting" class="checkbox">
+        <span class="controlled-setting-with-label">
+
+<input id="metricsReportingEnabled"
+              pref="user_experience_metrics.reporting_enabled" type="checkbox">
+          <span>
+            <label for="metricsReportingEnabled" i18n-content="enableLogging">
+            </label>
+            <span class="controlled-setting-indicator"
+                pref="user_experience_metrics.reporting_enabled">
+            </span>
+          </span>
+        </span>
+      </div>  <!-- pp_ifdef('_google_chrome') -->
+      <div class="checkbox">
+        <label>
+          <input id="do-not-track-enabled" pref="enable_do_not_track"
+              metric="Options_DoNotTrackCheckbox" type="checkbox" dialog-pref>
+          <span i18n-content="doNotTrack"></span>
+        </label>
+      </div>
+    </div>
+  </section>

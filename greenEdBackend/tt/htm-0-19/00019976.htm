@@ -1,0 +1,8 @@
+<div class="wrap-details public"><div><details class="function"><summary><div><a class="source" href="source/lib/webdriver/webdriver.js.src.html#l1550">code &raquo;</a><span class="member"><a name="window">window</a> <span class="args">( nameOrHandle )</span> &rArr; <code class="type">!<a href="class_webdriver_promise_Promise.html">webdriver.promise.Promise</a>.&lt;void&gt;</code></span></div><p>Schedules a command to switch the focus of all future commands to another
+ window. Windows may be specified by their <code >window.name</code> attribute or
+ by its handle (as returned by <code >webdriver.WebDriver#getWindowHandles</code>).
+ <p/>
+ If the specificed window can not be found, the deferred result will errback
+ with a <code >bot.ErrorCode.NO_SUCH_WINDOW</code> error.</summary><div class="info"><table><tbody><tr><th>Parameters<tr><td><dl><dt>nameOrHandle: <code class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></code><dd>The name or window handle of the window to
+     switch focus to.</dl><tr><th>Returns<tr><td><dl>A promise that will be resolved
+     when the driver has changed focus to the specified window.</dl></table></div></details></div></div></section>

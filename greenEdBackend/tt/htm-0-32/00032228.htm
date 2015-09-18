@@ -1,0 +1,33 @@
+<div id="main-wrapper"><input type="checkbox" id="sidenav-toggle" /><main><header><h1>Class webdriver.http.CorsClient</h1><a class="source" href="source/lib/webdriver/http/corsclient.js.src.html#l64">code &raquo;</a><dl><dt>All implemented interfaces:<dd><code><a href="interface_webdriver_http_Client.html">webdriver.http.Client</a></code></dl></header><section><p>Communicates with a WebDriver server, which may be on a different domain,
+ using the <a href="http://www.w3.org/TR/cors/">cross-origin resource sharing
+ </a> (CORS) extension to WebDriver's JSON wire protocol.
+
+ <p>Each command from the standard JSON protocol will be encoded in a
+ JSON object with the following form:
+ {method:string, path:string, data:!Object}
+
+ <p>The encoded command is then sent as a POST request to the server's /xdrpc
+ endpoint.  The server will decode the command, re-route it to the appropriate
+ handler, and then return the command's response as a standard JSON response
+ object.  The JSON responses will <em>always</em> be returned with a 200
+ response from the server; clients must rely on the response's "status" field
+ to determine whether the command succeeded.
+
+ <p>This client cannot be used with the standard wire protocol due to
+ limitations in the various browser implementations of the CORS specification:
+ <ul>
+   <li>IE's <a href="http://goo.gl/6l3kA">XDomainRequest</a> object is only
+     capable of generating the types of requests that may be generated through
+     a standard <a href="http://goo.gl/vgzAU">HTML form</a> - it can not send
+     DELETE requests, as is required in the wire protocol.
+   <li>WebKit's implementation of CORS does not follow the spec and forbids
+     redirects: https://bugs.webkit.org/show_bug.cgi?id=57600
+     This limitation appears to be intentional and is documented in WebKit's
+     Layout tests:
+     //LayoutTests/http/tests/xmlhttprequest/access-control-and-redirects.html
+   <li>If the server does not return a 2xx response, IE and Opera's
+     implementations will fire the XDomainRequest/XMLHttpRequest object's
+     onerror handler, but without the corresponding response text returned by
+     the server. This renders IE and Opera incapable of handling command
+     failures in the standard JSON protocol.
+ </ul><h2>Constructor</h2><div class="ctor wrap-details public"><div><div class="ctor"><span class="member">webdriver.http.CorsClient <span class="args">( url )</span></span></div><div class="info"><table><tbody><tr><th>Parameters<tr><td><dl><dt>url: <code class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></code><dd>URL for the WebDriver server to send commands to.</dl></table></div></div></div></section>

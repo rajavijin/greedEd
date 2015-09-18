@@ -1,0 +1,44 @@
+<div id="cloudprint-options-mdns" hidden>
+      <div class="settings-row">
+        <span i18n-content="cloudPrintOptionLabel"></span>
+        <a target="_blank" i18n-content="learnMore"
+           i18n-values="href:cloudPrintLearnMoreURL"></a>
+      </div>
+      <button id="cloudPrintDevicesPageButton"
+              i18n-content="cloudPrintDevicesPageButton">
+      </button>
+
+      <div class="checkbox"
+           i18n-values=".hidden: cloudPrintHideNotificationsCheckbox">
+        <span class="controlled-setting-with-label">
+          <input id="local-discovery-notifications-enabled"
+                 pref="local_discovery.notifications_enabled"
+                 type="checkbox"
+                 metric="LocalDiscoveryNotificationsDisabled_Settings" />
+          <span>
+            <label for="local-discovery-notifications-enabled"
+                   i18n-content="cloudPrintEnableNotificationsLabel">
+            </label>
+            <span class="controlled-setting-indicator"
+                  pref="local_discovery.notifications_enabled">
+            </span>
+          </span>
+      </div>
+    </div>
+
+    <div id="cloudprint-options-nomdns">
+
+
+<p id="cloudPrintConnectorLabel" class="settings-row"
+         i18n-content="cloudPrintConnectorDisabledLabel"></p>
+
+      <div class="settings-row">
+<button id="cloudPrintConnectorSetupButton"
+                i18n-content="cloudPrintConnectorDisabledButton"></button>
+
+        <button id="cloudPrintManageButton"
+                i18n-content="cloudPrintManageButton">
+        </button>
+      </div>
+    </div>
+  </section>

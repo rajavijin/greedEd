@@ -1,0 +1,57 @@
+<div>Type: <a href="http://api.jquery.com/Types/#Function" src="null">Function</a>()</div>
+<div>The function to execute when the DOM is ready.</div>
+</li></ul>
+</li></ul>
+<div class="longdesc" id="entry-longdesc-2">
+      <p>This function behaves just like <code>$( document ).ready()</code>, in that it should be used to wrap other <code>$()</code> operations on your page that depend on the DOM being ready. While this function is, technically, chainable, there really isn"t much use for chaining against it.</p>
+    </div>
+<section class="entry-examples" id="entry-examples-2"><header><h2>Examples:</h2></header><div class="entry-example" id="example-2-0">
+<h4>Example: <span class="desc">Execute the function when the DOM is ready to be used.</span>
+</h4>
+<div class="syntaxhighlighter javascript ">
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          
+            <div class="line n1">1</div>
+          
+            <div class="line n2">2</div>
+          
+            <div class="line n3">3</div>
+          
+        </td>
+        <td class="code">
+          <pre><div class="container"><div class="line"><code>$(<span class="keyword">function</span>() {</code></div></div><div class="container"><div class="line"><code>  <span class="comment">// Document is ready</span></code></div></div><div class="container"><div class="line"><code>});</code></div></div></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+</div>
+<div class="entry-example" id="example-2-1">
+<h4>Example: <span class="desc">Use both the shortcut for $(document).ready() and the argument to write failsafe jQuery code using the $ alias, without relying on the global alias.</span>
+</h4>
+<div class="syntaxhighlighter javascript ">
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          
+            <div class="line n1">1</div>
+          
+            <div class="line n2">2</div>
+          
+            <div class="line n3">3</div>
+          
+        </td>
+        <td class="code">
+          <pre><div class="container"><div class="line"><code>jQuery(<span class="keyword">function</span>( $ ) {</code></div></div><div class="container"><div class="line"><code>  <span class="comment">// Your code using failsafe $ alias here...</span></code></div></div><div class="container"><div class="line"><code>});</code></div></div></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+</div></section>

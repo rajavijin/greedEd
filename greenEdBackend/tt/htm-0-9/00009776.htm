@@ -1,0 +1,41 @@
+<div class="checkbox">
+      <span class="controlled-setting-with-label">
+        <input id="autofill-enabled" pref="autofill.enabled"
+            metric="Options_FormAutofill" type="checkbox">
+        <span>
+          <label for="autofill-enabled" i18n-content="autofillEnabled"></label>
+          <span class="controlled-setting-indicator" pref="autofill.enabled">
+          </span>
+          <button id="autofill-settings" class="link-button"
+              i18n-content="manageAutofillSettings">
+          </button>
+        </span>
+      </span>
+    </div>
+    <div class="checkbox">
+      <span class="controlled-setting-with-label">
+        <input id="password-manager-enabled"
+            pref="profile.password_manager_enabled"
+            metric="Options_PasswordManager" type="checkbox">
+        <span>
+          <label for="password-manager-enabled"
+              i18n-content="passwordManagerEnabled">
+          </label>
+          <span class="controlled-setting-indicator"
+              pref="profile.password_manager_enabled">
+          </span>
+          <button id="manage-passwords" class="link-button"
+              i18n-content="managePasswords">
+          </button>
+        </span>
+      </span>
+    </div>
+    <div class="checkbox" id="password-generation-checkbox">
+      <label>
+        <input id="password-generation-enabled" pref="password_generation.enabled"
+            metric="Options_PasswordGenerationCheckbox" type="checkbox">
+        <span i18n-content="passwordGenerationEnabledDescription"></span>
+      </label>
+    </div>
+
+  </section>

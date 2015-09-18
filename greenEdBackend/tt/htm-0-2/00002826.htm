@@ -1,0 +1,51 @@
+<div class="highlight"><pre><span class="nv">$response</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;status&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;OK&#39;</span><span class="p">);</span>
+
+<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">output</span>
+        <span class="o">-&gt;</span><span class="na">set_status_header</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
+        <span class="o">-&gt;</span><span class="na">set_content_type</span><span class="p">(</span><span class="s1">&#39;application/json&#39;</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="o">-&gt;</span><span class="na">set_output</span><span class="p">(</span><span class="nb">json_encode</span><span class="p">(</span><span class="nv">$response</span><span class="p">,</span> <span class="nx">JSON_PRETTY_PRINT</span> <span class="o">|</span> <span class="nx">JSON_UNESCAPED_UNICODE</span> <span class="o">|</span> <span class="nx">JSON_UNESCAPED_SLASHES</span><span class="p">))</span>
+        <span class="o">-&gt;</span><span class="na">_display</span><span class="p">();</span>
+<span class="k">exit</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Calling this method manually without aborting script execution will result in duplicated output.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="pagination.html" class="btn btn-neutral float-right" title="Pagination Class">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="migration.html" class="btn btn-neutral" title="Migrations Class"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014 - 2015, British Columbia Institute of Technology.
+      Last updated on Apr 14, 2015.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>

@@ -1,0 +1,69 @@
+<div class="section" id="query-bindings">
+<h2>Query Bindings<a class="headerlink" href="#query-bindings" title="Permalink to this headline">¶</a></h2>
+<p>Bindings enable you to simplify your query syntax by letting the system
+put the queries together for you. Consider the following example:</p>
+<div class="highlight-ci"><div class="highlight"><pre><span class="nv">$sql</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM some_table WHERE id = ? AND status = ? AND author = ?&quot;</span><span class="p">;</span>
+<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">query</span><span class="p">(</span><span class="nv">$sql</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;live&#39;</span><span class="p">,</span> <span class="s1">&#39;Rick&#39;</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>The question marks in the query are automatically replaced with the
+values in the array in the second parameter of the query function.</p>
+<p>Binding also work with arrays, which will be transformed to IN sets:</p>
+<div class="highlight-ci"><div class="highlight"><pre><span class="nv">$sql</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM some_table WHERE id IN ? AND status = ? AND author = ?&quot;</span><span class="p">;</span>
+<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">query</span><span class="p">(</span><span class="nv">$sql</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="s1">&#39;live&#39;</span><span class="p">,</span> <span class="s1">&#39;Rick&#39;</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>The resulting query will be:</p>
+<div class="highlight-ci"><div class="highlight"><pre><span class="nx">SELECT</span> <span class="o">*</span> <span class="nx">FROM</span> <span class="nx">some_table</span> <span class="nx">WHERE</span> <span class="nx">id</span> <span class="nx">IN</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span> <span class="k">AND</span> <span class="nx">status</span> <span class="o">=</span> <span class="s1">&#39;live&#39;</span> <span class="k">AND</span> <span class="nx">author</span> <span class="o">=</span> <span class="s1">&#39;Rick&#39;</span>
+</pre></div>
+</div>
+<p>The secondary benefit of using binds is that the values are
+automatically escaped, producing safer queries. You don&#8217;t have to
+remember to manually escape data; the engine does it automatically for
+you.</p>
+</div>
+<div class="section" id="handling-errors">
+<h2>Handling Errors<a class="headerlink" href="#handling-errors" title="Permalink to this headline">¶</a></h2>
+<p><strong>$this-&gt;db-&gt;error();</strong></p>
+<p>If you need to get the last error that has occured, the error() method
+will return an array containing its code and message. Here&#8217;s a quick
+example:</p>
+<div class="highlight-ci"><div class="highlight"><pre><span class="k">if</span> <span class="p">(</span> <span class="o">!</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">simple_query</span><span class="p">(</span><span class="s1">&#39;SELECT `example_field` FROM `example_table`&#39;</span><span class="p">))</span>
+<span class="p">{</span>
+        <span class="nv">$error</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">error</span><span class="p">();</span> <span class="c1">// Has keys &#39;code&#39; and &#39;message&#39;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="results.html" class="btn btn-neutral float-right" title="Generating Query Results">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="connecting.html" class="btn btn-neutral" title="Connecting to your Database"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014 - 2015, British Columbia Institute of Technology.
+      Last updated on Apr 14, 2015.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>

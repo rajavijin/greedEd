@@ -1,0 +1,16 @@
+<div id="main-wrapper"><input type="checkbox" id="sidenav-toggle" /><main><header><h1>Class webdriver.promise.Deferred.<code class="type">&lt;T&gt;</code></h1><a class="source" href="source/lib/webdriver/promise.js.src.html#l323">code &raquo;</a><pre><code>webdriver.promise.Promise.&lt;(T|null)&gt;
+  &#x2514; webdriver.promise.Deferred</code></pre><dl><dt>All implemented interfaces:<dd><code><a href="">webdriver.promise.Thenable.&lt;(T|null)&gt;</a></code></dl></header><section><p>Represents a value that will be resolved at some point in the future. This
+ class represents the protected "producer" half of a Promise - each Deferred
+ has a <code >promise</code> property that may be returned to consumers for
+ registering callbacks, reserving the ability to resolve the deferred to the
+ producer.
+
+ <p>If this Deferred is rejected and there are no listeners registered before
+ the next turn of the event loop, the rejection will be passed to the
+ <code  class="type"><a href="class_webdriver_promise_ControlFlow.html">webdriver.promise.ControlFlow</a></code> as an unhandled failure.
+
+ <p>If this Deferred is cancelled, the cancellation reason will be forward to
+ the Deferred's canceller function (if provided). The canceller may return a
+ truth-y value to override the reason provided for rejection.<h2>Constructor</h2><div class="ctor wrap-details public"><div><div class="ctor"><span class="member">webdriver.promise.Deferred <span class="args">( opt_flow )</span></span></div><div class="info"><table><tbody><tr><th>Parameters<tr><td><dl><dt>opt_flow: <code class="type"><a href="class_webdriver_promise_ControlFlow.html">webdriver.promise.ControlFlow</a>=</code><dd>The control flow
+     this instance was created under. This should only be provided during
+     unit tests.</dl></table></div></div></div></section>

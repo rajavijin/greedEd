@@ -1,0 +1,77 @@
+<div class="checkbox">
+      <label>
+        <input id="disableSpeedDialAnimations"
+               pref="speeddial.disable_animations" type="checkbox">
+        <span i18n-content="disableSpeedDialAnimations"></span>
+      </label>
+    </div>
+    <div class="advanced-setting" hidden>
+      <div class="checkbox advanced-setting-indicator"
+           i18n-values=".hidden:isExperimentalStartPage">
+        <label>
+          <input id="speed-dial-big-thumbnails"
+              pref="speeddial.big_thumbnails" type="checkbox">
+          <span i18n-content="speeddialBigThumbnails"></span>
+        </label>
+      </div>
+    </div>
+    <div class="power-setting" hidden>
+      <div class="settings-row power-setting-indicator"
+           i18n-values=".hidden:isExperimentalStartPage">
+        <div id="thumbnail-size">
+          <span i18n-contentF="speeddialThumbnailSize">
+            <input type="number" min="1" max="1000"
+                   pref="speeddial.thumbnail_width" data-type="number">
+            <input type="number" min="1" max="1000"
+                   pref="speeddial.thumbnail_height" data-type="number">
+          </span>
+          <button i18n-content="resetButton"
+                  pref-clear="speeddial.thumbnail_width,speeddial.thumbnail_height,speeddial.big_thumbnails">
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="advanced-setting" hidden>
+      <div class="settings-row advanced-setting-indicator"
+           i18n-values=".hidden:isExperimentalStartPage">
+        <label>
+          <span i18n-content="speeddialColumnCount"></span>
+          <select pref="speeddial.column_count" data-type="number">
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+          </select>
+        </label>
+      </div>
+      <div class="settings-row advanced-setting-indicator"
+           i18n-values=".hidden:isRegularStartPage">
+        <label>
+          <span i18n-content="speeddialColumnCount"></span>
+          <select pref="speeddial.experimental_column_count" data-type="number">
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+          </select>
+        </label>
+      </div>
+    </div>
+    <div class="power-setting" hidden>
+      <div class="checkbox power-setting-indicator">
+        <label>
+          <input pref="speeddial.hide_search_box" type="checkbox">
+          <span i18n-content="speeddialHideSearchBox"></span>
+        </label>
+      </div>
+    </div>
+  </section>

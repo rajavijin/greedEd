@@ -1,0 +1,21 @@
+<div class="cmtFrm">
+      <form name="it_comments_frm" id="it_comments_frm" method="POST">
+        <input type="hidden" name="cmt_content_id" id="cmt_content_id" value="19845"/>
+        <input type="hidden" name="cmt_contype_id" id="cmt_contype_id" value="3"/>
+        <input type="hidden" name="cmt_contype_id" id="cmt_contype_name" value="Photogallery"/>
+        <input type="hidden" name="cmt_headline" id="cmt_headline" value="'Madame Fisscher' exhibition"/>
+        <input type="hidden" name="cmt_guid" id="cmt_guid" value="http://www.indiatimes.com/art-and-culture/madame-fisscher-exhibition-19845.html"/>
+        
+        <div class="pcmt1">Comments are moderated and will be allowed if they are about the topic and not abusive.</div>        
+        <textarea name="comment_text" id="comment_text" onkeyup="remainingChar(this,'atrcharcount')" onfocus="makeBlank(this,'Your comment')" onblur="fillDefValue(this,'Your comment')">Your comment</textarea>
+        Characters remaining (<span id="atrcharcount">1500</span>) <span id="cmt_message" class="blank-error"></span>
+        <br><br>        
+        		<section class="ConnectBox" id="comments-login" style="border-bottom:none;">
+		  <div class="connectBtns">
+			<span class="lc blk gorg">LOGIN/CONNECT WITH:</span>
+			<a href="javascript:void(0);" class="ITConnect" onclick="loginNow('http://www.indiatimes.com/login.php')">Indiatimes</a>
+			<a href="javascript:void(0);" class="FBConnect" onclick="socialAppLogin('http://socialappsintegrator.indiatimes.com/socialsite/OAuth?channel=indiatimes_new', 1)">Indiatimes</a>
+			<a href="javascript:void(0);" class="TWConnect" onclick="socialAppLogin('http://socialappsintegrator.indiatimes.com/socialsite/twitterrequest?channel=indiatimes_new', 2)">Indiatimes</a>
+		  </div>
+		  <div class="clr"></div>
+		</section>

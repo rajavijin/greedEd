@@ -1,0 +1,51 @@
+<div id="main-wrapper"><input type="checkbox" id="sidenav-toggle" /><main><header><h1>Module selenium-webdriver/testing</h1><a class="source" href="source/testing/index.js.src.html">code &raquo;</a></header><section><p>Provides wrappers around the following global functions from
+ <a href="http://visionmedia.github.io/mocha/">Mocha's BDD interface</a>:
+ <ul>
+   <li>after
+   <li>afterEach
+   <li>before
+   <li>beforeEach
+   <li>it
+   <li>it.only
+   <li>it.skip
+   <li>xit
+ </ul>
+
+ <p>The provided wrappers leverage the <code  class="type"><a href="class_webdriver_promise_ControlFlow.html">webdriver.promise.ControlFlow</a></code>
+ to simplify writing asynchronous tests:
+ <pre><code>
+ var By = require('selenium-webdriver').By,
+     until = require('selenium-webdriver').until,
+     firefox = require('selenium-webdriver/firefox'),
+     test = require('selenium-webdriver/testing');
+
+ test.describe('Google Search', function() {
+   var driver;
+
+   test.before(function() {
+     driver = new firefox.Driver();
+   });
+
+   test.after(function() {
+     driver.quit();
+   });
+
+   test.it('should append query to title', function() {
+     driver.get('http://www.google.com/ncr');
+     driver.findElement(By.name('q')).sendKeys('webdriver');
+     driver.findElement(By.name('btnG')).click();
+     driver.wait(until.titleIs('webdriver - Google Search'), 1000);
+   });
+ });
+ </code></pre>
+
+ <p>You may conditionally suppress a test function using the exported
+ "ignore" function. If the provided predicate returns true, the attached
+ test case will be skipped:
+ <pre><code>
+   test.ignore(maybe()).it('is flaky', function() {
+     if (Math.random() < 0.5) throw Error();
+   });
+
+   function maybe() { return Math.random() < 0.5; }
+ </code></pre></section>

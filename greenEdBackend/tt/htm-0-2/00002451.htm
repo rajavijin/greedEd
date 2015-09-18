@@ -1,0 +1,74 @@
+<div class="last line-block">
+<div class="line"><br /></div>
+<div class="line">$this-&gt;db-&gt;query();</div>
+<div class="line">$this-&gt;db-&gt;result();</div>
+<div class="line">etc...</div>
+<div class="line"><br /></div>
+<div class="line">You will instead use:</div>
+<div class="line"><br /></div>
+<div class="line">$DB1-&gt;query();</div>
+<div class="line">$DB1-&gt;result();</div>
+<div class="line">etc...</div>
+</div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>You don&#8217;t need to create separate database configurations if you
+only need to use a different database on the same connection. You
+can switch to a different database when you need to, like this:</p>
+<div class="last line-block">
+<div class="line">$this-&gt;db-&gt;db_select($database2_name);</div>
+</div>
+</div>
+</div>
+<div class="section" id="reconnecting-keeping-the-connection-alive">
+<h2>Reconnecting / Keeping the Connection Alive<a class="headerlink" href="#reconnecting-keeping-the-connection-alive" title="Permalink to this headline">¶</a></h2>
+<p>If the database server&#8217;s idle timeout is exceeded while you&#8217;re doing
+some heavy PHP lifting (processing an image, for instance), you should
+consider pinging the server by using the reconnect() method before
+sending further queries, which can gracefully keep the connection alive
+or re-establish it.</p>
+<div class="highlight-ci"><div class="highlight"><pre><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">reconnect</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="manually-closing-the-connection">
+<h2>Manually closing the Connection<a class="headerlink" href="#manually-closing-the-connection" title="Permalink to this headline">¶</a></h2>
+<p>While CodeIgniter intelligently takes care of closing your database
+connections, you can explicitly close the connection.</p>
+<div class="highlight-ci"><div class="highlight"><pre><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">close</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="queries.html" class="btn btn-neutral float-right" title="Queries">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="configuration.html" class="btn btn-neutral" title="Database Configuration"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014 - 2015, British Columbia Institute of Technology.
+      Last updated on Apr 14, 2015.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>

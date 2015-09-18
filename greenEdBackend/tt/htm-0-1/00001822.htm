@@ -1,0 +1,26 @@
+<div class="checkbox">
+        <label>
+          <input id="do-not-track-enabled" pref="enable_do_not_track"
+              metric="Options_DoNotTrackCheckbox" type="checkbox" dialog-pref>
+          <span i18n-content="doNotTrack"></span>
+        </label>
+      </div>
+
+      <div id="hotword-search" hidden>
+        <div class="checkbox">
+          <span class="controlled-setting-with-label">
+            <input id="hotword-search-enable" pref="hotword.search_enabled"
+                metric="Options_HotwordCheckbox" type="checkbox" dialog-pref>
+            <span>
+              <label for="hotword-search-enable"
+                  i18n-values=".innerHTML:hotwordSearchEnable">
+              </label>
+              <span class="controlled-setting-indicator"
+                  pref="hotword.search_enabled" dialog-pref>
+              </span>
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>

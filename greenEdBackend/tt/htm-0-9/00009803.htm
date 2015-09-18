@@ -1,0 +1,102 @@
+<div class="action-area button-strip">
+    <button id="language-dictionary-overlay-done-button" i18n-content="done">
+    </button>
+  </div>
+</div>
+
+  <div id="manage-media-galleries-overlay" class="page" hidden>
+  <div class="close-button"></div>
+  <h1 i18n-content="manageMediaGalleries"></h1>
+  <div class="content-area">
+    <list id="available-galleries-list"></list>
+  </div>
+  <div class="action-area">
+    <div class="stretch">
+      <button id="new-media-gallery" i18n-content="addNewGalleryButton">
+      </button>
+    </div>
+    </stretch>
+    <div class="button-strip">
+      <button id="manage-media-confirm" i18n-content="done"></button>
+    </div>
+  </div>
+</div>
+
+  
+  
+</div>
+<div id="overlay-container-3" class="overlay transparent" hidden>
+</div>
+
+<div id="main-content">
+  <div id="mainview">
+    <div id="mainview-content">
+      <div id="page-container">
+        <!-- Please keep the main pages in desired order of display.  This will
+             allow search results to display in the desired order. -->
+        <div id="searchBox" class="page">
+  <header >
+    <span id="browser-options-search-field-container"
+        class="search-field-container">
+      <input id="search-field" type="search"
+          i18n-values="placeholder:searchPlaceholder;
+                       aria-label:searchPlaceholder" incremental>
+    </span>
+  </header>
+</div>
+
+        <div id="searchPage" class="page" hidden>
+  <header>
+    <h1 i18n-content="searchPage"></h1>
+  </header>
+  <div id="searchPageNoMatches" hidden>
+    <p i18n-content="searchPageNoMatches"></p>
+    <p><span i18n-content="searchPageHelpLabel"></span>
+      <a target="_blank" i18n-content="searchPageHelpTitle"
+          i18n-values="href:searchPageHelpURL"></a>
+    </p>
+  </div>
+</div>
+
+        <div id="settings" class="page" hidden>
+  <header>
+    <h1 i18n-content="settingsTitle"></h1>
+  </header>
+<section id="sync-section">
+  <h3 i18n-content="sectionTitleSync"></h3>
+
+
+  <div id="sync-overview" class="settings-row" hidden>
+    <p i18n-content="syncOverview"></p>
+    <a i18n-values="href:syncLearnMoreURL" i18n-content="learnMore"
+        target="_blank"></a>
+  </div>
+
+  <!-- pp_ifdef('chromeos') -->
+
+    <div id="sync-status" class="settings-row" hidden>
+      <span id="sync-status-text"></span>
+      <button id="sync-action-link" class="link-button"></button>
+    </div>
+
+  <!-- pp_ifdef('chromeos') -->
+
+  <div id="sync-buttons" class="settings-row">
+    <button id="start-stop-sync" hidden></button>
+    <span id="start-stop-sync-indicator"
+        class="controlled-setting-indicator" hidden>
+    </span>
+    <button id="customize-sync" i18n-content="customizeSync"
+        pref="sync.managed" hidden>
+    </button>
+  <!-- pp_ifdef('chromeos') -->
+    <div id="enable-auto-login-checkbox" class="checkbox" hidden>
+      <label>
+        <input id="enable-auto-login" pref="autologin.enabled"
+            metric="Options_Autologin" type="checkbox">
+        <span i18n-content="autologinEnabled"></span>
+      </label>
+    </div>
+  </div>
+
+</section>

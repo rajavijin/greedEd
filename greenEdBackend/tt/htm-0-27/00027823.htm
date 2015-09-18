@@ -1,0 +1,22 @@
+<div><details><summary><div><a class="source" href="source/lib/goog/uri/utils.js.src.html#l597">code &raquo;</a><a class="member" name="goog.uri.utils.QueryArray">goog.uri.utils.QueryArray</a> : <code class="type">!<a href="http://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Global_Objects/Array">Array</a></code></div><div>An array representing a set of query parameters with alternating keys
+ and values.
+
+ Keys are assumed to be URI encoded already and live at even indices.  See
+ goog.uri.utils.QueryValue for details on how parameter values are encoded.
+
+ Example:
+ <pre>
+ var data = [
+   // Simple param: ?name=BobBarker
+   'name', 'BobBarker',
+   // Conditional param -- may be omitted entirely.
+   'specialDietaryNeeds', hasDietaryNeeds() ? getDietaryNeeds() : null,
+   // Multi-valued param: &house=LosAngeles&house=NewYork&house=null
+   'house', ['LosAngeles', 'NewYork', null]
+ ];
+ </pre></div></summary></details></div></div><div class="wrap-details public"><div><details><summary><div><a class="source" href="source/lib/goog/uri/utils.js.src.html#l573">code &raquo;</a><a class="member" name="goog.uri.utils.QueryValue">goog.uri.utils.QueryValue</a> : <code class="type">*</code></div><div>Supported query parameter values by the parameter serializing utilities.
+
+ If a value is null or undefined, the key-value pair is skipped, as an easy
+ way to omit parameters conditionally.  Non-array parameters are converted
+ to a string and URI encoded.  Array values are expanded into multiple
+ &key=value pairs, with each element stringized and URI-encoded.</div></summary></details></div></div></section>

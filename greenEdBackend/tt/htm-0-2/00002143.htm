@@ -1,0 +1,114 @@
+<div class="checkbox controlled-setting-with-label">
+        <label>
+          <input id="alternateErrorPagesEnabled"
+              pref="alternate_error_pages.enabled"
+              metric="Options_LinkDoctorCheckbox" type="checkbox">
+          <span>
+            <span i18n-content="linkDoctorPref"></span>
+            <span class="controlled-setting-indicator"
+                pref="alternate_error_pages.enabled"></span>
+          </span>
+        </label>
+      </div>
+      <div class="checkbox controlled-setting-with-label"
+          guest-visibility="disabled">
+        <label>
+          <input pref="search.suggest_enabled"
+              metric="Options_UseSuggestCheckbox" type="checkbox">
+          <span>
+            <span i18n-content="suggestPref"></span>
+            <span class="controlled-setting-indicator"
+                pref="search.suggest_enabled"></span>
+          </span>
+        </label>
+      </div>
+      <div class="checkbox" guest-visibility="disabled">
+        <span class="controlled-setting-with-label">
+          <label>
+            <input id="networkPredictionOptions"
+                metric="Options_DnsPrefetchCheckbox" type="checkbox">
+            <span>
+              <span i18n-content="networkPredictionEnabledDescription"></span>
+              <span class="controlled-setting-indicator"
+                  pref="net.network_prediction_options"></span>
+            </span>
+          </label>
+        </span>
+      </div>
+      <div class="checkbox controlled-setting-with-label">
+        <label>
+          <input
+              metric="Options_SafeBrowsingExtendedReportingCheckbox"
+              pref="safebrowsing.extended_reporting_enabled"
+              type="checkbox">
+          <span>
+            <span i18n-content="safeBrowsingEnableExtendedReporting"></span>
+            <span class="controlled-setting-indicator"
+                pref="safebrowsing.extended_reporting_enabled"></span>
+          </span>
+        </label>
+      </div>
+      <div class="checkbox controlled-setting-with-label">
+        <label>
+          <input pref="safebrowsing.enabled"
+              metric="Options_SafeBrowsingCheckbox" type="checkbox">
+          <span>
+            <span i18n-content="safeBrowsingEnableProtection"></span>
+            <span class="controlled-setting-indicator"
+                pref="safebrowsing.enabled"></span>
+          </span>
+        </label>
+      </div>
+<div class="checkbox controlled-setting-with-label">
+        <label>
+          <input id="spelling-enabled-control" type="checkbox"
+              metric="Options_SpellingServiceCheckbox"
+              pref="spellcheck.use_spelling_service" dialog-pref>
+          <span>
+            <span i18n-content="spellingPref"></span>
+            <span id="spelling-enabled-indicator"
+                class="controlled-setting-indicator"
+                pref="spellcheck.use_spelling_service" dialog-pref>
+            </span>
+        </label>
+      </div>
+      <div id="metricsReportingSetting"
+          class="checkbox controlled-setting-with-label">
+
+<label>
+          <input id="metricsReportingEnabled" type="checkbox">
+          <span>
+            <span i18n-content="enableLogging"></span>
+            <span id="metrics-reporting-disabled-icon"
+                class="controlled-setting-indicator"></span>
+          </span>
+        </label>
+        <span id="metrics-reporting-reset-restart">
+          <!-- Text filled by JavaScript -->
+          <span></span><a is="action-link" role="button"
+              class="standalone-action-link"></a><span></span>
+        </span>
+      </div>  <!-- _google_chrome -->
+      <div class="checkbox">
+        <label>
+          <input id="do-not-track-enabled" pref="enable_do_not_track"
+              metric="Options_DoNotTrackCheckbox" type="checkbox" dialog-pref>
+          <span i18n-content="doNotTrack"></span>
+        </label>
+      </div>
+
+      <div id="hotword-search" hidden>
+        <div class="checkbox controlled-setting-with-label">
+          <label>
+            <input id="hotword-search-enable" pref="hotword.search_enabled_2"
+                metric="Options_HotwordCheckbox" type="checkbox" dialog-pref>
+            <span>
+              <span i18n-values=".innerHTML:hotwordSearchEnable"></span>
+              <span id="hotword-search-setting-indicator"
+                  pref="hotword.search_enabled_2" dialog-pref></span>
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </section>

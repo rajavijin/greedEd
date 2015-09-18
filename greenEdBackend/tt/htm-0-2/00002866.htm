@@ -1,0 +1,50 @@
+<div class="highlight"><pre><span class="c1">// You need to pass FALSE while sending in order for the email data</span>
+<span class="c1">// to not be cleared - if that happens, print_debugger() would have</span>
+<span class="c1">// nothing to output.</span>
+<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">email</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">(</span><span class="k">FALSE</span><span class="p">);</span>
+
+<span class="c1">// Will only print the email headers, excluding the message subject and body</span>
+<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">email</span><span class="o">-&gt;</span><span class="na">print_debugger</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">&#39;headers&#39;</span><span class="p">));</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">By default, all of the raw data will be printed.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="encrypt.html" class="btn btn-neutral float-right" title="Encrypt Class">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="config.html" class="btn btn-neutral" title="Config Class"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014 - 2015, British Columbia Institute of Technology.
+      Last updated on Apr 14, 2015.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>

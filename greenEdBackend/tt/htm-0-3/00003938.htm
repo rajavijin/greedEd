@@ -1,0 +1,72 @@
+<div id="cbd-throbber" class="throbber"></div>
+    <div class="action-area-right">
+      <div class="button-strip">
+        <button id="clear-browser-data-dismiss" i18n-content="cancel"></button>
+        <button id="clear-browser-data-commit"
+            i18n-content="clearBrowserDataCommit"></button>
+      </div>
+    </div>
+  </div>
+  <div id="some-stuff-remains-footer" class="gray-bottom-bar">
+    <p><!--This is filled by JavaScript--></p>
+  </div>
+</div>
+
+    <!-- Modified by Opera Software ASA -->
+<!-- @copied-from chromium/src/chrome/browser/resources/options/do_not_track_confirm_overlay.html -->
+<!-- @last-synchronized 70340f191abcce22c2f3b1d02823de7d35f3e1d9 -->
+<div id="do-not-track-confirm-overlay" class="page" hidden>
+  <div class="close-button"></div>
+  <h1 i18n-content="doNotTrackConfirmOverlay"></h1>
+  <div class="content-area">
+    <span id="do-not-track-confirm-text"
+        i18n-content="doNotTrackConfirmMessage">
+    </span>
+  </div>
+  <div class="action-area">
+    <div class="hbox stretch">
+      <a target="_blank" i18n-content="learnMore"
+          i18n-values="href:doNotTrackLearnMoreURL">
+      </a>
+    </div>
+    <div class="action-area-right">
+      <div class="button-strip">
+        <button id="do-not-track-confirm-cancel"
+            i18n-content="doNotTrackConfirmDisable">
+        </button>
+        <button class="default-button" id="do-not-track-confirm-ok"
+            i18n-content="doNotTrackConfirmEnable">
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div id="font-settings" class="page" hidden>
+  <div class="close-button"></div>
+  <h1 i18n-content="fontSettingsPage"></h1>
+  <div class="content-area">
+    <section>
+      <h3 class="section-header" i18n-content="fontSettingsStandard"></h3>
+      <div class="font-setting-container">
+        <div class="font-input-div">
+          <div>
+            <select id="standard-font-family" class="font-input"
+                data-type="string" metric="Options_ChangeStandardFont"
+                pref="webkit.webprefs.fonts.standard.Zyyy">
+            </select>
+          </div>
+          <div>
+            <input id="standard-font-size" type="range" min="0" max="24"
+                pref="webkit.webprefs.default_font_size">
+            <div>
+              <span i18n-content="fontSettingsSizeTiny"></span>
+              <span i18n-content="fontSettingsSizeHuge"
+                  class="font-settings-huge">
+              </span>
+            </div>
+          </div>
+        </div>
+        <div id="standard-font-sample" class="font-sample-div"></div>
+      </div>
+    </section>

@@ -1,0 +1,97 @@
+<div id="dog_tag"><p><a href="/"><img src="/r10/logo_dog2_lg.gif" alt="HTML Dog" width="80" height="41"><span><span></span></span><span><span></span></span></a></p></div>
+
+<nav id="you_are_here"><a href="/" id="home_link">HTML Dog</a><span> &rarr; </span><a href="/guides/">Tutorials</a><span> &rarr; </span><a href="/guides/css/">CSS</a><span> &rarr; </span><a href="/guides/css/advanced/">Advanced</a><span id="yah_last"> &rarr; </span></nav>
+
+<article>
+
+<header>
+
+	<h1>Rounded Corners</h1>
+
+	<p><em>Rounded corners</em> used to be the stuff of constricting solid background images or, for flexible boxes, numerous background images, one per-corner, slapped on multiple nested <a href="/reference/htmltags/div/" class="acode"><code>div</code></a> elements. Argh, ugly. Well, not any longer. Now, with simple CSS, you can lavish your designs with more curves than Marilyn Monroe.</p>
+
+
+</header>
+
+<section id="main_content">
+
+<aside id="ads">
+	<p><a href="http://www.siteground.com/web-hosting.htm?afcode=4960306b51b3ed1ddecbf83b3076ee11"><img src="/r10/siteground1.png" alt="SiteGround: Fast, reliable, recommended hosting." width="120" height="184"></a></p>
+</aside>
+
+
+
+<h2>Border radius?</h2>
+
+<p>Yeah. Border radius. Fear not, though - you don&#8217;t have to have borders. The <code>border-radius</code> property can be used to add a corner to each corner of a box.</p>
+
+<pre><code class="css">
+#marilyn {
+    background: #fc0; 
+    padding: 20px;
+    <em>border-radius: 10px;</em>
+}
+</code></pre>
+
+<p>And you get something like this. Rounded corners, see? If you&#8217;ve got a sensible browser (see note below).</p>
+
+<p>Or:</p>
+
+<pre><code class="css">
+#ok_a_border_then {
+    border: 5px solid #8b2;
+    padding: 20px;
+    <em>border-radius: 5px;</em>
+}
+</code></pre>
+
+<p>Woop.</p>
+
+<h2>Multiple values</h2>
+
+<p><code>border-top-left-radius</code>, <code>border-top-right-radius</code>, <code>border-bottom-right-radius</code>, and <code>border-bottom-left-radius</code> can also be used to target specific corners.</p>
+
+<p>Ever so slightly less horribly wordy, you can also define all corner radii (what a great word) individually with a space-separated list of values, working clockwise from top-left, just like other <a href="../../intermediate/shorthand/">shorthand properties</a>:</p>
+
+<pre><code class="css">
+#monroe {
+    background: #fc0;
+    padding: 20px;
+    <em>border-radius: 3px 6px 9px 12px;</em>
+}
+</code></pre>
+
+<p>Curvy.</p>
+
+<p>By using two values instead of four you target top-left and bottom-right with the first length (or percentage) and top-right + bottom-left with the second. Three values? Top-left, then top-right  + bottom-left, then bottom-right. Smashing.</p>
+
+<aside class="note warning">
+<p>Gah! There just had to be browser issues, didn&#8217;t there? Damn you, browsers.</p>
+
+<p>Internet Explorer versions 8 and below don&#8217;t support <code>border-radius</code>. The only way you can deal with this is either to make do with a design in those browsers that doesn&#8217;t have rounded corners (most people can live with that), or revert to the old background images.</p>
+</aside>
+
+<aside class="note i">
+<p>You might also stumble across similar proprietary properties, such as <code>-webkit-border-radius</code> and <code>-moz-border-radius</code> which are for older, barely-used versions of Safari and Firefox respectively. Our carefully worded professional advice? Screw &#8216;em.</p>
+</aside>
+
+<h2>Ellipses</h2>
+
+<p>Are circles a bit too square for you? You can specify different horizontal and vertical radiiii by splitting values with a &#8220;/&#8221;.</p>
+
+<pre><code class="css">
+#nanoo {
+    width: 100px;
+    height: 50px;
+    text-align: center;
+    padding-top: 100px;
+    background: #fc0;
+    <em>border-radius: 50px/100px;</em>
+    border-bottom-left-radius: 50px;
+    border-bottom-right-radius: 50px;
+}
+</code></pre>
+
+<p>Nanoo.</p>
+
+</section>

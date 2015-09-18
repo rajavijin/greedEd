@@ -1,0 +1,65 @@
+<div class="checkbox controlled-setting-with-label">
+        <label>
+          <input id="spelling-enabled-control" type="checkbox"
+              metric="Options_SpellingServiceCheckbox"
+              pref="spellcheck.use_spelling_service" dialog-pref>
+          <span>
+            <span i18n-content="spellingPref"></span>
+            <span id="spelling-enabled-indicator"
+                class="controlled-setting-indicator"
+                pref="spellcheck.use_spelling_service" dialog-pref>
+            </span>
+        </label>
+      </div>
+      <div id="metrics-reporting-setting"
+          class="checkbox controlled-setting-with-label">
+
+<label>
+          <input id="metrics-reporting-enabled" type="checkbox">
+          <span>
+            <span i18n-content="enableLogging"></span>
+            <span id="metrics-reporting-disabled-icon"
+                class="controlled-setting-indicator"></span>
+          </span>
+        </label>
+        <span id="metrics-reporting-reset-restart" hidden>
+          <!-- Text filled by JavaScript -->
+          <span></span><a is="action-link" role="button"
+              class="standalone-action-link"></a><span></span>
+        </span>
+      </div>
+      <div id="rappor-setting" class="checkbox controlled-setting-with-label">
+        <label>
+          <input pref="rappor.enabled" type="checkbox"
+              metric="Options_RapporEnabledCheckbox">
+          <span>
+            <span i18n-values=".innerHTML:enableRappor"></span>
+            <span class="controlled-setting-indicator"
+                pref="rappor.enabled"></span>
+          </span>
+        </label>
+      </div>  <!-- _google_chrome -->
+      <div class="checkbox">
+        <label>
+          <input id="do-not-track-enabled" pref="enable_do_not_track"
+              metric="Options_DoNotTrackCheckbox" type="checkbox" dialog-pref>
+          <span i18n-content="doNotTrack"></span>
+        </label>
+      </div>
+
+      <div id="hotword-search" hidden>
+        <div class="checkbox controlled-setting-with-label">
+          <label>
+            <input id="hotword-search-enable" pref="hotword.search_enabled_2"
+                metric="Options_HotwordCheckbox" type="checkbox" dialog-pref>
+            <span>
+              <span i18n-values=".innerHTML:hotwordSearchEnable"></span>
+              <span id="hotword-search-setting-indicator"
+                  pref="hotword.search_enabled_2" dialog-pref></span>
+            </span>
+          </label>
+        </div>
+      </div>
+
+    </div>
+  </section>

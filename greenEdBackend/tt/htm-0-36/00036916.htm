@@ -1,0 +1,11 @@
+<div class="wrap-details private"><div><details class="function"><summary><div><a class="source" href="source/lib/webdriver/webdriver.js.src.html#l179">code &raquo;</a><span class="member"><a name="webdriver.WebDriver.toWireValue_">webdriver.WebDriver.toWireValue_</a> <span class="args">( obj )</span> &rArr; <code class="type">!<a href="class_webdriver_promise_Promise.html">webdriver.promise.Promise</a></code></span></div><p>Converts an object to its JSON representation in the WebDriver wire protocol.
+ When converting values of type object, the following steps will be taken:
+ <ol>
+ <li>if the object is a WebElement, the return value will be the element's
+     server ID</li>
+ <li>if the object provides a "toJSON" function, the return value of this
+     function will be returned</li>
+ <li>otherwise, the value of each key will be recursively converted according
+     to the rules above.</li>
+ </ol></summary><div class="info"><table><tbody><tr><th>Parameters<tr><td><dl><dt>obj: <code class="type">*</code><dd>The object to convert.</dl><tr><th>Returns<tr><td><dl>A promise that will resolve to the
+     input value's JSON representation.</dl></table></div></details></div></div></section>

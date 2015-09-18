@@ -1,0 +1,82 @@
+<div class="panel-body">
+						<form class="form-horizontal tasi-form" ng-submit="csvImport(csv.result)">
+						<div class="form-group">
+					      <label class="col-sm-2 col-sm-2 control-label" for="name">School</label>
+					      <div class="col-sm-10">
+						      <input required="true" type="text" class="form-control" ng-model="school.school" 
+						         placeholder="Enter school name">
+					      </div>
+					   </div>
+					   <div class="form-group">
+					      <label class="col-sm-2 col-sm-2 control-label" for="name">School phone</label>
+					      <div class="col-sm-10">
+						      <input required="true" type="text" class="form-control" ng-model="school.schoolphone" 
+						         placeholder="Enter school phone number">
+					      </div>
+					   </div>	   
+					   	<div class="form-group required">
+					      <label class="col-sm-2 col-sm-2 control-label" for="passmark">Type of Ranking</label>
+					      <div class="col-sm-10">
+							<div class="radio">
+						  		<label><input type="radio" ng-model="school.ranking" value="grade">Grade</label>
+							</div>
+							<div class="radio">
+						  		<label><input type="radio" ng-model="school.ranking" value="rank">Rank</label>
+							</div>
+					      </div>
+					   </div>	
+					   <div class="form-group" ng-if="school.ranking == 'grade'">
+					      <label class="col-sm-2 col-sm-2 control-label" for="grades">Grades</label>
+					      <div class="col-sm-10">
+						      <input required="true" type="textarea" class="form-control" ng-model="allgrades" 
+						         placeholder="Enter grade and mark">
+						      <p class="help-block">Example "Grade A:60-100,Grade B:50-59,Grade C:40-49,Grade F:0-39"</p>
+					      </div>
+					   </div>
+					   	<div class="form-group" ng-if="school.ranking == 'rank'" ng-init="allgrades = '0-39,40-49,50-59,60-100'">
+					      <label class="col-sm-2 col-sm-2 control-label" for="grades">Mark range</label>
+					      <div class="col-sm-10">
+						      <input required="true" type="textarea" class="form-control" ng-model="allgrades" 
+						         placeholder="Enter grade and mark">
+						      <p class="help-block">Example "0-39,40-49,50-59,60-100"</p>
+					      </div>
+					   </div>
+					   <div class="form-group required" ng-if="school.ranking == 'rank'">
+					      <label class="col-sm-2 col-sm-2 control-label" for="passmark">Rank Type</label>
+					      <div class="col-sm-10">
+							<div class="radio">
+						  		<label><input type="radio" ng-model="school.ranktype" value="serial">Serial</label>
+							</div>
+							<div class="radio">
+						  		<label><input type="radio" ng-model="school.ranktype" value="dynamic">Dynamic</label>
+							</div>
+					      </div>
+					   </div>
+					   <div class="form-group required">
+					      <label class="col-sm-2 col-sm-2 control-label" for="passmark">Pass Mark</label>
+					      <div class="col-sm-10">
+						      <input required="true" type="textarea" class="form-control" ng-model="allpassmark" 
+						         placeholder="Enter Pass Mark">
+						         <p class="help-block">Example "default:40,11:70,12:70"</p>
+					      </div>
+					   </div>
+					   	<div class="form-group">
+					      <label class="col-sm-2 col-sm-2 control-label" for="grades">Maximum Mark</label>
+					      <div class="col-sm-10">
+					      <input required="true" type="textarea" class="form-control" ng-model="maximum" 
+					         placeholder="Enter maximum mark">
+					      <p class="help-block">Example "default:100,11:200,12:200"</p>
+					      </div>
+					   </div>	   	   
+					   <div class="form-group required">
+					      <label class="col-sm-2 col-sm-2 control-label" for="passmark">Academic Period</label>
+					      <div class="col-sm-10">
+					      <input required="true" type="textarea" class="form-control" ng-model="school.period" 
+					         placeholder="Enter Period of education year">
+					         <p class="help-block">Example "June-April"</p>
+					      </div>
+					   </div>		      	   
+					   <button type="submit" class="btn btn-default">Submit</button>
+						</form>
+					</div>
+				</section>

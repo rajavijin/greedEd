@@ -1,0 +1,70 @@
+<div class="section" id="the-environment-constant">
+<h2>The ENVIRONMENT Constant<a class="headerlink" href="#the-environment-constant" title="Permalink to this headline">¶</a></h2>
+<p>By default, CodeIgniter comes with the environment constant set to use
+the value provided in <tt class="docutils literal"><span class="pre">$_SERVER['CI_ENV']</span></tt>, otherwise defaults to
+&#8216;development&#8217;. At the top of index.php, you will see:</p>
+<div class="highlight-ci"><div class="highlight"><pre><span class="nb">define</span><span class="p">(</span><span class="s1">&#39;ENVIRONMENT&#39;</span><span class="p">,</span> <span class="nb">isset</span><span class="p">(</span><span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">&#39;CI_ENV&#39;</span><span class="p">])</span> <span class="o">?</span> <span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">&#39;CI_ENV&#39;</span><span class="p">]</span> <span class="o">:</span> <span class="s1">&#39;development&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>This server variable can be set in your .htaccess file, or Apache
+config using <a class="reference external" href="https://httpd.apache.org/docs/2.2/mod/mod_env.html#setenv">SetEnv</a>.
+Alternative methods are available for nginx and other servers, or you can
+remove this logic entirely and set the constant based on the server&#8217;s IP address.</p>
+<p>In addition to affecting some basic framework behavior (see the next
+section), you may use this constant in your own development to
+differentiate between which environment you are running in.</p>
+</div>
+<div class="section" id="effects-on-default-framework-behavior">
+<h2>Effects On Default Framework Behavior<a class="headerlink" href="#effects-on-default-framework-behavior" title="Permalink to this headline">¶</a></h2>
+<p>There are some places in the CodeIgniter system where the ENVIRONMENT
+constant is used. This section describes how default framework behavior
+is affected.</p>
+<div class="section" id="error-reporting">
+<h3>Error Reporting<a class="headerlink" href="#error-reporting" title="Permalink to this headline">¶</a></h3>
+<p>Setting the ENVIRONMENT constant to a value of &#8216;development&#8217; will cause
+all PHP errors to be rendered to the browser when they occur.
+Conversely, setting the constant to &#8216;production&#8217; will disable all error
+output. Disabling error reporting in production is a <a class="reference internal" href="security.html"><em>good security
+practice</em></a>.</p>
+</div>
+<div class="section" id="configuration-files">
+<h3>Configuration Files<a class="headerlink" href="#configuration-files" title="Permalink to this headline">¶</a></h3>
+<p>Optionally, you can have CodeIgniter load environment-specific
+configuration files. This may be useful for managing things like
+differing API keys across multiple environments. This is described in
+more detail in the environment section of the <a href="#id1"><span class="problematic" id="id2">:doc:`Config
+Class &lt;../libraries/config#environments&gt;`_</span></a> documentation.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="alternative_php.html" class="btn btn-neutral float-right" title="Alternate PHP Syntax for View Files">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="managing_apps.html" class="btn btn-neutral" title="Managing your Applications"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014 - 2015, British Columbia Institute of Technology.
+      Last updated on Apr 14, 2015.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>

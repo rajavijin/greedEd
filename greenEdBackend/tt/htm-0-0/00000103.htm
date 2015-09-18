@@ -1,0 +1,49 @@
+<div class="replace-with-website-settings">
+        <div class="radio controlled-setting-with-label">
+          <label>
+            <input id="plugins-allow-radio" type="radio" name="plugins"
+                   value="allow">
+            <span>
+              <span i18n-content="pluginsAllow"></span>
+              <span class="controlled-setting-indicator"
+                  content-setting="plugins" value="allow"></span>
+            </span>
+          </label>
+        </div>
+        <div class="radio controlled-setting-with-label">
+          <label>
+            <input type="radio" name="plugins" value="detect">
+            <span>
+              <span i18n-content="pluginsDetect"></span>
+              <span class="controlled-setting-indicator"
+                  content-setting="plugins" value="detect"></span>
+            </span>
+          </label>
+        </div>
+        <div class="radio controlled-setting-with-label">
+          <label>
+            <input type="radio" name="plugins" value="block">
+            <span>
+              <span i18n-content="pluginsBlock"></span>
+              <span class="controlled-setting-indicator"
+                  content-setting="plugins" value="block"></span>
+            </span>
+          </label>
+        </div>
+        <div class="settings-row">
+          <button class="exceptions-list-button" contentType="plugins"
+              i18n-content="manageExceptions"></button>
+        </div>
+        <div id="disable-plugins-container">
+          <a href="chrome://plugins" i18n-content="manageIndividualPlugins"
+              target="_blank"></a>
+        </div>
+      </div>
+    <div class="experimental-website-settings" hidden>
+        <span id="plugins-default-string"></span>
+        <div class="settings-row">
+          <button class="website-settings-permission-button"
+              contentType="plugins" i18n-content="websitesManage"></button>
+        </div>
+      </div>
+    </section>

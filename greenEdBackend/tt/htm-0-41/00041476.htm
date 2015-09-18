@@ -1,0 +1,94 @@
+<div class="line"><code>  <span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"http://code.jquery.com/jquery-1.9.1.js"</span>&gt;</span><span class="javascript"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></code></div></div><div class="container"><div class="line"><code><span class="tag">&lt;/<span class="title">head</span>&gt;</span></code></div></div><div class="container"><div class="line"><code><span class="tag">&lt;<span class="title">body</span>&gt;</span></code></div></div><div class="container"><div class="line"><code> </code></div></div><div class="container"><div class="line"><code><span class="tag">&lt;<span class="title">p</span>&gt;</span>one<span class="tag">&lt;/<span class="title">p</span>&gt;</span></code></div></div><div class="container"><div class="line"><code><span class="tag">&lt;<span class="title">div</span>&gt;</span><span class="tag">&lt;<span class="title">p</span>&gt;</span>two<span class="tag">&lt;/<span class="title">p</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span></code></div></div><div class="container"><div class="line"><code><span class="tag">&lt;<span class="title">p</span>&gt;</span>three<span class="tag">&lt;/<span class="title">p</span>&gt;</span></code></div></div><div class="container"><div class="line"><code> </code></div></div><div class="container"><div class="line"><code><span class="tag">&lt;<span class="title">script</span>&gt;</span><span class="javascript"></span></code></div></div><div class="container"><div class="line"><code>$( <span class="string">"div &gt; p"</span> ).css( <span class="string">"border"</span>, <span class="string">"1px solid gray"</span> );</code></div></div><div class="container"><div class="line"><code><span class="tag">&lt;/<span class="title">script</span>&gt;</span></code></div></div><div class="container"><div class="line"><code> </code></div></div><div class="container"><div class="line"><code><span class="tag">&lt;/<span class="title">body</span>&gt;</span></code></div></div><div class="container"><div class="line"><code><span class="tag">&lt;/<span class="title">html</span>&gt;</span></code></div></div></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<h4>Demo:</h4>
+<div class="demo code-demo"><iframe width="100%" height="250"></iframe></div>
+</div>
+<div class="entry-example" id="example-1">
+<h4>Example: <span class="desc">Find all inputs of type radio within the first form in the document.</span>
+</h4>
+<div class="syntaxhighlighter javascript ">
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          
+            <div class="line n1">1</div>
+          
+        </td>
+        <td class="code">
+          <pre><div class="container"><div class="line"><code>$( <span class="string">"input:radio"</span>, document.forms[ <span class="number">0</span> ] );</code></div></div></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+</div>
+<div class="entry-example" id="example-2">
+<h4>Example: <span class="desc">Find all div elements within an XML document from an Ajax response.</span>
+</h4>
+<div class="syntaxhighlighter javascript ">
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          
+            <div class="line n1">1</div>
+          
+        </td>
+        <td class="code">
+          <pre><div class="container"><div class="line"><code>$( <span class="string">"div"</span>, xml.responseXML );</code></div></div></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+</div>
+<div class="entry-example" id="example-3">
+<h4>Example: <span class="desc">Set the background color of the page to black.</span>
+</h4>
+<div class="syntaxhighlighter javascript ">
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          
+            <div class="line n1">1</div>
+          
+        </td>
+        <td class="code">
+          <pre><div class="container"><div class="line"><code>$( document.body ).css( <span class="string">"background"</span>, <span class="string">"black"</span> );</code></div></div></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+</div>
+<div class="entry-example" id="example-4">
+<h4>Example: <span class="desc">Hide all the input elements within a form.</span>
+</h4>
+<div class="syntaxhighlighter javascript ">
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          
+            <div class="line n1">1</div>
+          
+        </td>
+        <td class="code">
+          <pre><div class="container"><div class="line"><code>$( myForm.elements ).hide();</code></div></div></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+</div></section>

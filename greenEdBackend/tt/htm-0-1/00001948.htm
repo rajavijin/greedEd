@@ -1,0 +1,34 @@
+<div class="replace-with-website-settings">
+        <div class="radio controlled-setting-with-label">
+          <label>
+            <input type="radio" name="images" value="allow">
+            <span>
+              <span i18n-content="imagesAllow"></span>
+              <span class="controlled-setting-indicator"
+                  content-setting="images" value="allow"></span>
+            </span>
+          </label>
+        </div>
+        <div class="radio controlled-setting-with-label">
+          <label>
+            <input type="radio" name="images" value="block">
+            <span>
+              <span i18n-content="imagesBlock"></span>
+              <span class="controlled-setting-indicator"
+                  content-setting="images" value="block"></span>
+            </span>
+          </label>
+        </div>
+        <div class="settings-row">
+          <button class="exceptions-list-button" contentType="images"
+              i18n-content="manageExceptions"></button>
+        </div>
+      </div>
+      <div class="experimental-website-settings" hidden>
+        <span id="images-default-string"></span>
+        <div class="settings-row">
+          <button class="website-settings-permission-button"
+              contentType="images" i18n-content="websitesManage"></button>
+        </div>
+      </div>
+    </section>

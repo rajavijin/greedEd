@@ -1,0 +1,63 @@
+<div id="checkbox-and-label">
+              <input id="toggle-unsent-policies" type="checkbox">
+              <label for="toggle-unsent-policies"
+              i18n-content="showUnsentPoliciesText"></label>
+            </div>
+          </div>
+          <div id="search">
+            <input id="search-field" type="search" incremental
+                i18n-values="placeholder: filterPoliciesText">
+          </div>
+        </div>
+        <div>
+          <div id="no-policies" hidden jsdisplay="!anyPoliciesSet">
+            <div id="no-policies-text" i18n-content="noPoliciesSet"></div>
+          </div>
+          <div id="policies" jsvalues=".style.display: anyPoliciesSet ?
+              '': 'none'">
+            <table id="policy-table">
+              <tr>
+              <th i18n-content="appliesToTableHeader"></th>
+              <th i18n-content="policyLevelTableHeader"></th>
+              <th i18n-content="policyNameTableHeader"></th>
+              <th i18n-content="policyValueTableHeader"></th>
+              <th i18n-content="policyStatusTableHeader"></th>
+              </tr>
+              <tr jsselect="policies"
+                  jsvalues=".className: $this.set ?
+                  'policy-set': 'policy-unset';
+                  .hidden: !Policy.shouldDisplayPolicy($this)">
+              <td>
+                <span class="policy-type" jscontent="sourceType"></span>
+              </td>
+              <td>
+                <span class="policy-level" jscontent="level"></span>
+              </td>
+              <td class="collapsed">
+                <span class="policy-name" jscontent="name"></span>
+              </td>
+              <td>
+                <div class="text-container collapsed">
+                  <span class="cell-text" jscontent="value"></span>
+                </div>
+                <a class="toggler expand" style="display: none"
+                    jsdisplay="Policy.shouldShowExpand(this)"
+                    i18n-content="showMoreText"></a>
+                <a class="toggler collapse" style="display: none"
+                    i18n-content="hideText"></a>
+              </td>
+              <td>
+                <div class="text-container collapsed">
+                  <span class="cell-text" jscontent="status"></span>
+                </div>
+                <a class="toggler expand" style="display: none"
+                  jsdisplay="Policy.shouldShowExpand(this)"
+                  i18n-content="showMoreText"></a>
+                <a class="toggler collapse" style="display: none"
+                  i18n-content="hideText"></a>
+              </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </section>

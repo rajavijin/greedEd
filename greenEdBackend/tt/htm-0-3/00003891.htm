@@ -1,0 +1,17 @@
+<div id="hero1" hero-id="foo" hero></div>
+      // The below element contains a hero inside its shadowRoot making it two levels away
+      // from the core-animated-pages, and will not be transitioned.
+      <x-el></x-el>
+    </template>
+    </polymer-element>
+
+    <core-animated-pages transitions="hero-transition">
+      <x-page-1></x-page-1>
+      <x-page-2></x-page-2>
+    </core-animated-pages>
+
+Note that the container element of the page does not participate in the transition.
+
+    // This does not work
+    <core-animated-pages transitions="cross-fade">
+      <section cross-fade></section>

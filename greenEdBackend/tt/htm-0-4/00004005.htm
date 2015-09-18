@@ -1,0 +1,29 @@
+<div id="page-container">
+          <!-- Please keep the main pages in desired order of display.  This will
+               allow search results to display in the desired order. -->
+          <!-- Modified by Opera Software ASA -->
+<!-- @copied-from chromium/src/chrome/browser/resources/options/search_page.html -->
+<!-- @last-synchronized 2e32df53d5247061f638e55b46e98c84d7d6d6ce -->
+<div id="searchPage" class="page" hidden>
+  <h2 id="searchPageHeader" class="section-header"></h2>
+  <div id="searchPageNoMatches" hidden>
+    <p id="searchPageNoMatchesTitle" i18n-content="searchPageNoMatches"></p>
+    <p id="searchPageNoMatchesTip" i18n-values=".innerHTML:searchPageHelpText">
+    </p>
+  </div>
+</div>
+
+          <div id="settings" class="page">
+            <div class="settings-group" id="browser">
+  <section id="sync-section">
+    <h3 class="section-header" i18n-content="sectionTitleSync"></h3>
+    <div>
+      <div id="sync-overview" class="settings-row"
+          i18n-content="syncOverview"></div>
+      <div id="sync-status" class="settings-row learn-more">
+        <button id="sync-action"></button>
+        <a target="_blank" i18n-content="learnMore"
+            i18n-values="href:syncLearnMoreURL"></a>
+      </div>
+    </div>
+  </section>
