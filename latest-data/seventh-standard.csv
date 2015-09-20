@@ -1,6 +1,3 @@
-Standard;Teacher;TeacherPhone;TypeOfExams;CommonSubjects;;
-7;Sajeev;9496255116;periodical1,periodical2,quarterly,periodical3,halfyearly,periodical4,annual;english:Sahaya,math:Sathish,science:Raja,social:Sajeev,hindi:Bhavana;;
-;;;;;;
 Student;StudentID;Sex;Address;Parent;ParentPhone;SecondLanguage
 A.Athira;700001;Female;Athira Nivas, Nithravilai Post;S.Arvind Krishnan;9944611000;malayalam:Rakesh
 S.N.Adarsh;700002;Male;Santhosh Bhavan, Marthandam;A.Santhosh;9944611001;tamil:Sindhu
