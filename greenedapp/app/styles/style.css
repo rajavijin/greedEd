@@ -18,7 +18,7 @@ a, a:hover, a:focus {
 }
 
 ::selection {
-    background: #F77B6F;
+    background: #47E523;
     color: #fff;
 }
 ::-moz-selection {
@@ -1440,7 +1440,7 @@ ul.tag li a {
 
 .slide_title {
     font-weight: 300;
-    color:#F77B6F;
+    color:#47E523;
     text-transform: uppercase;
     font-size:35px;
     font-family: 'Fjalla One', sans-serif;
@@ -1479,7 +1479,7 @@ ul.tag li a {
 .slide_btn {
     font-family: 'Open Sans';
     font-weight: 300;
-    background:#F77B6F;
+    background:#47E523;
     padding:15px 20px;
     color:#fff;
     font-size:14px;
@@ -1499,7 +1499,7 @@ ul.tag li a {
 }
 
 .dark-text {
-    color: #797d87;
+    color: #FFFFFF;
 }
 
 .yellow-txt {
@@ -1554,7 +1554,7 @@ ul.tag li a {
 }
 
 .property h1 {
-    color: #475168;
+    color: #23B7E5;
     font-size: 24px;
     text-transform: uppercase;
     font-family: 'Fjalla One',sans-serif;
@@ -1563,7 +1563,7 @@ ul.tag li a {
 }
 
 a.btn-purchase {
-    background: #475168;
+    background: #23B7E5;
     color: #fff;
     text-transform: uppercase;
     padding: 20px 40px;
@@ -1575,7 +1575,7 @@ a.btn-purchase {
     transition: all .3s ease;
 }
 a.btn-purchase:hover, a.btn-purchase:focus{
-    background: #F77B6F;
+    background: #47E523;
     color: #fff;
     -webkit-transition: all .3s ease;
     -moz-transition: all .3s ease;
@@ -1764,7 +1764,7 @@ ul#filters > .active > span {
 /*parallax*/
 
 .parallax1 {
-    background: url("../img/flat_parallax.jpg") no-repeat fixed 0 0 #f77b6f;
+    background: url("../img/flat_parallax.png") no-repeat fixed 0 0 #f77b6f;
     background-size:cover;
     width: 100%;
     min-height: 400px;
