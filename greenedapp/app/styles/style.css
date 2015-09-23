@@ -4,7 +4,7 @@
 @import url(http://fonts.googleapis.com/css?family=Fjalla+One);
 
 body {
-    color: #797979;
+    color: #23b7e5;
     font-family: 'Open Sans', sans-serif;
     padding: 0px !important;
     margin: 0px !important;
@@ -60,7 +60,7 @@ p {line-height: 22px}
 }
 
 .navbar-brand span{
-    color: #f25f5b;
+    color: #23B7E5;
 }
 
 .header-frontend .navbar-collapse  ul.navbar-nav {
@@ -88,7 +88,7 @@ p {line-height: 22px}
 .header-frontend .nav li.active ul.dropdown-menu li a:hover,
 .header-frontend .nav li.active ul.dropdown-menu li.active a{
     color: #fff ;
-    background-color: #f77b6f;
+    background-color: #23b7e5;
     -webkit-transition: all .3s ease;
     -moz-transition: all .3s ease;
     -ms-transition: all .3s ease;
@@ -198,7 +198,7 @@ p {line-height: 22px}
 }
 
 .feature-head h1{
-    color: #475168;
+    color: #23B7E5;
     font-size: 30px;
     font-weight: 300;
     text-transform: uppercase;
@@ -207,7 +207,7 @@ p {line-height: 22px}
 }
 
 .feature-head p{
-    color: #8a8b8b;
+    color: #23b7e5;
     font-size: 18px;
     font-weight: 300;
 }
@@ -331,7 +331,7 @@ p {line-height: 22px}
 }
 
 .tab-bg-dark-navy-blue {
-    background:#6f6f6f;
+    background:#23b7e5;
     border-bottom: none;
     border-radius: 5px 5px 0 0;
     -webkit-border-radius: 5px 5px 0 0;
@@ -760,7 +760,7 @@ ul.about-flex-slides {
 }
 
 .r-work {
-    color: #475168;
+    color: #23b7e5;
     text-transform: uppercase;
     font-size: 24px;
     font-weight: 400;
@@ -1786,3 +1786,12 @@ ul#filters > .active > span {
 .mbot50 {
     margin-bottom: 50px;
 }
+.navbar-default .navbar-brand {
+    color: #47E523;
+    font-size: 30px;
+    font-weight: 100;
+    line-height: 30px;
+    margin-top: 30px;
+    padding: 0 0 0 15px;
+}
+    
