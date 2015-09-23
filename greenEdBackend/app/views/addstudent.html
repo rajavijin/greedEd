@@ -1,10 +1,9 @@
-<div ng-include="'views/navbar.html'" ng-controller="NavbarCtrl"></div>
 <!--state overview start-->
 <section id="main-content">
-	<section class="wrapper">
+	<section class="wrapper data-entry">
 	<div class="type pull-right">
-	<button ng-show="import" type="button" class="btn btn-info" ng-click="reset()"><i class="fa fa-user"></i> Add Teacher</button>
-	<button ng-hide="import" type="button" class="btn btn-info" ng-click="importTeachers()"><i class="fa fa-download"></i> Import Teachers</button>
+	<button ng-show="import" type="button" class="btn btn-info" ng-click="reset()"><i class="fa fa-user"></i> Add Student</button>
+	<button ng-hide="import" type="button" class="btn btn-info" ng-click="importTeachers()"><i class="fa fa-download"></i> Import Students</button>
 	</div>
 	<div class="landing-main">
 	   <div class="landing-form-widget">
@@ -85,8 +84,8 @@
 					      </div>
 					   </div>
 	                  </div>
-	                  <button id="nextBtn" class="fbtn fa fa-arrow-circle-o-right" ng-click="next(step)"></button>
-	                  <button ng-if="step != 1" id="backBtn" class="fbtn fa fa-arrow-circle-o-left" ng-click="previous(step)"></button>
+	                  <button id="nextBtn" class="fbtn icon-circle-arrow-right" ng-click="next(step)"></button>
+	                  <button ng-if="step != 1" id="backBtn" class="fbtn icon-circle-arrow-left" ng-click="previous(step)"></button>
 	               </form>
 	            </div>
 	            </span>

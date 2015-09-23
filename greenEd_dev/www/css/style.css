@@ -694,3 +694,9 @@ left: 84px;
   right: 5px;
   color: #444;
 }
+.list.card.done .item.item-avatar {text-decoration: line-through;}
+.button .badge.head-badge {
+  top: -11px;
+  left: -10px;
+  margin: 0;
+}

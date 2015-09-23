@@ -1,4 +1,4 @@
-    <div class="container">
+    <div class="container login-container">
 
       <form class="form-signin" role="form">
         <div class="login-wrap">
@@ -10,7 +10,7 @@
                     <a data-toggle="modal" href="#myModal"> Forgot Password?</a>
                 </span>
             </label>
-            <button class="btn btn-lg btn-info btn-block" type="submit" ng-click="passwordLogin(email, pass)">Sign in</button>
+            <button class="btn btn-lg btn-block btn-success" type="submit" ng-click="passwordLogin(email, pass)"><span ng-show="loading" class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Sign in</button>
 
         </div>
 

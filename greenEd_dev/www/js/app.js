@@ -55,10 +55,12 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'starter.controller
           if((user.students[i].division.length > 1) && (user.students[i].division != "all")) st = st+"-"+user.students[i].division;
           days.exams[st] = ref.child(user.schoolid+"/exams/"+st).orderByChild("id").startAt(start);
           timetableref[user.students[i].uid] = ref.child(user.schoolid+'/timetable/'+user.students[i].uid);
+          $rootScope.homeworks[user.students[i].uid] = $firebaseArray(ref.child(user.schoolid+'/homeworks').limitToLast(50));
         };
       } else if (user.role == 'teacher') {
         usersref = $firebaseObject(ref.child('users').orderByChild(user.alluserskey).equalTo(user.allusersval));
         timetableref[user.uid] = ref.child(user.schoolid+'/timetable/'+user.uid);
+        $rootScope.homeworks[user.uid] = $firebaseArray(ref.child(user.schoolid+'/homeworks').limitToLast(50));
       } else {
         usersref = $firebaseObject(ref.child('users').orderByChild(user.alluserskey).equalTo(user.allusersval));
       }
@@ -273,6 +275,33 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'starter.controller
       }
     }
   })
+  .state('app.teacherclasses', {
+    url: "/teacherclasses",
+    views: {
+      'menuContent' :{
+        templateUrl: "templates/teacherclasses.html",
+        controller: 'TeacherClassesCtrl'
+      }
+    }
+  })
+  .state('app.addhomework', {
+    url: "/teacherclasses/addhomework/:class/:subject",
+    views: {
+      'menuContent' :{
+        templateUrl: "templates/addhomework.html",
+        controller: 'AddHomeWorkCtrl'
+      }
+    }
+  })
+  .state('app.homeworks', {
+    url: "/homeworks/:uid",
+    views: {
+      'menuContent' :{
+        templateUrl: "templates/homeworks.html",
+        controller: 'HomeworksCtrl'
+      }
+    }
+  })
   .state('app.allstudents', {
     url: "/allstudents",
     views: {
@@ -282,6 +311,15 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'starter.controller
       }
     }
   })
+  .state('app.allhwstudents', {
+    url: "/allstudents/:uid/:class/:id/:status",
+    views: {
+      'menuContent' :{
+        templateUrl: "templates/allstudents.html",
+        controller: 'AllStudentsCtrl'
+      }
+    }
+  })  
   .state('app.allteachers', {
     url: "/allteachers",
     views: {

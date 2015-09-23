@@ -103,8 +103,10 @@ angular.module('greenEdApp')
       for (var i = 0; i < newdata.length; i++) {
         var userdata = {};
         for(var dkey in newdata[i]) {
-          var head = dkey.toLowerCase().replace(/"/g, "").split(/[;]/);
-            var row = newdata[i][dkey].split(/[;]/);
+          console.log("head", dkey);
+          console.log("newdata i", newdata[i][dkey]);
+          var head = dkey.toLowerCase().replace(/"/g, "").split(/[,]/);
+            var row = newdata[i][dkey].split(/[,]/);
             if(row.length > 1) {
               for (var ri = 0; ri < row.length; ri++) {
                 userdata[head[ri]] = row[ri].replace(/"/g, "");
@@ -125,7 +127,7 @@ angular.module('greenEdApp')
       userdata.schoolid = user.schoolid;
       userdata.role = "teacher";
       userdata.subjects = [];
-      var allsubjects = allusers[iteration].subjects.split(",");        
+      var allsubjects = allusers[iteration].subjects.split(";");        
       for (var si = 0; si < allsubjects.length; si++) {
         var cdata = allsubjects[si].split(":");
         if(cdata[1].indexOf("-") == -1) cdata[1] = cdata[1] + "-all";
@@ -167,6 +169,6 @@ angular.module('greenEdApp')
         }
       });
     }
-    alluserSubmit(0);
+    //alluserSubmit(0);
   }
 });
