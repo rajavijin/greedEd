@@ -1,0 +1,22 @@
+<ion-view view-title="Select Homework Class" ng-init="getItems(false)">
+  <ion-content>
+
+    <ion-refresher pulling-icon="ion-arrow-down-b" on-refresh="getItems(true)">
+    </ion-refresher>
+
+    <ion-list>
+      <ion-item collection-repeat="class in items" class="item item-icon-left positive" href="#/app/teacherclasses/addhomework/{{class.class}}/{{class.subject}}"  item-height="53" item-width="100%">
+        <i class="icon ion-easel"></i>
+        <h2>{{class.class}} : {{class.subject}}</h2>
+       </ion-item>
+    </ion-list>
+
+    <div ng-if="items !== undefined && !items.length" class="no-results list">
+       <a class="item" href="#">
+          <p>No class found</p>
+       </a>
+    </div>
+
+  </ion-content>
+
+</ion-view>

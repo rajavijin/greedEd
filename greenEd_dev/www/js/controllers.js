@@ -558,14 +558,140 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     }
   }
 })
+.controller("TeacherClassesCtrl", function($scope, $state, $stateParams) {
+  console.log("Teacher User", user);
+  $scope.getItems = function(refresh) {
+    $scope.items = user.subjects;
+    if(refresh) $scope.$broadcast('scroll.refreshComplete');
+  }
+})
+.controller("AddHomeWorkCtrl", function($scope, Auth, $stateParams, $state, $cordovaSQLite, $rootScope, S_ID) {
+  $scope.defaultDueDate = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+  $scope.hdata = {class:$stateParams.class, ack:{}, done:0, subject:$stateParams.subject, tid:user.uid, date: moment().valueOf(), $priority: 0 - moment().valueOf()};
+  var processUsers = function(allstudents) {
+    classcount[$stateParams.class] = 0;
+    for (var i = 0; i < allstudents.length; i++) {
+      if(allstudents[i].standard+'-'+allstudents[i].division == $stateParams.class) {
+        classcount[$stateParams.class]++;
+      }
+    }
+    $scope.hdata.undone = classcount[$stateParams.class];
+    console.log("hdata while add", $scope.hdata);
+  }
+  if(classcount[$stateParams.class]) {
+    console.log("classcount", classcount[$stateParams.class]);
+    $scope.hdata.undone = classcount[$stateParams.class];
+  } else {
+    if(online) {
+      Auth.getUsers().then(function(allusersfb) {
+        processUsers(allusersfb["allstudents"]);
+      })
+    } else {
+      if(db) {
+        $cordovaSQLite.execute(db, "SELECT value FROM mydata WHERE key = ?", ["allusers"]).then(function(res) {
+          if(res.rows.length > 0) {
+            processUsers(angular.fromJson(res.rows.item(0).value)["allstudents"]);
+          }
+        })
+      }  
+    }
+  }
+  $scope.save = function() {
+    console.log("date", new Date($scope.defaultDueDate).getTime());
+    $scope.hdata.duedate = new Date($scope.defaultDueDate).getTime();
+    console.log("hdata", $scope.hdata);
+    $rootScope.homeworks[user.uid].$add($scope.hdata);
+    $state.go('app.homeworks', {uid: user.uid});
+  }
+})
+.controller('HomeworksCtrl', function($scope, $rootScope, $state, $cordovaSQLite, Auth, $timeout, $stateParams) {
+  $scope.role = user.role;
+  var getLocalData = function() {
+    if(db) {
+      $cordovaSQLite.execute(db, "SELECT * from mydata where key = ?", ["wall"]).then(function(res) {
+        $scope.loading = false;
+        if(res.rows.length > 0) {
+          $scope.empty = false;
+          $rootScope.walls = angular.fromJson(res.rows.item(0).value);
+        } else {
+          $scope.empty = true;
+        }
+      });
+    }
+  }
 
-.controller("AllStudentsCtrl", function($scope, $cordovaSQLite, Auth, $ionicFilterBar, $timeout) {
+  $scope.getHomeworks = function(refresh) {
+    if(online) {
+      $rootScope.homeworks[$stateParams.uid].$loaded().then(function(data) {
+        if($rootScope.walls.length > 0) {
+          $scope.items = $rootScope.homeworks[$stateParams.uid];
+          $scope.empty = false;
+          Auth.saveLocal("wall", $rootScope.walls);
+        }
+        else $scope.loading = false;
+      });
+    } else {
+      if(db) getLocalData();
+      else $timeout(function() {getLocalData()}, 1000);
+    }
+    if(refresh) $scope.$broadcast('scroll.refreshComplete');
+  }
+  $scope.getHomeworks(false);
+  $scope.redirect = function(item, status) {
+    console.log("item", item);
+    console.log("id", item.$id);
+    console.log("status", status);
+    $state.go('app.allhwstudents', {uid:$stateParams.uid, class: item.class, id:item.$id, status:status})
+  }
+  $scope.ack = function(item) {
+    if(!item.ack) item.ack = {};
+    if(item.ack[$stateParams.uid]) {
+      item.ack[$stateParams.uid] = false;
+      item.done--;
+      item.undone++;
+      item.status = false;
+    } else {
+      item.ack[$stateParams.uid] = true;
+      item.done++;
+      item.undone--;
+      item.status = true;
+    }
+    $rootScope.homeworks[$stateParams.uid].$save(item);
+  }
+})
+.controller("AllStudentsCtrl", function($scope, $rootScope, $stateParams, $cordovaSQLite, Auth, $ionicFilterBar, $timeout) {
   var filterBarInstance;
+  if($stateParams.id) {
+    var hw = $rootScope.homeworks[$stateParams.uid].$getRecord($stateParams.id);
+    console.log("hw", hw);
+  }
+  var processUsers = function(allstudents) {
+    if($stateParams.id) {
+      var students = [];
+      for (var i = 0; i < allstudents.length; i++) {
+        if(allstudents[i].standard+'-'+allstudents[i].division == $stateParams.class) {
+          if(hw.ack) {
+            if($stateParams.status == 'done') {
+              if(hw.ack[allstudents[i].uid]) students.push(allstudents[i]);
+            } else {
+              if(!hw.ack[allstudents[i].uid]) students.push(allstudents[i]);
+            }
+          } else {
+            console.log("not yet", $stateParams.status);
+            if($stateParams.status == 'undone') students.push(allstudents[i]);
+          }
+        }
+      };
+      $scope.items = students;
+    } else {
+      $scope.items = allstudents;
+    }
+  }
   var getItems = function() {
     if(db) {
       $cordovaSQLite.execute(db, "SELECT value FROM mydata WHERE key = ?", ["allusers"]).then(function(res) {
         if(res.rows.length) {
-          $scope.items = angular.fromJson(res.rows.item(0).value)["allstudents"];
+          processUsers(angular.fromJson(res.rows.item(0).value)["allstudents"]);
         } else {
           if(online) serverData();
           else $scope.items = [];
@@ -597,7 +723,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   };
   var serverData = function() {
     Auth.getUsers().then(function(allusersfb) {
-      if(allusersfb["allstudents"]) $scope.items = allusersfb["allstudents"];
+      if(allusersfb["allstudents"]) processUsers(allusersfb["allstudents"]);
       else $scope.items = [];
     })
   }
@@ -717,13 +843,27 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       });
     }
   }
+    $scope.getWall = function(refresh) {
+    if(online) {
+      if(!refresh) $scope.loading = true;
+      $rootScope.walls.$loaded().then(function() {
+        if(!refresh) $scope.loading = false;
+        else $scope.$broadcast('scroll.infiniteScrollComplete');
+        console.log("rootScope.walls", $rootScope.walls);
+        Auth.saveLocal("wall", $rootScope.walls);
+      })
+    } else {
+      if(refresh) $scope.$broadcast('scroll.infiniteScrollComplete');
+      if(db) getLocalData();
+      else $timeout(function() {getLocalData()}, 1000);
+    }
+  }
   $scope.getWall = function(refresh) {
     if(!refresh) $scope.loading = true;
     if(online) {
       $rootScope.walls.$loaded().then(function(data) {
         if($rootScope.walls.length > 0) {
           $scope.empty = false;
-          Auth.saveLocal("wall", $rootScope.walls);
         }
         if(refresh) $scope.$broadcast('scroll.refreshComplete');
         else $scope.loading = false;
@@ -1430,36 +1570,30 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   };
 
 })
-.controller('FavTeacherCtrl', function ($scope, $stateParams, $state, $timeout, $ionicLoading, $ionicSideMenuDelegate, TDCardDelegate) {
+.controller('FavTeacherCtrl', function ($scope, $cordovaSQLite, $stateParams, Auth, $state, $timeout, $ionicLoading, $ionicSideMenuDelegate, TDCardDelegate) {
   console.log('CARDS CTRL', user);
   $scope.loadData = function() {
-    $ionicLoading.show();
     $scope.selectedCard = false;
-    cards = [];
-    $scope.cards = [];
     $scope.indexItem = false;
-    var lastitem = Object.keys(user.students[$stateParams.id]).length;
-    var i = 0;
-    var j = 20;
+    $ionicLoading.show();
+    var cards = [];
     angular.forEach(user.students[$stateParams.id], function(teacher, tk) {
-      i++;
       if(tk.indexOf("simplelogin") != -1) {
-        ref.child("users/"+tk).once('value', function(tsnap) {
-          console.log("teacher", tsnap.val());
-          var newcard = tsnap.val();
-          if(newcard.sex == "male") var sex = "men";
-          else var sex = "women";
-          newcard.img = "https://randomuser.me/api/portraits/med/"+sex+"/"+(tk.split(':')[1] - 1) +".jpg";
-          cards.push(newcard);
-          j++;
-        });
+        var tval = teacher.split("_");
+        var card = {
+          "uid":tk,
+          "name":tval[0],
+          "subject":tval[1],
+          "img": "https://randomuser.me/api/portraits/med/women/"+(tk.split(':')[1] - 1) +".jpg"
+        }
+        cards.push(card);
       }
-      $timeout(function() {$ionicLoading.hide(); $scope.cards = cards}, 2000);
     });
+    $timeout(function() {$ionicLoading.hide(); console.log("cards", cards); $scope.cards = cards;}, 100);
   }
 
   var selected = function(index) {
-    if(index) $scope.selectedCard = $scope.cards[index];
+    if(index >= 0) $scope.selectedCard = $scope.cards[index];
     else $scope.selectedCard = {};
     console.log("selected card", $scope.selectedCard);
     localStorage.setItem("selectedTeacher", angular.toJson($scope.selectedCard));

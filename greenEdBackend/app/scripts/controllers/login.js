@@ -7,11 +7,12 @@
  * Manages authentication to any active providers.
  */
 angular.module('greenEdApp')
-  .controller('LoginCtrl', function ($scope, Auth, $location, $q, Ref, $timeout) {
+  .controller('LoginCtrl', function ($scope, Auth, $rootScope, $location, Data, $q, Ref, $timeout) {
     $scope.email ="8951572125@ge.com";
     $scope.pass = "101thuxr";
     $scope.passwordLogin = function(email, pass) {
       $scope.err = null;
+      $scope.loading = true;
       Auth.$authWithPassword({email: email, password: pass}, {rememberMe: true}).then(
         redirect, showError
       );
@@ -70,6 +71,8 @@ angular.module('greenEdApp')
         var profile = pdata.val();
         profile.uid = userdata.uid;
         localStorage.setItem("user", JSON.stringify(profile));
+        $rootScope.menus = Data.getMenus(profile.role);
+        $rootScope.user = profile;
         console.log("Profile", profile);
       });
       $location.path('/dashboard');
@@ -81,64 +84,14 @@ angular.module('greenEdApp')
 
 
   })
-  .controller('NavbarCtrl', function ($scope, $location, Auth, $firebaseObject, Ref) {
-    var user = Auth.$getAuth();
+  .controller('NavbarCtrl', function ($scope, $rootScope, $location, Auth, Data, $firebaseObject, Ref) {
+    var user = JSON.parse(localStorage.getItem("user"));
     if(user) {
-      var profile = $firebaseObject(Ref.child('users/'+user.uid));
-      profile.$bindTo($scope, 'profile');
-      profile.$loaded().then(function(userdata) {
-        if(userdata.role == "admin") {
-          $scope.menu = [{
-            'title': 'Dashboard',
-            'link': '/dashboard',
-            'class': 'fa fa-dashboard',
-          },{
-            'title': 'Add school',
-            'link': '/addschool',
-            'class': 'fa fa-home'
-          }];
-        } else if (userdata.role == "hm") {
-          $scope.menu = [{
-            'title': 'Dashboard',
-            'link': '/dashboard',
-            'class': 'fa fa-dashboard',
-          },
-          {
-            'title': 'Add Teacher',
-            'link': '/addteacher',
-            'class': 'fa fa-user-md'
-          },
-          {
-            'title': 'Add Class',
-            'link': '/addclass',
-            'class': 'fa fa-home'
-          },
-          {
-            'title': 'Add Student',
-            'link': '/addstudent',
-            'class': 'fa fa-user'
-          },
-           {
-            'title': 'Teachers',
-            'link': '/teachers',
-            'class': 'fa fa-user-md'
-          },
-          {
-            'title': 'Class',
-            'link': '/class',
-            'class': 'fa fa-home'
-          },
-          {
-            'title': 'Student',
-            'link': '/student',
-            'class': 'fa fa-user'
-          }];
-        } else {
-
-        }
-      })
+      $rootScope.menus = Data.getMenus(user.role);
+      $rootScope.user = user;
+      console.log("menus", Data.getMenus(user.role));
     }
-    $scope.user = user;
+    console.log("Nav user", user);
     $scope.logout = function() {
       Auth.$unauth();
       $location.path('/');

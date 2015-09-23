@@ -1,6 +1,7 @@
 var online = true;
 var ref = '';
 var wallref = '';
+var classcount = {};
 var scrollRef = null;
 var luser = localStorage.getItem('user');
 if(luser) var user = JSON.parse(luser);
@@ -28,7 +29,7 @@ angular.module('starter.services', [])
     online = csnap.val();
     $rootScope.$emit("online", online);
   });
-
+  $rootScope.homeworks = {};
   var auth = $firebaseAuth(ref);
   var Auth = {
     login: function (userdata) {
@@ -57,7 +58,7 @@ angular.module('starter.services', [])
               value = user.name + "_" +tsub;
               user.alluserskey = key;
               user.allusersval = value;
-              if(user.uid == 'simplelogin:2') user.class = "6-all";
+              $rootScope.homeworks[user.uid] = $firebaseArray(ref.child(user.schoolid+'/homeworks').limitToLast(50));
               usersref = $firebaseObject(ref.child('users').orderByChild(user.alluserskey).equalTo(user.allusersval));
               timetableref[user.uid] = ref.child(user.schoolid+'/timetable/'+user.uid);
               localStorage.setItem("user", JSON.stringify(user));
@@ -77,6 +78,8 @@ angular.module('starter.services', [])
                   var st = kid.standard;
                   if((kid.division.length > 1) && (kid.division != "all")) st = st+"-"+kid.division;
                   days.exams[st] = ref.child(user.schoolid+"/exams/"+st).orderByChild("id").startAt(start);
+                  $rootScope.homeworks[kid.uid] = $firebaseArray(ref.child(user.schoolid+'/homeworks').limitToLast(50));
+
                 })
                 localStorage.setItem("user", JSON.stringify(user));
                 defer.resolve(user);
@@ -235,13 +238,13 @@ angular.module('starter.services', [])
         } else {
           var st = user.students[0].standard;
           if((user.students[0].division.length > 1) && (user.students[0].division != "all")) st = st+"-"+user.students[0].division;
-          return {"Links":[{"title":"Dashboard", "href":"/app/studentdashboard/"+user.students[0].standard+"-"+user.students[0].division+"/"+user.students[0].uid+"/"+user.students[0].name, "class":"ion-stats-bars"},{"title":"Class Dashboard", "href":"/app/classdashboard/"+user.students[0].standard+"-"+user.students[0].division, "class":"ion-pie-graph"},{"title":"Bus tracking", "href":"/app/bustracking", "class":"ion-android-bus"},{"title":"Exams", "href":"/app/days/exams/"+st, "class":"ion-clipboard"},{"title":"TimeTable", "href":"/app/timetable/"+user.students[0].standard+"-"+user.students[0].division, "class":"ion-ios-time"},{"title":"Favourite Teacher", "href":"/app/favteacher/0", "class":"ion-thumbsup"}]};
+          return {"Links":[{"title":"Homeworks", "href":"/app/homeworks/"+user.students[0].uid, "class":"ion-android-list"},{"title":"Dashboard", "href":"/app/studentdashboard/"+user.students[0].standard+"-"+user.students[0].division+"/"+user.students[0].uid+"/"+user.students[0].name, "class":"ion-stats-bars"},{"title":"Class Dashboard", "href":"/app/classdashboard/"+user.students[0].standard+"-"+user.students[0].division, "class":"ion-pie-graph"},{"title":"Bus tracking", "href":"/app/bustracking", "class":"ion-android-bus"},{"title":"Exams", "href":"/app/days/exams/"+st, "class":"ion-clipboard"},{"title":"TimeTable", "href":"/app/timetable/"+user.students[0].standard+"-"+user.students[0].division, "class":"ion-ios-time"},{"title":"Favourite Teacher", "href":"/app/favteacher/0", "class":"ion-thumbsup"}]};
         }
       } else {
         // if(user.class) {
         //   return {"Links":[{"title":"Class Dashboard", "href":"/app/classdashboard/"+user.class, "class":"ion-stats-bars"},{"title":"Teacher Dashboard", "href":"/app/teacherdashboard/"+user.uid+"/"+user.name, "class":"ion-ios-pulse-strong"},{"title":"Students", "href":"/app/allstudents", "class": "ion-person-stalker"},{"title":"Classes", "href":"/app/allclasses", "class": "ion-easel"},{"title":"TimeTable", "href":"/app/timetable/"+user.uid, "class":"ion-ios-time"},{"title":"Exams", "href":"/app/allclasses/exams", "class": "ion-clipboard"}]};
         // } else {
-        return {"Links":[{"title":"Dashboard", "href":"/app/teacherdashboard/"+user.uid+"/"+user.name, "class":"ion-stats-bars"},{"title":"Students", "href":"/app/allstudents", "class": "ion-person-stalker"},{"title":"Classes", "href":"/app/allclasses", "class": "ion-easel"},{"title":"Exams", "href":"/app/allclasses/exams", "class": "ion-clipboard"},{"title":"TimeTable", "href":"/app/timetable/"+user.uid, "class":"ion-ios-time"}]};
+        return {"Links":[{"title":"Dashboard", "href":"/app/teacherdashboard/"+user.uid+"/"+user.name, "class":"ion-stats-bars"},{"title":"Students", "href":"/app/allstudents", "class": "ion-person-stalker"},{"title":"Classes", "href":"/app/allclasses", "class": "ion-easel"},{"title":"Exams", "href":"/app/allclasses/exams", "class": "ion-clipboard"},{"title":"Add HomeWork", "href":"/app/teacherclasses", "class":"ion-plus-circled"},{"title":"Homeworks", "href":"/app/homeworks/"+user.uid, "class":"ion-android-list"},{"title":"TimeTable", "href":"/app/timetable/"+user.uid, "class":"ion-ios-time"}]};
         //}
       }      
     },

@@ -1,0 +1,23 @@
+<ion-view cache-view="false" title="Add Homework">
+<ion-content>
+   <form ng-submit="save()">
+   <div class="list">
+	<label class="item item-input item-floating-label">
+	<span class="input-label">Title</span>
+	<input type="text" placeholder="Title" ng-model="hdata.title">
+	</label>
+	<label class="item item-input item-floating-label">
+	<span class="input-label">Notes</span>
+	<textarea placeholder="Notes" ng-model="hdata.notes"></textarea>
+	</label>
+	<label class="item item-input item-floating-label">
+	<span class="input-label">Due Date</span>
+	<input type="date" placeholder="Due Date" ng-model="defaultDueDate">
+	</label>
+	<div class="padding">
+	   	<button class="button button-block button-positive" ng-disabled="!hdata.title">Save Homework</button>
+	</div>
+   </div>
+   </form>
+</ion-content>
+</ion-view>

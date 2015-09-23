@@ -19,6 +19,7 @@ angular.module('greenEdApp')
           // sometimes if ngCloak exists on same element, they argue, so make sure that
           // this one always runs last for reliability
           $timeout(function () {
+            el.removeClass('hide');
             el.toggleClass('ng-cloak', !Auth.$getAuth());
           }, 0);
         }
