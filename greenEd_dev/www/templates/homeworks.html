@@ -31,7 +31,7 @@
     <span class="badge badge-assertive">{{wall.undone}}</span>
   </a>
   </div>
-  <div ng-if="role == 'parent'" class="list card" ng-class="{'done': wall.status, 'hide':wall.filter}" ng-repeat="(wk,wall) in items | orderBy:['status']">
+  <div ng-if="role == 'parent'" class="list card" ng-class="{'done': wall.status}" ng-repeat="(wk,wall) in items | orderBy:['status']">
   <div class="item item-avatar">
     <img ng-src="https://randomuser.me/api/portraits/thumb/{{(wall.sex == 'male') ? 'men':'women'}}/{{wall.tid.split(':')[1] - 1}}.jpg">
     <h2>{{wall.title}}</h2>

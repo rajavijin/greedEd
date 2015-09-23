@@ -567,7 +567,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
 })
 .controller("AddHomeWorkCtrl", function($scope, Auth, $stateParams, $state, $cordovaSQLite, $rootScope, S_ID) {
   $scope.defaultDueDate = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
-  $scope.hdata = {class:$stateParams.class, ack:{}, done:0, subject:$stateParams.subject, tid:user.uid, date: moment().valueOf(), $priority: 0 - moment().valueOf()};
+  $scope.hdata = {class:$stateParams.class, ack:{}, status: false, done:0, subject:$stateParams.subject, tid:user.uid, date: moment().valueOf(), $priority: 0 - moment().valueOf()};
   var processUsers = function(allstudents) {
     classcount[$stateParams.class] = 0;
     for (var i = 0; i < allstudents.length; i++) {
@@ -831,50 +831,33 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
 .controller('WallCtrl', function($scope, $rootScope, $firebaseArray, $cordovaSQLite, $state, FIREBASE_URL, $ionicModal, Auth, $ionicLoading, $timeout) {
   $scope.moredata = false;
   var getLocalData = function() {
-    if(db) {
-      $cordovaSQLite.execute(db, "SELECT * from mydata where key = ?", ["wall"]).then(function(res) {
-        $scope.loading = false;
-        if(res.rows.length > 0) {
-          $scope.empty = false;
-          $rootScope.walls = angular.fromJson(res.rows.item(0).value);
-        } else {
-          $scope.empty = true;
-        }
-      });
-    }
+    console.log("local wall");
+    $cordovaSQLite.execute(db, "SELECT * from mydata where key = ?", ["wall"]).then(function(res) {
+      $scope.loading = false;
+      if(res.rows.length > 0) {
+        $scope.empty = false;
+        $scope.walls = angular.fromJson(res.rows.item(0).value);
+      } else {
+        $scope.empty = true;
+      }
+    });
   }
-    $scope.getWall = function(refresh) {
+  $scope.getWall = function(refresh) {
     if(online) {
       if(!refresh) $scope.loading = true;
       $rootScope.walls.$loaded().then(function() {
         if(!refresh) $scope.loading = false;
-        else $scope.$broadcast('scroll.infiniteScrollComplete');
         console.log("rootScope.walls", $rootScope.walls);
         Auth.saveLocal("wall", $rootScope.walls);
+        $scope.$broadcast('scroll.refreshComplete');
       })
-    } else {
-      if(refresh) $scope.$broadcast('scroll.infiniteScrollComplete');
-      if(db) getLocalData();
-      else $timeout(function() {getLocalData()}, 1000);
-    }
-  }
-  $scope.getWall = function(refresh) {
-    if(!refresh) $scope.loading = true;
-    if(online) {
-      $rootScope.walls.$loaded().then(function(data) {
-        if($rootScope.walls.length > 0) {
-          $scope.empty = false;
-        }
-        if(refresh) $scope.$broadcast('scroll.refreshComplete');
-        else $scope.loading = false;
-      });
     } else {
       if(refresh) $scope.$broadcast('scroll.refreshComplete');
       if(db) getLocalData();
       else $timeout(function() {getLocalData()}, 1000);
     }
   }
-  $scope.getWall(false);
+
   var last = 0;
   $scope.loadMoreData=function()
   {
