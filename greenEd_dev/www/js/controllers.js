@@ -507,17 +507,24 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   var filterBarInstance;
   if($stateParams.type) $scope.title = $stateParams.type;
   else $scope.title = "Classes";
+  var serverData = function() {
+    Auth.getUsers().then(function(allusersfb) {
+      if(allusersfb["allclasses"]) $scope.items = allusersfb["allclasses"];
+      else $scope.items = [];
+    })
+  }
   var getItems = function() {
-    if(db) {
-      $cordovaSQLite.execute(db, "SELECT value FROM mydata WHERE key = ?", ["allusers"]).then(function(res) {
-        if(res.rows.length) {
-          $scope.items = angular.fromJson(res.rows.item(0).value)["allclasses"];
-        } else {
-          if(online) serverData();
-          else $scope.items = [];
-        }
-      })
-    } else {$scope.items = [];}
+    if(online) {
+      serverData();
+    } else {
+      if(db) {
+        $cordovaSQLite.execute(db, "SELECT value FROM mydata WHERE key = ?", ["allusers"]).then(function(res) {
+          if(res.rows.length) {
+            $scope.items = angular.fromJson(res.rows.item(0).value)["allclasses"];
+          }
+        })
+      } else {$scope.items = [];}
+    }
   }
   getItems();
   $scope.showFilterBar = function () {
@@ -541,12 +548,6 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       $scope.$broadcast('scroll.refreshComplete');
     }, 1000);
   };
-  var serverData = function() {
-    Auth.getUsers().then(function(allusersfb) {
-      if(allusersfb["allclasses"]) $scope.items = allusersfb["allclasses"];
-      else $scope.items = [];
-    })
-  }
   $scope.redirect = function(standard, division) {
     if($stateParams.type == "exams") {
       var st = standard;
@@ -687,61 +688,24 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       $scope.items = allstudents;
     }
   }
-  var getItems = function() {
-    if(db) {
-      $cordovaSQLite.execute(db, "SELECT value FROM mydata WHERE key = ?", ["allusers"]).then(function(res) {
-        if(res.rows.length) {
-          processUsers(angular.fromJson(res.rows.item(0).value)["allstudents"]);
-        } else {
-          if(online) serverData();
-          else $scope.items = [];
-        }
-      })
-    } else {$scope.items = [];}
-  }
-  getItems();
-  $scope.showFilterBar = function () {
-    filterBarInstance = $ionicFilterBar.show({
-      items: $scope.items,
-      update: function (filteredItems, filterText) {
-        $scope.items = filteredItems;
-      }
-    });
-  };
-
-  $scope.refreshItems = function () {
-    if (filterBarInstance) {
-      filterBarInstance();
-      filterBarInstance = null;
-    }
-
-    $timeout(function () {
-      if(online) serverData();
-      else getItems();
-      $scope.$broadcast('scroll.refreshComplete');
-    }, 1000);
-  };
   var serverData = function() {
     Auth.getUsers().then(function(allusersfb) {
       if(allusersfb["allstudents"]) processUsers(allusersfb["allstudents"]);
       else $scope.items = [];
     })
   }
-})
-
-.controller("AllTeachersCtrl", function($scope, $cordovaSQLite, Auth, $ionicFilterBar, $timeout) {
-  var filterBarInstance;
   var getItems = function() {
-    if(db) {
-      $cordovaSQLite.execute(db, "SELECT value FROM mydata WHERE key = ?", ["allusers"]).then(function(res) {
-        if(res.rows.length) {
-          $scope.items = angular.fromJson(res.rows.item(0).value)["allteachers"];
-        } else {
-          if(online) serverData();
-          else $scope.items = [];
-        }
-      })
-    } else {$scope.items = [];}
+    if(online) {
+      serverData();
+    } else {
+      if(db) {
+        $cordovaSQLite.execute(db, "SELECT value FROM mydata WHERE key = ?", ["allusers"]).then(function(res) {
+          if(res.rows.length) {
+            processUsers(angular.fromJson(res.rows.item(0).value)["allstudents"]);
+          }
+        })
+      } else {$scope.items = [];}
+    }
   }
   getItems();
   $scope.showFilterBar = function () {
@@ -765,12 +729,51 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       $scope.$broadcast('scroll.refreshComplete');
     }, 1000);
   };
+})
+
+.controller("AllTeachersCtrl", function($scope, $cordovaSQLite, Auth, $ionicFilterBar, $timeout) {
+  var filterBarInstance;
   var serverData = function() {
     Auth.getUsers().then(function(allusersfb) {
       if(allusersfb["allstudents"]) $scope.items = allusersfb["allteachers"];
       else $scope.items = [];
     })
   }
+  var getItems = function() {
+    if(online) {
+      serverData();
+    } else {
+      if(db) {
+        $cordovaSQLite.execute(db, "SELECT value FROM mydata WHERE key = ?", ["allusers"]).then(function(res) {
+          if(res.rows.length) {
+            $scope.items = angular.fromJson(res.rows.item(0).value)["allteachers"];
+          }
+        })
+      } else {$scope.items = [];}
+    }
+  }
+  getItems();
+  $scope.showFilterBar = function () {
+    filterBarInstance = $ionicFilterBar.show({
+      items: $scope.items,
+      update: function (filteredItems, filterText) {
+        $scope.items = filteredItems;
+      }
+    });
+  };
+
+  $scope.refreshItems = function () {
+    if (filterBarInstance) {
+      filterBarInstance();
+      filterBarInstance = null;
+    }
+
+    $timeout(function () {
+      if(online) serverData();
+      else getItems();
+      $scope.$broadcast('scroll.refreshComplete');
+    }, 1000);
+  };
 })
 
 .controller("MarkStudentsCtrl", function($scope, $stateParams, $cordovaSQLite, $ionicFilterBar, $timeout) {
@@ -1280,17 +1283,8 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     $scope.title = days[index] + " Timetable";
   };
   $scope.title = "Timetable";
-  if(db) {
-    $cordovaSQLite.execute(db, "SELECT value from mydata WHERE key = ?", ["tt_"+$stateParams.id]).then(function(tres) {
-      if(tres.rows.length > 0) {
-        processData(angular.fromJson(tres.rows.item(0).value));
-      } else {
-        if(online) timetableFromServer();
-        else $scope.empty = true;
-      }
-    })
-  }
   var processData = function(daysData) {
+    console.log("daysData", daysData);
     if(daysData.length > 0){
         $timeout(function() {
           $scope.slides = daysData;
@@ -1315,6 +1309,17 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
       processData(timetable);
     })
   }
+  if(online) {
+    timetableFromServer();
+  } else {
+    if(db) {
+      $cordovaSQLite.execute(db, "SELECT value from mydata WHERE key = ?", ["tt_"+$stateParams.id]).then(function(tres) {
+        if(tres.rows.length > 0) {
+          processData(angular.fromJson(tres.rows.item(0).value));
+        }
+      })
+    }
+  }
 })
 .controller('DaysCtrl', function($scope, $rootScope, $stateParams, Auth, $timeout, $cordovaSQLite, $ionicSlideBoxDelegate) {
   $scope.empty = false;
@@ -1326,17 +1331,6 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
     $scope.title = ($stateParams.class) ? slides[index].id.replace("_", " ") + " " + $stateParams.type : months[parseInt(slides[index].id.split("-")[1]) - 1] + " " + slides[index].id.split("-")[0] + " " + $stateParams.type;
   };
   $scope.title = $stateParams.type;
-  var lkey = ($stateParams.class) ? user.uid + $stateParams.type + $stateParams.class : user.uid + $stateParams.type;
-  if(db) {
-    $cordovaSQLite.execute(db, "SELECT value from mydata WHERE key = ?", [lkey]).then(function(tres) {
-      if(tres.rows.length > 0) {
-        processData(angular.fromJson(tres.rows.item(0).value));
-      } else {
-        if(online) timetableFromServer();
-        else $scope.empty = true;
-      }
-    })
-  } else {$scope.empty = true;}
   var processData = function(daysData) {
     $timeout(function() {
       $scope.slides = daysData;
@@ -1365,6 +1359,18 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
         $scope.empty = true;
       }
     })
+  }
+  var lkey = ($stateParams.class) ? user.uid + $stateParams.type + $stateParams.class : user.uid + $stateParams.type;
+  if(online) {
+    timetableFromServer();
+  } else {
+    if(db) {
+      $cordovaSQLite.execute(db, "SELECT value from mydata WHERE key = ?", [lkey]).then(function(tres) {
+        if(tres.rows.length > 0) {
+          processData(angular.fromJson(tres.rows.item(0).value));
+        }
+      })
+    } else {$scope.empty = true;}
   }
   $rootScope.$on('online', function (event, data) {
     if($scope.empty) {
