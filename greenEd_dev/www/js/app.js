@@ -179,7 +179,6 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'starter.controller
     };
 })
 .config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
-  $ionicConfigProvider.views.forwardCache(true);
   $stateProvider
     .state('login', {
     url: '/login',

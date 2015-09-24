@@ -187,7 +187,8 @@ text {
 .scroll { height: 100% }
 #logo h1 {font-size: 70px;}
 #logo h4 {margin: 0;}
-.pane.tab-content {top: 92px;}
+.pane.has-tabs-top {top: 93px;}
+.platform-android .has-tabs-top .list:last-child {margin-bottom: 93px;}
 .tabs-striped .tab-item.tab-item-active, .tabs-striped .tab-item.active, .tabs-striped .tab-item.activated {border-color: #23b7e5;}
 /* allows the bar-footer to be elastic /*
 /* optionally set a max-height */

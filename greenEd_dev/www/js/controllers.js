@@ -1582,7 +1582,7 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   }
 
   var selected = function(index) {
-    if(index >= 0) $scope.selectedCard = $scope.cards[index];
+    if(index != -1) $scope.selectedCard = $scope.cards[index];
     else $scope.selectedCard = {};
     console.log("selected card", $scope.selectedCard);
     localStorage.setItem("selectedTeacher", angular.toJson($scope.selectedCard));
@@ -1608,21 +1608,21 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   };
 
   $scope.noCard = function() {   
-  console.log("index on No", $scope.indexItem); 
     if(!$scope.indexItem) {
       $scope.indexItem = $scope.cards.length - 1;
       TDCardDelegate.$getByHandle('teachers').cardInstances[$scope.indexItem].swipe('left');
     } else {
       $scope.indexItem--;
       TDCardDelegate.$getByHandle('teachers').cardInstances[$scope.indexItem].swipe('left');
-      if($scope.indexItem == 0) selected(false);
+      console.log("index on No", $scope.indexItem); 
+      if($scope.indexItem == 0) selected(-1);
     }
   };
   $scope.cardSwipedLeft = function(index) {
     console.log('LEFT SWIPE');
     console.log("index", index);
     $scope.indexItem = index;
-    if(index == 0) selected(false);
+    if(index == 0) selected(-1);
   };
   $scope.cardSwipedRight = function(index) {
     console.log('RIGHT SWIPE');
