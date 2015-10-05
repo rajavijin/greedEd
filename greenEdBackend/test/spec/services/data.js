@@ -3,7 +3,7 @@
 describe('Service: Data', function () {
 
   // load the service's module
-  beforeEach(module('greenEdApp'));
+  beforeEach(module('greenEdBackendApp'));
 
   // instantiate service
   var Data;

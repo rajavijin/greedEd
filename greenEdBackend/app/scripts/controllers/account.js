@@ -6,15 +6,15 @@
  * # AccountCtrl
  * Provides rudimentary account management functions.
  */
-angular.module('greenEdApp')
-  .controller('AccountCtrl', function ($scope, user, Auth, Ref, $firebaseObject, $timeout) {
+angular.module('greenEdBackendApp')
+  .controller('AccountCtrl', function ($rootScope, $scope, user, Auth, Ref, $firebaseObject, $timeout) {
     $scope.user = user;
     $scope.logout = function() { Auth.$unauth(); };
     $scope.messages = [];
     var profile = $firebaseObject(Ref.child('users/'+user.uid));
     profile.$bindTo($scope, 'profile');
     
-
+    console.log("user info", $rootScope.user);
     $scope.changePassword = function(oldPass, newPass, confirm) {
       $scope.err = null;
       if( !oldPass || !newPass ) {

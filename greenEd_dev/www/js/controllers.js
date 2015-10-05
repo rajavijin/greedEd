@@ -624,10 +624,11 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   $scope.getHomeworks = function(refresh) {
     if(online) {
       $rootScope.homeworks[$stateParams.uid].$loaded().then(function(data) {
-        if($rootScope.walls.length > 0) {
+        console.log("homeworks", $rootScope.homeworks[$stateParams.uid]);
+        if($rootScope.homeworks[$stateParams.uid].length > 0) {
           $scope.items = $rootScope.homeworks[$stateParams.uid];
           $scope.empty = false;
-          Auth.saveLocal("wall", $rootScope.walls);
+          Auth.saveLocal("homeworks", $rootScope.homeworks[$stateParams.uid]);
         }
         else $scope.loading = false;
       });
@@ -1653,17 +1654,23 @@ angular.module('starter.controllers', ['starter.services', 'monospaced.elastic',
   {
     title: 'Head Master',
     username: "8951572125",
-    password: '4spuv7vi'
+    password: '4spuv7vi',
+    iconid: 0,
+    sex: 'women'
   },
   {
     title: 'Teacher',
     username: "9496255108",
-    password: "3wqoxbt9"
+    password: "3wqoxbt9",
+    iconid: 3,
+    sex: 'women'
   },
   {
     title: "Parent",
     username: "9944711005",
-    password: "4aacq5mi"
+    password: "4aacq5mi",
+    iconid: 13,
+    sex: 'men'
   }];
   $scope.fillUser = function(modal, username, password) {
     modal.hide();

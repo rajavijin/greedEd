@@ -7,11 +7,10 @@
  * # AddschoolCtrl
  * Controller of the greenEdApp
  */
-angular.module('greenEdApp')
-  .controller('AddschoolCtrl', function ($scope, Ref, $q, $firebaseArray, $timeout, Auth, $http, $location) {
+angular.module('greenEdBackendApp')
+  .controller('AddschoolCtrl', function ($scope, Ref, $q, $firebaseObject, $firebaseArray, $timeout, Auth, $http, $location) {
   	// synchronize a read-only, synchronized array of schools, limit to most recent 10
-    $scope.schools = $firebaseArray(Ref.child('schools').limitToLast(10));
-
+    $scope.schools = $firebaseArray(Ref.child('schools'));
     // display any errors
     $scope.schools.$loaded().catch(alert);
 
@@ -69,6 +68,12 @@ angular.module('greenEdApp')
             });
         }
         schoolData.grades = grades;
+        var tschools = $scope.schools.length;
+        if(tschools > 0) {
+            schoolData.id = "s" + (parseInt($scope.schools[$scope.schools.length - 1].id.substring(1)) + 1);
+        } else {
+            schoolData.id = "s0";
+        }
         console.log("schoolData", schoolData);
         // push a message to the end of the array
         $scope.schools.$add(schoolData).then(function() {
@@ -77,16 +82,13 @@ angular.module('greenEdApp')
         	console.log("school created", schoolcreated);
 	        var hm = {};
 			hm.name = "Head Master";
-			hm.email = schoolcreated.schoolphone + "@ge.com";
+			hm.email = schoolcreated.schoolphone + "h"+ schoolcreated.id +"@ge.com";
 			hm.pepper = Math.random().toString(36).slice(-8);
-			hm.role = "hm";
-			hm.school = schoolcreated.school;
-			hm.schoolid = schoolcreated.$id;
 			console.log("hm", hm);
 			Auth.$createUser({email: hm.email, password: hm.pepper})
 	          .then(function (userData) {
 	            console.log("user created", userData);
-	            return createProfile(userData, hm);
+	            return createProfile(userData, hm, schoolcreated.id);
 	          })
 	          .then(redirect, showError);
         })
@@ -102,8 +104,8 @@ angular.module('greenEdApp')
     	console.log("error", a);
     }
 
-	function createProfile(userData, user) {
-		var ref = Ref.child('users/'+userData.uid), def = $q.defer();
+	function createProfile(userData, user, schoolid) {
+		var ref = Ref.child(schoolid+'/users/hm/'+userData.uid), def = $q.defer();
 		ref.set(user, function(err) {
 		  $timeout(function() {
 		    if( err ) {

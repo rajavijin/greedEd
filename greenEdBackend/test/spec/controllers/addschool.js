@@ -3,7 +3,7 @@
 describe('Controller: AddschoolCtrl', function () {
 
   // load the controller's module
-  beforeEach(module('greenEdApp'));
+  beforeEach(module('greenEdBackendApp'));
 
   var AddschoolCtrl,
     scope;

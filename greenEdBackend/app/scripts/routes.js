@@ -1,7 +1,7 @@
 'use strict';
 /**
  * @ngdoc overview
- * @name greenEdApp:routes
+ * @name greenEdBackendApp:routes
  * @description
  * # routes.js
  *
@@ -27,7 +27,7 @@
  *   }
  *
  */
-angular.module('greenEdApp')
+angular.module('greenEdBackendApp')
 
 /**
  * Adds a special `whenAuthenticated` method onto $routeProvider. This special method,
@@ -45,9 +45,7 @@ angular.module('greenEdApp')
     $routeProvider.whenAuthenticated = function(path, route) {
       route.resolve = route.resolve || {};
       route.resolve.user = ['Auth', function(Auth) {
-        var user = Auth.$requireAuth();
-        if(user) return JSON.parse(localStorage.getItem("user")) || {};
-        else return user;
+        return Auth.$requireAuth();
       }];
       $routeProvider.when(path, route);
       SECURED_ROUTES[path] = true;
@@ -59,54 +57,30 @@ angular.module('greenEdApp')
   // before trying to access that route
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
-      .when('/', {
-        templateUrl: 'views/login.html',
-        controller: 'LoginCtrl'
+      .when('/main', {
+        templateUrl: 'views/main.html',
+        controller: 'MainCtrl',
       })
 
       .when('/chat', {
         templateUrl: 'views/chat.html',
         controller: 'ChatCtrl'
       })
+      .when('/', {
+        templateUrl: 'views/login.html',
+        controller: 'LoginCtrl'
+      })
       .whenAuthenticated('/account', {
         templateUrl: 'views/account.html',
         controller: 'AccountCtrl'
       })
-      .whenAuthenticated('/dashboard', {
-        templateUrl: 'views/dashboard.html',
-        controller: 'DashboardCtrl'
+      .whenAuthenticated('/wall', {
+        templateUrl: 'views/wall.html',
+        controller: 'WallCtrl'
       })
-      .whenAuthenticated('/addteacher', {
-        templateUrl: 'views/addteacher.html',
-        controller: 'AddteacherCtrl'
-      })
-      .whenAuthenticated('/addschool', {
+      .when('/addschool', {
         templateUrl: 'views/addschool.html',
         controller: 'AddschoolCtrl'
-      })
-      .whenAuthenticated('/addclass', {
-        templateUrl: 'views/addclass.html',
-        controller: 'AddclassCtrl'
-      })
-      .whenAuthenticated('/addstudent', {
-        templateUrl: 'views/addstudent.html',
-        controller: 'AddstudentCtrl'
-      })
-      .when('/contact', {
-        templateUrl: 'views/contact.html',
-        controller: 'ContactCtrl'
-      })
-      .whenAuthenticated('/teachers', {
-        templateUrl: 'views/teachers.html',
-        controller: 'TeachersCtrl'
-      })
-      .whenAuthenticated('/class', {
-        templateUrl: 'views/class.html',
-        controller: 'ClassCtrl'
-      })
-      .whenAuthenticated('/student', {
-        templateUrl: 'views/student.html',
-        controller: 'StudentCtrl'
       })
       .otherwise({redirectTo: '/'});
   }])
@@ -117,11 +91,10 @@ angular.module('greenEdApp')
    * for changes in auth status which might require us to navigate away from a path
    * that we can no longer view.
    */
-  .run(['$rootScope', '$location', 'Auth', 'SECURED_ROUTES', 'loginRedirectPath',
-    function($rootScope, $location, Auth, SECURED_ROUTES, loginRedirectPath) {
+  .run(['$rootScope', '$location', 'Auth', 'Data', 'SECURED_ROUTES', 'Ref', '$firebaseObject', 'loginRedirectPath', 'loggedInPath',
+    function($rootScope, $location, Auth, Data, SECURED_ROUTES, Ref, $firebaseObject, loginRedirectPath, loggedInPath) {
       // watch for login status changes and redirect if appropriate
       Auth.$onAuth(check);
-
       // some of our routes may reject resolve promises with the special {authRequired: true} error
       // this redirects to the login page whenever that is encountered
       $rootScope.$on('$routeChangeError', function(e, next, prev, err) {
@@ -133,6 +106,26 @@ angular.module('greenEdApp')
       function check(user) {
         if( !user && authRequired($location.path()) ) {
           $location.path(loginRedirectPath);
+        } else if (user && ($location.path() == '/')) {
+          $location.path(loggedInPath);
+        }
+        console.log("user", user);
+        if(user && !$rootScope.user) {
+          var email = user.password.email.split("@")[0];
+          var i = null;
+          if(i = email.indexOf("h") > 0) {
+            console.log("email", email);
+            console.log("i", email.substring(i + 1));
+            var key = email.substring(i)+"/users/hm";
+          } else if (i = email.indexOf("t") > 0) {
+
+          } else {
+            var key = 'users';
+          }
+          console.log("key", key+'/'+user.uid);
+          $rootScope.user = $firebaseObject(Ref.child(key+'/'+user.uid));
+          $rootScope.menus = Data.getMenus(email);
+          console.log("root user", $rootScope.user);
         }
       }
 

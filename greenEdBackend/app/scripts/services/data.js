@@ -7,56 +7,53 @@
  * # Data
  * Service in the greenEdApp.
  */
-angular.module('greenEdApp')
-  .service('Data', function (FBURL, $window) {
+angular.module('greenEdBackendApp')
+  .service('Data', function (FBURL, $window,  $rootScope, $localStorage) {
     // AngularJS will instantiate a singleton by calling "new" on this function
     var Data = {
-    	getMenus: function(role) {
-    		if(role == "admin") {
+    	getMenus: function(emailId) {
+    		console.log("emailid", emailId);
+			var email = emailId.split("@")[0];
+    		if(email == "admin") {
 		        return [{
 		          'title': 'Dashboard',
-		          'link': '/dashboard',
-		          'class': 'icon-dashboard',
+		          'href': '/wall',
+		          'class': 'mdi-action-dashboard',
 		        },{
 		          'title': 'Add school',
-		          'link': '/addschool',
-		          'class': 'icon-home'
+		          'href': '/addschool',
+		          'class': 'mdi-action-account-balance'
 		        }];
-			} else if (role == "hm") {
+			} else if(email.indexOf("h") > 0) {
 				return [{
 				  'title': 'Dashboard',
-				  'link': '/dashboard',
-				  'class': 'icon-dashboard',
+				  'href': '/dashboard',
+				  'class': 'fa fa-dashboard',
 				},
 				{
 				  'title': 'Add Teacher',
-				  'link': '/addteacher',
-				  'class': 'icon-user-md'
-				},
-				{
-				  'title': 'Add Class',
-				  'link': '/addclass',
-				  'class': 'icon-home'
+				  'href': '/addteacher',
+				  'class': 'fa fa-user-md'
 				},
 				{
 				  'title': 'Add Student',
-				  'link': '/addstudent',
-				  'class': 'icon-user'
+				  'href': '/addstudent',
+				  'class': 'fa fa-user'
 				},
 				 {
 				  'title': 'Teachers',
-				  'link': '/teachers',
-				  'class': 'icon-user-md'
+				  'href': '/teachers',
+				  'class': 'fa fa-user-md'
 				},
 				{
 				  'title': 'Class',
-				  'link': '/class',
-				  'class': 'icon-home'
+				  'href': '/class',
+				  'class': 'fa fa-home'
 				},
 				{
 				  'title': 'Student',
-				  'link': '/student',
-				  'class': 'icon-user'
+				  'href': '/student',
+				  'class': 'fa fa-user'
 				}];
 			} else {
 				return [];

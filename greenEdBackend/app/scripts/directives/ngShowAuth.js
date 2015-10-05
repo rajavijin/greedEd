@@ -1,12 +1,12 @@
 /**
  * @ngdoc function
- * @name greenEdApp.directive:ngShowAuth
+ * @name greenEdBackendApp.directive:ngShowAuth
  * @description
  * # ngShowAuthDirective
  * A directive that shows elements only when user is logged in. It also waits for Auth
  * to be initialized so there is no initial flashing of incorrect state.
  */
-angular.module('greenEdApp')
+angular.module('greenEdBackendApp')
   .directive('ngShowAuth', ['Auth', '$timeout', function (Auth, $timeout) {
     'use strict';
 
@@ -19,7 +19,6 @@ angular.module('greenEdApp')
           // sometimes if ngCloak exists on same element, they argue, so make sure that
           // this one always runs last for reliability
           $timeout(function () {
-            el.removeClass('hide');
             el.toggleClass('ng-cloak', !Auth.$getAuth());
           }, 0);
         }

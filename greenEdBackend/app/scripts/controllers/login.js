@@ -1,15 +1,13 @@
 'use strict';
 /**
  * @ngdoc function
- * @name greenEdApp.controller:LoginCtrl
+ * @name greenEdBackendApp.controller:LoginCtrl
  * @description
  * # LoginCtrl
  * Manages authentication to any active providers.
  */
-angular.module('greenEdApp')
-  .controller('LoginCtrl', function ($scope, Auth, $rootScope, $location, Data, $q, Ref, $timeout) {
-    $scope.email ="8951572125@ge.com";
-    $scope.pass = "101thuxr";
+angular.module('greenEdBackendApp')
+  .controller('LoginCtrl', function ($scope, Auth, $rootScope, $localStorage, $location, $q, Ref, $timeout) {
     $scope.passwordLogin = function(email, pass) {
       $scope.err = null;
       $scope.loading = true;
@@ -17,7 +15,8 @@ angular.module('greenEdApp')
         redirect, showError
       );
     };
-
+    $scope.email = "admin@ge.com";
+    $scope.pass = "sahaya003";
     $scope.createAccount = function(email, pass, confirm) {
       $scope.err = null;
       if( !pass ) {
@@ -65,39 +64,14 @@ angular.module('greenEdApp')
 
   
 
-    function redirect(userdata) {
-      console.log("user while redirect", userdata);
-      Ref.child('users/'+userdata.uid).once('value', function(pdata) {
-        var profile = pdata.val();
-        profile.uid = userdata.uid;
-        localStorage.setItem("user", JSON.stringify(profile));
-        $rootScope.menus = Data.getMenus(profile.role);
-        $rootScope.user = profile;
-        console.log("Profile", profile);
-      });
-      $location.path('/dashboard');
+    function redirect(userdata) {      
+      $location.path('/wall');
     }
 
     function showError(err) {
+      $scope.loading = false;
       $scope.err = err;
     }
 
 
-  })
-  .controller('NavbarCtrl', function ($scope, $rootScope, $location, Auth, Data, $firebaseObject, Ref) {
-    var user = JSON.parse(localStorage.getItem("user"));
-    if(user) {
-      $rootScope.menus = Data.getMenus(user.role);
-      $rootScope.user = user;
-      console.log("menus", Data.getMenus(user.role));
-    }
-    console.log("Nav user", user);
-    $scope.logout = function() {
-      Auth.$unauth();
-      $location.path('/');
-    };
-
-    $scope.isActive = function(route) {
-      return route === $location.path();
-    };
   });
