@@ -8,50 +8,77 @@
  * Controller of the greenEdBackendApp
  */
 angular.module('greenEdBackendApp')
-.controller('AddstudentCtrl', function ($scope, $rootScope, $firebaseArray, $window, user, $q, $timeout, Auth, Ref) {
+.controller('AddstudentCtrl', function ($scope, $rootScope, Data, $firebaseArray, $window, user, $q, $timeout, Auth, Ref) {
   console.log("User in teacher", settings);
   var reset = function() {
     $scope.import = false;
     $rootScope.title = "Add Student";
     $scope.msg = '';
     $scope.step = 1;
-    $scope.student = {};
+    $scope.student = {status:"active"};
     $scope.student.subjects = [{subject:''}];
   }
   reset();
-  $scope.teachers = $firebaseArray(Ref.child(settings.sid+'/users/teachers'));
+  Ref.child(settings.sid+"/users/teacher").once('value', function(tsnap) {
+    console.log("tsnap val", tsnap.val());
+    tsnap.forEach(function(tdata) {
+      console.log("tdata", tdata.val());
+    });
+  });
+  // $scope.teachers = $firebaseArray(Ref.child(settings.sid+'/users/teachers'));
   $scope.next = function(step) {
     console.log("Step", step);
     if(step == 7) {
-      $scope.msg = "Creating Teacher...";
-      var allsubjects = [];
-      var teacher = $scope.student;
-      teacher.email = teacher.phone +'@ge.com';
-      teacher.pepper = Math.random().toString(36).slice(-8);
-      teacher.password = teacher.pepper;
-      teacher.role = "teacher";
-      teacher.school = user.school;
-      teacher.schoolid = settings.sid;
-      teacher.subjects.forEach(function(sk, sv) {
-        if(sk["$$hashKey"]) delete sk["$$hashKey"]; 
-      })
-      console.log("finally", teacher);
-      // Ref.child("users").orderByChild("email").equalTo(teacher.email).once('value', function(tsnap) {
-      //   console.log("snap val", tsnap.val());
-      //   if(tsnap.val() === null) {
-      //     Auth.$createUser({email: teacher.email, password: teacher.pepper})
-      //     .then(function (usercreated) {
-      //       console.log("user created", usercreated);
-      //       return createProfile(usercreated, teacher);
-      //     })
-      //     .then(function() { 
-      //       $scope.msg = "Teacher has been created successfully";
-      //     }, showError);
-      //   } else {
-      //     $scope.msg = "Teacher already exists";
-      //     $scope.$apply();
-      //   }
-      // })
+      $scope.msg = "Creating Student...";
+      var userdata = {};
+      userdata.pepper = Math.random().toString(36).slice(-8);
+      var parent = {};
+      parent.name = $scope.student.parent;
+      parent.email = $scope.student.parentphone+"p"+settings.sid+"@ge.com";
+      parent.phone = $scope.student.parentphone;
+      parent.pepper = Math.random().toString(36).slice(-8);
+      parent.role = "parent";
+      parent.schoolid = settings.sid;
+      console.log("parent", parent);
+      Auth.$createUser({email: parent.email, password: parent.pepper})
+          .then(function (parentcreated) {
+              console.log("user created", parentcreated);
+              userdata.parentid = parentcreated.uid;
+              return createProfile(parentcreated, parent);
+           })
+           .then(function() {
+          $scope.student.email = $scope.student.studentid+"s"+settings.sid+"@ge.com";
+          var allsubjects = $scope.student.subjects;
+          for (var si = 0; si < allsubjects.length; si++) {
+            var cdata = allsubjects[si];
+            var tkey = $scope.student.standard + "-" + $scope.student.division +"_"+ allsubjects[si];
+            // if(!userdata[teachers[tkey]]) {
+            //   userdata[teachers[tkey]] = cdata[1] +'_'+cdata[0];
+            // } else {
+            //   userdata[teachers[tkey]] += ':'+cdata[0];
+            // }
+            // if(cdata[1] == userdata.teacher) {
+            // tidkey = tkey;
+            // }
+          };
+          if(tidkey) userdata.teacherid = teachers[tidkey];
+              userdata.usertype = school.$id+"|student";
+              userdata.parentkids = userdata.usertype + '|'+ userdata.parentid;
+              delete userdata.parentid;
+            Auth.$createUser({email: userdata.email, password: userdata.pepper})
+             .then(function (usercreated) {
+                console.log("student created", usercreated);
+                return createProfile(usercreated, userdata);
+              })
+              .then(function() { 
+               if(iteration != (allusers.length -1)) {
+            iteration++;
+              alluserSubmit(iteration);
+          } else {
+            $location.path('/addstudent');
+          }
+        }, showError);
+      }, showError);
   	} else {
       $scope.step = step + 1;
     }

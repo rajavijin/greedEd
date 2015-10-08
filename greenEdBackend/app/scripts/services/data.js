@@ -8,7 +8,7 @@
  * Service in the greenEdApp.
  */
 angular.module('greenEdBackendApp')
-  .service('Data', function (FBURL, $window,  $rootScope, $localStorage) {
+  .service('Data', function (FBURL, $window,  Ref, $firebaseArray, $firebaseObject, $rootScope, $localStorage) {
     // AngularJS will instantiate a singleton by calling "new" on this function
     var Data = {
     	getMenus: function(emailId) {
