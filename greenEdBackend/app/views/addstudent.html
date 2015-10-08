@@ -1,0 +1,163 @@
+
+	   	<div class="col-xs-12 add-data">
+          	<div class="card row">
+	        <div class="panel-heading blue">
+		        <div ng-hide="import">
+			        <span class="label pull-right m-r-md amber">{{step}}/7</span>
+		        	<span class="h4" ng-if="student.name">{{student.name}}</span>
+					<span class="h4" ng-if="student.id"> / {{student.id}}</span>
+					<span class="h4" ng-if="student.male"> / {{student.male}}</span>
+					<span class="h4" ng-if="student.female"> / {{student.female}}</span>
+					<span class="h4" ng-if="student.address"> / {{student.address}}</span>
+					<span class="h4" ng-if="student.parent"> / {{student.parent}}</span>
+					<span class="h4" ng-if="student.parentphone"> / {{student.parentphone}}</span>
+		            <span class="h4" ng-repeat="(sk, sv) in student.subjects" ng-if="student.subjects[sk].subject"> / {{sv.subject}} - {{sv.teacher}}</span>
+	        	</div>
+	        </div>
+        	<div class="card-tools">
+              <ul class="list-inline">
+                <li class="dropdown">
+                  <a md-ink-ripple="" data-toggle="dropdown" class="md-btn md-flat md-btn-circle">
+                    <i class="mdi-navigation-more-vert text-md"></i>
+                  <div class="md-ripple-container"></div></a>
+                  <ul class="dropdown-menu dropdown-menu-scale pull-right pull-up top text-color">
+                    <li ng-show="import"><a href="" ng-click="reset()">Add Teacher</a></li>
+                    <li ng-hide="import"><a href="" ng-click="importTeachers()">Import Teacher</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+            <div class="card-body">
+	         	<div class="form-wrapper" ng-show="import"><br>
+					<form role="form" ng-submit="csvImport(csv.result)">
+					    <center><ng-csv-import content="csv.content" header="true" result="csv.result"></ng-csv-import></center><br>
+					    <center><button type="submit" class="btn btn-info"><i class="fa fa-download"></i> Import</button></center>
+					</form>
+	         	</div>
+	         	<div class="message center" ng-if="msg != ''">
+				  <h1>{{msg}}</h1>
+				  <button ng-if="msg != 'Creating Student...'" type="button" class="btn btn-info" ng-click="reset()"><i class="fa fa-user"></i> Add another Teacher</button>
+	         	</div>
+
+	         	<span ng-if="msg == ''" ng-hide="import">
+	            <div class="form-wrapper">
+	               <form name="addForm">
+	                  <div class="form-content">
+			            <div ng-switch="step">
+					      <div ng-switch-when="1">
+							<div class="md-form-group col-sm-10">
+								<label class="text-info">Student Name and Id</label>
+								<div class="row">
+			                    <div class="col-md-6"><input class="md-input" placeholder="Enter name" name="name" ng-model="student.name" type="text" required ng-focus auto-focus="true" />
+								  <div role="alert">
+							      	<span class="error" ng-show="addForm.name.$error.required && addForm.name.$focused">Required</span>
+							      </div>
+								  </div>
+								  <div class="col-md-6"><input class="md-input" placeholder="Enter ID" name="id" ng-model="student.id" type="text" required ng-focus />
+								  <div role="alert">
+							      	<span class="error" ng-show="addForm.id.$error.required && addForm.id.$focused">Required</span>
+							      </div>
+								  </div>
+								</div>
+							</div>
+					      </div>
+					      <div ng-switch-when="2">
+					      	<div ng-init="radioInit()" class="md-form-group col-sm-10">
+		                        <label class="text-info"> Enter Student Sex</label>
+		                        <div class="radios">
+                                  <label class="label_radio" for="radio-01">
+                                      <input name="sex" ng-model="student.sex" id="radio-01" value="1" type="radio" checked focus-me="true" /> Male
+                                  </label>
+                                  <label class="label_radio" for="radio-02">
+                                      <input name="sex" ng-model="student.sex" id="radio-02" value="1" type="radio" /> Female
+                                  </label>
+                              	</div>
+							</div>
+					      </div>
+					      <div ng-switch-when="3">
+					      	<div class="md-form-group col-sm-10">
+								<label class="text-info">Student Address</label>
+			                    <input class="md-input" ng-model="student.address" placeholder="Enter student adress" type="text" name="address" required ng-focus focus-me="true" />
+								<div role="alert">
+							      	<span class="error" ng-show="addForm.address.$error.required && addForm.address.$focused">Required</span>
+							      </div>
+							</div>
+					      </div>
+					      <div ng-switch-when="4">
+		                     <div class="md-form-group col-sm-10">
+		                        <label class="text-info"> Parent name</label>
+		                        <input class="md-input" ng-model="student.parent" name="parent" placeholder="Enter parent name" type="text" required ng-focus focus-me="true" />
+		                        <div role="alert">
+							      	<span class="error" ng-show="addForm.parent.$error.required && addForm.parent.$focused">Required</span>
+							      </div>
+		                     </div>
+					      </div>
+					      <div ng-switch-when="5">
+		                     <div class="md-form-group col-sm-10">
+		                        <label class="text-info"> Parent phone number</label>
+		                        <input class="md-input" ng-model="student.parentphone" name="parentphone" placeholder="Enter parent phone number" type="text" required ng-focus focus-me="true" />
+		                        <div role="alert">
+							      	<span class="error" ng-show="addForm.parentphone.$error.required && addForm.parentphone.$focused">Required</span>
+							      </div>
+		                     </div>
+					      </div>
+					      <div ng-switch-when="6">
+		                  	<div class="md-form-group col-sm-10">
+		                        <label class="text-info">Class And Division</label>
+		                        <div class="row">
+		                        <div class="col-md-6">
+		                        <input class="md-input" placeholder="Class" ng-model="student.class" name="class" type="text" required ng-focus focus-me="true" />
+		                        <div role="alert">
+							      	<span class="error" ng-show="addForm.class.$error.required && addForm.class.$focused">Required</span>
+							      </div>
+		                        </div>
+								  <div class="col-md-5"><input class="md-input" placeholder="Division" ng-model="student.division" name="division" type="text" required ng-focus />
+								  <div role="alert">
+							      	<span class="error" ng-show="addForm.division.$error.required && addForm.division.$focused">Required</span>
+							      </div>
+								  </div>
+								</div>
+		                        </div>
+					      </div>
+					      <div ng-switch-when="7">
+		                  	<div class="md-form-group col-sm-10">
+		                        <label class="text-info">Subjects</label>
+								<div class="row" ng-repeat="(k,v) in student.subjects">
+								  <div class="col-md-1">
+								  	<button ng-click="(k == 0) ? createSubject(): removeSubject(k)" class="btn custom-add-icon btn-default"><i class="fbtn ibtn fa" ng-class="{ 'fa-plus' : k == 0, 'fa-trash' : k !== 0}"></i></button>
+								  	</div>
+								  <div class="col-md-11">
+								  	<input class="md-input" placeholder="Enter subject" ng-model="student.subjects[k].subject" type="text" required focus-me="true" ng-focus \>
+								  </div>
+								</div>
+		                    </div>
+					      </div>
+					      <div ng-switch-when="8">
+					      	<div class="md-form-group col-sm-10 ">
+								<label class="add-data-g-l">Teacher Subjects and Classes</label>
+			                    <div class="row" ng-repeat="(k,v) in teacher.subjects">
+								  <div class="col-md-1">
+								  	<button ng-click="(k == 0) ? createSubject(): removeSubject(k)" class="btn custom-add-icon btn-default"><i class="fbtn ibtn fa" ng-class="{ 'fa-plus' : k == 0, 'fa-trash' : k !== 0}"></i></button>
+								  	</div>
+								  <div class="col-md-6">
+								  	<input placeholder="Subject" class="md-input" ng-model="teacher.subjects[k].subject" type="text" required focus-me="true" ng-focus \>
+								  </div>
+								  <div class="col-md-5"><input placeholder="Class" class="md-input" ng-model="teacher.subjects[k].class" type="text"></div>
+								</div>
+		                        <div role="alert">
+							      <span class="error" ng-show="addForm.name.$error.required && addForm.name.$focused"><small>Required</small></span>
+							    </div>
+							</div>
+					      </div>
+					   </div>
+	                  </div>
+	                  <button id="nextBtn" ng-disabled="!addForm.$valid" class="btn data-submit pull-right btn-icon btn-rounded btn-info" ng-click="next(step)"><i class="fa  fa-arrow-right"></i></button>
+	                  <button ng-if="step != 1" id="backBtn" class="btn pull-right m-r-lg btn-icon data-submit btn-rounded btn-info" ng-click="previous(step)"><i class="fa  fa-arrow-left"></i></button>
+	               </form>
+	            </div>
+	            </span>
+	         </div>
+          </div>
+        </div>
+<!-- 	   </div>
+	</div>

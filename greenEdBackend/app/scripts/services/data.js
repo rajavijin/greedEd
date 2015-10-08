@@ -16,7 +16,11 @@ angular.module('greenEdBackendApp')
 			var email = emailId.split("@")[0];
     		if(email == "admin") {
 		        return [{
-		          'title': 'Dashboard',
+				  'title': 'Dashboard',
+				  'href': '/dashboard',
+				  'class': 'mdi-action-dashboard',
+				},{
+		          'title': 'Wall',
 		          'href': '/wall',
 		          'class': 'mdi-action-dashboard',
 		        },{
@@ -28,8 +32,12 @@ angular.module('greenEdBackendApp')
 				return [{
 				  'title': 'Dashboard',
 				  'href': '/dashboard',
-				  'class': 'fa fa-dashboard',
-				},
+				  'class': 'mdi-action-dashboard',
+				},{
+		          'title': 'Wall',
+		          'href': '/wall',
+		          'class': 'mdi-action-dashboard',
+		        },
 				{
 				  'title': 'Add Teacher',
 				  'href': '/addteacher',

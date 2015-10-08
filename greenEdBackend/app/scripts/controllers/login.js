@@ -11,12 +11,12 @@ angular.module('greenEdBackendApp')
     $scope.passwordLogin = function(email, pass) {
       $scope.err = null;
       $scope.loading = true;
-      Auth.$authWithPassword({email: email, password: pass}, {rememberMe: true}).then(
+      Auth.$authWithPassword({email: email+"@ge.com", password: pass}, {rememberMe: true}).then(
         redirect, showError
       );
     };
-    $scope.email = "admin@ge.com";
-    $scope.pass = "sahaya003";
+    $scope.email = "8951572124hs1";
+    $scope.pass = "9o3tmx6r";
     $scope.createAccount = function(email, pass, confirm) {
       $scope.err = null;
       if( !pass ) {
@@ -64,11 +64,13 @@ angular.module('greenEdBackendApp')
 
   
 
-    function redirect(userdata) {      
+    function redirect(userdata) {
+      $scope.loading = false;   
       $location.path('/wall');
     }
 
     function showError(err) {
+      console.log("error", err);
       $scope.loading = false;
       $scope.err = err;
     }

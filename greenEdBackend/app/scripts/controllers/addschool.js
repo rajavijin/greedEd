@@ -31,8 +31,7 @@ angular.module('greenEdBackendApp')
     $scope.maximum = "default:100,11:200,12:200";
     $scope.school.period = "June-April";
 	$scope.processing = false;
-    $scope.csvImport = function(csvdata) {
-    	console.log("csvdata", csvdata);
+    $scope.createSchool = function() {
         var schoolData = $scope.school;
         var max = $scope.maximum.split(",");
         schoolData.maxmark = [];

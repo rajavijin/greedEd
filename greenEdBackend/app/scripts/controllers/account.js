@@ -7,7 +7,7 @@
  * Provides rudimentary account management functions.
  */
 angular.module('greenEdBackendApp')
-  .controller('AccountCtrl', function ($rootScope, $scope, user, Auth, Ref, $firebaseObject, $timeout) {
+  .controller('AccountCtrl', function ($rootScope, $route, $scope, user, Auth, Ref, $firebaseObject, $timeout) {
     $scope.user = user;
     $scope.logout = function() { Auth.$unauth(); };
     $scope.messages = [];

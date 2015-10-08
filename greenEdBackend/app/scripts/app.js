@@ -30,9 +30,11 @@ angular.module('greenEdBackendApp', [
     'angular-loading-bar',
     'firebase',
     'firebase.ref',
-    'firebase.auth'
+    'firebase.auth',
+    'ngCsvImport'
   ])
-.controller('AppCtrl', function ($scope, $localStorage, $window, $document, Auth, Data, $location, $rootScope, $timeout, $mdSidenav,   $mdColorPalette,   $anchorScroll ) {
+.controller('AppCtrl', function ($scope, $route, $localStorage, $window, $document, Auth, Data, $location, $rootScope, $timeout, $mdSidenav,   $mdColorPalette,   $anchorScroll ) {
+      console.log("state", $route);
       // add 'ie' classes to html
       var isIE = !!navigator.userAgent.match(/MSIE/i) || !!navigator.userAgent.match(/Trident.*rv:11\./);
       isIE && angular.element($window.document.body).addClass('ie');

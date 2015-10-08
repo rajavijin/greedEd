@@ -1,4 +1,10 @@
 'use strict';
+var ldata = localStorage.getItem("settings");
+if(ldata) {
+  var settings = JSON.parse(CryptoJS.AES.decrypt(ldata, "*(%!%&@!@%").toString(CryptoJS.enc.Utf8));
+} else {
+  var settings = {};
+}
 /**
  * @ngdoc overview
  * @name greenEdBackendApp:routes
@@ -72,15 +78,32 @@ angular.module('greenEdBackendApp')
       })
       .whenAuthenticated('/account', {
         templateUrl: 'views/account.html',
-        controller: 'AccountCtrl'
+        controller: 'AccountCtrl',
+        title: "Account"
       })
       .whenAuthenticated('/wall', {
         templateUrl: 'views/wall.html',
-        controller: 'WallCtrl'
+        controller: 'WallCtrl',
+        title: 'Wall'
       })
       .when('/addschool', {
         templateUrl: 'views/addschool.html',
-        controller: 'AddschoolCtrl'
+        controller: 'AddschoolCtrl',
+        title: 'Add School'
+      })
+      .whenAuthenticated('/dashboard', {
+        templateUrl: 'views/dashboard.html',
+        controller: 'DashboardCtrl'
+      })
+      .when('/addteacher', {
+        templateUrl: 'views/addteacher.html',
+        controller: 'AddteacherCtrl',
+        title: 'Add Teacher'
+      })
+      .whenAuthenticated('/addstudent', {
+        templateUrl: 'views/addstudent.html',
+        controller: 'AddstudentCtrl',
+        title: 'Add Student'
       })
       .otherwise({redirectTo: '/'});
   }])
@@ -91,8 +114,8 @@ angular.module('greenEdBackendApp')
    * for changes in auth status which might require us to navigate away from a path
    * that we can no longer view.
    */
-  .run(['$rootScope', '$location', 'Auth', 'Data', 'SECURED_ROUTES', 'Ref', '$firebaseObject', 'loginRedirectPath', 'loggedInPath',
-    function($rootScope, $location, Auth, Data, SECURED_ROUTES, Ref, $firebaseObject, loginRedirectPath, loggedInPath) {
+  .run(['$rootScope', '$route', '$location', 'Auth', 'Data', 'SECURED_ROUTES', 'Ref', '$firebaseObject', 'loginRedirectPath', 'loggedInPath',
+    function($rootScope, $route, $location, Auth, Data, SECURED_ROUTES, Ref, $firebaseObject, loginRedirectPath, loggedInPath) {
       // watch for login status changes and redirect if appropriate
       Auth.$onAuth(check);
       // some of our routes may reject resolve promises with the special {authRequired: true} error
@@ -103,29 +126,45 @@ angular.module('greenEdBackendApp')
         }
       });
 
-      function check(user) {
-        if( !user && authRequired($location.path()) ) {
+      $rootScope.$on('$routeChangeSuccess', function() {
+        $rootScope.title = $route.current.title;
+        if($rootScope.user) {
+          $rootScope.user.$loaded().then(function() {
+            if(!$rootScope.user.email) {
+              Auth.$unauth();
+              $location.reload();
+            }
+          });
+        }
+      });
+
+      function check(userdata) {
+        if( !userdata && authRequired($location.path()) ) {
           $location.path(loginRedirectPath);
-        } else if (user && ($location.path() == '/')) {
+        } else if (userdata && ($location.path() == '/')) {
           $location.path(loggedInPath);
         }
-        console.log("user", user);
-        if(user && !$rootScope.user) {
-          var email = user.password.email.split("@")[0];
-          var i = null;
-          if(i = email.indexOf("h") > 0) {
+        console.log("userdata", userdata);
+        if(userdata && !$rootScope.user) {
+          var email = userdata.password.email.split("@")[0];
+          var i = 0;
+          if((i = email.indexOf("h")) > 0) {
             console.log("email", email);
-            console.log("i", email.substring(i + 1));
-            var key = email.substring(i)+"/users/hm";
+            console.log("i", i);
+            console.log("role", email.substring(i + 1));
+            settings.sid = email.substring(i+1);
+            settings.role = "hm";
+            settings.uid = userdata.uid;
+            var key = settings.sid+"/users/hm";
+            localStorage.setItem("settings", CryptoJS.AES.encrypt(JSON.stringify(settings), "*(%!%&@!@%"));
           } else if (i = email.indexOf("t") > 0) {
 
           } else {
             var key = 'users';
           }
-          console.log("key", key+'/'+user.uid);
-          $rootScope.user = $firebaseObject(Ref.child(key+'/'+user.uid));
+          console.log("key", key+'/'+userdata.uid);
+          $rootScope.user = $firebaseObject(Ref.child(key+'/'+userdata.uid));
           $rootScope.menus = Data.getMenus(email);
-          console.log("root user", $rootScope.user);
         }
       }
 

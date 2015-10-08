@@ -3157,6 +3157,34 @@ a.list-group-item.hover {
   box-shadow: none;
 }
 
+.add-data .md-input {
+  height: auto;
+  font-size: 36px;
+  padding: 20px 0 0; 
+  border-bottom: 2px solid #2196f3;
+}
+.add-data .md-input:focus,
+.add-data .md-input.focus {
+  border-color: #2196f3;
+}
+
+.add-data .md-input:focus ~ label,
+.add-data .md-input.focus ~ label {
+  top: 0 !important;
+  font-size: 14px !important;
+  color: #2196f3;
+}
+.add-data .float-label .md-input ~ label {
+  top: 40px;
+  font-size: 36px;
+}
+
+.add-data .float-label .md-input.ng-dirty ~ label,
+.add-data .float-label .md-input.has-value ~ label {
+  top: 0;
+  font-size: 14px;
+}
+
 .md-input:focus,
 .md-input.focus {
   padding-bottom: 1px;
@@ -3171,7 +3199,6 @@ a.list-group-item.hover {
   color: #3f51b5;
   opacity: 1;
 }
-
 .float-label .md-input ~ label {
   top: 20px;
   font-size: 1em;
@@ -6213,3 +6240,14 @@ a.text-dark:hover {
     from { transform: scale(1) rotate(0deg);}
     to { transform: scale(1) rotate(360deg);}
 }
+.add-data .btn.data-submit {
+  position: absolute;
+  right: 20px;
+  bottom: 30px;
+}
+.add-data #backBtn {right: 40px;}
+.add-data .custom-add-icon {
+  font-size: 26px;
+  margin: 20px 0 0 15px;
+}
+.add-data .panel-heading {min-height: 54px;}

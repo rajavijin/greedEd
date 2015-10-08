@@ -28,7 +28,9 @@
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
-    <div ng-hide-auth class="app" ng-view=""></div>
+    <div ng-hide-auth class="app">
+      <div ng-include="'views/login.html'" ng-controller="LoginCtrl"></div>
+    </div>
     <div ng-show-auth class="app ng-scope">
       <div ng-controller="AppCtrl">  <!-- aside -->
   <!-- uiView: aside@ --><md-sidenav id="aside" class="app-aside md-sidenav-left md-closed ng-scope ng-isolate-scope" ng-class="{'folded': app.setting.asideFolded || $state.current.data.folded}" ui-view="aside@" md-component-id="aside" tabindex="-1"><div class="box bg-white ng-scope">
@@ -150,16 +152,6 @@
       </div>
     </div>
   </div>
-  <nav>
-    <ul class="nav b-t b">
-      <li>
-        <a href="http://themeforest.net/item/materil-responsive-admin-dashboard-template/11062969" target="_blank" md-ink-ripple="">
-          <i class="icon mdi-action-help i-20"></i>
-          <span>Help &amp; Feedback</span>
-        </a>
-      </li>
-    </ul>
-  </nav>
 </div>
 </md-sidenav> 
   <!-- / aside -->
@@ -175,7 +167,7 @@
     <a md-ink-ripple="" class="navbar-item pull-left ng-hide" ng-click="goBack()" ng-show="$state.current.data.child" tabindex="0" aria-hidden="true"><i class="mdi-navigation-arrow-back i-24"></i></a>
     <!-- / -->
     <!-- Page title - Bind to $state's title -->
-    <div class="navbar-item pull-left h4 ng-binding" ng-bind="$state.current.data.title">Blank</div>
+    <div class="navbar-item pull-left h4 ng-binding">{{title}}</div>
     <!-- / -->
     <!-- Common tools -->
     <ul class="nav nav-sm navbar-tool pull-right" ng-hide="$state.current.data.child" aria-hidden="false">
@@ -225,7 +217,8 @@
   <!-- Content -->
   <div class="box-row">
     <div class="box-cell">
-      <!-- uiView:  --><div class="box-inner padding" id="view">  <div ng-view=""></div>
+      <div class="box-inner padding"> 
+        <div ng-view></div>
 </div>
     </div>
   </div>
@@ -236,169 +229,12 @@
 
 
 <div class="modal fade ng-scope" id="user" data-backdrop="false">
-  <!-- ngInclude: 'views/partials/aside.tpl.user.html' --><div class="right w-xl bg-white md-whiteframe-z2 ng-scope" ng-include="'views/partials/aside.tpl.user.html'">  <div class="box ng-scope">
-    <div class="p p-h-md">
-      <a data-dismiss="modal" class="pull-right text-muted-lt text-2x m-t-n inline p-sm">×</a>
-      <strong>Members</strong>
-    </div>
-    <div class="box-row">
-      <div class="box-cell">
-        <div class="box-inner">
-          <div class="list-group no-radius no-borders">
-            <a data-toggle="modal" data-target="#chat" data-dismiss="modal" class="list-group-item p-h-md">
-              <img src="images/a1.jpg" class="pull-left w-40 m-r img-circle">
-              <div class="clear">
-                <span class="font-bold block">Jonathan Doe</span>
-                <span class="clear text-ellipsis text-xs">"Hey, What's up"</span>
-              </div>
-            </a>
-            <a data-toggle="modal" data-target="#chat" data-dismiss="modal" class="list-group-item p-h-md">
-              <img src="images/a2.jpg" class="pull-left w-40 m-r img-circle">
-              <div class="clear">
-                <span class="font-bold block">James Pill</span>
-                <span class="clear text-ellipsis text-xs">"Lorem ipsum dolor sit amet onsectetur adipiscing elit"</span>
-              </div>
-            </a>
-            <div class="p-h-md m-t p-v-xs">Work</div>
-            <a data-toggle="modal" data-target="#chat" data-dismiss="modal" class="list-group-item p-h-md">
-                <i class="fa fa-circle text-success text-xs m-r-xs"></i>
-                <span>Jonathan Morina</span>
-            </a>
-            <a data-toggle="modal" data-target="#chat" data-dismiss="modal" class="list-group-item p-h-md">
-                <i class="fa fa-circle text-success text-xs m-r-xs"></i>
-                <span>Mason Yarnell</span>
-            </a>
-            <a data-toggle="modal" data-target="#chat" data-dismiss="modal" class="list-group-item p-h-md">
-                <i class="fa fa-circle text-warning text-xs m-r-xs"></i>
-                <span>Mike Mcalidek</span>
-            </a>
-            <a data-toggle="modal" data-target="#chat" data-dismiss="modal" class="list-group-item p-h-md">
-                <i class="fa fa-circle text-muted-lt text-xs m-r-xs"></i>
-                <span>Cris Labiso</span>
-            </a>
-            <a data-toggle="modal" data-target="#chat" data-dismiss="modal" class="list-group-item p-h-md">
-                <i class="fa fa-circle text-muted-lt text-xs m-r-xs"></i>
-                <span>Daniel Sandvid</span>
-            </a>
-            <a data-toggle="modal" data-target="#chat" data-dismiss="modal" class="list-group-item p-h-md">
-                <i class="fa fa-circle text-muted-lt text-xs m-r-xs"></i>
-                <span>Helder Oliveira</span>
-            </a>
-            <a data-toggle="modal" data-target="#chat" data-dismiss="modal" class="list-group-item p-h-md">
-                <i class="fa fa-circle text-muted-lt text-xs m-r-xs"></i>
-                <span>Jeff Broderik</span>
-            </a>
-            <a data-toggle="modal" data-target="#chat" data-dismiss="modal" class="list-group-item p-h-md">
-                <i class="fa fa-circle text-muted-lt text-xs m-r-xs"></i>
-                <span>Daniel Sandvid</span>
-            </a>
-            <a data-toggle="modal" data-target="#chat" data-dismiss="modal" class="list-group-item p-h-md">
-                <i class="fa fa-circle text-muted-lt text-xs m-r-xs"></i>
-                <span>Helder Oliveira</span>
-            </a>
-            <a data-toggle="modal" data-target="#chat" data-dismiss="modal" class="list-group-item p-h-md">
-                <i class="fa fa-circle text-muted-lt text-xs m-r-xs"></i>
-                <span>Jeff Broderik</span>
-            </a>
-            <div class="p-h-md m-t p-v-xs">Partner</div>            
-            <a data-toggle="modal" data-target="#chat" data-dismiss="modal" class="list-group-item p-h-md">
-                <i class="fa fa-circle text-success text-xs m-r-xs"></i>
-                <span>Mason Yarnell</span>
-            </a>
-            <a data-toggle="modal" data-target="#chat" data-dismiss="modal" class="list-group-item p-h-md">
-                <i class="fa fa-circle text-warning text-xs m-r-xs"></i>
-                <span>Mike Mcalidek</span>
-            </a>
-            <a data-toggle="modal" data-target="#chat" data-dismiss="modal" class="list-group-item p-h-md">
-                <i class="fa fa-circle text-muted-lt text-xs m-r-xs"></i>
-                <span>Cris Labiso</span>
-            </a>
-            <a data-toggle="modal" data-target="#chat" data-dismiss="modal" class="list-group-item p-h-md">
-                <i class="fa fa-circle text-muted-lt text-xs m-r-xs"></i>
-                <span>Jonathan Morina</span>
-            </a>
-            <a data-toggle="modal" data-target="#chat" data-dismiss="modal" class="list-group-item p-h-md">
-                <i class="fa fa-circle text-muted-lt text-xs m-r-xs"></i>
-                <span>Daniel Sandvid</span>
-            </a>
-            <a data-toggle="modal" data-target="#chat" data-dismiss="modal" class="list-group-item p-h-md">
-                <i class="fa fa-circle text-muted-lt text-xs m-r-xs"></i>
-                <span>Helder Oliveira</span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="p-h-md p-v">
-      <p>Invite People</p>
-      <a href="" class="text-muted"><i class="fa fa-fw fa-twitter"></i> Twitter</a>
-      <a href="" class="text-muted m-h"><i class="fa fa-fw fa-facebook"></i> Facebook</a>
-    </div>
-  </div>
+<div class="right w-xl bg-white md-whiteframe-z2 ng-scope" ng-include="'views/partials/aside.tpl.user.html'"> 
 </div>
 </div>
 
 <div class="modal fade ng-scope" id="chat" data-backdrop="false">
-  <!-- ngInclude: 'views/partials/aside.tpl.chat.html' --><div class="right w-xxl bg-white md-whiteframe-z2 ng-scope" ng-include="'views/partials/aside.tpl.chat.html'">  <div class="box ng-scope">
-    <div class="p p-h-md">
-      <a data-dismiss="modal" class="pull-right text-muted-lt text-2x m-t-n inline p-sm">×</a>
-      <strong>Chat</strong>
-    </div>
-    <div class="box-row bg-light lt">
-      <div class="box-cell">
-        <div class="box-inner">
-          <div class="p-md">
-            <div class="m-b">
-              <a href="" class="pull-left w-40 m-r-sm"><img src="images/a2.jpg" alt="..." class="w-full img-circle"></a>
-              <div class="clear">
-                <div class="p p-v-sm bg-warning inline r">
-                  Hi John, What's up...
-                </div>
-                <div class="text-muted-lt text-xs m-t-xs"><i class="fa fa-ok text-success"></i> 2 minutes ago</div>
-              </div>
-            </div>
-            <div class="m-b">
-              <a href="" class="pull-right w-40 m-l-sm"><img src="images/a3.jpg" class="w-full img-circle" alt="..."></a>
-              <div class="clear text-right">
-                <div class="p p-v-sm bg-info inline text-left r">
-                  Lorem ipsum dolor soe rooke..
-                </div>
-                <div class="text-muted-lt text-xs m-t-xs">1 minutes ago</div>
-              </div>
-            </div>
-            <div class="m-b">
-              <a href="" class="pull-left w-40 m-r-sm"><img src="images/a2.jpg" alt="..." class="w-full img-circle"></a>
-              <div class="clear">
-                <div class="p p-v-sm bg-warning inline r">
-                  Good!
-                </div>
-                <div class="text-muted-lt text-xs m-t-xs"><i class="fa fa-ok text-success"></i> 5 seconds ago</div>
-              </div>
-            </div>
-            <div class="m-b">
-              <a href="" class="pull-right w-40 m-l-sm"><img src="images/a3.jpg" class="w-full img-circle" alt="..."></a>
-              <div class="clear text-right">
-                <div class="p p-v-sm bg-info inline text-left r">
-                  Dlor soe isep..
-                </div>
-                <div class="text-muted-lt text-xs m-t-xs">Just now</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="p-h-md p-v">
-      <a class="pull-left w-32 m-r"><img src="images/a3.jpg" class="w-full img-circle" alt="..."></a>
-      <form class="ng-pristine ng-valid">
-        <div class="input-group">
-          <input type="text" class="form-control" placeholder="Say something">
-          <span class="input-group-btn">
-            <button class="btn btn-default" type="button">SEND</button>
-          </span>
-        </div>
-      </form>
-    </div>
+  <div class="right w-xxl bg-white md-whiteframe-z2 ng-scope" ng-include="'views/partials/aside.tpl.chat.html'">
   </div>
 </div>
 </div>
@@ -417,6 +253,7 @@
     <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
     <script src="bower_components/angular-touch/angular-touch.js"></script>
+    <script src="bower_components/angular-csv-import-tmp/dist/angular-csv-import.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -434,6 +271,7 @@
         <script src="libs/angular/oclazyload/dist/ocLazyLoad.js"></script>
         <script src="libs/angular/angular-loading-bar/build/loading-bar.js"></script>
 
+        <script src="scripts/aes.js"></script>
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/main.js"></script>
         <script src="scripts/angularfire/config.js"></script>
@@ -457,6 +295,9 @@
         <script src="scripts/services/ui-load.js"></script>
         <script src="scripts/routes.js"></script>
         <script src="scripts/controllers/addschool.js"></script>
+        <script src="scripts/controllers/dashboard.js"></script>
+        <script src="scripts/controllers/addteacher.js"></script>
+        <script src="scripts/controllers/addstudent.js"></script>
         <!-- endbuild -->
 </body>
 </html>
