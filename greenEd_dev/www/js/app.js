@@ -42,6 +42,8 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'starter.controller
     })
     chatrooms = $firebaseObject(ref.child(S_ID+"/chatrooms"));
     $rootScope.hm = $firebaseObject(ref.child('users').orderByChild("role").equalTo("hm"));
+    $rootScope.events = $firebaseArray(ref.child(S_ID+"/calendar"));
+    console.log("All events", $rootScope.events);
     var d = new Date();
     var start = parseInt(d.getFullYear() +'-'+ ("0" + (d.getMonth() + 1)).slice(-2));
     days.holidays = ref.child(S_ID+"/holidays").orderByChild("id").startAt(start);
