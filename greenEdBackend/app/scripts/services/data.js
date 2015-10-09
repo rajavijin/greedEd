@@ -54,13 +54,13 @@ angular.module('greenEdBackendApp')
 				  'class': 'fa fa-user-md'
 				},
 				{
-				  'title': 'Class',
-				  'href': '/class',
-				  'class': 'fa fa-home'
-				},
-				{
 				  'title': 'Student',
 				  'href': '/student',
+				  'class': 'fa fa-user'
+				},
+				{
+				  'title': 'Marks',
+				  'href': '/addmarks',
 				  'class': 'fa fa-user'
 				}];
 			} else {
