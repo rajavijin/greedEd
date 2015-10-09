@@ -11,7 +11,7 @@
 
 var isIOS = ionic.Platform.isIOS();
 var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'starter.controllers','firebase','ngCordova', 'ionic.contrib.ui.tinderCards'])
+angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'starter.controllers','firebase','ngCordova', 'ionic.contrib.ui.tinderCards','flexcalendar'])
 .constant('FIREBASE_URL', 'https://sizzling-fire-6207.firebaseio.com/')
 .constant('S_ID', '-JwVp4kJ36Uv06GOEvlk')
 .run(function($ionicPlatform, $http, $rootScope, Auth, FIREBASE_URL, S_ID, $firebaseObject, $cordovaSQLite, $firebaseArray) {
@@ -345,6 +345,15 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'starter.controller
       'menuContent' :{
         templateUrl: "templates/messages.html",
         controller: 'MessagesCtrl'
+      }
+    }
+  })
+  .state('app.calendar', {
+    url: "/calendar",
+    views: {
+      'menuContent' :{
+        templateUrl: "templates/calendar.html",
+        controller: 'CalendarCtrl'
       }
     }
   })
