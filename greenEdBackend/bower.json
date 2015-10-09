@@ -1,5 +1,5 @@
 {
-  "name": "green-ed",
+  "name": "green-ed-backend",
   "version": "0.0.0",
   "dependencies": {
     "angular": "^1.3.0",
@@ -11,12 +11,12 @@
     "angular-route": "^1.3.0",
     "angular-sanitize": "^1.3.0",
     "angular-touch": "^1.3.0",
-    "angular-csv-import": "~0.0.16"
+    "angular-csv-import-tmp": "angular-csv-import#~0.0.26"
   },
   "devDependencies": {
     "mockfirebase": "0.11.0",
     "angular-mocks": "^1.3.0"
   },
   "appPath": "app",
-  "moduleName": "greenEdApp"
+  "moduleName": "greenEdBackendApp"
 }

@@ -1,13 +1,13 @@
 
 /**
  * @ngdoc function
- * @name greenEdApp.directive:ngHideAuth
+ * @name greenEdBackendApp.directive:ngHideAuth
  * @description
  * # ngHideAuthDirective
  * A directive that shows elements only when user is logged out. It also waits for Auth
  * to be initialized so there is no initial flashing of incorrect state.
  */
-angular.module('greenEdApp')
+angular.module('greenEdBackendApp')
   .directive('ngHideAuth', ['Auth', '$timeout', function (Auth, $timeout) {
     'use strict';
 

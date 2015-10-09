@@ -1,11 +1,19 @@
  <ion-view class="modal">
   <ion-content>
+    <ion-header-bar class="bar-positive bar bar-header disable-user-behavior" align-title="left">
+    <div class="title title-left header-item">Select a Demo user to Login</div>
+    <div class="buttons buttons-right">
+    <span class="right-buttons">
+      <button class="button button-icon button-clear ion-close-circled" ng-click="modal.hide()">
+    </button>
+  	</span>
+  	</div>
+  	</ion-header-bar>
     <ion-list>
       <ion-item class="bar bar-header bar-positive">
-        <h1 class="title">Select a Demo user to Login</h1>
-        <div class="button button-clear" ng-click="modal.hide()"><span class="icon ion-close"></span></div>
+        
       </ion-item>
-      <ion-item ng-click="fillUser(modal, user.username,user.password)" class="item item-icon-left positive" ng-repeat="user in users"><i class="icon ion-person"></i><h2>{{user.title}}</h2></ion-item>
+      <ion-item ng-click="fillUser(modal, user.username,user.password)" class="item item-icon-left item-avatar custom-avatar positive" ng-repeat="user in users"><img ng-src="https://randomuser.me/api/portraits/med/{{user.sex}}/{{user.iconid}}.jpg"><h2>{{user.title}}</h2></ion-item>
     </ion-list>
   </ion-content>
 </ion-view>

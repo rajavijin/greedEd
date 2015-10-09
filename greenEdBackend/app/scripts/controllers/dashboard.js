@@ -2,15 +2,16 @@
 
 /**
  * @ngdoc function
- * @name greenEdApp.controller:DashboardCtrl
+ * @name greenEdBackendApp.controller:DashboardCtrl
  * @description
  * # DashboardCtrl
- * Controller of the greenEdApp
+ * Controller of the greenEdBackendApp
  */
-angular.module('greenEdApp')
-  .controller('DashboardCtrl', function ($scope, user, Auth, $firebaseObject, Ref) {
-	$scope.user = user;
-	console.log("dashboard user", user);
-    var profile = $firebaseObject(Ref.child('users/'+user.uid));
-    profile.$bindTo($scope, 'profile');
+angular.module('greenEdBackendApp')
+  .controller('DashboardCtrl', function ($scope) {
+    $scope.awesomeThings = [
+      'HTML5 Boilerplate',
+      'AngularJS',
+      'Karma'
+    ];
   });

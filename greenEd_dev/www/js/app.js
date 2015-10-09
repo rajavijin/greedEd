@@ -178,7 +178,9 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'starter.controller
                   '</div>'
     };
 })
-.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+.config(function($stateProvider, $urlRouterProvider, $compileProvider, $ionicConfigProvider) {
+  $compileProvider.debugInfoEnabled(false);
+//  $ionicConfigProvider.scrolling.jsScrolling(false);
   $stateProvider
     .state('login', {
     url: '/login',

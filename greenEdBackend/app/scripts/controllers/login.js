@@ -1,23 +1,22 @@
 'use strict';
 /**
  * @ngdoc function
- * @name greenEdApp.controller:LoginCtrl
+ * @name greenEdBackendApp.controller:LoginCtrl
  * @description
  * # LoginCtrl
  * Manages authentication to any active providers.
  */
-angular.module('greenEdApp')
-  .controller('LoginCtrl', function ($scope, Auth, $rootScope, $location, Data, $q, Ref, $timeout) {
-    $scope.email ="8951572125@ge.com";
-    $scope.pass = "101thuxr";
+angular.module('greenEdBackendApp')
+  .controller('LoginCtrl', function ($scope, Auth, $rootScope, $localStorage, $location, $q, Ref, $timeout) {
     $scope.passwordLogin = function(email, pass) {
       $scope.err = null;
       $scope.loading = true;
-      Auth.$authWithPassword({email: email, password: pass}, {rememberMe: true}).then(
+      Auth.$authWithPassword({email: email+"@ge.com", password: pass}, {rememberMe: true}).then(
         redirect, showError
       );
     };
-
+    $scope.email = "8951572124hs1";
+    $scope.pass = "9o3tmx6r";
     $scope.createAccount = function(email, pass, confirm) {
       $scope.err = null;
       if( !pass ) {
@@ -66,38 +65,15 @@ angular.module('greenEdApp')
   
 
     function redirect(userdata) {
-      console.log("user while redirect", userdata);
-      Ref.child('users/'+userdata.uid).once('value', function(pdata) {
-        var profile = pdata.val();
-        profile.uid = userdata.uid;
-        localStorage.setItem("user", JSON.stringify(profile));
-        $rootScope.menus = Data.getMenus(profile.role);
-        $rootScope.user = profile;
-        console.log("Profile", profile);
-      });
-      $location.path('/dashboard');
+      $scope.loading = false;   
+      $location.path('/wall');
     }
 
     function showError(err) {
+      console.log("error", err);
+      $scope.loading = false;
       $scope.err = err;
     }
 
 
-  })
-  .controller('NavbarCtrl', function ($scope, $rootScope, $location, Auth, Data, $firebaseObject, Ref) {
-    var user = JSON.parse(localStorage.getItem("user"));
-    if(user) {
-      $rootScope.menus = Data.getMenus(user.role);
-      $rootScope.user = user;
-      console.log("menus", Data.getMenus(user.role));
-    }
-    console.log("Nav user", user);
-    $scope.logout = function() {
-      Auth.$unauth();
-      $location.path('/');
-    };
-
-    $scope.isActive = function(route) {
-      return route === $location.path();
-    };
   });
