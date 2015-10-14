@@ -31,10 +31,8 @@ angular.module('starter.controllers', [])
       }
     }
     $scope.hdata.undone = classcount[$stateParams.class];
-    console.log("hdata while add", $scope.hdata);
   }
   if(classcount[$stateParams.class]) {
-    console.log("classcount", classcount[$stateParams.class]);
     $scope.hdata.undone = classcount[$stateParams.class];
   } else {
     if(online) {
@@ -52,9 +50,7 @@ angular.module('starter.controllers', [])
     }
   }
   $scope.save = function() {
-    console.log("date", new Date($scope.defaultDueDate).getTime());
     $scope.hdata.duedate = new Date($scope.defaultDueDate).getTime();
-    console.log("hdata", $scope.hdata);
     $rootScope.homeworks[user.uid].$add($scope.hdata);
     $state.go('app.homeworks', {uid: user.uid});
   }
@@ -78,7 +74,6 @@ angular.module('starter.controllers', [])
   $scope.getHomeworks = function(refresh) {
     if(online) {
       $rootScope.homeworks[$stateParams.uid].$loaded().then(function(data) {
-        console.log("homeworks", $rootScope.homeworks[$stateParams.uid]);
         if($rootScope.homeworks[$stateParams.uid].length > 0) {
           $scope.items = $rootScope.homeworks[$stateParams.uid];
           $scope.empty = false;
@@ -94,9 +89,6 @@ angular.module('starter.controllers', [])
   }
   $scope.getHomeworks(false);
   $scope.redirect = function(item, status) {
-    console.log("item", item);
-    console.log("id", item.$id);
-    console.log("status", status);
     $state.go('app.allhwstudents', {uid:$stateParams.uid, class: item.class, id:item.$id, status:status})
   }
   $scope.ack = function(item) {
@@ -119,7 +111,6 @@ angular.module('starter.controllers', [])
 .controller('WallCtrl', function($scope, S_ID, $rootScope, $firebaseArray, $cordovaSQLite, $state, FIREBASE_URL, $ionicModal, Auth, $ionicLoading, $timeout) {
   $scope.moredata = false;
   var getLocalData = function() {
-    console.log("local wall");
     $cordovaSQLite.execute(db, "SELECT * from mydata where key = ?", ["wall"]).then(function(res) {
       $scope.loading = false;
       if(res.rows.length > 0) {
@@ -135,7 +126,6 @@ angular.module('starter.controllers', [])
       if(!refresh) $scope.loading = true;
       $rootScope.walls.$loaded().then(function() {
         if(!refresh) $scope.loading = false;
-        console.log("rootScope.walls", $rootScope.walls);
         Auth.saveLocal("wall", $rootScope.walls);
         $scope.$broadcast('scroll.refreshComplete');
       })
@@ -270,10 +260,8 @@ angular.module('starter.controllers', [])
   var localContacts = function() {
     if(db) {
       $cordovaSQLite.execute(db, "SELECT value FROM mydata WHERE key = ?", ["allusers"]).then(function(res) {
-        console.log("allusers", res.rows.length);
         if(res.rows.length > 0) {
           $scope.items.contacts = angular.fromJson(res.rows.item(0).value)["chatcontacts"];
-          console.log("items", $scope.items);
         } else {
           if(online) serverContacts();
           else $scope.items.contacts = [];
@@ -337,7 +325,6 @@ angular.module('starter.controllers', [])
   }
   var filterBarInstance;
   $scope.getItems = function(type) {
-    console.log("type", type);
     $scope.title = type;
     if(type == "chats") {
       if(online) serverChats();
@@ -382,7 +369,6 @@ angular.module('starter.controllers', [])
   };
   $scope.processing = {};
   $scope.$on('$ionicView.enter', function() {
-    console.log("from", $rootScope.fromState);
     //if($rootScope.fromState == 'app.messagebox') $scope.getItems($scope.title);
   });
   $scope.toMessageBox = function(contact, action) {
@@ -566,9 +552,7 @@ angular.module('starter.controllers', [])
     $scope.title = days[index] + " Timetable";
   };
   $scope.title = "Timetable";
-  console.log('timetable');
   var processData = function(daysData) {
-    console.log("daysData", daysData);
     if(daysData.length > 0){
         $timeout(function() {
           $scope.slides = daysData;
@@ -583,14 +567,11 @@ angular.module('starter.controllers', [])
     }
   }
   var timetableFromServer = function() {
-    console.log("timetable", timetableref);
-    console.log("Params", $stateParams);
     if(timetableref[$stateParams.id]) {
       var tref = timetableref[$stateParams.id];
     } else {
       var tref = Auth.getTimetable($stateParams.id);
     }
-    console.log("tref", tref);
     tref.on('value', function(tdata) {
       var timetable = tdata.val() || {};
       processData(timetable);
@@ -610,7 +591,6 @@ angular.module('starter.controllers', [])
 })
 
 .controller('FavTeacherCtrl', function ($scope, $cordovaSQLite, $stateParams, Auth, $state, $timeout, $ionicLoading, $ionicSideMenuDelegate, TDCardDelegate) {
-  console.log('CARDS CTRL', user);
   $scope.loadData = function() {
     $scope.selectedCard = false;
     $scope.indexItem = false;
@@ -625,13 +605,12 @@ angular.module('starter.controllers', [])
       }
       cards.push(card);
     });
-    $timeout(function() {$ionicLoading.hide(); console.log("cards", cards); $scope.cards = cards;}, 100);
+    $timeout(function() {$ionicLoading.hide(); $scope.cards = cards;}, 100);
   }
 
   var selected = function(index) {
     if(index != -1) $scope.selectedCard = $scope.cards[index];
     else $scope.selectedCard = {};
-    console.log("selected card", $scope.selectedCard);
     localStorage.setItem("selectedTeacher", angular.toJson($scope.selectedCard));
     $state.go('app.favteachercard', {student:$stateParams.id});
   }
@@ -650,7 +629,6 @@ angular.module('starter.controllers', [])
   $scope.yesCard = function() {
     if(!$scope.indexItem) $scope.indexItem = $scope.cards.length - 1;
     else $scope.indexItem--;
-    console.log('YES', $scope.indexItem);
     selected($scope.indexItem);
   };
 
@@ -661,20 +639,15 @@ angular.module('starter.controllers', [])
     } else {
       $scope.indexItem--;
       TDCardDelegate.$getByHandle('teachers').cardInstances[$scope.indexItem].swipe('left');
-      console.log("index on No", $scope.indexItem); 
       if($scope.indexItem == 0) selected(-1);
     }
   };
   $scope.cardSwipedLeft = function(index) {
-    console.log('LEFT SWIPE');
-    console.log("index", index);
     console.log("scope cards", $scope.cards.length);
     $scope.indexItem = index;
     if(index == 0) selected(-1);
   };
   $scope.cardSwipedRight = function(index) {
-    console.log('RIGHT SWIPE');
-    console.log("index", index);
     selected(index);
   };
 })
@@ -685,7 +658,6 @@ angular.module('starter.controllers', [])
   var steacher = localStorage.getItem("selectedTeacher");
   if(steacher) {
     var teacher = angular.fromJson(steacher);
-    console.log("teacher", teacher);
     $scope.teacher = (Object.keys(teacher).length > 0) ? teacher : false;
   }
   $scope.redirect = function() {
@@ -702,7 +674,6 @@ angular.module('starter.controllers', [])
     dayNamesLength: 1, // 1 for "M", 2 for "Mo", 3 for "Mon"; 9 will show full day names. Default is 1.
     mondayIsFirstDay: true,//set monday as first day of week. Default is false
     eventClick: function(date) {
-      console.log("event clicked", date);
       $scope.item = date;
       $scope.monthevents = false;
       $scope.title = moment(date.date).format('Do MMM YYYY') +" "+ date.event[0].type;
@@ -719,10 +690,6 @@ angular.module('starter.controllers', [])
     $scope.monthevents = true;
     $scope.title = type +"s of "+ months[$rootScope.selectedMonthIndex - 1] +" "+$rootScope.selectedYearIndex;
     $scope.meventType = type;
-    console.log("type", type);
-    console.log("index", $rootScope.selectedMonthIndex);
-    console.log("month", $scope.selectedMonth);
-    console.log("year", $rootScope.selectedYearIndex);
     $scope.openModal();
   }
 
@@ -819,7 +786,6 @@ angular.module('starter.controllers', [])
 
 
 .controller('BusTrackingCtrl', function($scope, $ionicLoading, S_ID) {
-  console.log("tracking bus");
  // Set the center as Firebase HQ
   var locations = {
     "FirebaseHQ": [12.917147, 77.622798],
@@ -873,7 +839,6 @@ angular.module('starter.controllers', [])
     var currentLocationMarker = createStudentMarker(user.students[0].lat, user.students[0].lng);
     /* Adds new vehicle markers to the map when they enter the query */
     geoQuery.on("key_entered", function(vehicleId, vehicleLocation) {
-      console.log("key entered", vehicleId, vehicleLocation);
       // Specify that the vehicle has entered this query
       vehicleId = vehicleId.split(":")[1];
       vehiclesInQuery[vehicleId] = true;
@@ -882,15 +847,11 @@ angular.module('starter.controllers', [])
       transitFirebaseRef.child("vehicles").child(vehicleId).once("value", function(dataSnapshot) {
         // Get the vehicle data from the Open Data Set
         vehicle = dataSnapshot.val();
-        console.log("vehicle", vehicle);
         // If the vehicle has not already exited this query in the time it took to look up its data in the Open Data
         // Set, add it to the map
         if (vehicle !== null && vehiclesInQuery[vehicleId] === true) {
           // Add the vehicle to the list of vehicles in the query
-          console.log("creating vehicle marker");
           vehiclesInQuery[vehicleId] = vehicle;
-          console.log("vehicleLocation lat", vehicleLocation[0]);
-          console.log("Long", vehicleLocation[1]);
           // Create a new marker for the vehicle
           vehicle.marker = createVehicleMarker(vehicleLocation[0], vehicleLocation[1], vehicle);
         }
@@ -899,7 +860,6 @@ angular.module('starter.controllers', [])
 
     /* Moves vehicles markers on the map when their location within the query changes */
     geoQuery.on("key_moved", function(vehicleId, vehicleLocation) {
-      console.log("key moved", vehicleId, vehicleLocation);
       // Get the vehicle from the list of vehicles in the query
       vehicleId = vehicleId.split(":")[1];
       var vehicle = vehiclesInQuery[vehicleId];
@@ -912,7 +872,6 @@ angular.module('starter.controllers', [])
 
     /* Removes vehicle markers from the map when they exit the query */
     geoQuery.on("key_exited", function(vehicleId, vehicleLocation) {
-      console.log("key exists", vehicleId, vehicleLocation);
       // Get the vehicle from the list of vehicles in the query
       vehicleId = vehicleId.split(":")[1];
       var vehicle = vehiclesInQuery[vehicleId];
@@ -951,7 +910,6 @@ angular.module('starter.controllers', [])
     }
 
     function createStudentMarker(latitude, longitude) {
-      console.log("creating a parent",latitude, longitude);
       var marker = new google.maps.Marker({
         zIndex: 10,
         position: new google.maps.LatLng(latitude, longitude),

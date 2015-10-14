@@ -5,10 +5,8 @@ angular.module('dashboards', [])
   $scope.getMarksData = function() {
     $scope.empty = false;
     $scope.dashboard = false;
-    console.log("filters", filters)
     if(filters) key = filters.years[filters.year] +'_'+ filters.exams[filters.exam];
     else key = false;
-    console.log("key", key);
     if(key) {
       $scope.title = filters.exams[filters.exam] +' '+ filters.years[filters.year];
       if(online) {
@@ -221,8 +219,6 @@ angular.module('dashboards', [])
   var serverData = function(key) {
     $scope.dashboard = true;
     $scope.loading = true;
-    console.log("key", key);
-    console.log("params", $stateParams);
     Auth.getMarks(key+"/"+$stateParams.uid).$ref().on('value', function(fbdata) {
       $scope.$broadcast('scroll.refreshComplete');
       $scope.loading = false;
@@ -277,7 +273,6 @@ angular.module('dashboards', [])
     if(filters) key = filters.years[filters.year] +'_'+ filters.exams[filters.exam];
     else key = false;
     if(key) {
-      console.log("StateParams", $stateParams);
       $scope.title = $stateParams.name +' '+ filters.exams[filters.exam] +' '+ filters.years[filters.year];
       if(online) {
         serverData(key);
@@ -543,7 +538,6 @@ angular.module('dashboards', [])
   }
 })
 .controller("TeacherClassesCtrl", function($scope, $state, $stateParams) {
-  console.log("Teacher User", user);
   $scope.getItems = function(refresh) {
     $scope.items = user.subjects;
     if(refresh) $scope.$broadcast('scroll.refreshComplete');
@@ -554,7 +548,6 @@ angular.module('dashboards', [])
   var filterBarInstance;
   if($stateParams.id) {
     var hw = $rootScope.homeworks[$stateParams.uid].$getRecord($stateParams.id);
-    console.log("hw", hw);
   }
   var processUsers = function(allstudents) {
     if($stateParams.id) {
@@ -568,7 +561,6 @@ angular.module('dashboards', [])
               if(!hw.ack[allstudents[i].uid]) students.push(allstudents[i]);
             }
           } else {
-            console.log("not yet", $stateParams.status);
             if($stateParams.status == 'undone') students.push(allstudents[i]);
           }
         }

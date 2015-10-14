@@ -49,7 +49,6 @@ angular.module('starter.services', [])
         if(err) {
           defer.reject(err);
         } else {
-          console.log("user data", userdatafb);
           $ionicLoading.hide();
           $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Fetching user data...'});
           if(userdata.role == "parent") {
@@ -156,8 +155,6 @@ angular.module('starter.services', [])
         usnap.forEach(function(iusnap) {
           var fbuser = iusnap.key();
           var fbusers = iusnap.val();
-          console.log("fbusers", fbusers);
-          console.log("fbuser", fbuser);
           var sclass = fbusers.standard+'-'+fbusers.division;
           if(!allusers["groups"][sclass]) allusers["groups"][sclass] = [];
           if(!classes[sclass]) {
@@ -193,7 +190,6 @@ angular.module('starter.services', [])
             };
           }
         });
-        console.log("All users from fb", allusers);    
         Auth.saveLocal("allusers", allusers);
         deferred.resolve(allusers);
       }, function(err) {

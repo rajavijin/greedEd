@@ -29,7 +29,7 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'starter.services',
     } else {
       db = openDatabase('mydb', '1.0', 'my first database', 2 * 1024 * 1024);
     }
-    $cordovaSQLite.execute(db, "DROP TABLE mydata");
+    //$cordovaSQLite.execute(db, "DROP TABLE mydata");
     $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS mydata (key text, value blob, unique (key))");
     online = true;
     scrollRef = new Firebase.util.Scroll(ref.child(S_ID+"/wall"), '$priority');
