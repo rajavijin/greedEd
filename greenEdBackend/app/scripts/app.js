@@ -26,6 +26,7 @@ angular.module('greenEdBackendApp', [
     'ui.utils',
     'ui.load',
     'ui.jp',
+    'ui.select',
     'oc.lazyLoad',
     'angular-loading-bar',
     'firebase',

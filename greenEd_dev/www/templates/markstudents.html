@@ -11,7 +11,7 @@
     </ion-refresher>
     <div class="list" ng-if="items.length > 0">
         <a collection-repeat="user in items" class="item item-icon-left  item-avatar custom-avatar positive" href="#/app/studentdashboard/{{user.class}}/{{user.uid}}/{{user.name}}" item-height="53" item-width="100%">
-            <img ng-src="http://res.cloudinary.com/dnzljpk6o/image/upload/v1442348003/{{user.uid.split(':')[1]}}.png">
+            <img ng-src="http://res.cloudinary.com/dnzljpk6o/image/upload/v1442348003/{{user.uid}}.png">
             <h2>{{user.class.replace("-all", "")}} : {{user.name}}</h2>
         </a>
     </div>

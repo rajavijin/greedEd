@@ -11,7 +11,7 @@
                   <div class="list">
                   <a ng-if="m.text" class="item item-avatar item-icon-left" href="#/app/messages/{{m.chatid}}/{{m.uid}}/{{m.name}}/{{m.type}}/{{m.notify}}" ng-repeat="m in items.chats | orderBy:['-date']">
                     <img ng-if="m.type == 'group'" src="http://res.cloudinary.com/dnzljpk6o/image/upload/v1442350191/group.jpg"></i>
-                    <img ng-if="m.type == 'single'" ng-src="https://randomuser.me/api/portraits/thumb/{{(m.name.indexOf('Parent') == -1) ? 'women' : 'men'}}/{{(m.name.indexOf('Parent') == -1) ? m.uid.split(':')[1] - 1 : m.uid.split(':')[1] - 20}}.jpg">
+                    <img ng-if="m.type == 'single'" ng-src="http://res.cloudinary.com/dnzljpk6o/image/upload/v1442348003/{{m.uid}}.jpg">
                     <h2>{{m.name}}
                     <span class="chat-desc" am-time-ago="m.date"></span>
                     </h2>
@@ -28,7 +28,7 @@
                   <div class="list">
                     <a ng-click="toMessageBox(contact)" class="item item-icon-left item-avatar custom-avatar" ng-disabled="processing[contact.uid]" ng-repeat="(ck, contact) in items.contacts | orderBy:['role','name']">
                         <img ng-if="contact.type == 'group'" src="http://res.cloudinary.com/dnzljpk6o/image/upload/v1442350191/group.jpg"></i>
-                        <img ng-if="contact.type == 'single'" ng-src="https://randomuser.me/api/portraits/thumb/{{(contact.role == 'parent' || contact.sex == 'male') ? 'men' : 'women'}}/{{(contact.role == 'parent') ? contact.uid.split(':')[1] - 20 : contact.uid.split(':')[1] - 1}}.jpg">
+                        <img ng-if="contact.type == 'single'" ng-src="http://res.cloudinary.com/dnzljpk6o/image/upload/v1442348003/{{contact.uid}}.jpg">
                       <h2>{{contact.name}}</h2>
                       <span ng-if="processing[contact.uid]" class="badge custom-badge"><ion-spinner icon="android"></ion-spinner></span>
                     </a>

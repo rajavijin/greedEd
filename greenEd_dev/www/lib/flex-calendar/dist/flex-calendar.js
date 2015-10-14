@@ -8,21 +8,24 @@
 
       var template =
       '<div class="flex-calendar">'+
-        '<div class="month">'+
-          '<div class="arrow {{arrowPrevClass}}" ng-click="prevMonth()"></div>'+
-          '<div class="label">{{ selectedMonth}} {{selectedYear}}</div>'+
-          '<div class="arrow {{arrowNextClass}}" ng-click="nextMonth()"></div>'+
-        '</div>'+
+'<div class="bar-positive bar bar-header month"><div class="buttons buttons-left header-item"><span class="left-buttons">'+
+    '<button menu-toggle="left" class="button button-icon icon ion-navicon"></button>'+
+    '<button class="button button-icon icon ion-ios-arrow-back" ng-click="prevMonth()"></button>'+
+  '</span><span class="left-buttons hide">'+
+         '<button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>'+
+         '</span></div><div class="title header-item" style="left: 96px; right: 55px;"><span class="nav-bar-title">{{ selectedMonth}} {{selectedYear}}</span></div><div class="buttons buttons-right"><span class="right-buttons">'+
+    '<button class="button button-icon icon ion-ios-arrow-forward" ng-click="nextMonth()"></button>'+
+  '</span></div></div>'+
         '<div class="week">'+
           '<div class="day" ng-repeat="day in weekDays(options.dayNamesLength) track by $index">{{ day }}</div>'+
         '</div>'+
         '<div class="days" ng-repeat="week in weeks">'+
-          '<div class="day"'+
+          '<div class="day {{day.event[0].type}}"'+
             'ng-repeat="day in week track by $index"'+
-            'ng-class="{selected: isDefaultDate(day), event: day.event[0], disabled: day.disabled, out: !day}"'+
+            'ng-class="{selected: isDefaultDate(day), eventday: day.event[0], disabled: day.disabled, out: !day}"'+
             'ng-click="onClick(day, $index, $event)"'+
           '>'+
-            '<div class="number">{{day.day}}</div>'+
+            '<div class="number">{{day.day}}<div><i ng-if="isDefaultDate(day)" class="icon ctick ion-android-done positive"></i></div></div>'+
           '</div>'+
         '</div>'+
       '</div>';
@@ -41,9 +44,9 @@
 
     }
 
-    Controller.$inject = ['$scope' , '$filter'];
+    Controller.$inject = ['$scope' , '$rootScope', '$filter'];
 
-    function Controller($scope , $filter) {
+    function Controller($scope , $rootScope, $filter) {
 
       $scope.days = [];
       $scope.options = $scope.options || {};
@@ -120,6 +123,7 @@
         createMappedEvents();
         calculateWeeks();
       });
+
 
       /////////////////
 
@@ -254,6 +258,8 @@
 
         $scope.selectedYear  = $scope.options._defaultDate.getFullYear();
         $scope.selectedMonth = MONTHS[$scope.options._defaultDate.getMonth()];
+        $rootScope.selectedYearIndex = $scope.selectedYear;
+        $rootScope.selectedMonthIndex = ("0" + ($scope.options._defaultDate.getMonth() + 1)).slice(-2);
         $scope.selectedDay   = $scope.options._defaultDate.getDate();
         calculateWeeks();
       }
@@ -281,12 +287,15 @@
       function prevMonth() {
         if (!$scope.allowedPrevMonth()) { return; }
         var currIndex = MONTHS.indexOf($scope.selectedMonth);
+
         if (currIndex === 0) {
           $scope.selectedYear -= 1;
           $scope.selectedMonth = MONTHS[11];
         } else {
           $scope.selectedMonth = MONTHS[currIndex - 1];
         }
+        $rootScope.selectedYearIndex = $scope.selectedYear;
+        $rootScope.selectedMonthIndex = ("0" + (currIndex)).slice(-2);
         var month = {name: $scope.selectedMonth, index: currIndex - 1, _index: currIndex+2 };
         $scope.options.changeMonth(month, $scope.selectedYear);
         calculateWeeks();
@@ -295,12 +304,14 @@
       function nextMonth() {
         if (!$scope.allowedNextMonth()) { return; }
         var currIndex = MONTHS.indexOf($scope.selectedMonth);
+        $rootScope.selectedMonthIndex = ("0" + (currIndex + 2)).slice(-2);
         if (currIndex === 11) {
           $scope.selectedYear += 1;
           $scope.selectedMonth = MONTHS[0];
         } else {
           $scope.selectedMonth = MONTHS[currIndex + 1];
         }
+        $rootScope.selectedYearIndex = $scope.selectedYear;
         var month = {name: $scope.selectedMonth, index: currIndex + 1, _index: currIndex+2 };
         $scope.options.changeMonth(month, $scope.selectedYear);
         calculateWeeks();

@@ -6250,4 +6250,7 @@ a.text-dark:hover {
   font-size: 26px;
   margin: 20px 0 0 15px;
 }
-.add-data .panel-heading {min-height: 54px;}
+.add-data .panel-heading {min-height: 48px;}
+.add-marks .select-class .form-group {margin: 0;}
+.add-marks .md-form-group {width: 22%;}
+.add-marks .form-inline {text-align: center;}
