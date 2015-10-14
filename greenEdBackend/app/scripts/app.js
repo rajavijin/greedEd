@@ -26,12 +26,14 @@ angular.module('greenEdBackendApp', [
     'ui.utils',
     'ui.load',
     'ui.jp',
+    'ui.select',
     'oc.lazyLoad',
     'angular-loading-bar',
     'firebase',
     'firebase.ref',
     'firebase.auth',
-    'ngCsvImport'
+    'ngCsvImport',
+    'xeditable'
   ])
 .controller('AppCtrl', function ($scope, $route, $localStorage, $window, $document, Auth, Data, $location, $rootScope, $timeout, $mdSidenav,   $mdColorPalette,   $anchorScroll ) {
       console.log("state", $route);

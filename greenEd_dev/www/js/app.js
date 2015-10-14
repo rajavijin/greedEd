@@ -11,10 +11,10 @@
 
 var isIOS = ionic.Platform.isIOS();
 var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'starter.controllers','firebase','ngCordova', 'ionic.contrib.ui.tinderCards'])
-.constant('FIREBASE_URL', 'https://sizzling-fire-6207.firebaseio.com/')
-.constant('S_ID', '-JwVp4kJ36Uv06GOEvlk')
-.run(function($ionicPlatform, $http, $rootScope, Auth, FIREBASE_URL, S_ID, $firebaseObject, $cordovaSQLite, $firebaseArray) {
+angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'starter.services', 'dashboards', 'monospaced.elastic', 'angularMoment', 'starter.controllers','firebase','ngCordova', 'ionic.contrib.ui.tinderCards','flexcalendar'])
+.constant('FIREBASE_URL', 'https://greenedbackend.firebaseio.com/')
+.constant('S_ID', 's1')
+.run(function($ionicPlatform, $http, $rootScope, Auth, FIREBASE_URL, S_ID, $firebaseObject, $cordovaSQLite, $timeout, $firebaseArray) {
   $ionicPlatform.ready(function() {
     //$rootScope.walls = $firebaseArray(ref.child("-JwVp4kJ36Uv06GOEvlk/wall").limitToLast(25));
     if (window.StatusBar) {
@@ -29,43 +29,40 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'starter.controller
     } else {
       db = openDatabase('mydb', '1.0', 'my first database', 2 * 1024 * 1024);
     }
-    //$cordovaSQLite.execute(db, "DROP TABLE mydata");
+    $cordovaSQLite.execute(db, "DROP TABLE mydata");
     $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS mydata (key text, value blob, unique (key))");
+    online = true;
     scrollRef = new Firebase.util.Scroll(ref.child(S_ID+"/wall"), '$priority');
     $rootScope.walls = $firebaseArray(scrollRef);
     scrollRef.scroll.next(20);
     $rootScope.walls.scroll = scrollRef.scroll;
-
-    ref.child(S_ID+"/filters").on('value', function(fsnap) {
-      filters = fsnap.val();
-      localStorage.setItem("filters", angular.toJson(filters));
-    })
-    chatrooms = $firebaseObject(ref.child(S_ID+"/chatrooms"));
-    $rootScope.hm = $firebaseObject(ref.child('users').orderByChild("role").equalTo("hm"));
-    var d = new Date();
-    var start = parseInt(d.getFullYear() +'-'+ ("0" + (d.getMonth() + 1)).slice(-2));
-    days.holidays = ref.child(S_ID+"/holidays").orderByChild("id").startAt(start);
-    days.events = ref.child(S_ID+"/events").orderByChild("id").startAt(start);
     if(Object.keys(user).length > 0) {
       $rootScope.updateMenu = true;
-      userchatroomsref = $firebaseObject(ref.child(user.schoolid+"/chatrooms/"+user.uid));
+      userchatroomsref = $firebaseObject(ref.child(S_ID+"/chatrooms/"+user.uid));
       if(user.role == 'parent') {
         for (var i = 0; i < user.students.length; i++) {
           var st = user.students[i].standard;
           if((user.students[i].division.length > 1) && (user.students[i].division != "all")) st = st+"-"+user.students[i].division;
-          days.exams[st] = ref.child(user.schoolid+"/exams/"+st).orderByChild("id").startAt(start);
-          timetableref[user.students[i].uid] = ref.child(user.schoolid+'/timetable/'+user.students[i].uid);
-          $rootScope.homeworks[user.students[i].uid] = $firebaseArray(ref.child(user.schoolid+'/homeworks').limitToLast(50));
+          timetableref[user.students[i].uid] = ref.child(S_ID+'/timetable/'+user.students[i].standard+'-'+user.students[i].division);
+          $rootScope.homeworks[user.students[i].uid] = $firebaseArray(ref.child(S_ID+'/homeworks').limitToLast(50));
         };
       } else if (user.role == 'teacher') {
-        usersref = $firebaseObject(ref.child('users').orderByChild(user.alluserskey).equalTo(user.allusersval));
-        timetableref[user.uid] = ref.child(user.schoolid+'/timetable/'+user.uid);
-        $rootScope.homeworks[user.uid] = $firebaseArray(ref.child(user.schoolid+'/homeworks').limitToLast(50));
+        userRef = $firebaseObject(ref.child(S_ID+'/users/student'));
+        timetableref[user.uid] = ref.child(S_ID+'/timetable/'+user.uid);
+        $rootScope.homeworks[user.uid] = $firebaseArray(ref.child(S_ID+'/homeworks').limitToLast(50));
       } else {
-        usersref = $firebaseObject(ref.child('users').orderByChild(user.alluserskey).equalTo(user.allusersval));
+        userRef = $firebaseObject(ref.child(S_ID+'/users/student'));
       }
     }
 
+    $rootScope.events = $firebaseArray(ref.child(S_ID+"/calendar"));
+
+    // ref.child(S_ID+"/filters").on('value', function(fsnap) {
+    //   filters = fsnap.val();
+    //   localStorage.setItem("filters", angular.toJson(filters));
+    // })
+    chatrooms = $firebaseObject(ref.child(S_ID+"/chatrooms"));
+    $rootScope.hm = $firebaseObject(ref.child(S_ID+'/users/hm'));
   });
 })
 
@@ -345,6 +342,15 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'starter.controller
       'menuContent' :{
         templateUrl: "templates/messages.html",
         controller: 'MessagesCtrl'
+      }
+    }
+  })
+  .state('app.calendar', {
+    url: "/calendar",
+    views: {
+      'menuContent' :{
+        templateUrl: "templates/calendar.html",
+        controller: 'CalendarCtrl'
       }
     }
   })

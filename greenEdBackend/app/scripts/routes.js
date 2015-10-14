@@ -61,7 +61,7 @@ angular.module('greenEdBackendApp')
 
   // configure views; whenAuthenticated adds a resolve method to ensure users authenticate
   // before trying to access that route
-  .config(['$routeProvider', function($routeProvider) {
+  .config(['$routeProvider', function($routeProvider, $ocLazyLoad) {
     $routeProvider
       .when('/main', {
         templateUrl: 'views/main.html',
@@ -105,6 +105,11 @@ angular.module('greenEdBackendApp')
         controller: 'AddstudentCtrl',
         title: 'Add Student'
       })
+      .when('/addmarks', {
+        templateUrl: 'views/addmarks.html',
+        controller: 'AddmarksCtrl',
+        title: "marks",
+      })
       .otherwise({redirectTo: '/'});
   }])
 
@@ -114,8 +119,8 @@ angular.module('greenEdBackendApp')
    * for changes in auth status which might require us to navigate away from a path
    * that we can no longer view.
    */
-  .run(['$rootScope', '$route', '$location', 'Auth', 'Data', 'SECURED_ROUTES', 'Ref', '$firebaseObject', 'loginRedirectPath', 'loggedInPath',
-    function($rootScope, $route, $location, Auth, Data, SECURED_ROUTES, Ref, $firebaseObject, loginRedirectPath, loggedInPath) {
+  .run(['$rootScope', '$route', '$ocLazyLoad', '$location', 'Auth', 'Data', 'SECURED_ROUTES', 'Ref', '$firebaseObject', 'loginRedirectPath', 'loggedInPath',
+    function($rootScope, $route, $ocLazyLoad, $location, Auth, Data, SECURED_ROUTES, Ref, $firebaseObject, loginRedirectPath, loggedInPath) {
       // watch for login status changes and redirect if appropriate
       Auth.$onAuth(check);
       // some of our routes may reject resolve promises with the special {authRequired: true} error
@@ -165,6 +170,13 @@ angular.module('greenEdBackendApp')
           console.log("key", key+'/'+userdata.uid);
           $rootScope.user = $firebaseObject(Ref.child(key+'/'+userdata.uid));
           $rootScope.menus = Data.getMenus(email);
+
+          Ref.child('schools').orderByChild("id").equalTo(settings.sid).on('value', function(sdatasnap) {
+            sdatasnap.forEach(function(sdata) {
+              $rootScope.school = sdata.val();
+            })
+          });
+
         }
       }
 

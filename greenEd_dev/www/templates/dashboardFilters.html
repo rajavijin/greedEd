@@ -12,9 +12,9 @@
 <form>
    <ion-list class="menu-list filters">
    <ion-item class="item-icon-left positive"><i class="icon ion-clock"></i><strong>EducationYear</strong></ion-item>
-   <ion-radio class="item item-complex" name="year" ng-model="filters.educationyear" ng-repeat="(k,v) in filters.educationyears" ng-value="{{k}}">{{v}}</ion-radio>
+   <ion-radio class="item item-complex" name="year" ng-model="filters.year" ng-repeat="(k,v) in filters.years" ng-value="{{k}}">{{v}}</ion-radio>
    <ion-item ng-hide="noexams" class="item-icon-left positive"><i class="icon ion-clipboard"></i><strong>Exams</strong></ion-item>
-   <ion-radio ng-hide="noexams" class="item item-complex" name="exam" ng-model="filters.typeofexam" ng-repeat="(k,v) in filters.typeofexams" ng-value="{{k}}">{{v}}</ion-radio>
+   <ion-radio ng-hide="noexams" class="item item-complex" name="exam" ng-model="filters.exam" ng-repeat="(k,v) in filters.exams" ng-value="{{k}}">{{v}}</ion-radio>
     <ion-item class="item submit first"><button menu-close class="button icon-left ion-chevron-left button-block button-positive" ng-click="dashboardFilters()">Filter</button></ion-item>
     </ion-list>
 </form>

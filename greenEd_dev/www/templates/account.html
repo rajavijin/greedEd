@@ -4,21 +4,18 @@
       <div id="profile-bg"></div>
       <div id="content" ng-hide="loading">
         <div id="profile-info">
-          <div id="profile-image"><img ng-src="https://randomuser.me/api/portraits/med/{{(user.sex == 'male') ? 'men' : 'women'}}/{{(user.role == 'parent') ? user.uid.split(':')[1] - 20 : user.uid.split(':')[1] - 1}}.jpg"></div>
+          <div id="profile-image"><img src="http://res.cloudinary.com/dnzljpk6o/image/upload/v1442348003/{{user.uid}}_med.jpg"></div>
           <h3 id="profile-name">{{user.name}}</h3>
         </div>
-      <ion-list ng-if="user.role == 'hm'">
+<!--       <ion-list ng-if="user.role == 'hm'">
         <ion-item class="item item-icon-left" href="#">
           <i class="icon ion-ios-home positive"></i><h2>{{user.school}}</h2>
         </ion-item>
         <ion-item class="item item-icon-left" href="#">
           <i class="icon ion-ios-telephone positive"></i><h2>{{user.email.replace("@ge.com", "")}}</h2>
         </ion-item>
-      </ion-list>
+      </ion-list> -->
       <ion-list ng-if="user.role == 'teacher'">
-        <ion-item class="item item-icon-left" href="#">
-          <i class="icon ion-ios-home positive"></i><h2>{{user.school}}</h2>
-        </ion-item>
         <ion-item class="item item-icon-left" href="#">
           <i class="icon ion-ios-telephone positive"></i><h2>{{user.phone}}</h2>
         </ion-item>
@@ -30,18 +27,11 @@
         </ion-item>
       </ion-list>
       <ion-list ng-if="user.role == 'parent'">
-        <ion-item class="item item-icon-left" href="#">
-          <i class="icon ion-ios-home positive"></i><h2>{{user.school}}</h2>
-        </ion-item>
-        <ion-item class="item item-icon-left" href="#">
-          <i class="icon ion-ios-telephone positive"></i><h2>{{user.phone}}</h2>
-        </ion-item>
         <span ng-repeat="student in user.students">
         <ion-item class="item-icon-left positive"><i class="icon ion-person"></i><strong>{{student.name}}</strong></ion-item>
-        <ion-item class="item-icon-left positive"><i class="icon ion-information"></i><h2>{{student.studentid}}</h2></ion-item>
+        <ion-item class="item-icon-left positive"><i class="icon ion-information"></i><h2>{{student.id}}</h2></ion-item>
         <ion-item class="item-icon-left positive" href="#"><i ng-class="{'icon ion-woman positive': student.sex == 'Female', 'icon ion-man positive': student.sex == 'Male'}"></i><h2>{{student.sex}}</h2>
         </ion-item>
-        <ion-item class="item-icon-left positive"><i class="icon ion-ios-body"></i><h2>{{student.teacher}}</h2></ion-item>
         <ion-item class="item-icon-left positive"><i class="icon ion-easel positive"></i><h2>{{student.standard}}-{{student.division}}</h2>
         </ion-item>
         <ion-item class="item-icon-left positive" href="#"><i class="icon ion-home positive"></i><h2>{{student.address}}</h2>

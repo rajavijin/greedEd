@@ -1,0 +1,86 @@
+<div class="padding-out" ng-init="reset()">
+  <div class="padding add-marks">
+    <div class="panel panel-card p-sm">
+      <form class="form-inline" role="form">
+        <div class="form-group md-form-group float-label">
+          <input type="text" class="md-input" ng-class="{'ng-dirty' : filter.standard}" ng-model="filter.standard" required>
+          <label>Standard</label>
+        </div>
+        <div class="form-group md-form-group float-label">
+          <input type="text" class="md-input" ng-class="{'ng-dirty' : filter.division}" ng-model="filter.division" required>
+          <label>Division</label>
+        </div>
+        <div class="form-group md-form-group float-label">
+          <input type="text" class="md-input" ng-class="{'ng-dirty' : filter.exam}" ng-model="filter.exam" required>
+          <label>Exam</label>
+        </div>
+        <div class="form-group md-form-group float-label">
+          <input type="text" class="md-input" ng-class="{'ng-dirty' : filter.year}" ng-model="filter.year" required>
+          <label>Year</label>
+        </div> 
+        <button type="submit" class="btn btn-default" ng-click="applyFilters()">Add Marks</button>
+      </form>
+    </div>
+    
+    <div class="col-xs-12 add-data" ng-show="addData">
+            <div class="card row">
+          <div class="panel-heading blue" ng-hide="import">
+            <span class="label pull-right m-r-md amber">{{step}}/3</span>
+              <span class="h4" ng-if="teacher.name">{{teacher.name}}</span>
+              <span class="h4" ng-if="teacher.phone"> / {{teacher.phone}}</span>
+              <span class="h4" ng-repeat="(sk, sv) in teacher.subjects" ng-if="teacher.subjects[sk].subject"> / {{sv.subject}} => {{sv.class}}</span>
+          </div>
+          <div class="panel-heading blue" ng-show="import">
+              <span class="h4"></span>
+          </div>
+          <div class="card-tools">
+              <ul class="list-inline">
+                <li class="dropdown">
+                  <a md-ink-ripple="" data-toggle="dropdown" class="md-btn md-flat md-btn-circle">
+                    <i class="mdi-navigation-more-vert text-md"></i>
+                  <div class="md-ripple-container"></div></a>
+                  <ul class="dropdown-menu dropdown-menu-scale pull-right pull-up top text-color">
+                    <li ng-show="import"><a href="" ng-click="reset()">Add Teacher</a></li>
+                    <li ng-hide="import"><a href="" ng-click="importMarks()">Import Teacher</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+            <div class="card-body">
+            <div class="form-wrapper" ng-show="import"><br>
+          <form role="form" ng-submit="csvImport(csv.result)" ng-hide="importing">
+              <center><ng-csv-import content="csv.content" header="true" result="csv.result"></ng-csv-import></center><br>
+              <center><button type="submit" class="btn btn-info"><i class="fa fa-download"></i> Import</button></center>
+          </form>
+          <div class="message center" ng-show="importing">
+            <div class="progress progress-striped active" ng-hide="importMsg == 'Import completed successfully.'">
+                  <div class="progress-bar progress-bar-info" style="width:{{importStatusP}}">{{importStatusP}}</div>
+              </div>
+            <h4>{{importMsg}} ({{importStatus}}/{{importTotal}})</h4>
+            <button ng-if="importMsg == 'Import completed successfully.'" type="button" class="btn btn-info" ng-click="importTeachers()"><i class="fa fa-download"></i> Import next sheet</button>
+          </div>
+            </div>
+            <div class="message center" ng-if="msg != ''">
+          <h1>{{msg}}</h1>
+          <button ng-if="msg != 'Creating Teacher...'" type="button" class="btn btn-info" ng-click="reset()"><i class="fa fa-user"></i> Add another Teacher</button>
+            </div>
+
+            <span ng-if="msg == ''" ng-hide="import">
+
+            </span>
+           </div>
+          </div>
+        </div>
+
+    <div ng-hide="filter">
+      <div class="p-lg text-center animated fadeInUp">
+        <span class="text-3x">
+          <i class="mdi-action-done-all text-2x text-white"></i>
+        </span>
+        <h3 class="font-thin">
+          Enter all the fileds to Add Marks!
+        </h3>
+      </div>
+    </div>
+  </div>
+</div>
