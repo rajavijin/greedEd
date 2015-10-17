@@ -170,6 +170,13 @@ angular.module('greenEdBackendApp')
           console.log("key", key+'/'+userdata.uid);
           $rootScope.user = $firebaseObject(Ref.child(key+'/'+userdata.uid));
           $rootScope.menus = Data.getMenus(email);
+
+          Ref.child('schools').orderByChild("id").equalTo(settings.sid).on('value', function(sdatasnap) {
+            sdatasnap.forEach(function(sdata) {
+              $rootScope.school = sdata.val();
+            })
+          });
+
         }
       }
 

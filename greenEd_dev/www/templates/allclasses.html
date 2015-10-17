@@ -13,7 +13,7 @@
     <ion-list>
       <ion-item collection-repeat="class in items" class="item item-icon-left positive" ng-click="redirect(class.standard, class.division)"  item-height="53" item-width="100%">
         <i class="icon ion-easel"></i>
-        <h2>{{class.standard}}<span ng-hide="class.division == 'all'">{{class.division}}</span></h2>
+        <h2>{{class.standard}}-{{class.division}}</h2>
        </ion-item>
     </ion-list>
 
