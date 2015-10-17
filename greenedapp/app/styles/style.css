@@ -1775,7 +1775,7 @@ ul#filters > .active > span {
 /*parallax*/
 
 .parallax1 {
-    background: url("../img/flat_parallax.png") no-repeat fixed 0 0 #f77b6f;
+    background: url("../img/flat_parallax.png") no-repeat fixed 0 0 #EBEEF3;
     background-size:cover;
     width: 100%;
     min-height: 400px;
@@ -1785,9 +1785,9 @@ ul#filters > .active > span {
 
 .parallax1 h1 {
     text-align: center;
-    color: #80A2FD;
+    color: #23B7E5;
     font-size: 25px;
-    font-weight: 600;
+    font-weight: 300;
     line-height: 40px;
     margin-top: 160px;
 }
@@ -1799,8 +1799,8 @@ ul#filters > .active > span {
 }
 .navbar-default .navbar-brand {
     color: #47E523;
-    font-size: 30px;
-    font-weight: 100;
+    font-size: 14px;
+    font-weight: 300;
     line-height: 30px;
     margin-top: 30px;
     padding: 0 0 0 15px;
@@ -1879,3 +1879,21 @@ ul#filters > .active > span {
 .bs-callout-info h4 {
     color: #5bc0de;
 }
+.bs-callout-primary1 {
+    border-top-color: #428bca;
+    background-color: white;
+    border-radius: 16px;
+    text-align: justify;
+    border-top-width: 5px;
+    border-left-width: 1px;
+}
+.bs-callout-primary2 {
+    border-right-color: #428bca;
+    background-color: white;
+    border-radius: 16px;
+    text-align: justify;
+    border-left-width: 1px;
+    border-right-width: 5px;
+}
+h4 {
+    color: #5bc0de;
