@@ -546,6 +546,7 @@ angular.module('dashboards', [])
 
 .controller("AllStudentsCtrl", function($scope, $rootScope, $stateParams, $cordovaSQLite, Auth, $ionicFilterBar, $timeout) {
   var filterBarInstance;
+  $scope.title = moment().format("Do MMM YYYY") +" "+$stateParams.action;
   if($stateParams.id) {
     var hw = $rootScope.homeworks[$stateParams.uid].$getRecord($stateParams.id);
   }

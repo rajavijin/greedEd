@@ -301,7 +301,7 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'starter.services',
     }
   })
   .state('app.allstudents', {
-    url: "/allstudents",
+    url: "/allstudents/:class/:action",
     views: {
       'menuContent' :{
         templateUrl: "templates/allstudents.html",
