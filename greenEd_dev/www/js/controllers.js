@@ -14,7 +14,10 @@ angular.module('starter.controllers', [])
     $rootScope.fromState = fromState.name;
     $rootScope.currentState = toState.name;
     if(toState.name == "login") {
-      $timeout(function() { $ionicLoading.hide();$window.location.reload(true);}, 1500);
+      $timeout(function() { 
+        $ionicLoading.hide();
+        //$window.location.reload(true);
+      }, 1500);
     }
   });
   $scope.user = user;
@@ -665,8 +668,6 @@ angular.module('starter.controllers', [])
   }
 })
 .controller('CalendarCtrl', function($scope, $rootScope, $state, $ionicModal) {
-  "use strict";
-  // With "use strict", Dates can be passed ONLY as strings (ISO format: YYYY-MM-DD)
   $scope.options = {
     defaultDate: moment().format("YYYY-MM-DD"),
     minDate: "2015-01-01",
@@ -678,6 +679,69 @@ angular.module('starter.controllers', [])
       $scope.monthevents = false;
       $scope.title = moment(date.date).format('Do MMM YYYY') +" "+ date.event[0].type;
       $scope.openModal();
+    },
+    dateClick: function(date) {
+      console.log("date", date);
+    },
+    changeMonth: function(month, year) {
+      console.log(month, year);
+    },
+  };
+  $scope.showEvents = function(type) {
+    $scope.monthevents = true;
+    $scope.title = type +"s of "+ months[$rootScope.selectedMonthIndex - 1] +" "+$rootScope.selectedYearIndex;
+    $scope.meventType = type;
+    $scope.openModal();
+  }
+
+  $ionicModal.fromTemplateUrl('templates/calendarEvent.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
+
+  $scope.openModal = function() {$scope.modal.show();};
+  $scope.closeModal = function() {$scope.modal.hide();};
+  $scope.filterData = function() {$scope.openModal();}
+})
+.controller('AttendanceCtrl', function($scope, $rootScope, $state, $stateParams, $ionicModal) {
+  var today = moment().format("YYYY-MM-DD");
+  var monthVal = school.period.split("-");
+  var startRange = MONTHS[monthVal[0].toUpperCase()];
+  var d = new Date();
+  var year = d.getFullYear();
+  if(d.getMonth() < startRange) var startdate = (year - 1) + "-" + ("0" + (startRange + 1)).slice(-2) + "-01";
+  else var startdate = year + "-" + ("0" + (startRange + 1)).slice(-2) + "-01";
+  console.log("Attendance", $rootScope.viewAttendance[$stateParams.uid]);
+  $rootScope.viewAttendance[$stateParams.uid].$ref().on('value', function(asnap) {
+    $scope.events = [];
+    asnap.forEach(function(childsnap) {
+      var val = childsnap.val();
+      var key = childsnap.key();
+      console.log("val", val);
+      console.log("valkey", key);
+      for(var dkey in val) {
+        if(typeof val[dkey][$stateParams.uid] != 'undefined') {
+          if(key < startRange) var cyear = year - 1;
+          else var cyear = year;        
+          if(val[dkey][$stateParams.uid]) {
+            $scope.events.push({type:"present", date:cyear+"-"+key+"-"+dkey});
+          } else {
+            $scope.events.push({type:"absent", date:cyear+"-"+key+"-"+dkey});
+          }
+        }
+      }
+    })
+  })
+
+  $scope.options = {
+    minDate: startdate,
+    maxDate: today,
+    dayNamesLength: 1, // 1 for "M", 2 for "Mo", 3 for "Mon"; 9 will show full day names. Default is 1.
+    mondayIsFirstDay: true,//set monday as first day of week. Default is false
+    eventClick: function(date) {
+      console.log("date on event click", date);
     },
     dateClick: function(date) {
       console.log("date", date);

@@ -879,6 +879,7 @@ left: 84px;
   border-radius: 100%;
   line-height: 40px;
   color: #000000;
+  position: relative;
 }
 .flex-calendar .days .day.eventday .number {
   width: 40px;
@@ -888,13 +889,13 @@ left: 84px;
   margin: 10px 0 0 10px;
   color: #FFFFFF;
 }
-.flex-calendar .days .day.holiday .number {
+.flex-calendar .days .day.holiday .number, .flex-calendar .days .day.absent .number {
   background-color: #ef473a;
 }
 .flex-calendar .days .day.event .number {
   background-color: #33cd5f;
 }
-.flex-calendar .days .day.exam .number {
+.flex-calendar .days .day.exam .number, .flex-calendar .days .day.present .number {
   background-color: #23b7e5;
 }
 .list.cal-event-types .item {
@@ -905,8 +906,8 @@ left: 84px;
 }
 .flex-calendar .days .day .ctick {
     position: absolute;
-    bottom: -5px;
-    left: 25px;
+    bottom: -15px;
+    left: 15px;
 }
 .flex-calendar .days .day:not(.disabled):not(.out){
   cursor: pointer;
@@ -920,3 +921,5 @@ left: 84px;
   background-color: #EFEFEF;
   background-image: url('data:image/gif;base64,R0lGODlhBQAFAOMAAP/14////93uHt3uHt3uHt3uHv///////////wAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAAAALAAAAAAFAAUAAAQL0ACAzpG0YnonNxEAOw==');
 }
+.cal-filters .button.ion-navicon {display: none;}
+.cal-filters .button.ion-ios-close-outline {display: block;}

@@ -6,6 +6,9 @@ var scrollRef = null;
 var luser = localStorage.getItem('user');
 if(luser) var user = JSON.parse(luser);
 else var user = {};
+var lschool = localStorage.getItem('school');
+if(lschool) var school = JSON.parse(lschool);
+else var school = {};
 var lfilter = localStorage.getItem('filters');
 if(lfilter) var filters = angular.fromJson(lfilter);
 else var filters = {};
@@ -17,21 +20,68 @@ var db = null;
 var dashboards = {hm:false,class:false,teacher:false,student:false,overall:false};
 var timetableref = {};
 var days = {"holidays":[], "events":[], "exams":[]};
+
+var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+var MONTHS = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAI', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
+var WEEKDAYS = ['SUNDAY' , 'MONDAY' , 'TUESDAY' , 'WEDNESDAY' , 'THURSDAY' , 'FRIDAY' , 'SATURDAY'];
+var currentEducationYear = function(period) {
+  var monthVal = period.split("-");
+  var startRange = MONTHS[monthVal[0].toUpperCase()];
+  var d = new Date();
+  var year = d.getFullYear();
+  if(d.getMonth() < startRange) return (year - 1) + "-" + year;
+  else return year + "-" + (year + 1);
+}
+
 angular.module('starter.services', [])
 
-.factory('myCache', function($cacheFactory) {
-  return $cacheFactory('myCache');
-})
-
-.factory('Auth', function ( $firebaseAuth, S_ID, $q, $firebaseObject, $ionicLoading, $cordovaSQLite, myCache, $firebaseArray, FIREBASE_URL, $state, $rootScope) {
+.factory('Auth', function ( $firebaseAuth, S_ID, S_ID_key, $q, $firebaseObject, $ionicLoading, $cordovaSQLite, $firebaseArray, FIREBASE_URL, $state, $rootScope) {
   ref = new Firebase(FIREBASE_URL);
   ref.child('.info/connected').on('value', function(csnap) {
     online = csnap.val();
     $rootScope.$emit("online", online);
   });
+  scrollRef = new Firebase.util.Scroll(ref.child(S_ID+"/wall"), '$priority');
+  $rootScope.walls = $firebaseArray(scrollRef);
+  scrollRef.scroll.next(20);
+  $rootScope.walls.scroll = scrollRef.scroll;
+  $rootScope.walls.$loaded().then(function(dsnap) {
+    console.log("walls", $rootScope.walls);
+  })
+  chatrooms = $firebaseObject(ref.child(S_ID+"/chatrooms"));
+  $rootScope.calendar = $firebaseArray(ref.child(S_ID+"/calendar"));
   $rootScope.homeworks = {};
+  $rootScope.viewAttendance = {};
+  ref.child("schools/"+S_ID_key).on('value', function(schoolSnap) {
+    school = schoolSnap.val();
+    console.log("schoolSnap", school); 
+    localStorage.setItem("school", JSON.stringify(school));
+  });
   var auth = $firebaseAuth(ref);
   var Auth = {
+    authInit: function(uData) {
+      userchatroomsref = $firebaseObject(ref.child(S_ID+"/chatrooms/"+uData.uid));
+      if(uData.role == 'parent') {
+        for (var i = 0; i < uData.students.length; i++) {
+          var st = uData.students[i].standard;
+          if((uData.students[i].division.length > 1) && (uData.students[i].division != "all")) st = st+"-"+uData.students[i].division;
+          timetableref[uData.students[i].uid] = ref.child(S_ID+'/timetable/'+uData.students[i].standard+'-'+uData.students[i].division);
+          $rootScope.homeworks[uData.students[i].uid] = $firebaseArray(ref.child(S_ID+'/homeworks').limitToLast(50));
+          $rootScope.viewAttendance[uData.students[i].uid] = $firebaseObject(ref.child(S_ID+'/attendance/'+currentEducationYear(school.period)+'/'+uData.students[i].standard+'-'+uData.students[i].division));
+        };
+      } else if (uData.role == 'teacher') {
+        userRef = $firebaseObject(ref.child(S_ID+'/users/student'));
+        timetableref[uData.uid] = ref.child(S_ID+'/timetable/'+uData.uid);
+        $rootScope.homeworks[uData.uid] = $firebaseArray(ref.child(S_ID+'/homeworks').limitToLast(50));
+        $rootScope.hm = $firebaseObject(ref.child(S_ID+'/users/hm'));
+        var attendanceRef = $firebaseObject(ref.child(S_ID+'/attendance/'+currentEducationYear(school.period)+'/'+user.class));
+        attendanceRef.$bindTo($rootScope, "attendance");
+      } else {
+        userRef = $firebaseObject(ref.child(S_ID+'/users/student'));
+      }
+      return true;
+    },
+
     login: function (userdata) {
       var defer = $q.defer();
       var index = 0;
@@ -63,6 +113,7 @@ angular.module('starter.services', [])
                 user.students.push(kid);
                 timetableref[kid.uid] = ref.child(S_ID+'/timetable/'+kid.standard+'-'+kid.division);
                 $rootScope.homeworks[kid.uid] = $firebaseArray(ref.child(S_ID+'/homeworks').limitToLast(50));
+                $rootScope.viewAttendance[kid.uid] = $firebaseObject(ref.child(S_ID+'/attendance/'+currentEducationYear(school.period)+'/'+kid.standard+'-'+kid.division));
               })
               localStorage.setItem("user", JSON.stringify(user));
               defer.resolve(user);
@@ -73,8 +124,10 @@ angular.module('starter.services', [])
               delete user.pepper;
               user.uid = userdatafb.uid;
               userchatroomsref = $firebaseObject(ref.child(S_ID+"/chatrooms/"+user.uid));
-              $rootScope.homeworks[user.uid] = $firebaseArray(ref.child(S_ID+'/homeworks').limitToLast(50));
               userRef = $firebaseObject(ref.child(S_ID+'/users/student'));
+              $rootScope.homeworks[user.uid] = $firebaseArray(ref.child(S_ID+'/homeworks').limitToLast(50));
+              var attendanceRef = $firebaseObject(ref.child(S_ID+'/attendance/'+currentEducationYear(school.period)+'/'+user.class));
+              attendanceRef.$bindTo($rootScope, "attendance");
               timetableref[user.uid] = ref.child(S_ID+'/timetable/'+user.uid);
               localStorage.setItem("user", JSON.stringify(user));
               defer.resolve(user);            
@@ -167,7 +220,7 @@ angular.module('starter.services', [])
           //   standard[fbusers.standard] = true;
           //   allusers["allclasses"].push({standard:fbusers.standard, division:"all"});
           // }
-          allusers["allstudents"].push({name:fbusers.name, studentid:fbusers.studentid, standard:fbusers.standard, division:fbusers.division, uid:fbuser, sex:fbusers.sex});
+          allusers["allstudents"].push({name:fbusers.name, studentid:fbusers.studentid, standard:fbusers.standard, division:fbusers.division, uid:fbuser, sex:fbusers.sex, present: true});
           if(chatcontacts[fbusers.name]) {
             allusers["chatcontacts"][chatcontacts[fbusers.name] - 1].name += ","+fbusers.name;
             allusers["groups"][sclass][chatcontacts[fbusers.name] - 1].name += ","+fbusers.name;
@@ -217,6 +270,7 @@ angular.module('starter.services', [])
           if((user.students[0].division.length > 1) && (user.students[0].division != "all")) st = st+"-"+user.students[0].division;
           return {"Links":[
           {"title":"Homeworks", "href":"/app/homeworks/"+user.students[0].uid, "class":"ion-android-list"},
+          {"title":"Attendance", "href":"/app/attendance/"+user.students[0].uid, "class":"ion-checkmark-round"},
           {"title":"Dashboard", "href":"/app/studentdashboard/"+user.students[0].standard+"-"+user.students[0].division+"/"+user.students[0].uid+"/"+user.students[0].name, "class":"ion-stats-bars"},
           {"title":"Class Dashboard", "href":"/app/classdashboard/"+user.students[0].standard+"-"+user.students[0].division, "class":"ion-pie-graph"},
           {"title":"Bus tracking", "href":"/app/bustracking", "class":"ion-android-bus"},

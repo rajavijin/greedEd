@@ -13,8 +13,9 @@
     '<button class="button button-icon icon ion-ios-arrow-back" ng-click="prevMonth()"></button>'+
   '</span><span class="left-buttons hide">'+
          '<button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>'+
-         '</span></div><div class="title header-item" style="left: 96px; right: 55px;"><span class="nav-bar-title">{{ selectedMonth}} {{selectedYear}}</span></div><div class="buttons buttons-right"><span class="right-buttons">'+
+         '</span></div><div class="title header-item"><span class="nav-bar-title">{{ selectedMonth}} {{selectedYear}}</span></div><div class="buttons buttons-right"><span class="right-buttons">'+
     '<button class="button button-icon icon ion-ios-arrow-forward" ng-click="nextMonth()"></button>'+
+    '<button class="button button-icon button-clear ion-ios-close-outline hide" ng-click="closeModal()"></button>'+
   '</span></div></div>'+
         '<div class="week">'+
           '<div class="day" ng-repeat="day in weekDays(options.dayNamesLength) track by $index">{{ day }}</div>'+
@@ -61,14 +62,14 @@
       $scope.isDefaultDate = isDefaultDate;
       $scope.prevMonth = prevMonth;
       $scope.nextMonth = nextMonth;
-
+      $scope.closeModal = closeModal;
       $scope.arrowPrevClass = "visible";
       $scope.arrowNextClass = "visible";
 
       //var $translate = $filter('translate');
 
-      var MONTHS = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAI', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
-      var WEEKDAYS = ['SUNDAY' , 'MONDAY' , 'TUESDAY' , 'WEDNESDAY' , 'THURSDAY' , 'FRIDAY' , 'SATURDAY'];
+//      var MONTHS = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAI', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
+//      var WEEKDAYS = ['SUNDAY' , 'MONDAY' , 'TUESDAY' , 'WEDNESDAY' , 'THURSDAY' , 'FRIDAY' , 'SATURDAY'];
 
       if($scope.options.mondayIsFirstDay)
       {
@@ -315,6 +316,10 @@
         var month = {name: $scope.selectedMonth, index: currIndex + 1, _index: currIndex+2 };
         $scope.options.changeMonth(month, $scope.selectedYear);
         calculateWeeks();
+      }
+
+      function closeModal() {
+        $scope.options.closeModal();
       }
     }
 

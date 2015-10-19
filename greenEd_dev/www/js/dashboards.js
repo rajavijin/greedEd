@@ -544,16 +544,38 @@ angular.module('dashboards', [])
   }
 })
 
-.controller("AllStudentsCtrl", function($scope, $rootScope, $stateParams, $cordovaSQLite, Auth, $ionicFilterBar, $timeout) {
+.controller("AllStudentsCtrl", function($scope, $rootScope, $stateParams, $cordovaSQLite, Auth, $ionicFilterBar, $ionicModal, $timeout) {
+  console.log('three way attendance', $rootScope.attendance);
   var filterBarInstance;
-  $scope.title = moment().format("Do MMM YYYY") +" "+$stateParams.action;
   if($stateParams.id) {
     var hw = $rootScope.homeworks[$stateParams.uid].$getRecord($stateParams.id);
   }
+  $scope.class = $stateParams.class;
+  $scope.filters = {day:moment().format("DD"), month: moment().format("MM"), year: moment().format("YYYY")};
+
+  if($stateParams.action) {
+    $scope.action = $stateParams.action;
+  } else {
+    $scope.action = "homework";
+  }
+  $scope.takeAction = function(index, student) {
+    if($scope.action == 'attendance') {
+      console.log("index", index);
+      console.log("student", student);
+      $rootScope.attendance[$scope.filters.month][$scope.filters.day][student.uid] = !$rootScope.attendance[$scope.filters.month][$scope.filters.day][student.uid];
+    }
+  }
+
   var processUsers = function(allstudents) {
-    if($stateParams.id) {
-      var students = [];
-      for (var i = 0; i < allstudents.length; i++) {
+    var students = [];
+    var attendance = {};
+    var newEntry = false;
+    if(!$rootScope.attendance[$scope.filters.month]) $rootScope.attendance[$scope.filters.month] = {};
+    if(!$rootScope.attendance[$scope.filters.month][$scope.filters.day]) newEntry = true;
+
+    var totalStudents = allstudents.length;
+    for (var i = 0; i < totalStudents; i++) {
+      if($stateParams.id) {
         if(allstudents[i].standard+'-'+allstudents[i].division == $stateParams.class) {
           if(hw.ack) {
             if($stateParams.status == 'done') {
@@ -565,10 +587,15 @@ angular.module('dashboards', [])
             if($stateParams.status == 'undone') students.push(allstudents[i]);
           }
         }
-      };
-      $scope.items = students;
-    } else {
-      $scope.items = allstudents;
+      } else if ($stateParams.action == 'attendance') {
+        students.push(allstudents[i]);
+        if(newEntry) attendance[allstudents[i].uid] = true;
+      }
+      if(i == (totalStudents - 1)) {
+        console.log("attendance", attendance);
+        if(newEntry) $rootScope.attendance[$scope.filters.month][$scope.filters.day] = attendance;
+        $scope.items = students;
+      }
     }
   }
   var serverData = function() {
@@ -611,6 +638,43 @@ angular.module('dashboards', [])
       else getItems();
       $scope.$broadcast('scroll.refreshComplete');
     }, 1000);
+  };
+
+  $ionicModal.fromTemplateUrl('templates/calendarFilters.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
+
+  $scope.openModal = function() {$scope.modal.show();};
+  $scope.closeModal = function() {$scope.modal.hide();};
+  $scope.filterData = function() {$scope.openModal();}
+  var today = moment().format("YYYY-MM-DD");
+  $scope.options = {
+    defaultDate: today,
+    minDate: $scope.filters.year + "-01-01",
+    maxDate: today,
+    dayNamesLength: 1, // 1 for "M", 2 for "Mo", 3 for "Mon"; 9 will show full day names. Default is 1.
+    mondayIsFirstDay: true,//set monday as first day of week. Default is false
+    eventClick: function(date) {
+      console.log("date", date);
+    },
+    dateClick: function(date) {
+      console.log("date Click", date);
+      $scope.filters.day = moment(date.date).format("DD");
+      $scope.filters.month = moment(date.date).format("MM");
+      console.log("Filters", $scope.filters);
+      getItems();
+      $scope.modal.hide();
+    },
+    changeMonth: function(month, year) {
+      console.log(month, year);
+    },
+    closeModal: function() {
+      console.log("you can change it");
+      $scope.modal.hide();
+    }
   };
 })
 
