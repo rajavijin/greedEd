@@ -655,10 +655,8 @@ angular.module('dashboards', [])
           }
         }
       } else if ($stateParams.action == 'attendance') {
-        students.push(allstudents[i]);
         if(newEntry) attendance[allstudents[i].uid] = true;
       } else if (($stateParams.action == 'addpoint') || ($stateParams.action == 'points')) {
-        students.push(allstudents[i]);
         if(newEntry) defaultPoints[allstudents[i].uid] = {points:{positive:[],negative:[]}, positive: 0, negative: 0};
       }
       if(i == (totalStudents - 1)) {
@@ -667,7 +665,8 @@ angular.module('dashboards', [])
           if($scope.action == 'attendance') $rootScope.attendance[$scope.filters.month][$scope.filters.day] = attendance;
           if(($scope.action == 'points') || ($scope.action == 'addpoint')) $rootScope.rewards[$stateParams.class] = defaultPoints;
         }
-        $scope.items = students;
+        if(students.length > 0) $scope.items = students;
+        else $scope.items = allstudents;
       }
     }
   }
@@ -807,6 +806,8 @@ angular.module('dashboards', [])
       $scope.modal.show();
     } else if ($scope.action == 'points') {
       $state.go('app.points', {uid:student.uid,name:student.name,class:student.standard+'-'+student.division});
+    } else if ($scope.action == 'student dashboard') {
+      $state.go('app.studentDashboard', {uid:student.uid,name:student.name,class:student.standard+'-'+student.division});
     }
   }
 })

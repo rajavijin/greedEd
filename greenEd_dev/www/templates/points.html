@@ -6,7 +6,7 @@
         <ion-tabs class="tabs-icon-top balanced">
             <ion-tab class="balanced" title="Positive ({{points[uid].positive}})" icon-on="ion-thumbsup" icon-off="ion-thumbsup" on-select="getItems()">
                 <ion-content has-header="true">
-                  <ion-refresher pulling-icon="ion-arrow-down-b" on-refresh="getItems()"></ion-refresher>
+                  <!-- <ion-refresher pulling-icon="ion-arrow-down-b" on-refresh="getItems()"></ion-refresher> -->
                   <div class="list">
                   <a class="item item-icon-left" href="" ng-repeat="m in points[uid].points.positive | orderBy:['-date']">
                     <i class="icon {{m.icon}} balanced"></i>
@@ -18,7 +18,7 @@
             </ion-tab>
             <ion-tab class="assertive" title="Negative ({{points[uid].negative}})" icon-on="ion-thumbsdown" icon-off="ion-thumbsdown" on-select="getItems()">
                 <ion-content has-header="true">
-                  <ion-refresher pulling-icon="ion-arrow-down-b" on-refresh="getItems()"></ion-refresher>
+<!--                   <ion-refresher pulling-icon="ion-arrow-down-b" on-refresh="getItems()"></ion-refresher> -->
                   <div class="list">
                   <a class="item item-icon-left" href="" ng-repeat="m in points[uid].points.negative | orderBy:['-date']">
                     <i class="icon {{m.icon}} assertive"></i>
