@@ -52,10 +52,13 @@ angular.module('starter.services', [])
   $rootScope.calendar = $firebaseArray(ref.child(S_ID+"/calendar"));
   $rootScope.homeworks = {};
   $rootScope.viewAttendance = {};
-  ref.child("schools/"+S_ID_key).on('value', function(schoolSnap) {
+  $rootScope.points = {};
+  var schoolRefP = ref.child("schools/"+S_ID_key);
+  var schoolRef = $firebaseObject(schoolRefP);
+  schoolRef.$bindTo($rootScope, "school");
+  schoolRefP.on('value', function(schoolSnap) {
     school = schoolSnap.val();
-    console.log("schoolSnap", school); 
-    localStorage.setItem("school", JSON.stringify(school));
+    localStorage.setItem('school', JSON.stringify(school));
   });
   var auth = $firebaseAuth(ref);
   var Auth = {
@@ -68,6 +71,7 @@ angular.module('starter.services', [])
           timetableref[uData.students[i].uid] = ref.child(S_ID+'/timetable/'+uData.students[i].standard+'-'+uData.students[i].division);
           $rootScope.homeworks[uData.students[i].uid] = $firebaseArray(ref.child(S_ID+'/homeworks').limitToLast(50));
           $rootScope.viewAttendance[uData.students[i].uid] = $firebaseObject(ref.child(S_ID+'/attendance/'+currentEducationYear(school.period)+'/'+uData.students[i].standard+'-'+uData.students[i].division));
+          $rootScope.points[uData.students[i].uid] = $firebaseObject(ref.child(S_ID+'/points/'+currentEducationYear(school.period)+'/'+user.class+'/'+uData.students[i].uid));
         };
       } else if (uData.role == 'teacher') {
         userRef = $firebaseObject(ref.child(S_ID+'/users/student'));
@@ -76,6 +80,8 @@ angular.module('starter.services', [])
         $rootScope.hm = $firebaseObject(ref.child(S_ID+'/users/hm'));
         var attendanceRef = $firebaseObject(ref.child(S_ID+'/attendance/'+currentEducationYear(school.period)+'/'+user.class));
         attendanceRef.$bindTo($rootScope, "attendance");
+        var pointsRef = $firebaseObject(ref.child(S_ID+'/points/'+currentEducationYear(school.period)));
+        pointsRef.$bindTo($rootScope, "rewards");
       } else {
         userRef = $firebaseObject(ref.child(S_ID+'/users/student'));
       }
@@ -128,6 +134,8 @@ angular.module('starter.services', [])
               $rootScope.homeworks[user.uid] = $firebaseArray(ref.child(S_ID+'/homeworks').limitToLast(50));
               var attendanceRef = $firebaseObject(ref.child(S_ID+'/attendance/'+currentEducationYear(school.period)+'/'+user.class));
               attendanceRef.$bindTo($rootScope, "attendance");
+              var pointsRef = $firebaseObject(ref.child(S_ID+'/points/'+currentEducationYear(school.period)));
+              pointsRef.$bindTo($rootScope, "rewards");
               timetableref[user.uid] = ref.child(S_ID+'/timetable/'+user.uid);
               localStorage.setItem("user", JSON.stringify(user));
               defer.resolve(user);            
@@ -271,6 +279,7 @@ angular.module('starter.services', [])
           return {"Links":[
           {"title":"Homeworks", "href":"/app/homeworks/"+user.students[0].uid, "class":"ion-android-list"},
           {"title":"Attendance", "href":"/app/attendance/"+user.students[0].uid, "class":"ion-checkmark-round"},
+          {"title":"Points", "href":"/app/points/"+user.students[0].uid+"/"+user.students[0].standard+"-"+user.students[0].division+"/"+user.students[0].name, "class":"ion-thumbsup"},
           {"title":"Dashboard", "href":"/app/studentdashboard/"+user.students[0].standard+"-"+user.students[0].division+"/"+user.students[0].uid+"/"+user.students[0].name, "class":"ion-stats-bars"},
           {"title":"Class Dashboard", "href":"/app/classdashboard/"+user.students[0].standard+"-"+user.students[0].division, "class":"ion-pie-graph"},
           {"title":"Bus tracking", "href":"/app/bustracking", "class":"ion-android-bus"},
@@ -283,7 +292,6 @@ angular.module('starter.services', [])
         // } else {
         return {"Links":[
         {"title":"Dashboard", "href":"/app/teacherdashboard/"+user.uid+"/"+user.name, "class":"ion-stats-bars"},
-        {"title":"Students", "href":"/app/allstudents", "class": "ion-person-stalker"},
         {"title":"Classes", "href":"/app/allclasses", "class": "ion-easel"},
         {"title":"Add HomeWork", "href":"/app/teacherclasses", "class":"ion-plus-circled"},
         {"title":"Homeworks", "href":"/app/homeworks/"+user.uid, "class":"ion-android-list"},

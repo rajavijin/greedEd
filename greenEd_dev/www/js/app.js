@@ -29,7 +29,7 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'starter.services',
     } else {
       db = openDatabase('mydb', '1.0', 'my first database', 2 * 1024 * 1024);
     }
-    $cordovaSQLite.execute(db, "DROP TABLE mydata");
+    //$cordovaSQLite.execute(db, "DROP TABLE mydata");
     $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS mydata (key text, value blob, unique (key))");
     if(Object.keys(user).length > 0) Auth.authInit(user);
   });
@@ -248,6 +248,15 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'starter.services',
       'menuContent' :{
         templateUrl: "templates/teacherclasses.html",
         controller: 'TeacherClassesCtrl'
+      }
+    }
+  })
+  .state('app.points', {
+    url: "/points/:uid/:class/:name",
+    views: {
+      'menuContent' :{
+        templateUrl: "templates/points.html",
+        controller: 'PointsCtrl'
       }
     }
   })

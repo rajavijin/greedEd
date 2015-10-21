@@ -1,7 +1,7 @@
-<ion-view view-title="All Students">
+<ion-view view-title="{{action}}">
 
   <ion-nav-buttons side="secondary">
-  <button class="button button-icon icon ion-calendar" ng-click="filterData()">
+  <button ng-if="action == 'attendance'" class="button button-icon icon ion-calendar" ng-click="filterData()">
     </button>
     <button class="button button-icon icon ion-ios-search-strong" ng-click="showFilterBar()">
     </button>
@@ -16,6 +16,10 @@
             <img ng-src="http://res.cloudinary.com/dnzljpk6o/image/upload/v1442348003/{{student.uid}}.png">
             <h2>{{student.standard}}<span ng-hide="student.division == 'all'">{{student.division}}</span> : {{student.name}}</h2>
             <i ng-if="action == 'attendance'" class="icon" ng-class="{'ion-checkmark-round' : attendance[filters.month][filters.day][student.uid], 'ion-close-round assertive': !attendance[filters.month][filters.day][student.uid]}"></i>
+            <span ng-if="action == 'addpoint' || action == 'points'">
+              <span class="badge badge-assertive">{{rewards[class][student.uid].negative}}</span>
+              <span class="badge badge2 badge-balanced">{{rewards[class][student.uid].positive}}</span>
+            </span>
         </a>
     </div>
 

@@ -135,7 +135,7 @@ angular.module('starter.controllers', [])
     } else {
       if(refresh) $scope.$broadcast('scroll.refreshComplete');
       if(db) getLocalData();
-      else $timeout(function() {getLocalData()}, 1000);
+      else $timeout(function() {getLocalData()}, 2000);
     }
   }
 

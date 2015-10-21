@@ -923,3 +923,29 @@ left: 84px;
 }
 .cal-filters .button.ion-navicon {display: none;}
 .cal-filters .button.ion-ios-close-outline {display: block;}
+.list .item .badge.badge2 { margin-right: 40px;}
+button.button-icon.round-overlay-button.bottom-right {
+    bottom: 0;
+    margin-bottom: 16px;
+    right: 16px;
+    z-index: 2;
+}
+button.button-icon.round-overlay-button.assertive {
+    background-color: #ef473a;
+    color: white;
+}
+button.button-icon.round-overlay-button {
+    position: absolute;
+    height: 45px;
+    width: 45px;
+    border-radius: 50%;
+    min-height: 45px;
+    padding: 0;
+    border: none;
+    background-color: #33cd5f;
+    color: white;
+    box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.16), 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+    transition: all linear 220ms;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+}

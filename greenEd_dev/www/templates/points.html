@@ -1,0 +1,47 @@
+<ion-view title="{{title}} Points">
+  <ion-nav-buttons side="secondary">
+    <button class="button button-icon icon ion-ios-search-strong" ng-click="showFilterBar()">
+    </button>
+  </ion-nav-buttons>
+        <ion-tabs class="tabs-icon-top balanced">
+            <ion-tab class="balanced" title="Positive ({{points[uid].positive}})" icon-on="ion-thumbsup" icon-off="ion-thumbsup" on-select="getItems()">
+                <ion-content has-header="true">
+                  <ion-refresher pulling-icon="ion-arrow-down-b" on-refresh="getItems()"></ion-refresher>
+                  <div class="list">
+                  <a class="item item-icon-left" href="" ng-repeat="m in points[uid].points.positive | orderBy:['-date']">
+                    <i class="icon {{m.icon}} balanced"></i>
+                    <h2 class="balanced">{{m.title}}</h2>
+                    <p>{{m.subject}}, <span am-time-ago="m.date"></span></p>
+                  </a>
+                  </div>
+                </ion-content>
+            </ion-tab>
+            <ion-tab class="assertive" title="Negative ({{points[uid].negative}})" icon-on="ion-thumbsdown" icon-off="ion-thumbsdown" on-select="getItems()">
+                <ion-content has-header="true">
+                  <ion-refresher pulling-icon="ion-arrow-down-b" on-refresh="getItems()"></ion-refresher>
+                  <div class="list">
+                  <a class="item item-icon-left" href="" ng-repeat="m in points[uid].points.negative | orderBy:['-date']">
+                    <i class="icon {{m.icon}} assertive"></i>
+                    <h2 class="assertive">{{m.title}}</h2>
+                    <p>{{m.subject}}, <span am-time-ago="m.date"></span></p>
+                  </a>
+                  </div>
+                </ion-content>
+            </ion-tab>
+        </ion-tabs>
+<!--      <ion-tabs class="tabs-icon-top tabs-positive">
+
+        <ion-tab title="Home" icon="ion-home">
+          one
+        </ion-tab>
+
+        <ion-tab title="About" icon="ion-ios-information" href="#/tab/about">
+          2
+        </ion-tab>
+
+        <ion-tab title="Contact" icon="ion-ios-world" ui-sref="tabs.contact">
+         3
+        </ion-tab>
+
+      </ion-tabs> -->
+    </ion-view>
