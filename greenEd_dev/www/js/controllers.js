@@ -124,6 +124,7 @@ angular.module('starter.controllers', [])
       }
     });
   }
+  $scope.loading = true;
   $scope.getWall = function(refresh) {
     if(online) {
       if(!refresh) $scope.loading = true;

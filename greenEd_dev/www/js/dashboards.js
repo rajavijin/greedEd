@@ -624,7 +624,7 @@ angular.module('dashboards', [])
           $rootScope.school.points.positive.push({title:res,icon:"ion-sad"});
         }
       } else {
-         console.log('Please enter input');
+        console.log('Please enter input');
       }
     });
   }
@@ -633,12 +633,11 @@ angular.module('dashboards', [])
     var attendance = {};
     var defaultPoints = {};
     var newEntry = false;
-    if($rootScope.attendance) {
+    if($rootScope.attendance && ($stateParams.action == 'attendance')) {
       if(!$rootScope.attendance[$scope.filters.month]) $rootScope.attendance[$scope.filters.month] = {};
       if(!$rootScope.attendance[$scope.filters.month][$scope.filters.day]) newEntry = true;
-    }
-    if($rootScope.rewards) {
-      if(!$rootScope.rewards[$stateParams.class]) {$rootScope.rewards[$stateParams.class] = {}; newEntry = true; }
+    } else if ($rootScope.rewards) {
+      if(!$rootScope.rewards[$stateParams.class]) { console.log("new Entry"); newEntry = true; }
     }
     var totalStudents = allstudents.length;
     for (var i = 0; i < totalStudents; i++) {
@@ -660,7 +659,7 @@ angular.module('dashboards', [])
         if(newEntry) defaultPoints[allstudents[i].uid] = {points:{positive:[],negative:[]}, positive: 0, negative: 0};
       }
       if(i == (totalStudents - 1)) {
-        console.log("attendance", attendance);
+        console.log("defaultPoints", defaultPoints);
         if(newEntry) {
           if($scope.action == 'attendance') $rootScope.attendance[$scope.filters.month][$scope.filters.day] = attendance;
           if(($scope.action == 'points') || ($scope.action == 'addpoint')) $rootScope.rewards[$stateParams.class] = defaultPoints;
