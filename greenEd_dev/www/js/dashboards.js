@@ -636,7 +636,8 @@ angular.module('dashboards', [])
     var newEntry = false;
     if($rootScope.attendance && ($stateParams.action == 'attendance')) {
       if(user.role == "hm") {
-        if(!$rootScope.attendance[$stateParams.class][$scope.filters.month]) $rootScope.attendance[$scope.filters.month] = {};
+        if(!$rootScope.attendance[$stateParams.class]) $rootScope.attendance[$stateParams.class] = {};
+        if(!$rootScope.attendance[$stateParams.class][$scope.filters.month]) $rootScope.attendance[$stateParams.class][$scope.filters.month] = {};
         if(!$rootScope.attendance[$stateParams.class][$scope.filters.month][$scope.filters.day]) newEntry = true;        
       } else {
         if(!$rootScope.attendance[$scope.filters.month]) $rootScope.attendance[$scope.filters.month] = {};
