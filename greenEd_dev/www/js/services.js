@@ -129,6 +129,8 @@ angular.module('starter.services', [])
                 timetableref[kid.uid] = ref.child(S_ID+'/timetable/'+kid.standard+'-'+kid.division);
                 $rootScope.homeworks[kid.uid] = $firebaseArray(ref.child(S_ID+'/homeworks').limitToLast(50));
                 $rootScope.viewAttendance[kid.uid] = $firebaseObject(ref.child(S_ID+'/attendance/'+currentEducationYear(school.period)+'/'+kid.standard+'-'+kid.division));
+                $rootScope.viewAttendance[kid.uid] = $firebaseObject(ref.child(S_ID+'/attendance/'+currentEducationYear(school.period)+'/'+kid.standard+'-'+kid.division));
+                $rootScope.points[kid.uid] = $firebaseObject(ref.child(S_ID+'/points/'+currentEducationYear(school.period)+'/'+kid.standard+'-'+kid.division+'/'+kid.uid));
               })
               localStorage.setItem("user", JSON.stringify(user));
               defer.resolve(user);
