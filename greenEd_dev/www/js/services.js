@@ -88,6 +88,10 @@ angular.module('starter.services', [])
         pointsRef.$bindTo($rootScope, "rewards");
       } else {
         userRef = $firebaseObject(ref.child(S_ID+'/users/student'));
+        var attendanceRef = $firebaseObject(ref.child(S_ID+'/attendance/'+currentEducationYear(school.period)));
+        attendanceRef.$bindTo($rootScope, "attendance");
+        var pointsRef = $firebaseObject(ref.child(S_ID+'/points/'+currentEducationYear(school.period)));
+        pointsRef.$bindTo($rootScope, "rewards");
       }
 
       return true;
@@ -153,6 +157,10 @@ angular.module('starter.services', [])
               user = profilesnap.val();
               delete user.pepper;
               user.uid = userdatafb.uid;
+              var attendanceRef = $firebaseObject(ref.child(S_ID+'/attendance/'+currentEducationYear(school.period)+'/'+user.class));
+              attendanceRef.$bindTo($rootScope, "attendance");
+              var pointsRef = $firebaseObject(ref.child(S_ID+'/points/'+currentEducationYear(school.period)));
+              pointsRef.$bindTo($rootScope, "rewards");
               localStorage.setItem("user", JSON.stringify(user));
               defer.resolve(user);
             });

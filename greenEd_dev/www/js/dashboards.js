@@ -600,6 +600,7 @@ angular.module('dashboards', [])
     var hw = $rootScope.homeworks[$stateParams.uid].$getRecord($stateParams.id);
   }
   $scope.class = $stateParams.class;
+  $scope.role = user.role;
   $scope.filters = {day:moment().format("DD"), month: moment().format("MM"), year: moment().format("YYYY")};
   $scope.filter = true;
   if($stateParams.action) {
@@ -634,8 +635,13 @@ angular.module('dashboards', [])
     var defaultPoints = {};
     var newEntry = false;
     if($rootScope.attendance && ($stateParams.action == 'attendance')) {
-      if(!$rootScope.attendance[$scope.filters.month]) $rootScope.attendance[$scope.filters.month] = {};
-      if(!$rootScope.attendance[$scope.filters.month][$scope.filters.day]) newEntry = true;
+      if(user.role == "hm") {
+        if(!$rootScope.attendance[$stateParams.class][$scope.filters.month]) $rootScope.attendance[$scope.filters.month] = {};
+        if(!$rootScope.attendance[$stateParams.class][$scope.filters.month][$scope.filters.day]) newEntry = true;        
+      } else {
+        if(!$rootScope.attendance[$scope.filters.month]) $rootScope.attendance[$scope.filters.month] = {};
+        if(!$rootScope.attendance[$scope.filters.month][$scope.filters.day]) newEntry = true;
+      }
     } else if ($rootScope.rewards) {
       if(!$rootScope.rewards[$stateParams.class]) { console.log("new Entry"); newEntry = true; }
     }
@@ -661,8 +667,10 @@ angular.module('dashboards', [])
       if(i == (totalStudents - 1)) {
         console.log("defaultPoints", defaultPoints);
         if(newEntry) {
-          if($scope.action == 'attendance') $rootScope.attendance[$scope.filters.month][$scope.filters.day] = attendance;
-          if(($scope.action == 'points') || ($scope.action == 'addpoint')) $rootScope.rewards[$stateParams.class] = defaultPoints;
+          if($scope.action == 'attendance') {
+            if(user.role == "hm") $rootScope.attendance[$stateParams.class][$scope.filters.month][$scope.filters.day] = attendance;
+            else $rootScope.attendance[$scope.filters.month][$scope.filters.day] = attendance;
+          } else if (($scope.action == 'points') || ($scope.action == 'addpoint')) $rootScope.rewards[$stateParams.class] = defaultPoints;
         }
         if(students.length > 0) $scope.items = students;
         else $scope.items = allstudents;
@@ -790,7 +798,8 @@ angular.module('dashboards', [])
     if($scope.action == 'attendance') {
       console.log("index", index);
       console.log("student", student);
-      $rootScope.attendance[$scope.filters.month][$scope.filters.day][student.uid] = !$rootScope.attendance[$scope.filters.month][$scope.filters.day][student.uid];
+      if(user.role == "hm") $rootScope.attendance[$stateparams.class][$scope.filters.month][$scope.filters.day][student.uid] = !$rootScope.attendance[$scope.filters.month][$scope.filters.day][student.uid];
+      else $rootScope.attendance[$scope.filters.month][$scope.filters.day][student.uid] = !$rootScope.attendance[$scope.filters.month][$scope.filters.day][student.uid];
     } else if ($scope.action == 'addpoint') {
       var subject = '';
       for (var si = 0; si < user.subjects.length; si++) {
