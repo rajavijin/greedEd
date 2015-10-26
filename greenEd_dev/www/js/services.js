@@ -159,7 +159,7 @@ angular.module('starter.services', [])
               user = profilesnap.val();
               delete user.pepper;
               user.uid = userdatafb.uid;
-              var attendanceRef = $firebaseObject(ref.child(S_ID+'/attendance/'+currentEducationYear(school.period)+'/'+user.class));
+              var attendanceRef = $firebaseObject(ref.child(S_ID+'/attendance/'+currentEducationYear(school.period)));
               attendanceRef.$bindTo($rootScope, "attendance");
               var pointsRef = $firebaseObject(ref.child(S_ID+'/points/'+currentEducationYear(school.period)));
               pointsRef.$bindTo($rootScope, "rewards");
