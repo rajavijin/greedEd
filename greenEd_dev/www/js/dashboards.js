@@ -548,7 +548,7 @@ angular.module('dashboards', [])
   $scope.title = $stateParams.name;
   $scope.uid = $stateParams.uid;
   console.log("rootScope", $rootScope.points[$stateParams.uid]);
-  if(user.role == 'teacher') {
+  if(user.role == 'teacher' || user.role == 'hm') {
     $scope.points[$stateParams.uid] = $rootScope.rewards[$stateParams.class][$stateParams.uid];
   }
   var serverData = function() {
