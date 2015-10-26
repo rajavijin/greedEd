@@ -802,11 +802,15 @@ angular.module('dashboards', [])
       else $rootScope.attendance[$scope.filters.month][$scope.filters.day][student.uid] = !$rootScope.attendance[$scope.filters.month][$scope.filters.day][student.uid];
     } else if ($scope.action == 'addpoint') {
       var subject = '';
-      for (var si = 0; si < user.subjects.length; si++) {
-        if(user.subjects[si].class == $stateParams.class) {
-          subject = user.subjects[si].subject;
-        }
-      };
+      if(user.role == "hm") {
+        subject = "Head master";
+      } else {
+        for (var si = 0; si < user.subjects.length; si++) {
+          if(user.subjects[si].class == $stateParams.class) {
+            subject = user.subjects[si].subject;
+          }
+        };
+      }
       $scope.filter = false;
       $scope.pointStudents = [];
       $scope.pointStudents.push({uid:student.uid,name:student.name,subject:subject});
