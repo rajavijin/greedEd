@@ -21,15 +21,15 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'starter.services',
       StatusBar.styleDefault();
     }
     if (window.cordova) {
-      db = $cordovaSQLite.openDB({ name: "my.db", bgType: 1 });
+      db = $cordovaSQLite.openDB({ name: "dev.db", bgType: 1 });
       if(window.cordova.plugins.Keyboard) {
         cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
         cordova.plugins.Keyboard.disableScroll(true);
       }
     } else {
-      db = openDatabase('mydb', '1.0', 'my first database', 2 * 1024 * 1024);
+      db = openDatabase('devdb', '1.0', 'my first database', 2 * 1024 * 1024);
     }
-    //$cordovaSQLite.execute(db, "DROP TABLE mydata");
+    //$cordovaSQLite.execute(db, "DROP TABLE devdb");
     $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS mydata (key text, value blob, unique (key))");
     if(Object.keys(user).length > 0) Auth.authInit(user);
   });
@@ -412,6 +412,15 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'starter.services',
       'menuContent': {
         templateUrl: 'templates/favteachercard.html',
         controller: 'FavTeacherCardCtrl'
+      }
+    }
+  })
+  .state('app.kid', {
+    url: "/kid/:uid/:name/:key",
+    views: {
+      'menuContent' :{
+        templateUrl: "templates/kid.html",
+        controller: 'KidCtrl'
       }
     }
   })

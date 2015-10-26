@@ -111,7 +111,7 @@ angular.module('starter.controllers', [])
   }
 })
 
-.controller('WallCtrl', function($scope, S_ID, $rootScope, $firebaseArray, $cordovaSQLite, $state, FIREBASE_URL, $ionicModal, Auth, $ionicLoading, $timeout) {
+.controller('WallCtrl', function($scope, S_ID, $rootScope, $firebaseArray, $cordovaSQLite, $state, FIREBASE_URL, $ionicModal, Auth, $ionicLoading, $ionicPopup, $timeout) {
   $scope.moredata = false;
   var getLocalData = function() {
     $cordovaSQLite.execute(db, "SELECT * from mydata where key = ?", ["wall"]).then(function(res) {
@@ -174,18 +174,22 @@ angular.module('starter.controllers', [])
   }
 
   $scope.like = function(wallid, action) {
-    var update = {};
-    update.like = $rootScope.walls[wallid].like;
-    update.likeuids = ($rootScope.walls[wallid].likeuids) ? $rootScope.walls[wallid].likeuids : [];
-    if(action == 'like') {
-      update.like++;
-      update.likeuids.push(user.uid);
+    if(online) {
+      var update = {};
+      update.like = $rootScope.walls[wallid].like;
+      update.likeuids = ($rootScope.walls[wallid].likeuids) ? $rootScope.walls[wallid].likeuids : [];
+      if(action == 'like') {
+        update.like++;
+        update.likeuids.push(user.uid);
+      } else {
+        update.like--;
+        var uidindex = update.likeuids.indexOf(user.uid);
+        update.likeuids.splice(uidindex);
+      }
+      var updated = Auth.updateWall(S_ID+'/wall/'+$rootScope.walls[wallid].$id, update);
     } else {
-      update.like--;
-      var uidindex = update.likeuids.indexOf(user.uid);
-      update.likeuids.splice(uidindex);
+      $ionicPopup.alert({title: 'No internet Connection',template: "Please check your internet connection"});
     }
-    var updated = Auth.updateWall(S_ID+'/wall/'+$rootScope.walls[wallid].$id, update);
   }
 
   $ionicModal.fromTemplateUrl('templates/image-modal.html', {
@@ -848,7 +852,9 @@ angular.module('starter.controllers', [])
 .controller('AccountCtrl', function($scope) {
   $scope.user = user;
 })
-
+.controller('KidCtrl', function($scope, $stateParams) {
+  $scope.kid = user.students[$stateParams.key];
+})
 
 .controller('BusTrackingCtrl', function($scope, $ionicLoading, S_ID) {
  // Set the center as Firebase HQ
@@ -901,6 +907,40 @@ angular.module('starter.controllers', [])
       });
     }, 10);
     google.maps.event.addListener(circle, "drag", updateCriteria);
+    //create route
+    var rendererOptions = {
+      map: map,
+      suppressMarkers : true
+    }
+    var directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions);
+    var directionsService = new google.maps.DirectionsService();
+    var start = new google.maps.LatLng(12.921354, 77.620125);
+    //var end = new google.maps.LatLng(38.334818, -181.884886);
+    var end = new google.maps.LatLng(12.928778, 77.615662);
+    var request = {
+      origin: start,
+      destination: end,
+      travelMode: google.maps.TravelMode.DRIVING
+    };
+    directionsService.route(request, function(response, status) {
+      if (status == google.maps.DirectionsStatus.OK) {
+        var myRoute = response.routes[0].legs[0];
+        var startMarker = new google.maps.Marker({
+          position: myRoute.steps[0].start_point, 
+          map: map,
+          icon: "img/flag.png"
+        });
+        var endMarker = new google.maps.Marker({
+          position: myRoute.steps[myRoute.steps.length - 1].end_point, 
+          map: map,
+          icon: "img/school.png"
+        });
+        directionsDisplay.setDirections(response);
+        directionsDisplay.setMap(map);
+      } else {
+        alert("Directions Request from " + start.toUrlValue(6) + " to " + end.toUrlValue(6) + " failed: " + status);
+      }
+    });
     var currentLocationMarker = createStudentMarker(user.students[0].lat, user.students[0].lng);
     /* Adds new vehicle markers to the map when they enter the query */
     geoQuery.on("key_entered", function(vehicleId, vehicleLocation) {
@@ -918,6 +958,7 @@ angular.module('starter.controllers', [])
           // Add the vehicle to the list of vehicles in the query
           vehiclesInQuery[vehicleId] = vehicle;
           // Create a new marker for the vehicle
+          console.log('vehicle loc', vehicleLocation);
           vehicle.marker = createVehicleMarker(vehicleLocation[0], vehicleLocation[1], vehicle);
         }
       });
@@ -964,7 +1005,7 @@ angular.module('starter.controllers', [])
     /* Adds a marker for the inputted vehicle to the map */
     function createVehicleMarker(latitude, longitude, vehicle) {
       var marker = new google.maps.Marker({
-        icon: "https://chart.googleapis.com/chart?chst=d_bubble_icon_text_small&chld=bus|bb|"+vehicle.routeTag+"|F75C50|FFFFFF",
+        icon: "img/bus.png",
         //icon: "https://lh4.googleusercontent.com/-UjKiveTyTUI/VKJ3RyUC0LI/AAAAAAAAAGc/zxBS9koEx6c/w800-h800/nnkjn.png&chld=" + vehicle.vtype + "|bbT|" + vehicle.routeTag + "|" + vehicleColor + "|eee",
         position: new google.maps.LatLng(latitude, longitude),
         optimized: true,
@@ -977,6 +1018,7 @@ angular.module('starter.controllers', [])
     function createStudentMarker(latitude, longitude) {
       var marker = new google.maps.Marker({
         zIndex: 10,
+        icon: "img/kids.png",
         position: new google.maps.LatLng(latitude, longitude),
         optimized: true,
         map: map

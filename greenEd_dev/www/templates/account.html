@@ -21,14 +21,12 @@
       <ion-list ng-if="user.role == 'parent'">
         <span ng-repeat="student in user.students">
         <ion-item class="item-icon-left positive"><i class="icon ion-person"></i><strong>{{student.name}}</strong></ion-item>
-        <ion-item class="item-icon-left positive"><i class="icon ion-information"></i><h2>{{student.id}}</h2></ion-item>
-        <ion-item class="item-icon-left positive" href="#"><i ng-class="{'icon ion-woman positive': student.sex == 'Female', 'icon ion-man positive': student.sex == 'Male'}"></i><h2>{{student.sex}}</h2>
-        </ion-item>
-        <ion-item class="item-icon-left positive"><i class="icon ion-easel positive"></i><h2>{{student.standard}}-{{student.division}}</h2>
-        </ion-item>
         <ion-item class="item-icon-left positive" href="#"><i class="icon ion-home positive"></i><h2>{{student.address}}</h2>
         </ion-item>
         </span>
+        <ion-item class="item item-icon-left" href="#">
+          <i class="icon ion-ios-telephone positive"></i><h2>{{user.phone}}</h2>
+        </ion-item>
       </ion-list>
       </div>
    </ion-content>

@@ -860,6 +860,7 @@ angular.module('dashboards', [])
   var filterBarInstance;
   var title = "";
   var getItems = function() {
+    console.log("marks studnets filtered");
     if($stateParams.type.indexOf("student") != -1) {
       var type = $stateParams.type.split("_");
       var key = $stateParams.filter +"/"+type[1]+"/"+type[2];
@@ -869,8 +870,11 @@ angular.module('dashboards', [])
     } else {
       var key = $stateParams.filter +"/"+$stateParams.type;
     }
+    console.log("key", key);
+    console.log("db", db);
     $cordovaSQLite.execute(db, "SELECT value from mydata where key = ?", [key]).then(function(res) {
       var users = [];
+      console.log("val", res.rows.item(0).value);
       if(res.rows.length > 0) {
         var ldata = angular.fromJson(res.rows.item(0).value);
         if($stateParams.key == "passfail") {
@@ -884,6 +888,7 @@ angular.module('dashboards', [])
           title += $stateParams.val;
         }
       }
+      console.log("users", users);
       $scope.title = title +" "+ $stateParams.filter.replace("_", " ") + " ";
       $scope.items = users;
     })
