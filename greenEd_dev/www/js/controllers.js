@@ -291,7 +291,7 @@ angular.module('starter.controllers', [])
   }
   var parentContacts = function() {
     contacts = [];
-    hmcontact();
+    //hmcontact();
     for (var i = 0; i < user.students.length; i++) {
       for(var ss in user.students[i].subjects) {
         var stt = user.students[i].subjects[ss];
