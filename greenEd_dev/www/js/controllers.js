@@ -800,8 +800,14 @@ angular.module('starter.controllers', [])
     password: "m7td42t9",
     id: '2bfa18b3-ed48-49ab-94c6-587f97c108d8'
   }];
+  $ionicModal.fromTemplateUrl('templates/selectusers.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
   $scope.fillUser = function(modal, username, password) {
-    modal.hide();
+    $scope.modal.hide();
     $scope.user = {
       username: username,
       password: password
@@ -809,13 +815,7 @@ angular.module('starter.controllers', [])
     $scope.login();
   }
   $scope.showUsers = function() {
-    $ionicModal.fromTemplateUrl('templates/selectusers.html', {
-      scope: $scope,
-      animation: 'slide-in-up'
-    }).then(function(modal) {
-      $scope.modal = modal;
-      $scope.modal.show();
-    });
+    $scope.modal.show();
   }
   var filters = Auth.filters(S_ID);
   filters.$loaded().then(function(fdata) {

@@ -799,7 +799,7 @@ angular.module('dashboards', [])
     if($scope.action == 'attendance') {
       console.log("index", index);
       console.log("student", student);
-      if(user.role == "hm") $rootScope.attendance[$stateparams.class][$scope.filters.month][$scope.filters.day][student.uid] = !$rootScope.attendance[$scope.filters.month][$scope.filters.day][student.uid];
+      if(user.role == "hm") $rootScope.attendance[$stateParams.class][$scope.filters.month][$scope.filters.day][student.uid] = !$rootScope.attendance[$stateParams.class][$scope.filters.month][$scope.filters.day][student.uid];
       else $rootScope.attendance[$scope.filters.month][$scope.filters.day][student.uid] = !$rootScope.attendance[$scope.filters.month][$scope.filters.day][student.uid];
     } else if ($scope.action == 'addpoint') {
       var subject = '';
