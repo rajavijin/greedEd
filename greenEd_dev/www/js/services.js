@@ -36,23 +36,18 @@ var currentEducationYear = function(period) {
 angular.module('starter.services', [])
 
 .factory('Auth', function ( $firebaseAuth, S_ID, S_ID_key, $q, $firebaseObject, $ionicLoading, $cordovaSQLite, $firebaseArray, FIREBASE_URL, $state, $rootScope) {
-  ref = new Firebase(FIREBASE_URL);
-  ref.child('.info/connected').on('value', function(csnap) {
-    online = csnap.val();
-    $rootScope.$emit("online", online);
-  });
-  scrollRef = new Firebase.util.Scroll(ref.child(S_ID+"/wall"), '$priority');
-  $rootScope.walls = $firebaseArray(scrollRef);
-  scrollRef.scroll.next(20);
-  $rootScope.walls.scroll = scrollRef.scroll;
-  $rootScope.walls.$loaded().then(function(dsnap) {
-    console.log("walls", $rootScope.walls);
-  })
-  chatrooms = $firebaseObject(ref.child(S_ID+"/chatrooms"));
-  $rootScope.calendar = $firebaseArray(ref.child(S_ID+"/calendar"));
+  if(user.uid) $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Please wait while fetching data...'});
   $rootScope.homeworks = {};
   $rootScope.viewAttendance = {};
   $rootScope.points = {};
+  ref = new Firebase(FIREBASE_URL);
+  ref.child('.info/connected').on('value', function(csnap) {
+    online = csnap.val();
+    if(!online) $ionicLoading.hide();
+    $rootScope.$emit("online", online);
+  });
+  chatrooms = $firebaseObject(ref.child(S_ID+"/chatrooms"));
+  $rootScope.calendar = $firebaseArray(ref.child(S_ID+"/calendar"));
   var schoolRefP = ref.child("schools/"+S_ID_key);
   var schoolRef = $firebaseObject(schoolRefP);
   schoolRef.$bindTo($rootScope, "school");
@@ -60,6 +55,14 @@ angular.module('starter.services', [])
     school = schoolSnap.val();
     localStorage.setItem('school', JSON.stringify(school));
   });
+  scrollRef = new Firebase.util.Scroll(ref.child(S_ID+"/wall"), '$priority');
+  $rootScope.walls = $firebaseArray(scrollRef);
+  scrollRef.scroll.next(20);
+  $rootScope.walls.scroll = scrollRef.scroll;
+  $rootScope.walls.$loaded().then(function(dsnap) {
+    console.log("walls", $rootScope.walls);
+    $ionicLoading.hide();
+  })
   var auth = $firebaseAuth(ref);
   var Auth = {
     authInit: function(uData) {
@@ -263,7 +266,6 @@ angular.module('starter.services', [])
         return {"Links":[
         {"title":"Dashboard", "href":"/app/hmdashboard", "class":"ion-stats-bars"},
         {"title":"Classes", "href":"/app/allclasses", "class": "ion-easel"},
-        {"title":"Students", "href":"/app/allstudents", "class": "ion-person-stalker"},
         {"title":"Teachers", "href":"/app/allteachers", "class": "ion-ios-body"}]};
       } else if (user.role == "parent") {
         if(user.students.length > 1) {
@@ -284,7 +286,8 @@ angular.module('starter.services', [])
           {"title":"Class Dashboard", "href":"/app/classdashboard/"+user.students[0].standard+"-"+user.students[0].division, "class":"ion-pie-graph"},
           {"title":"Bus tracking", "href":"/app/bustracking", "class":"ion-android-bus"},
           {"title":"TimeTable", "href":"/app/timetable/"+user.students[0].standard+"-"+user.students[0].division, "class":"ion-ios-time"},
-          {"title":"Favourite Teacher", "href":"/app/favteacher/0", "class":"ion-thumbsup"}]};
+          {"title":"Favourite Teacher", "href":"/app/favteacher/0", "class":"ion-thumbsup"},
+          {"title":user.students[0].name, "href":"/app/kid/"+user.students[0].uid+"/"+user.students[0].name+"/0", "class":"ion-person"}]};
         }
       } else {
         // if(user.class) {
@@ -351,7 +354,6 @@ angular.module('starter.services', [])
     } else {
       $rootScope.updateMenu = false;
       localStorage.removeItem("user");
-      if(db) $cordovaSQLite.execute(db, "DROP TABLE mydata");
     }
   });
   
