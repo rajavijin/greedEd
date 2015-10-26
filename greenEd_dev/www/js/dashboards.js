@@ -594,7 +594,8 @@ angular.module('dashboards', [])
   };
 })
 .controller("AllStudentsCtrl", function($scope, $rootScope, S_ID, $state, $stateParams, $cordovaSQLite, Auth, $ionicFilterBar, $ionicModal, $ionicPopup, $timeout) {
-  console.log('three way attendance', $rootScope.attendance);
+  console.log('teacher attendance', $rootScope.attendance);
+  console.log("hm attendance", $rootScope.hmattendance);
   var filterBarInstance;
   if($stateParams.id) {
     var hw = $rootScope.homeworks[$stateParams.uid].$getRecord($stateParams.id);
@@ -634,17 +635,19 @@ angular.module('dashboards', [])
     var attendance = {};
     var defaultPoints = {};
     var newEntry = false;
-    if($rootScope.attendance && ($stateParams.action == 'attendance')) {
-      if(user.role == "hm") {
-        if(!$rootScope.attendance[$stateParams.class]) $rootScope.attendance[$stateParams.class] = {};
-        if(!$rootScope.attendance[$stateParams.class][$scope.filters.month]) $rootScope.attendance[$stateParams.class][$scope.filters.month] = {};
-        if(!$rootScope.attendance[$stateParams.class][$scope.filters.month][$scope.filters.day]) newEntry = true;        
-      } else {
-        if(!$rootScope.attendance[$scope.filters.month]) $rootScope.attendance[$scope.filters.month] = {};
-        if(!$rootScope.attendance[$scope.filters.month][$scope.filters.day]) newEntry = true;
+    if(online) {
+      if($rootScope.attendance && ($stateParams.action == 'attendance')) {
+        if(user.role == "hm") {
+          if(!$rootScope.hmattendance[$stateParams.class]) $rootScope.hmattendance[$stateParams.class] = {};
+          if(!$rootScope.hmattendance[$stateParams.class][$scope.filters.month]) $rootScope.hmattendance[$stateParams.class][$scope.filters.month] = {};
+          if(!$rootScope.hmattendance[$stateParams.class][$scope.filters.month][$scope.filters.day]) newEntry = true;        
+        } else {
+          if(!$rootScope.attendance[$scope.filters.month]) $rootScope.attendance[$scope.filters.month] = {};
+          if(!$rootScope.attendance[$scope.filters.month][$scope.filters.day]) newEntry = true;
+        }
+      } else if ($rootScope.rewards) {
+        if(!$rootScope.rewards[$stateParams.class]) { console.log("new Entry"); newEntry = true; }
       }
-    } else if ($rootScope.rewards) {
-      if(!$rootScope.rewards[$stateParams.class]) { console.log("new Entry"); newEntry = true; }
     }
     var totalStudents = allstudents.length;
     for (var i = 0; i < totalStudents; i++) {
@@ -669,7 +672,7 @@ angular.module('dashboards', [])
         console.log("defaultPoints", defaultPoints);
         if(newEntry) {
           if($scope.action == 'attendance') {
-            if(user.role == "hm") $rootScope.attendance[$stateParams.class][$scope.filters.month][$scope.filters.day] = attendance;
+            if(user.role == "hm") $rootScope.hmattendance[$stateParams.class][$scope.filters.month][$scope.filters.day] = attendance;
             else $rootScope.attendance[$scope.filters.month][$scope.filters.day] = attendance;
           } else if (($scope.action == 'points') || ($scope.action == 'addpoint')) $rootScope.rewards[$stateParams.class] = defaultPoints;
         }
@@ -799,7 +802,7 @@ angular.module('dashboards', [])
     if($scope.action == 'attendance') {
       console.log("index", index);
       console.log("student", student);
-      if(user.role == "hm") $rootScope.attendance[$stateParams.class][$scope.filters.month][$scope.filters.day][student.uid] = !$rootScope.attendance[$stateParams.class][$scope.filters.month][$scope.filters.day][student.uid];
+      if(user.role == "hm") $rootScope.hmattendance[$stateParams.class][$scope.filters.month][$scope.filters.day][student.uid] = !$rootScope.hmattendance[$stateParams.class][$scope.filters.month][$scope.filters.day][student.uid];
       else $rootScope.attendance[$scope.filters.month][$scope.filters.day][student.uid] = !$rootScope.attendance[$scope.filters.month][$scope.filters.day][student.uid];
     } else if ($scope.action == 'addpoint') {
       var subject = '';
