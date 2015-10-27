@@ -1,14 +1,12 @@
 angular.module('dashboards', [])
-.controller("HmDashboardCtrl", function($scope, $state, $cordovaSQLite, $rootScope, myCache, $ionicModal, Auth, $ionicLoading, $timeout) {
+.controller("HmDashboardCtrl", function($scope, $state, $cordovaSQLite, $rootScope, $ionicModal, Auth, $ionicLoading, $timeout) {
   var key = '';
   var save = true;
   $scope.getMarksData = function() {
     $scope.empty = false;
     $scope.dashboard = false;
-    console.log("filters", filters)
     if(filters) key = filters.years[filters.year] +'_'+ filters.exams[filters.exam];
     else key = false;
-    console.log("key", key);
     if(key) {
       $scope.title = filters.exams[filters.exam] +' '+ filters.years[filters.year];
       if(online) {
@@ -221,8 +219,6 @@ angular.module('dashboards', [])
   var serverData = function(key) {
     $scope.dashboard = true;
     $scope.loading = true;
-    console.log("key", key);
-    console.log("params", $stateParams);
     Auth.getMarks(key+"/"+$stateParams.uid).$ref().on('value', function(fbdata) {
       $scope.$broadcast('scroll.refreshComplete');
       $scope.loading = false;
@@ -277,7 +273,6 @@ angular.module('dashboards', [])
     if(filters) key = filters.years[filters.year] +'_'+ filters.exams[filters.exam];
     else key = false;
     if(key) {
-      console.log("StateParams", $stateParams);
       $scope.title = $stateParams.name +' '+ filters.exams[filters.exam] +' '+ filters.years[filters.year];
       if(online) {
         serverData(key);
@@ -543,23 +538,114 @@ angular.module('dashboards', [])
   }
 })
 .controller("TeacherClassesCtrl", function($scope, $state, $stateParams) {
-  console.log("Teacher User", user);
   $scope.getItems = function(refresh) {
     $scope.items = user.subjects;
     if(refresh) $scope.$broadcast('scroll.refreshComplete');
   }
 })
+.controller("PointsCtrl", function($scope, $rootScope, $stateParams, $state, $cordovaSQLite, Auth, $ionicFilterBar, $timeout) {
+  var filterBarInstance;
+  $scope.title = $stateParams.name;
+  $scope.uid = $stateParams.uid;
+  if(user.role == 'teacher' || user.role == 'hm') {
+    $scope.points[$stateParams.uid] = $rootScope.rewards[$stateParams.class][$stateParams.uid];
+  }
+  var serverData = function() {
+    // Auth.getUsers().then(function(allusersfb) {
+    //   if(allusersfb["allclasses"]) $scope.items = allusersfb["allclasses"];
+    //   else $scope.items = [];
+    // })
+  }
+  var getItems = function() {
+    if(online) {
+      $scope.$apply();
+    } else {
+      // if(db) {
+      //   $cordovaSQLite.execute(db, "SELECT value FROM mydata WHERE key = ?", ["allusers"]).then(function(res) {
+      //     if(res.rows.length) {
+      //       $scope.items = angular.fromJson(res.rows.item(0).value)["allclasses"];
+      //     }
+      //   })
+      // } else {$scope.items = [];}
+    }
+  }
 
-.controller("AllStudentsCtrl", function($scope, $rootScope, $stateParams, $cordovaSQLite, Auth, $ionicFilterBar, $timeout) {
+  $scope.showFilterBar = function () {
+    filterBarInstance = $ionicFilterBar.show({
+      items: $rootScope.points,
+      update: function (filteredItems, filterText) {
+        $rootScope.points = filteredItems;
+      }
+    });
+  };
+
+  $scope.refreshItems = function () {
+    if (filterBarInstance) {
+      filterBarInstance();
+      filterBarInstance = null;
+    }
+
+    $timeout(function () {
+      // if(online) serverData();
+      // else getItems();
+      $scope.$broadcast('scroll.refreshComplete');
+    }, 1000);
+  };
+})
+.controller("AllStudentsCtrl", function($scope, $rootScope, S_ID, $state, $stateParams, $cordovaSQLite, Auth, $ionicFilterBar, $ionicModal, $ionicPopup, $timeout) {
   var filterBarInstance;
   if($stateParams.id) {
     var hw = $rootScope.homeworks[$stateParams.uid].$getRecord($stateParams.id);
-    console.log("hw", hw);
+  }
+  $scope.class = $stateParams.class;
+  $scope.role = user.role;
+  $scope.filters = {day:moment().format("DD"), month: moment().format("MM"), year: moment().format("YYYY")};
+  $scope.filter = true;
+  if($stateParams.action) {
+    $scope.action = $stateParams.action;
+  } else {
+    $scope.action = "homework";
+  }
+  $scope.getPointItems = function(type) {
+    $scope.ctab = type;
+  }
+  $scope.addNewPoint = function(type) {
+    var promptPopup = $ionicPopup.prompt({
+      title: 'New '+ type + ' Point',
+      template: 'Please enter New '+type+' Point'
+    });
+    promptPopup.then(function(res) {
+      if (res) {
+        if(type == 'positive') {
+          $rootScope.school.points.positive.push({title:res,icon:"ion-happy"});
+        } else {
+          $rootScope.school.points.positive.push({title:res,icon:"ion-sad"});
+        }
+      }
+    });
   }
   var processUsers = function(allstudents) {
-    if($stateParams.id) {
-      var students = [];
-      for (var i = 0; i < allstudents.length; i++) {
+    var students = [];
+    var attendance = {};
+    var defaultPoints = {};
+    var newEntry = false;
+    if(online) {
+      if($rootScope.attendance && ($stateParams.action == 'attendance')) {
+        if(user.role == "hm") {
+          if(!$rootScope.hmattendance[$stateParams.class]) $rootScope.hmattendance[$stateParams.class] = {};
+          if(!$rootScope.hmattendance[$stateParams.class][$scope.filters.month]) $rootScope.hmattendance[$stateParams.class][$scope.filters.month] = {};
+          if(!$rootScope.hmattendance[$stateParams.class][$scope.filters.month][$scope.filters.day]) newEntry = true;        
+        } else {
+          if(!$rootScope.attendance[$scope.filters.month]) $rootScope.attendance[$scope.filters.month] = {};
+          if(!$rootScope.attendance[$scope.filters.month][$scope.filters.day]) newEntry = true;
+        }
+      } else if ($rootScope.rewards) {
+        if(!$rootScope.rewards[$stateParams.class]) { newEntry = true; }
+      }
+    }
+    var totalStudents = allstudents.length;
+    for (var i = 0; i < totalStudents; i++) {
+      if($stateParams.id) {
         if(allstudents[i].standard+'-'+allstudents[i].division == $stateParams.class) {
           if(hw.ack) {
             if($stateParams.status == 'done') {
@@ -568,14 +654,24 @@ angular.module('dashboards', [])
               if(!hw.ack[allstudents[i].uid]) students.push(allstudents[i]);
             }
           } else {
-            console.log("not yet", $stateParams.status);
             if($stateParams.status == 'undone') students.push(allstudents[i]);
           }
         }
-      };
-      $scope.items = students;
-    } else {
-      $scope.items = allstudents;
+      } else if ($stateParams.action == 'attendance') {
+        if(newEntry) attendance[allstudents[i].uid] = true;
+      } else if (($stateParams.action == 'addpoint') || ($stateParams.action == 'points')) {
+        if(newEntry) defaultPoints[allstudents[i].uid] = {points:{positive:[],negative:[]}, positive: 0, negative: 0};
+      }
+      if(i == (totalStudents - 1)) {
+        if(newEntry) {
+          if($scope.action == 'attendance') {
+            if(user.role == "hm") $rootScope.hmattendance[$stateParams.class][$scope.filters.month][$scope.filters.day] = attendance;
+            else $rootScope.attendance[$scope.filters.month][$scope.filters.day] = attendance;
+          } else if (($scope.action == 'points') || ($scope.action == 'addpoint')) $rootScope.rewards[$stateParams.class] = defaultPoints;
+        }
+        if(students.length > 0) $scope.items = students;
+        else $scope.items = allstudents;
+      }
     }
   }
   var serverData = function() {
@@ -619,6 +715,98 @@ angular.module('dashboards', [])
       $scope.$broadcast('scroll.refreshComplete');
     }, 1000);
   };
+
+  $ionicModal.fromTemplateUrl('templates/calendarFilters.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
+
+  $scope.openModal = function() {$scope.modal.show();};
+  $scope.closeModal = function() {$scope.modal.hide();};
+  $scope.filterData = function() {$scope.openModal();}
+  var today = moment().format("YYYY-MM-DD");
+  $scope.options = {
+    defaultDate: today,
+    minDate: $scope.filters.year + "-01-01",
+    maxDate: today,
+    dayNamesLength: 1, // 1 for "M", 2 for "Mo", 3 for "Mon"; 9 will show full day names. Default is 1.
+    mondayIsFirstDay: true,//set monday as first day of week. Default is false
+    eventClick: function(date) {
+      //console.log("date", date);
+    },
+    dateClick: function(date) {
+      //console.log("date Click", date);
+      $scope.filters.day = moment(date.date).format("DD");
+      $scope.filters.month = moment(date.date).format("MM");
+      getItems();
+      $scope.modal.hide();
+    },
+    changeMonth: function(month, year) {
+      //console.log(month, year);
+    },
+    closeModal: function() {
+      $scope.modal.hide();
+    }
+  };
+
+  $scope.savePoint = function(pkey, point, type) {
+    var pcount = (type == "positive") ? "+1" : "-1";
+    var names = '';
+    for (var ii = 0; ii < $scope.pointStudents.length; ii++) {
+      if(ii == 0) names = $scope.pointStudents[ii].name;
+      else names+= ','+ $scope.pointStudents[ii].name;
+    };
+    var confirmPopup = $ionicPopup.confirm({
+      title: 'Are You Sure ?',
+      template: 'You want to give '+pcount+' to '+names+' for '+point.title,
+    });
+    confirmPopup.then(function(res) {
+      if (res) {
+        $scope.pointStudents.forEach(function(psk, psv) {
+          if(!$rootScope.rewards[$stateParams.class][psk.uid].points) var allpoints = {positive:[], negative:[]};
+          else var allpoints = $rootScope.rewards[$stateParams.class][psk.uid].points;
+          if(type == "positive") {
+            $rootScope.rewards[$stateParams.class][psk.uid].positive = $rootScope.rewards[$stateParams.class][psk.uid].positive + 1;
+            allpoints.positive.push({title: point.title, subject: psk.subject, icon:point.icon, date: moment().valueOf()});
+          } else {
+            $rootScope.rewards[$stateParams.class][psk.uid].negative = $rootScope.rewards[$stateParams.class][psk.uid].negative - 1;
+            allpoints.negative.push({title: point.title, subject: psk.subject, icon:point.icon, date: moment().valueOf()}); 
+          }
+          $rootScope.rewards[$stateParams.class][psk.uid].points = allpoints;
+        })
+        $scope.modal.hide();
+      } else {
+         //console.log('You clicked on "Cancel" button');
+      }
+   });
+  }
+  $scope.takeAction = function(index, student) {
+    if($scope.action == 'attendance') {
+      if(user.role == "hm") $rootScope.hmattendance[$stateParams.class][$scope.filters.month][$scope.filters.day][student.uid] = !$rootScope.hmattendance[$stateParams.class][$scope.filters.month][$scope.filters.day][student.uid];
+      else $rootScope.attendance[$scope.filters.month][$scope.filters.day][student.uid] = !$rootScope.attendance[$scope.filters.month][$scope.filters.day][student.uid];
+    } else if ($scope.action == 'addpoint') {
+      var subject = '';
+      if(user.role == "hm") {
+        subject = "Head master";
+      } else {
+        for (var si = 0; si < user.subjects.length; si++) {
+          if(user.subjects[si].class == $stateParams.class) {
+            subject = user.subjects[si].subject;
+          }
+        };
+      }
+      $scope.filter = false;
+      $scope.pointStudents = [];
+      $scope.pointStudents.push({uid:student.uid,name:student.name,subject:subject});
+      $scope.modal.show();
+    } else if ($scope.action == 'points') {
+      $state.go('app.points', {uid:student.uid,name:student.name,class:student.standard+'-'+student.division});
+    } else if ($scope.action == 'student dashboard') {
+      $state.go('app.studentDashboard', {uid:student.uid,name:student.name,class:student.standard+'-'+student.division});
+    }
+  }
 })
 
 .controller("AllTeachersCtrl", function($scope, $cordovaSQLite, Auth, $ionicFilterBar, $timeout) {

@@ -28,7 +28,7 @@
 </div>
 <!-- ng-if="(('0' + (item.date.getMonth() + 1)).slice(-2) == selectedMonthIndex) && (item.date.getFullYear() == selectedYearIndex)" && (item.type == title)-->
 <div ng-show="monthevents">
-  <div class="list card" ng-if="(('0' + (item.date.getMonth() + 1)).slice(-2) == selectedMonthIndex) && (item.date.getFullYear() == selectedYearIndex) && (item.type == meventType)" ng-repeat="(ek, item) in events">
+  <div class="list card" ng-if="(('0' + (item.date.getMonth() + 1)).slice(-2) == selectedMonthIndex) && (item.date.getFullYear() == selectedYearIndex) && (item.type == meventType)" ng-repeat="(ek, item) in calendar">
     <a href="#" class="item item-icon-left">
       <i class="icon positive" ng-class="{'ion-clipboard': (item.type == 'exam'), 'ion-happy': (item.type == 'holiday'), 'ion-android-calendar': (item.type == 'event')}"></i>
       <h2>{{item.title}}</h2>

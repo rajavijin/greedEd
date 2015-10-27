@@ -1,0 +1,43 @@
+<ion-modal-view>
+  <ion-content>
+    <div ng-if="filter" class="wrapp cal-filters">
+      <flex-calendar options="options"></flex-calendar>
+    </div>
+    <div ng-if="!filter">
+    <ion-header-bar class="bar-positive bar bar-header disable-user-behavior" align-title="left">
+    <div class="title title-left header-item">Select a Point</div>
+    <div class="buttons buttons-right">
+    <span class="right-buttons">
+      <button class="button button-icon button-clear ion-close-circled" ng-click="modal.hide()">
+    </button>
+  	</span>
+  	</div>
+  	</ion-header-bar>
+  <ion-tabs ng-if="!filter" tabs-type="tabs-icon-only" class="positive">
+            <ion-tab class="balanced" title="Tab 1" icon-on="ion-thumbsup" icon-off="ion-thumbsup" on-select="getPointItems('positive')">
+                <ion-content>
+                  <ion-refresher pulling-icon="ion-arrow-down-b" on-refresh="getPointItems('positive')"></ion-refresher>
+                  <div class="list">
+                  <a class="item item-icon-left balanced" href="" ng-repeat="(k, m) in school.points.positive" ng-click="savePoint(k, m, 'positive')">
+                    <i class="icon {{m.icon}} balanced"></i>
+                    <h2 class="balanced">{{m.title}}</h2>
+                  </a>
+                  </div>
+                </ion-content>
+            </ion-tab>
+            <ion-tab class="assertive" title="Tab 2" icon-on="ion-thumbsup" icon-off="ion-thumbsup" on-select="getPointItems('negative')">
+                <ion-content>
+                  <ion-refresher pulling-icon="ion-arrow-down-b" on-refresh="getPointItems('negative')"></ion-refresher>
+                  <div class="list">
+                  <a class="item item-icon-left assertive" href="" ng-repeat="(k, m) in school.points.negative" ng-click="savePoint(k, m, 'negative')">
+                    <i class="icon {{m.icon}} assertive"></i>
+                    <h2 class="assertive">{{m.title}}</h2>
+                  </a>
+                  </div>
+                </ion-content>
+            </ion-tab>
+        </ion-tabs>
+    </div>
+  </ion-content>
+  <button ng-if="!filter" class="round-overlay-button bottom-right button button-icon icon ion-plus-round" ng-class="{'balanced': ctab == 'positive', 'assertive': ctab == 'negative'}" ng-click="addNewPoint(ctab)"></button>
+</ion-modal-view>

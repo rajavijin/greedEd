@@ -10,13 +10,37 @@
     <ion-refresher pulling-icon="ion-arrow-down-b" on-refresh="refreshItems()">
     </ion-refresher>
 
-    <ion-list>
-      <ion-item collection-repeat="class in items" class="item item-icon-left positive" ng-click="redirect(class.standard, class.division)"  item-height="53" item-width="100%">
-        <i class="icon ion-easel"></i>
-        <h2>{{class.standard}}-{{class.division}}</h2>
-       </ion-item>
-    </ion-list>
+<div class="list card" collection-repeat="class in items">
+<a href="#" class="item item-icon-left">
+        <center>
+        <h2 class="title"><strong>{{class.standard}}-{{class.division}}</strong></h2></center>
+       </a>
+  <a href="#/app/allstudents/{{class.standard}}-{{class.division}}/attendance" class="item item-icon-left">
+    <i class="icon ion-checkmark positive"></i>
+    Attendance
+  </a>
 
+  <a href="#/app/allstudents/{{class.standard}}-{{class.division}}/addpoint" class="item item-icon-left">
+    <i class="icon ion-plus-circled positive"></i>
+    Add Point
+  </a>
+
+  <a href="#/app/allstudents/{{class.standard}}-{{class.division}}/points" class="item item-icon-left">
+    <i class="icon ion-trophy positive"></i>
+    Points
+  </a>
+
+  <a href="#/app/allstudents/{{class.standard}}-{{class.division}}/student dashboard" class="item item-icon-left">
+    <i class="icon ion-podium positive"></i>
+    Student Dashboard
+  </a>
+
+  <a class="item item-icon-left" ng-click="redirect(class.standard, class.division)"  item-height="53" item-width="100%">
+    <i class="icon ion-stats-bars positive"></i>
+    Class Dashboard
+  </a>
+
+</div>
     <div ng-if="items !== undefined && !items.length" class="no-results list">
        <a class="item" href="#">
           <p>No class found</p>
