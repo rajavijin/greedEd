@@ -651,7 +651,6 @@ angular.module('starter.controllers', [])
     }
   };
   $scope.cardSwipedLeft = function(index) {
-    console.log("scope cards", $scope.cards.length);
     $scope.indexItem = index;
     if(index == 0) selected(-1);
   };
@@ -686,10 +685,10 @@ angular.module('starter.controllers', [])
       $scope.openModal();
     },
     dateClick: function(date) {
-      console.log("date", date);
+      //console.log("date", date);
     },
     changeMonth: function(month, year) {
-      console.log(month, year);
+      //console.log(month, year);
     },
   };
   $scope.showEvents = function(type) {
@@ -718,14 +717,11 @@ angular.module('starter.controllers', [])
   var year = d.getFullYear();
   if(d.getMonth() < startRange) var startdate = (year - 1) + "-" + ("0" + (startRange + 1)).slice(-2) + "-01";
   else var startdate = year + "-" + ("0" + (startRange + 1)).slice(-2) + "-01";
-  console.log("Attendance", $rootScope.viewAttendance[$stateParams.uid]);
   $rootScope.viewAttendance[$stateParams.uid].$ref().on('value', function(asnap) {
     $scope.events = [];
     asnap.forEach(function(childsnap) {
       var val = childsnap.val();
       var key = childsnap.key();
-      console.log("val", val);
-      console.log("valkey", key);
       for(var dkey in val) {
         if(typeof val[dkey][$stateParams.uid] != 'undefined') {
           if(key < startRange) var cyear = year - 1;
@@ -746,13 +742,13 @@ angular.module('starter.controllers', [])
     dayNamesLength: 1, // 1 for "M", 2 for "Mo", 3 for "Mon"; 9 will show full day names. Default is 1.
     mondayIsFirstDay: true,//set monday as first day of week. Default is false
     eventClick: function(date) {
-      console.log("date on event click", date);
+      //console.log("date on event click", date);
     },
     dateClick: function(date) {
-      console.log("date", date);
+      //console.log("date", date);
     },
     changeMonth: function(month, year) {
-      console.log(month, year);
+      //console.log(month, year);
     },
   };
   $scope.showEvents = function(type) {
@@ -817,10 +813,6 @@ angular.module('starter.controllers', [])
   $scope.showUsers = function() {
     $scope.modal.show();
   }
-  var filters = Auth.filters(S_ID);
-  filters.$loaded().then(function(fdata) {
-    localStorage.setItem("filters", angular.toJson(fdata));
-  });
   $scope.login = function () {
     $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Authenticating...'});
 
@@ -958,7 +950,6 @@ angular.module('starter.controllers', [])
           // Add the vehicle to the list of vehicles in the query
           vehiclesInQuery[vehicleId] = vehicle;
           // Create a new marker for the vehicle
-          console.log('vehicle loc', vehicleLocation);
           vehicle.marker = createVehicleMarker(vehicleLocation[0], vehicleLocation[1], vehicle);
         }
       });
