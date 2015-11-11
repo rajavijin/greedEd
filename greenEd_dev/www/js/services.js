@@ -65,8 +65,26 @@ angular.module('starter.services', [])
   $rootScope.walls.scroll = scrollRef.scroll;
   $rootScope.walls.$loaded().then(function(dsnap) {
     $timeout(function() { $ionicLoading.hide();}, 1000);
-  })
+  });
+  $rootScope.avatars = $firebaseObject(ref.child(S_ID+"/avatar"));
   var auth = $firebaseAuth(ref);
+  var ionicUser = function(iuserData) {
+    console.log("iuserData", iuserData);
+    Ionic.io();
+    var iuser = Ionic.User.current();
+    iuser.id = iuserData.uid;
+    iuser.set("sid", S_ID);
+    iuser.set("name", iuserData.name);
+    iuser.set("role", iuserData.role);
+    iuser.save().then(function(data) {
+      console.log("data", data);
+      console.log("success");
+      return true;
+    }, function(err) {
+      console.log("ionic user err", err);
+      return false;
+    });
+  }
   var usersInit = function(uData) {
     userchatroomsref = $firebaseObject(ref.child(S_ID+"/chatrooms/"+uData.uid));
     if(uData.role == 'parent') {
@@ -117,6 +135,7 @@ angular.module('starter.services', [])
         if(err) {
           defer.reject(err);
         } else {
+          console.log("logging in");
           $ionicLoading.hide();
           $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Fetching user data...'});
           if(userdata.role == "parent") {
@@ -131,6 +150,7 @@ angular.module('starter.services', [])
                 user.students.push(kid);
               })
               usersInit(user);
+              ionicUser(user);
               localStorage.setItem("user", JSON.stringify(user));
               defer.resolve(user);
             });
@@ -140,6 +160,7 @@ angular.module('starter.services', [])
               delete user.pepper;
               user.uid = userdatafb.uid;
               usersInit(user);
+              ionicUser(user);
               localStorage.setItem("user", JSON.stringify(user));
               defer.resolve(user);            
             });
@@ -152,6 +173,7 @@ angular.module('starter.services', [])
               delete user.pepper;
               user.uid = userdatafb.uid;
               usersInit(user);
+              ionicUser(user);
               localStorage.setItem("user", JSON.stringify(user));
               defer.resolve(user);
             });
@@ -200,6 +222,9 @@ angular.module('starter.services', [])
     },
     updateWall: function(key, update) {
       return ref.child(key).update(update);
+    },
+    updateProfilePic: function(uid, imageData) {
+      return ref.child(S_ID+"/avatar/"+uid).set(imageData);
     },
     getTimetable: function(key) {
       return ref.child(S_ID+'/timetable/'+key);
