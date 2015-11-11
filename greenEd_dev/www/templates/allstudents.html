@@ -13,7 +13,8 @@
     </ion-refresher>
     <div class="list animate-in-primary" ng-if="items.length > 0">
         <a ng-repeat="(i, student) in items | orderBy:['standard', 'studentid']" class="item item-icon-left  item-icon-right item-avatar custom-avatar positive" href="" ng-click="takeAction(i, student)" item-height="53" item-width="100%">
-            <img ng-src="http://res.cloudinary.com/dnzljpk6o/image/upload/v1442348003/{{student.uid}}.png">
+            <img ng-show="avatars[student.uid]" ng-src="data:image/jpeg;base64,{{avatars[student.uid]}}">
+            <i ng-hide="avatars[student.uid]" class="picon icon ion-person positive"></i>
             <h2>{{student.standard}}<span ng-hide="student.division == 'all'">{{student.division}}</span> : {{student.name}}</h2>
             <i ng-if="action == 'attendance' && role == 'hm'" class="icon" ng-class="{'ion-checkmark-round' : hmattendance[class][filters.month][filters.day][student.uid], 'ion-close-round assertive': !hmattendance[class][filters.month][filters.day][student.uid]}"></i>
             <i ng-if="action == 'attendance' && role == 'teacher'" class="icon" ng-class="{'ion-checkmark-round' : attendance[filters.month][filters.day][student.uid], 'ion-close-round assertive': !attendance[filters.month][filters.day][student.uid]}"></i>

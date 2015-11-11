@@ -4,7 +4,10 @@
       <div id="profile-bg"></div>
       <div id="content" ng-hide="loading">
         <div id="profile-info">
-          <div id="profile-image"><img src="http://res.cloudinary.com/dnzljpk6o/image/upload/v1442348003/{{kid.uid}}_med.jpg"></div>
+          <div id="profile-image" ng-click="show()"><img ng-show="avatars[kid.uid]" ng-src="data:image/jpeg;base64,{{avatars[kid.uid]}}">
+          <i ng-hide="avatars[kid.uid]" class="picon icon ion-person positive"></i>
+          <i class="pedit icon ion-edit positive"></i>
+          </div>
           <h3 id="profile-name">{{kid.name}}</h3>
         </div>
       <ion-list>

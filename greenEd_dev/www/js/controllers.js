@@ -467,7 +467,7 @@ angular.module('starter.controllers', [])
     $timeout(function() {
       $ionicScrollDelegate.$getByHandle('userMessageScroll').scrollBottom();
       Auth.saveLocal("chats_"+$stateParams.chatid, allmsg);
-    },500);
+    },1000);
   }
   var getMessages = function() {
     if(online) {
@@ -841,11 +841,83 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('AccountCtrl', function($scope) {
+.controller('AccountCtrl', function($scope, $ionicActionSheet, $cordovaCamera, $timeout, Auth) {
   $scope.user = user;
+  $scope.show = function() {
+    // Show the action sheet
+    var hideSheet = $ionicActionSheet.show({
+     buttons: [
+       { text: '<i class="icon ion-image positive"></i> Gallery ' },
+       { text: '<i class="icon ion-camera positive"></i>  Camera ' }
+     ],
+     titleText: 'Change Profile Picture',
+     cancelText: 'Cancel',
+     cancel: function() {
+          // add cancel code..
+        },
+     buttonClicked: function(index) {
+        console.log("index", index);
+        $timeout(function() { hideSheet();}, 0);
+
+        var options = {
+          quality : 75,
+          destinationType : Camera.DestinationType.DATA_URL,
+          sourceType : Camera.PictureSourceType.PHOTOLIBRARY,
+          encodingType: Camera.EncodingType.JPEG,
+          popoverOptions: CameraPopoverOptions,
+          targetWidth: 150,
+          targetHeight: 150,
+          allowEdit: true,
+          saveToPhotoAlbum: false
+        };
+        if(index == 1) options.sourceType = Camera.PictureSourceType.CAMERA;
+        $cordovaCamera.getPicture(options).then(function(imageData) {
+          Auth.updateProfilePic(user.uid, imageData);
+        }, function(error) {
+          console.error(error);
+        });
+      }
+    });
+  };
 })
-.controller('KidCtrl', function($scope, $stateParams) {
+.controller('KidCtrl', function($scope, $stateParams, $ionicActionSheet, $cordovaCamera, $timeout, Auth) {
   $scope.kid = user.students[$stateParams.key];
+  $scope.show = function() {
+    // Show the action sheet
+    var hideSheet = $ionicActionSheet.show({
+     buttons: [
+       { text: '<i class="icon ion-image positive"></i> Gallery ' },
+       { text: '<i class="icon ion-camera positive"></i>  Camera ' }
+     ],
+     titleText: 'Change Profile Picture',
+     cancelText: 'Cancel',
+     cancel: function() {
+          // add cancel code..
+        },
+     buttonClicked: function(index) {
+        console.log("index", index);
+        $timeout(function() { hideSheet();}, 0);
+
+        var options = {
+          quality : 75,
+          destinationType : Camera.DestinationType.DATA_URL,
+          sourceType : Camera.PictureSourceType.PHOTOLIBRARY,
+          encodingType: Camera.EncodingType.JPEG,
+          popoverOptions: CameraPopoverOptions,
+          targetWidth: 150,
+          targetHeight: 150,
+          allowEdit: true,
+          saveToPhotoAlbum: false
+        };
+        if(index == 1) options.sourceType = Camera.PictureSourceType.CAMERA;
+        $cordovaCamera.getPicture(options).then(function(imageData) {
+          Auth.updateProfilePic($stateParams.uid, imageData);
+        }, function(error) {
+          console.error(error);
+        });
+      }
+    });
+  };
 })
 
 .controller('BusTrackingCtrl', function($scope, $ionicLoading, S_ID) {

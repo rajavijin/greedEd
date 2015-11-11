@@ -12,8 +12,9 @@
     </a>
    </div> -->
   <div class="list card" ng-repeat="(wk,wall) in walls">
-  <div class="item item-avatar">
-    <img ng-src="http://res.cloudinary.com/dnzljpk6o/image/upload/v1442348003/{{wall.uid}}.jpg">
+  <div class="item item-avatar item-icon-left">
+    <img ng-show="avatars[wall.uid]" ng-src="data:image/jpeg;base64,{{avatars[wall.uid]}}">
+    <i ng-hide="avatars[wall.uid]" class="picon icon ion-person positive"></i>
     <h2>{{wall.name}}</h2>
     <p>{{wall.date| date:'hh:mm a, MMM dd yyyy'}}</p>
   </div>

@@ -11,7 +11,8 @@
     </ion-refresher>
     <div class="list" ng-if="items.length > 0">
         <a ng-repeat="(k, teacher) in items" class="item item-icon-left  item-avatar custom-avatar positive" href="#/app/teacherdashboard/{{teacher.uid}}/{{teacher.name}}">
-            <img ng-src="http://res.cloudinary.com/dnzljpk6o/image/upload/v1442348003/{{teacher.uid}}.jpg">
+            <img ng-show="avatars[teacher.uid]" ng-src="data:image/jpeg;base64,{{avatars[teacher.uid]}}">
+            <i ng-hide="avatars[teacher.uid]" class="picon icon ion-person positive"></i>
             <h2>{{teacher.name}}</h2>
         </a>
     </div>

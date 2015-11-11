@@ -4,7 +4,10 @@
       <div id="profile-bg"></div>
       <div id="content" ng-hide="loading">
         <div id="profile-info">
-          <div id="profile-image"><img src="http://res.cloudinary.com/dnzljpk6o/image/upload/v1442348003/{{user.uid}}_med.jpg"></div>
+          <div id="profile-image" ng-click="show()"><img ng-show="avatars[user.uid]" ng-src="data:image/jpeg;base64,{{avatars[user.uid]}}">
+          <i ng-hide="avatars[user.uid]" class="picon icon ion-person positive"></i>
+          <i class="pedit icon ion-edit positive"></i>
+          </div>
           <h3 id="profile-name">{{user.name}}</h3>
         </div>
       <ion-list ng-if="user.role == 'teacher'">
@@ -20,13 +23,10 @@
       </ion-list>
       <ion-list ng-if="user.role == 'parent'">
         <span ng-repeat="student in user.students">
-        <ion-item class="item-icon-left positive"><i class="icon ion-person"></i><strong>{{student.name}}</strong></ion-item>
+        <ion-item class="item-icon-left positive" href="#"><i class="icon ion-person"></i><h2>{{student.name}}</h2></ion-item>
         <ion-item class="item-icon-left positive" href="#"><i class="icon ion-home positive"></i><h2>{{student.address}}</h2>
         </ion-item>
         </span>
-        <ion-item class="item item-icon-left" href="#">
-          <i class="icon ion-ios-telephone positive"></i><h2>{{user.phone}}</h2>
-        </ion-item>
       </ion-list>
       </div>
    </ion-content>

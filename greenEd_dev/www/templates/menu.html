@@ -12,7 +12,8 @@
    <ion-side-menu side="left">
       <ion-content>
          <ion-list ng-init="linkItem = {}">
-            <ion-item nav-clear class="center menu-logo"><div class="item-avatar"><img ng-src="http://res.cloudinary.com/dnzljpk6o/image/upload/v1442348003/{{user.uid}}.jpg"></div><h2></h2></ion-item>
+            <ion-item nav-clear class="center menu-logo"><div id="profile-image"><img ng-show="avatars[user.uid]" ng-src="data:image/jpeg;base64,{{avatars[user.uid]}}">
+          <i ng-hide="avatars[user.uid]" class="picon icon ion-person positive"></i></div></ion-item>
             <ion-item nav-clear menu-close class="item-icon-left" href="#/app/wall"><i class="icon ion-ios-list positive"></i><h2>Wall</h2></ion-item>
             <ion-item nav-clear menu-close class="item-icon-left" href="#/app/messages"><i class="icon ion-chatboxes positive"></i><h2>Messages</h2></ion-item>        
             <ion-item nav-clear menu-close class="item-icon-left" href="#/app/calendar"><i class="icon ion-calendar positive"></i><h2>Calendar</h2></ion-item>

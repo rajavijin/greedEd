@@ -12,10 +12,11 @@
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.min.js"></script>
     <script src="js/ng-cordova.min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB16sGmIekuGIvYOfNoW9T44377IU2d2Es&sensor=true"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB16sGmIekuGIvYOfNoW9T44377IU2d2Es&amp;sensor=true"></script>
 
     <!-- cordova script (this will be a 404 during development) -->
-    <script src="cordova.js"></script>
+    <!-- Cordova is bootstrapped by ionic-platform-web-client, uncomment this if you remove ionic-platform-web-client... -->
+<!-- <script src="cordova.js"></script> -->
  <!-- Firebase -->
     <script src="js/firebase.js"></script>
     <script src="js/angularfire.min.js"></script>    
@@ -43,7 +44,8 @@
     <script src="js/highcharts.js"></script>
     <script src="js/highcharts-3d.js"></script>    
     <script src="js/controllers.js"></script>
-</head>
+
+<script src="lib/ionic-platform-web-client/dist/ionic.io.bundle.min.js"></script></head>
 <body ng-app="starter">
 
 <ion-nav-view></ion-nav-view>
