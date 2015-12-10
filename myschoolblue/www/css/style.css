@@ -1,0 +1,61 @@
+/* Empty. Add your own CSS if you like */
+.list .item, .title, .list .item .col {
+    text-transform: capitalize;
+    white-space: normal;
+}
+.list .item {
+    margin: 0 10px;
+    border-width: 1px 0px 0px 0;
+    border-color: #f6f6f6;
+}
+.list .item:first-child {
+	border-width: 0px 0 0px;
+}
+body .list .item.first {
+	border-width: 1px 0 0;
+}
+.list .item:last-child, .list .item.last {
+	border-width: 1px 0;
+}
+.item-icon-left .icon {
+ left: 5px;
+}
+.item .badge {
+  right: 5px;
+}
+.item-radio input:checked ~ .radio-icon {
+  color: #7cb5ec;
+}
+.item-radio input:checked ~ .item-content {
+  background: #fcfcfc;
+}
+.home .list .item {
+	border-color: #7cb5ec;
+	margin: 0 2px;
+  border-width: 1px 1px 0;
+}
+.home .list .item.last {
+  border-width: 1px;
+}
+.noclick {
+	pointer-events: none;
+}
+.center {
+    text-align: center;
+}
+.home .item-input .icon {
+  padding: 0 10px 0 0;
+  font-size: 20px;
+}
+text {
+  font-family: serif;
+}
+.button {
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+.filters {z-index: -1000;}
+.menu-left h1 {margin: 0;}
+.filters .submit {padding: 0px;}
+.bar {padding: 0;}.platform-android .bar .title{font-size: 18px;margin:0 2px;}.bar .title + .buttons{right:0;}
+.grade-b .menu-content, .grade-c .menu-content {left: 0px; right: 0px; box-shadow: -1px 0px 2px rgba(0, 0, 0, 0.2), 1px 0px 2px rgba(0, 0, 0, 0.2);}
+.menu-left {left: 1px;}

@@ -1,0 +1,17 @@
+{
+  "name": "myschool",
+  "app_id": "5d2c6491",
+  "proxies": [
+    {
+      "path": "/api",
+      "proxyUrl": "http://localhost:9000/api"
+    }
+  ],
+  "browsers": [
+    {
+      "platform": "android",
+      "browser": "crosswalk",
+      "version": "13.42.319.12"
+    }
+  ]
+}
