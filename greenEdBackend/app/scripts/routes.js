@@ -133,9 +133,10 @@ angular.module('greenEdBackendApp')
 
       $rootScope.$on('$routeChangeSuccess', function() {
         $rootScope.title = $route.current.title;
+        console.log("rootscope user", $rootScope.user);
         if($rootScope.user) {
           $rootScope.user.$loaded().then(function() {
-            if(!$rootScope.user.email) {
+            if(!$rootScope.user.$id) {
               Auth.$unauth();
               $location.reload();
             }

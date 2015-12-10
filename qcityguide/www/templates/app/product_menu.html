@@ -1,0 +1,23 @@
+<ion-view view-title="{{cate.name}}">
+    <ion-header-bar align-title="center" class="bar-light">
+        <ion-nav-bar align-title="center">
+            <ion-nav-buttons>
+                <button class="button button-clear button-icon" ng-click="goBack()" ><i class="ion-chevron-left"></i></button>
+            </ion-nav-buttons>
+        </ion-nav-bar>
+    </ion-header-bar>
+    <ion-content>
+        <div class="cate-lv2">
+            <div class="card cate-lv2-item" ng-repeat="product in productByCate" ng-controller="AppCtrl">
+                <div class="item item-thumbnail-left item-text-wrap" ng-click="productDetail({{product.id}})">
+                    <img ng-src={{product.img}}>
+
+                    <h2>{{product.name}}</h2>
+
+                    <div class="price">{{product.price}}</div>
+                    <div class="like"><i class="ion-heart"></i> {{product.like}}</div>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

@@ -140,6 +140,7 @@ angular.module('greenEdBackendApp')
       userdata.name = allusers[iteration].teacher;
       userdata.email = allusers[iteration].teacherphone + "t"+settings.sid+"@ge.com";
       userdata.phone = allusers[iteration].teacherphone;
+      userdata.class = allusers[iteration].class;
       userdata.role = "teacher";
       console.log("iteration", userdata);
       Ref.child(settings.sid+"/users/teacher").orderByChild("email").equalTo(userdata.email).once('value', function(tsnap) {

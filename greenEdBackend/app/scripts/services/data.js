@@ -14,7 +14,7 @@ angular.module('greenEdBackendApp')
     	getMenus: function(emailId) {
     		console.log("emailid", emailId);
 			var email = emailId.split("@")[0];
-    		if(email == "admin") {
+    		if(email.indexOf("admin") > 0) {
 		        return [{
 				  'title': 'Dashboard',
 				  'href': '/dashboard',

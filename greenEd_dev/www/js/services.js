@@ -35,7 +35,7 @@ var currentEducationYear = function(period) {
 
 angular.module('starter.services', [])
 
-.factory('Auth', function ( $firebaseAuth, S_ID, S_ID_key, $q, $firebaseObject, $ionicLoading, $cordovaSQLite, $firebaseArray, FIREBASE_URL, $state, $rootScope, $timeout) {
+.factory('Auth', function ( $firebaseAuth, S_ID, S_ID_key, $q, $firebaseObject, $ionicLoading, $cordovaSQLite, $firebaseArray, FIREBASE_URL, $state, $rootScope, $timeout, $http) {
   if(user.uid) $ionicLoading.show({template:'<ion-spinner icon="lines" class="spinner-calm"></ion-spinner></br>Please wait while fetching data...'});
   $rootScope.homeworks = {};
   $rootScope.viewAttendance = {};
@@ -105,7 +105,7 @@ angular.module('starter.services', [])
       attendanceRef.$bindTo($rootScope, "attendance");
       var pointsRef = $firebaseObject(ref.child(S_ID+'/points/'+currentEducationYear(school.period)));
       pointsRef.$bindTo($rootScope, "rewards");
-    } else {
+    } else {  
       userRef = $firebaseObject(ref.child(S_ID+'/users/student'));
       var hmAttendanceRef = $firebaseObject(ref.child(S_ID+'/attendance/'+currentEducationYear(school.period)));
       hmAttendanceRef.$bindTo($rootScope, "hmattendance");
@@ -232,6 +232,45 @@ angular.module('starter.services', [])
     getExams: function(key, start) {
       return ref.child(S_ID+"/exams/"+key).orderByChild("id").startAt(start);
     },
+    sendPush: function() {
+      var defer = $q.defer();
+      // Define relevant info
+      var privateKey = '68bd326725b43d497dbfc77b5375f7be0169bfe92ed54ebe';
+      var tokens = ['DEV-49cf5d2b-d7d8-48ee-a011-08e6b3ffa8f0'];
+      var appId = '5b54e2e0';
+
+      // Encode your key
+      var auth = btoa(privateKey + ':');
+
+      // Build the request object
+      var req = {
+        method: 'POST',
+        url: 'https://push.ionic.io/api/v1/push',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Ionic-Application-Id': appId,
+          'Authorization': 'basic ' + auth
+        },
+        data: {
+          "tokens": tokens,
+          "notification": {
+            "alert":"Hello World!"
+          }
+        }
+      };
+
+      // Make the API call
+      $http(req).success(function(resp){
+        // Handle success
+        defer.resolve("success");
+        console.log("Ionic Push: Push success!");
+      }).error(function(error){
+        // Handle error 
+        defer.reject("failed");
+        console.log("Ionic Push: Push error...");
+      });
+      return defer.promise;
+    },
     getUsers: function() {
       var deferred = $q.defer();
       userRef.$ref().on('value', function(usnap) {
@@ -246,13 +285,16 @@ angular.module('starter.services', [])
           var fbuser = iusnap.key();
           var fbusers = iusnap.val();
           var sclass = fbusers.standard+'-'+fbusers.division;
+          fbusers.standard = parseInt(fbusers.standard);
           if(!allusers["groups"][sclass]) allusers["groups"][sclass] = [];
           if(!classes[sclass]) {
             classes[sclass] = true;
             allusers["allclasses"].push({standard:fbusers.standard, division:fbusers.division});  
             allusers["chatcontacts"].push({name: sclass, role:"class", uid:sclass,type:"group"})
           }
-
+          if(!chatcontacts[sclass]) chatcontacts[sclass] = {};
+          console.log("FB users", fbusers);
+          console.log("FB user", fbuser);
           // if(!standard[fbusers.standard] && (fbusers.division != "all")) {
           //   standard[fbusers.standard] = true;
           //   allusers["allclasses"].push({standard:fbusers.standard, division:"all"});
@@ -260,11 +302,17 @@ angular.module('starter.services', [])
           allusers["allstudents"].push({name:fbusers.name, studentid:fbusers.id, standard:fbusers.standard, division:fbusers.division, uid:fbuser, sex:fbusers.sex, present: true});
           if(chatcontacts[fbusers.name]) {
             allusers["chatcontacts"][chatcontacts[fbusers.name] - 1].name += ","+fbusers.name;
-            allusers["groups"][sclass][chatcontacts[fbusers.name] - 1].name += ","+fbusers.name;
           } else {
-            var cci = allusers["chatcontacts"].push({name: "Parent of "+fbusers.name, role:"parent", class:sclass, uid:fbusers.pid,type:"single"});
-            allusers["groups"][sclass].push({name: "Parent of "+fbusers.name, role:"parent", class:sclass, uid:fbusers.pid,type:"single"})
-            chatcontacts[fbusers.name] = cci;
+            chatcontacts[fbusers.name] = allusers["chatcontacts"].push({name: "Parent of "+fbusers.name, role:"parent", class:sclass, uid:fbusers.pid,type:"single"});
+          }
+          if(chatcontacts[sclass][fbusers.name]) {
+            console.log("chat contact", chatcontacts[fbusers.name]);
+            console.log("chat contact", chatcontacts[fbusers.name +'_group']);
+            console.log("groups", allusers["groups"]);
+            console.log("chatcontacts", allusers["groups"]);
+            allusers["groups"][sclass][chatcontacts[sclass][fbusers.name] - 1].name += ","+fbusers.name;
+          } else {
+            chatcontacts[sclass][fbusers.name] = allusers["groups"][sclass].push({name: "Parent of "+fbusers.name, role:"parent", class:sclass, uid:fbusers.pid,type:"single"})
           }
           if (user.role == "hm") {
             for (var si = 0; si < fbusers.subjects.length; si++) {
