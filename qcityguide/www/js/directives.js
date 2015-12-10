@@ -6,7 +6,7 @@ angular.module('starter.directives', [])
     scope: {
       onCreate: '&'
     },
-    link: function ($scope, $element, $attr) {
+    link: function ($scope, $rootScope, $element, $attr) {
       function initialize() {
         var mapOptions = {
           center: new google.maps.LatLng(12.917147, 77.622798),
