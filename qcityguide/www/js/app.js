@@ -3,7 +3,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('hoss_app', ['ionic', 'hoss_app.controllers', 'hoss_app.services'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -32,6 +32,11 @@ angular.module('hoss_app', ['ionic', 'hoss_app.controllers', 'hoss_app.services'
                 templateUrl: "templates/app/product_menu.html",
                 controller: 'ProductMenuCtrl'
             })
+            .state('nearby', {
+                url: "/nearby/:id",
+                templateUrl: "templates/nearby.html",
+                controller: 'NearByCtrl'
+            })
 
             // MAIN APP
             .state('app', {
@@ -47,7 +52,7 @@ angular.module('hoss_app', ['ionic', 'hoss_app.controllers', 'hoss_app.services'
                         templateUrl: "templates/app/category.html"
                     }
                 }
-            })            
+            })     
             .state('app.shopping_cart', {
                 url: "/shopping_cart",
                 views: {

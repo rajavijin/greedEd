@@ -1,4 +1,4 @@
-var app = angular.module('hoss_app.services', [])
+var app = angular.module('starter.services', [])
 
 app.factory('Cates', function() {
   // Might use a resource here that returns a JSON array

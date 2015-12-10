@@ -315,3 +315,8 @@ input.input-qty {
   margin: 0 10px; }
 
 /* PAGE SHOPPING CART */
+map {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
