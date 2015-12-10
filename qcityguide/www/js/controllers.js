@@ -50,10 +50,31 @@ angular.module('starter.controllers', [])
             $scope.product = Products.get($id);
             $scope.modal.show();
         };
-
+        $scope.gotoNearby = function() {
+            $state.go('app.nearby', {id:$stateParams.cateId}, {reload:true});
+        }
         $scope.goBack = function () {
             window.history.back();
         };
 
     })
+    
+    .controller('NearbyCtrl', function($scope, $stateParams, $ionicLoading) {
+      $scope.mapCreated = function(map) {
+        $scope.map = map;
 
+        var allShops = shopRef[$stateParams.id]
+        for(var k in allShops) {
+            console.log("item", allShops[k]);
+            var marker = new google.maps.Marker({
+            icon: "img/restaurant.png",
+            //icon: "https://lh4.googleusercontent.com/-UjKiveTyTUI/VKJ3RyUC0LI/AAAAAAAAAGc/zxBS9koEx6c/w800-h800/nnkjn.png&chld=" + vehicle.vtype + "|bbT|" + vehicle.routeTag + "|" + vehicleColor + "|eee",
+            position: new google.maps.LatLng(allShops[k].lat, allShops[k].lng),
+            optimized: true,
+            map: map
+          });
+        }
+
+      };
+
+});

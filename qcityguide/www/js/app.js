@@ -26,69 +26,120 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         console.log("ccsnap", catRef)
     });
     shopRef = $firebaseObject(ref.child('shops'));
+
+    navigator.geolocation.getCurrentPosition(function (pos) {
+      console.log('Got pos', pos);
+      $rootScope.currentP = [pos.coords.latitude, pos.coords.longitude];
+    }, function (error) {
+      alert('Unable to get location: ' + error.message);
+    });
   });
 })
 
-    .config(function ($stateProvider, $urlRouterProvider) {
-        $stateProvider
+.directive('map', function($rootScope) {
+  return {
+    restrict: 'E',
+    scope: {
+      onCreate: '&'
+    },
+    link: function ($scope, $element, $attr) {
+      var latlng = ($rootScope.currentP) ? $rootScope.currentP : [12.917147, 77.622798];
+      console.log("latlng", latlng);
+      
+      function initialize() {
+        var mapOptions = {
+          center: new google.maps.LatLng(latlng[0], latlng[1]),
+          zoom: 16,
+          mapTypeId: google.maps.MapTypeId.ROADMAP,
+          mapTypeControlOptions: {
+            style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+            position: google.maps.ControlPosition.TOP_RIGHT
+        },
+        };
+        var map = new google.maps.Map($element[0], mapOptions);
+  
+        $scope.onCreate({map: map});
 
-            .state('intro', {
-                url: "/intro",
-                templateUrl: "templates/intro.html",
-                controller: 'IntroCtrl'
-            })
+      // Stop the side bar from dragging when mousedown/tapdown on the map
+        google.maps.event.addDomListener($element[0], 'mousedown', function (e) {
+          e.preventDefault();
+          return false;
+        });
+      }
+      console.log("document.readyState", document.readyState);
+      if (document.readyState === "complete") {
+        initialize();
+      } else {
+        google.maps.event.addDomListener(window, 'load', initialize);
+      }
+    }
+  }
+})
 
-            .state('product_menu', {
-                url: "/product/menu/:cateId/:cateTitle",
-                templateUrl: "templates/app/product_menu.html",
-                controller: 'ProductMenuCtrl'
-            })
-            .state('nearby', {
-                url: "/nearby/:id",
-                templateUrl: "templates/nearby.html",
-                controller: 'NearByCtrl'
-            })
+.config(function ($stateProvider, $urlRouterProvider) {
+    $stateProvider
 
-            // MAIN APP
-            .state('app', {
-                url: "/app",
-                abstract: true,
-                templateUrl: "templates/app/ion_nav_view.html",
-                controller: 'AppCtrl'
-            })
-            .state('app.category', {
-                url: "/category",
-                views: {
-                    'menuAppContent': {
-                        templateUrl: "templates/app/category.html"
-                    }
-                }
-            })     
-            .state('app.shopping_cart', {
-                url: "/shopping_cart",
-                views: {
-                    'menuAppContent': {
-                        templateUrl: "templates/app/shopping_cart.html"
-                    }
-                }
-            })
-            .state('app.settings', {
-                url: "/settings",
-                views: {
-                    'menuAppContent': {
-                        templateUrl: "templates/app/settings.html"
-                    }
-                }
-            })
-            .state('app.profile', {
-                url: "/profile",
-                views: {
-                    'menuAppContent': {
-                        templateUrl: "templates/app/profile.html"
-                    }
-                }
-            });
+        .state('intro', {
+            url: "/intro",
+            templateUrl: "templates/intro.html",
+            controller: 'IntroCtrl'
+        })
 
-        // if none of the above states are matched, use this as the fallback
-        $urlRouterProvider.otherwise('/intro');
-    });
+        .state('product_menu', {
+            url: "/product/menu/:cateId/:cateTitle",
+            templateUrl: "templates/app/product_menu.html",
+            controller: 'ProductMenuCtrl'
+        })
+
+        // MAIN APP
+        .state('app', {
+            url: "/app",
+            abstract: true,
+            templateUrl: "templates/app/ion_nav_view.html",
+            controller: 'AppCtrl'
+        })
+        .state('app.category', {
+            url: "/category",
+            views: {
+                'menuAppContent': {
+                    templateUrl: "templates/app/category.html"
+                }
+            }
+        })     
+        .state('app.nearby', {
+            url: "/nearby/:id",
+            views: {
+                'menuAppContent': {
+                    templateUrl: "templates/nearby.html",
+                    controller: 'NearbyCtrl'
+                }
+            }
+        })
+        .state('app.shopping_cart', {
+            url: "/shopping_cart",
+            views: {
+                'menuAppContent': {
+                    templateUrl: "templates/app/shopping_cart.html"
+                }
+            }
+        })
+        .state('app.settings', {
+            url: "/settings",
+            views: {
+                'menuAppContent': {
+                    templateUrl: "templates/app/settings.html"
+                }
+            }
+        })
+        .state('app.profile', {
+            url: "/profile",
+            views: {
+                'menuAppContent': {
+                    templateUrl: "templates/app/profile.html"
+                }
+            }
+        });
+
+    // if none of the above states are matched, use this as the fallback
+    $urlRouterProvider.otherwise('/intro');
+});
