@@ -10,7 +10,7 @@
     <ion-refresher pulling-icon="ion-arrow-down-b" on-refresh="refreshItems()">
     </ion-refresher>
 
-<div class="list card" collection-repeat="class in items">
+<div class="list card" ng-repeat="class in items | orderBy:['standard']">
 <a href="#" class="item item-icon-left">
         <center>
         <h2 class="title"><strong>{{class.standard}}-{{class.division}}</strong></h2></center>

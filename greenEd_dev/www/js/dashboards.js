@@ -486,7 +486,9 @@ angular.module('dashboards', [])
   if($stateParams.type) $scope.title = $stateParams.type;
   else $scope.title = "Classes";
   var serverData = function() {
+    console.log("get user from server");
     Auth.getUsers().then(function(allusersfb) {
+      console.log("allusers", allusersfb);
       if(allusersfb["allclasses"]) $scope.items = allusersfb["allclasses"];
       else $scope.items = [];
     })
@@ -666,7 +668,7 @@ angular.module('dashboards', [])
         if(newEntry) {
           if($scope.action == 'attendance') {
             if(user.role == "hm") $rootScope.hmattendance[$stateParams.class][$scope.filters.month][$scope.filters.day] = attendance;
-            else $rootScope.attendance[$scope.filters.month][$scope.filters.day] = attendance;
+            //else $rootScope.attendance[$scope.filters.month][$scope.filters.day] = attendance;
           } else if (($scope.action == 'points') || ($scope.action == 'addpoint')) $rootScope.rewards[$stateParams.class] = defaultPoints;
         }
         if(students.length > 0) $scope.items = students;

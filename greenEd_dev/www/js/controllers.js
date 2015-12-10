@@ -250,6 +250,7 @@ angular.module('starter.controllers', [])
       'pictures' : $scope.post.pictures,
       'like' : 0
     });
+    Auth.sendPush();
     $state.go('app.wall');
   }
 })
@@ -780,21 +781,18 @@ angular.module('starter.controllers', [])
   $scope.users = [
   {
     title: 'Head Master',
-    username: "8951572124hs1",
-    password: '9o3tmx6r',
-    id: 'b182738f-aa54-4286-b3a3-51a3ede9367e',
+    username: "8951572125hs0",
+    password: 'ik1vpldi',
   },
   {
     title: 'Teacher',
-    username: "9496255108ts1",
-    password: "qjhjv2t9",
-    id: '8be5f5a3-56c7-474c-82a3-0e0004bbb2fc'
+    username: "9496255108ts0",
+    password: "t1jlwhfr",
   },
   {
     title: "Parent",
-    username: "9944711005ps1",
-    password: "m7td42t9",
-    id: '2bfa18b3-ed48-49ab-94c6-587f97c108d8'
+    username: "9944711005ps0",
+    password: "v8xxyldi",
   }];
   $ionicModal.fromTemplateUrl('templates/selectusers.html', {
     scope: $scope,

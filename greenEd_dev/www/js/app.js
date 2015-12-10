@@ -11,9 +11,9 @@
 
 var isIOS = ionic.Platform.isIOS();
 angular.module('starter', ['ionic','ionic.service.core', 'jett.ionic.filter.bar', 'starter.services', 'dashboards', 'monospaced.elastic', 'angularMoment', 'starter.controllers','firebase','ngCordova', 'ionic.contrib.ui.tinderCards','flexcalendar'])
-.constant('FIREBASE_URL', 'https://greenedbackend.firebaseio.com/')
-.constant('S_ID', 's1')
-.constant('S_ID_key', '-K-sr5TPiJXNtoA59vM9')
+.constant('FIREBASE_URL', 'https://greenedtest.firebaseio.com/')
+.constant('S_ID', 's0')
+.constant('S_ID_key', '-K2uk8HFFMcZC3kGQVkO')
 .run(function($ionicPlatform, $http, $rootScope, Auth, FIREBASE_URL, S_ID, $firebaseObject, $cordovaSQLite, $timeout, $firebaseArray) {
   $ionicPlatform.ready(function() {
     //$rootScope.walls = $firebaseArray(ref.child("-JwVp4kJ36Uv06GOEvlk/wall").limitToLast(25));
@@ -29,16 +29,16 @@ angular.module('starter', ['ionic','ionic.service.core', 'jett.ionic.filter.bar'
     } else {
       db = openDatabase('devdb', '1.0', 'my first database', 2 * 1024 * 1024);
     }
-    //$cordovaSQLite.execute(db, "DROP TABLE devdb");
+    $cordovaSQLite.execute(db, "DROP TABLE devdb");
     $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS mydata (key text, value blob, unique (key))");
     if(Object.keys(user).length > 0) Auth.authInit(user);
-    var push = new Ionic.Push({
-      "debug": true
-    });
+    // var push = new Ionic.Push({
+    //   "debug": true
+    // });
 
-    push.register(function(token) {
-      console.log("Device token:",token.token);
-    });
+    // push.register(function(token) {
+    //   console.log("Device token:",token.token);
+    // });
   });
 })
 

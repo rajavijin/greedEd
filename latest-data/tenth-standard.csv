@@ -1,42 +1,45 @@
-Student;StudentID;Sex;Address;Parent;ParentPhone;SecondLanguage
-R.S.Arun;100001;Male;Bhavani Nivas, Nithravilai Post;A.Ramachandran;9944711000;malayalam:Rakesh
-S.Arshad;100002;Male;Arshad Manzil, Nambali;A.Salman;9944911001;tamil:Sindhu
-R.Ambili;100003;Female;Munnu Bhavan, Nadaikkavu;R.Rajan;9944911002;tamil:Sudha
-B.Anto;100004;Male;Anto Villa, Marthandam;S.Bijipal;9944911003;tamil:Sudha
-H.Athira;100005;Female;Athira Bhavan, Puthukadai;G.Hari Kumar;9944911004;tamil:Sudha
-S.Binil;100006;Male;Binil Bhavan, Pozhiyoor;A.Solamon;9944911005;malayalam:Stephen
-D.Babitha;100007;Female;Babitha Bhavan, Thoothoor;C.Daniel;9944911006;tamil:Sudha
-D.Brijesh;100008;Male;Brijesh Illam, Kollemcode;V.Dhanraj;9944911007;tamil:Sudha
-A.Britto;100009;Male;Jude Villa, Thoothoor;S.Ajin;9944911008;malayalam:Stephen
-A.N.Bhavani;100010;Female;Brindha Nivas, Kaliyikavilai;S.S.Ajay;9944711009;tamil:Sudha
-A.Chandra Lekha;100011;Female;Lekha Bhavan, Kollemcode;S.Athul;9944911010;malayalam:Stephen
-S.Cibiraj;100012;Male;Cibi Bhavan, Puthukadai;S.Selvan;9944911011;tamil:Sudha
-S.Daniston;100013;Male;Don Villa, Thoothoor;A.Samuel;9944911012;tamil:Sudha
-S.S.Deepa;100014;Female;Dhanya Bhavan, Nagercoil;A.S.Subhash;9944711013;tamil:Sudha
-S.Devi;100015;Female;Devi Bhavan, Kollemcode;A.R.Sudheer;9944911014;malayalam:Stephen
-R.Ervine;100016;Male;Ervine Villa, Marthandam;S.Raj;9944911015;tamil:Sudha
-J.Elena;100017;Female;Elena Villa, Thoothoor;S.Jacob;9944911016;tamil:Sudha
-A.Fawad;100018;Male;Fawad Manzil, Nambali;A.Abu;9944911017;malayalam:Stephen
-J.Finil;100019;Male;Finil Villa, Thoothoor;A.Jerry;9944911018;tamil:Sudha
-S.Febi;100020;Female;Febi Villa, Vallavilai;A.Sebastain;9944911019;tamil:Sudha
-R.Girija;100021;Female;Girija Bhavan, Kollemcode;D.Rahul;9944911020;malayalam:Stephen
-A.Gokul;100022;Male;Gokulam, Karungal;A.Ashokan;9944911021;tamil:Sudha
-A.Haritha;100023;Female;Hema Bhavan, Kollemcode;S.Arjunan;9944711022;malayalam:Stephen
-A.Ivan;100024;Male;Ivan Villa, Poothurai;A.Ashton;9944911023;tamil:Sudha
-S.Ishan;100025;Male;Ishan Manzil, Nambali;A.Sahul;9944911024;tamil:Sudha
-J.Jerry;100026;Female;Jerryi Villa, Chinnathurai;A.Jerin;9944911025;tamil:Sudha
-K.Kanimozhi;100027;Female;Kani Nivas, Nithravilai;A.Kumaran;9944911026;tamil:Sudha
-S.Kumar;100028;Male;Kumar Bhavan, Puthukadai;A.Sukumaran;9944911027;malayalam:Stephen
-K.Lal;100029;Male;Lal Villa, Thoothoor;S.Keerthi;9944911028;tamil:Sudha
-S.Mohan;100030;Male;Manoj Bhavan, Kuzhithurai;A.Shabu;9944711029;tamil:Sudha
-S.Malar;100031;Female;Malar Bhavan, Marthandam;A.Shaji;9944911030;malayalam:Stephen
-R.Priya;100032;Female;Priya Bhavan, Nithravilai;S.Retheesh;9944911031;tamil:Sudha
-P.Pooja;100033;Female;Pooja Bhavan, Kollemcode;S.Prakash;9944911032;tamil:Sudha
-V.Preetha;100034;Female;Preetha Bhavan, Kanjampuram;A.Vinu;9944911033;tamil:Sudha
-S.Rahul;100035;Male;Rahul Bhavan, Kirathoor;S.Sreekumar;9944911034;tamil:Sudha
-V.Riju;100036;Male;Riju Bhavan, Kollemcode;B.Varghese;9944911035;malayalam:Stephen
-A.Sunil;100037;Male;Sunil Bhavan, Kollemcode;S.Arvind;9944911036;tamil:Sudha
-S.Subash;100038;Male;Subash Bhavan, Nithravilai;A.Sivaram;9944911037;malayalam:Stephen
-A.Tittu;100039;Female;Tittu Villa, Kollemcode;S.Ajin Kumar;9944911038;tamil:Sudha
-N.Udit;100040;Male;Udit Bhavan, Marthandam;M.Naveen;9944911039;tamil:Sudha
-M.Vikash;100041;Male;Vikash Bhavan, Kollemcode;S.Murali;9944911040;malayalam:Stephen
+Standard,Division,CommonSubjects,,,,
+10,a,"english,hindi,math,science1,science2,social",,,,
+,,,,,,
+Name,ID,Sex,Address,Parent,ParentPhone,SecondLanguage
+R.S.Arun,100001,Male,"Bhavani Nivas, Nithravilai Post",A.Ramachandran,9944711000,malayalam
+S.Arshad,100002,Male,"Arshad Manzil, Nambali",A.Salman,9944911001,tamil
+R.Ambili,100003,Female,"Munnu Bhavan, Nadaikkavu",R.Rajan,9944911002,tamil
+B.Anto,100004,Male,"Anto Villa, Marthandam",S.Bijipal,9944911003,tamil
+H.Athira,100005,Female,"Athira Bhavan, Puthukadai",G.Hari Kumar,9944911004,tamil
+S.Binil,100006,Male,"Binil Bhavan, Pozhiyoor",A.Solamon,9944911005,malayalam
+D.Babitha,100007,Female,"Babitha Bhavan, Thoothoor",C.Daniel,9944911006,tamil
+D.Brijesh,100008,Male,"Brijesh Illam, Kollemcode",V.Dhanraj,9944911007,tamil
+A.Britto,100009,Male,"Jude Villa, Thoothoor",S.Ajin,9944911008,malayalam
+A.N.Bhavani,100010,Female,"Brindha Nivas, Kaliyikavilai",S.S.Ajay,9944711009,tamil
+A.Chandra Lekha,100011,Female,"Lekha Bhavan, Kollemcode",S.Athul,9944911010,malayalam
+S.Cibiraj,100012,Male,"Cibi Bhavan, Puthukadai",S.Selvan,9944911011,tamil
+S.Daniston,100013,Male,"Don Villa, Thoothoor",A.Samuel,9944911012,tamil
+S.S.Deepa,100014,Female,"Dhanya Bhavan, Nagercoil",A.S.Subhash,9944711013,tamil
+S.Devi,100015,Female,"Devi Bhavan, Kollemcode",A.R.Sudheer,9944911014,malayalam
+R.Ervine,100016,Male,"Ervine Villa, Marthandam",S.Raj,9944911015,tamil
+J.Elena,100017,Female,"Elena Villa, Thoothoor",S.Jacob,9944911016,tamil
+A.Fawad,100018,Male,"Fawad Manzil, Nambali",A.Abu,9944911017,malayalam
+J.Finil,100019,Male,"Finil Villa, Thoothoor",A.Jerry,9944911018,tamil
+S.Febi,100020,Female,"Febi Villa, Vallavilai",A.Sebastain,9944911019,tamil
+R.Girija,100021,Female,"Girija Bhavan, Kollemcode",D.Rahul,9944911020,malayalam
+A.Gokul,100022,Male,"Gokulam, Karungal",A.Ashokan,9944911021,tamil
+A.Haritha,100023,Female,"Hema Bhavan, Kollemcode",S.Arjunan,9944711022,malayalam
+A.Ivan,100024,Male,"Ivan Villa, Poothurai",A.Ashton,9944911023,tamil
+S.Ishan,100025,Male,"Ishan Manzil, Nambali",A.Sahul,9944911024,tamil
+J.Jerry,100026,Female,"Jerryi Villa, Chinnathurai",A.Jerin,9944911025,tamil
+K.Kanimozhi,100027,Female,"Kani Nivas, Nithravilai",A.Kumaran,9944911026,tamil
+S.Kumar,100028,Male,"Kumar Bhavan, Puthukadai",A.Sukumaran,9944911027,malayalam
+K.Lal,100029,Male,"Lal Villa, Thoothoor",S.Keerthi,9944911028,tamil
+S.Mohan,100030,Male,"Manoj Bhavan, Kuzhithurai",A.Shabu,9944711029,tamil
+S.Malar,100031,Female,"Malar Bhavan, Marthandam",A.Shaji,9944911030,malayalam
+R.Priya,100032,Female,"Priya Bhavan, Nithravilai",S.Retheesh,9944911031,tamil
+P.Pooja,100033,Female,"Pooja Bhavan, Kollemcode",S.Prakash,9944911032,tamil
+V.Preetha,100034,Female,"Preetha Bhavan, Kanjampuram",A.Vinu,9944911033,tamil
+S.Rahul,100035,Male,"Rahul Bhavan, Kirathoor",S.Sreekumar,9944911034,tamil
+V.Riju,100036,Male,"Riju Bhavan, Kollemcode",B.Varghese,9944911035,malayalam
+A.Sunil,100037,Male,"Sunil Bhavan, Kollemcode",S.Arvind,9944911036,tamil
+S.Subash,100038,Male,"Subash Bhavan, Nithravilai",A.Sivaram,9944911037,malayalam
+A.Tittu,100039,Female,"Tittu Villa, Kollemcode",S.Ajin Kumar,9944911038,tamil
+N.Udit,100040,Male,"Udit Bhavan, Marthandam",M.Naveen,9944911039,tamil
+M.Vikash,100041,Male,"Vikash Bhavan, Kollemcode",S.Murali,9944911040,malayalam
