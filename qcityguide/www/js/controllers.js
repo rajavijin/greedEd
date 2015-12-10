@@ -6,8 +6,8 @@ angular.module('starter.controllers', [])
     })
    
 
-    .controller('AppCtrl', function ($scope, Cates, Products, Carts) {
-        $scope.cates = Cates.all();
+    .controller('AppCtrl', function ($scope, Data, Products, Carts) {
+        $scope.cates = Data.categories();
         $scope.productData = {};
 
         $scope.carts = Carts.all();
@@ -17,8 +17,8 @@ angular.module('starter.controllers', [])
         };
     })
 
-    .controller('ProductMenuCtrl', function ( $scope, $ionicModal, $timeout, $state, $stateParams, Cates, Products) {
-        $scope.cate = Cates.get($stateParams.cateId);      
+    .controller('ProductMenuCtrl', function ( $scope, $ionicModal, $timeout, $state, $stateParams, Data, Products) {
+        $scope.cate = Data.get($stateParams.cateId);      
         $scope.products = Products.all();
 
         $scope.productByCate = Products.getByCate($stateParams.cateId);
@@ -57,6 +57,3 @@ angular.module('starter.controllers', [])
 
     })
 
-    .controller('NearByCtrl', function ($scope) {
-
-    })
