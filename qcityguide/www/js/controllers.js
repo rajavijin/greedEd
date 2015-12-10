@@ -1,4 +1,4 @@
-angular.module('hoss_app.controllers', [])
+angular.module('starter.controllers', [])
 
 
     .controller('IntroCtrl', function ($scope) {
@@ -57,3 +57,6 @@ angular.module('hoss_app.controllers', [])
 
     })
 
+    .controller('NearByCtrl', function ($scope) {
+
+    })
