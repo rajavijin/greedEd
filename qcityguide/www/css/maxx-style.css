@@ -166,7 +166,7 @@ a {
 .product-header {
   position: relative;
   height: 300px;
-  background: url("../img/category/5.jpg") no-repeat;
+  background: url("../img/category/m1.jpg") no-repeat;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -315,3 +315,4 @@ input.input-qty {
   margin: 0 10px; }
 
 /* PAGE SHOPPING CART */
+.page-intro .slider-pager {display:none;}
