@@ -7,7 +7,7 @@ angular.module('starter.controllers', [])
    
 
     .controller('AppCtrl', function ($scope, Data, Products, Carts) {
-        $scope.cates = Data.categories();
+        $scope.cates = catRef;
         $scope.productData = {};
 
         $scope.carts = Carts.all();
@@ -18,10 +18,10 @@ angular.module('starter.controllers', [])
     })
 
     .controller('ProductMenuCtrl', function ( $scope, $ionicModal, $timeout, $state, $stateParams, Data, Products) {
-        $scope.cate = Data.get($stateParams.cateId);      
-        $scope.products = Products.all();
+        $scope.cate = catRef[$stateParams.cateId];      
+        $scope.products = shopRef[$stateParams.cateId];
 
-        $scope.productByCate = Products.getByCate($stateParams.cateId);
+        $scope.productByCate = shopRef[$stateParams.cateId];
 
         $ionicModal.fromTemplateUrl('templates/app/product_detail.html', {
             scope: $scope

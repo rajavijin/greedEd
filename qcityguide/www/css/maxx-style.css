@@ -321,3 +321,5 @@ map {
   height: 100%;
 }
 .page-intro .slider-pager {display:none;}
+.category-list ion-header-bar {background: none; border: 0 none;}
+.category-list ion-content {top: 0;}

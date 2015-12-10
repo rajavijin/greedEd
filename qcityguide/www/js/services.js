@@ -1,44 +1,15 @@
 var app = angular.module('starter.services', [])
 
-app.factory('Data', function(FB_URL, $firebaseObject) {
+app.factory('Data', function(FB_URL, $rootScope, $firebaseObject) {
   // Might use a resource here that returns a JSON array
-  var ref = new Firebase(FB_URL);
-  // Some fake testing data
-  var cates = [{
-    id: 0,
-	class: 'item-1',
-	img: 'img/category/1.jpg',
-    name: 'Breakfast',
-    lastText: 'Enthusiastically architect.'
-  }, {
-    id: 1,
-	class: 'item-2',
-	img: 'img/category/2.jpg',
-    name: 'Dinner',
-    lastText: 'Enthusiastically architect.'
-  }, {
-    id: 2,
-	class: 'item-3',
-	img: 'img/category/3.jpg',
-    name: 'Sweets',
-    lastText: 'Enthusiastically architect.'
-  }, {
-    id: 3,
-	class: 'item-4',
-	img: 'img/category/4.jpg',
-    name: 'Coffee',
-    lastText: 'Enthusiastically architect.'
-  }, {
-    id: 4,
-	class: 'item-5',
-	img: 'img/category/5.jpg',
-    name: 'Special drinks',
-    lastText: 'Enthusiastically architect.'
-  }];
-
+  // ref = new Firebase(FB_URL);
+  // $rootScope.cates = $firebaseObject(ref.child('categories'));
+  // $rootScope.cates.$loaded().then(function(ccsnap) {
+  // 	console.log("ccsnap", catRef)
+  // });
   return {
   	categories: function() {
-  		return $firebaseObject(ref.child('categories'));
+  		return catRef;
   	},
     all: function() {
       return cates;
