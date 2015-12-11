@@ -5,23 +5,32 @@
                 <button class="button button-clear button-icon" ng-click="goBack()" ><i class="ion-chevron-left"></i></button>
             </ion-nav-buttons>
             <ion-nav-buttons side="right">
+                <button class="button button-icon icon ion-ios-search-strong" ng-click="showFilterBar()"></button>
                 <button class="button button-icon button-clear ion-map" ng-click="gotoNearby()"></button>
-           </ion-nav-buttons>
+            </ion-nav-buttons>
+<!--             <h1 class="title">{{cate.name}}</h1>
+            <div class="buttons buttons-right">
+                <button class="button button-icon icon ion-ios-search-strong" ng-click="showFilterBar()"></button>
+                <button class="button button-icon button-clear ion-map" ng-click="gotoNearby()"></button>
+            </div> -->
         </ion-nav-bar>
     </ion-header-bar>
-    <ion-content>
-        <div class="cate-lv2">
-            <div class="card cate-lv2-item" ng-repeat="product in productByCate" ng-controller="AppCtrl">
-                <div class="item item-thumbnail-left item-text-wrap" ng-click="productDetail({{product.id}})">
-                    <img ng-src={{product.img}}>
+   <ion-content>
 
-                    <h2>{{product.title}}</h2>
-                    <h5>{{product.type}}</h5>
-                    <h5>{{product.status}}</h5>
-                    <div class="price">{{product.price}}</div>
-                    <div class="like"><i class="ion-heart"></i> {{product.like}}</div>
-                </div>
-            </div>
-        </div>
-    </ion-content>
+    <ion-refresher pulling-icon="ion-arrow-down-b" on-refresh="refreshItems()">
+    </ion-refresher>
+    <div class="list" ng-if="items.length > 0">
+        <a ng-repeat="item in items" class="item item-avatar positive" href ng-click="productDetail({{item.$id}})">
+            <img src="img/shop-icon.png">
+            <h2>{{item.title}}</h2>
+            <p>{{item.type}}</p>
+        </a>
+    </div>
+    <div ng-if="items !== undefined && !items.length" class="no-results list">
+       <a class="item" href="#">
+          <p>No shops found</p>
+       </a>
+    </div>
+
+  </ion-content>
 </ion-view>

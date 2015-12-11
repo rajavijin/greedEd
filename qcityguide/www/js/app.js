@@ -5,7 +5,7 @@ var shopRef = null;
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'firebase'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'jett.ionic.filter.bar', 'firebase'])
 
 .constant('FB_URL', 'https://qcityguide.firebaseio.com')
 
@@ -75,7 +75,44 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     }
   }
 })
+// .directive('ionSearch', function() {
+//     return {
+//         restrict: 'E',
+//         replace: true,
+//         scope: {
+//             getData: '&source',
+//             model: '=?',
+//             search: '=?filter'
+//         },
+//         link: function(scope, element, attrs) {
+//             attrs.minLength = attrs.minLength || 0;
+//             scope.placeholder = attrs.placeholder || '';
+//             scope.search = {value: ''};
+//             if (attrs.class)
+//               element.addClass(attrs.class);
 
+//             if (attrs.source) {
+//               scope.$watch('search.value', function (newValue, oldValue) {
+//                   if (newValue.length > attrs.minLength) {
+//                     scope.getData({str: newValue}).then(function (results) {
+//                       scope.model = results;
+//                     });
+//                   } else {
+//                     scope.model = [];
+//                   }
+//               });
+//             }
+
+//             scope.clearSearch = function() {
+//                 scope.search.value = '';
+//             };
+//         },
+//         template: '<div class="item-input-wrapper">' +
+//                     '<input type="search" placeholder="{{placeholder}}" ng-model="search.value" class="search">' +
+//                     '<i ng-if="search.value.length > 0" ng-click="clearSearch()" class="icon ion-close"></i>' +
+//                   '</div>'
+//     };
+// })
 .config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider
 

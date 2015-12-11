@@ -1,7 +1,16 @@
-<ion-view class="category-list">
+<ion-view>
     <ion-header-bar align-title="center">
         <div class="buttons">
             <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
+        </div>
+    </ion-header-bar>
+    <ion-header-bar align-title="center" class="bar-positive">
+        <div class="buttons">
+            <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
+        </div>
+        <h1 class="title">Nearby Shops</h1>
+        <div class="buttons buttons-right">
+            <button class="button button-icon button-clear ion-funnel" ng-click="filterSettings()"></button>
         </div>
     </ion-header-bar>
     <ion-content scroll="false" data-tap-disabled="true">
