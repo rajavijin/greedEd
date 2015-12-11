@@ -1,7 +1,7 @@
 <ion-view view-title="Intro Page">
-    <ion-content scroll="false">
+    <ion-content scroll="false" overflow-scroll="false">
         <div id="page-intro" class="page-intro">
-            <ion-slide-box >
+            <ion-slide-box ng-init="disableSwipe()">
                 <ion-slide>
                     <div id="slide-intro-2" class="slide-intro">
                         <div class="slide-intro-wrapper">
@@ -11,7 +11,7 @@
                                         <div class="logo">
                                          <span>QATAR</span>
                                         </div>
-                                        <p>City Guide</p>
+                                        <p>Explore the city to find the best.</p>
                                         <button ui-sref="app.category" class="button-get-started button button-outline button-light">
                                             Get Started
                                         </button>

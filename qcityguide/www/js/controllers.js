@@ -1,13 +1,18 @@
 angular.module('starter.controllers', [])
 
 
-.controller('IntroCtrl', function ($scope) {
-
+.controller('IntroCtrl', function ($scope, $ionicSlideBoxDelegate) {
+$scope.disableSwipe = function() {
+   $ionicSlideBoxDelegate.enableSlide(false);
+};
 })
 
 
 .controller('AppCtrl', function ($scope, Data, Products, Carts) {
-    $scope.cates = catRef;
+    var cats = Data.categories();
+    cats.$loaded().then(function(csnap) {
+        $scope.cates = cats;
+    })
     $scope.productData = {};
 
     $scope.carts = Carts.all();
@@ -20,10 +25,12 @@ angular.module('starter.controllers', [])
 .controller('ProductMenuCtrl', function ( $scope, $ionicModal, $timeout, $state, $ionicFilterBar, $stateParams, Data, Products) {
     $scope.cate = (catRef) ? catRef[$stateParams.cateId] : '';       
     $scope.items = [];
+    $scope.categoryid = $stateParams.cateId;
     var getItems = function() {
         if(shopRef) {
             for (var sk in shopRef[$stateParams.cateId]) {
                 var item = shopRef[$stateParams.cateId][sk];
+                item.key = sk;
                 console.log("item", item);
                 $scope.items.push(item);
             }
@@ -75,8 +82,9 @@ angular.module('starter.controllers', [])
         btn_like.find('i').toggleClass('active');
     }
     // Open the product modal
-    $scope.productDetail = function ($id) {
-        $scope.product = Products.get($id);
+    $scope.productDetail = function (id) {
+        console.log("id", id);
+        $scope.shopid = id;
         $scope.modal.show();
     };
     $scope.gotoNearby = function() {

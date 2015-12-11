@@ -20,10 +20,10 @@
     <ion-refresher pulling-icon="ion-arrow-down-b" on-refresh="refreshItems()">
     </ion-refresher>
     <div class="list" ng-if="items.length > 0">
-        <a ng-repeat="item in items" class="item item-avatar positive" href ng-click="productDetail({{item.$id}})">
+        <a ng-repeat="item in items track by $index" class="item item-avatar positive" href ng-click="productDetail({{$index}})">
             <img src="img/shop-icon.png">
-            <h2>{{item.title}}</h2>
-            <p>{{item.type}}</p>
+            <h2>{{item.title}} {{item.key}}</h2>
+            <p>{{item.type}} <span class="pull-right assertive">{{item.status}}</span></p>
         </a>
     </div>
     <div ng-if="items !== undefined && !items.length" class="no-results list">

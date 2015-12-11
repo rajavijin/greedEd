@@ -110,7 +110,7 @@ a {
     display: table;
     width: 100%;
     height: 140px;
-    margin-bottom: 2px;
+    margin-bottom: 1px;
     position: relative; }
     .cate-lv1 .cate-lv1-item:last-child {
       margin-bottom: 0; }
@@ -255,13 +255,15 @@ a {
         -webkit-border-radius: 50%;
         -moz-border-radius: 50%;
         border-radius: 50%;
+        background: #fff;
+        padding: 5px;
         border: 5px solid rgba(255, 255, 255, 0.2); }
       #page-profile .box .info h2.name {
         margin-bottom: 10px;
         color: #ffffff;
         font-weight: normal; }
       #page-profile .box .info .position {
-        color: rgba(225, 255, 255, 0.7);
+        color: #fff;
         margin-bottom: 130px; }
       #page-profile .box .info .links {
         color: #ffffff;
@@ -323,6 +325,7 @@ input.input-qty {
 .page-intro .slider-pager {display:none;}
 .category-list ion-header-bar {background: none; border: 0 none;}
 .category-list ion-content {top: 0;}
+.pull-right {float: right;}
 .filter-bar-backdrop {
   -webkit-transition: opacity 150ms ease-in-out;
   transition: opacity 150ms ease-in-out;

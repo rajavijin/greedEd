@@ -2,14 +2,14 @@ var app = angular.module('starter.services', [])
 
 app.factory('Data', function(FB_URL, $rootScope, $firebaseObject) {
   // Might use a resource here that returns a JSON array
-  // ref = new Firebase(FB_URL);
+   if(!ref) ref = new Firebase(FB_URL);
   // $rootScope.cates = $firebaseObject(ref.child('categories'));
   // $rootScope.cates.$loaded().then(function(ccsnap) {
   // 	console.log("ccsnap", catRef)
   // });
   return {
   	categories: function() {
-  		return catRef;
+  		return (catRef) ? catRef : $firebaseObject(ref.child('categories'));
   	},
     all: function() {
       return cates;
