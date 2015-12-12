@@ -154,6 +154,13 @@ angular.module('starter.controllers', [])
         });
     } else {
         $scope.title = "Nearby Shops";
+        var userm = new google.maps.Marker({
+            icon: "img/person.png",
+            position: new google.maps.LatLng($rootScope.currentP[0], $rootScope.currentP[1]),
+            optimized: true,
+            map: map
+        });
+
         for(var k in allShops) {
             console.log("item", allShops[k]);
             var marker = new google.maps.Marker({
