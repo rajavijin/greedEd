@@ -1,21 +1,26 @@
 angular.module('starter.controllers', [])
 
 
-.controller('IntroCtrl', function ($scope, $ionicSlideBoxDelegate) {
-$scope.disableSwipe = function() {
-   $ionicSlideBoxDelegate.enableSlide(false);
-};
+.controller('IntroCtrl', function ($scope, $timeout, $state, $ionicSlideBoxDelegate) {
+    $scope.disableSwipe = function() {
+       $ionicSlideBoxDelegate.enableSlide(false);
+    };
+    $scope.start = function() {
+        $scope.loading = true;
+        $timeout(function() {
+            $scope.loading = false;
+            $state.go('app.category', {});
+        }, 2000);
+    }
 })
 
 
-.controller('AppCtrl', function ($scope, Data, Products, Carts) {
-    var cats = Data.categories();
-    cats.$loaded().then(function(csnap) {
-        $scope.cates = cats;
+.controller('AppCtrl', function ($scope, Data, $timeout, Products, Carts) {
+    $scope.cates = catRef;
+    $scope.loading = true;
+    catRef.$loaded().then(function(csnap) {
+        $scope.loading = false;
     })
-    $scope.productData = {};
-
-    $scope.carts = Carts.all();
 
     $scope.goBack = function () {
         window.history.back();
@@ -68,7 +73,10 @@ $scope.disableSwipe = function() {
     $scope.closeModal = function () {
         $scope.modal.hide();
     };
-    
+    $scope.getdirection = function(shopid) {
+        $scope.modal.hide();
+        $state.go('app.nearbydirection', {id:$scope.categoryid, shopid: shopid});
+    }
     $scope.doOrder = function () {
         $state.go("app.shopping_cart");
         $timeout(function () {
@@ -99,17 +107,63 @@ $scope.disableSwipe = function() {
 .controller('NearbyCtrl', function($scope, $stateParams, $ionicLoading) {
   $scope.mapCreated = function(map) {
     $scope.map = map;
-
     var allShops = shopRef[$stateParams.id]
-    for(var k in allShops) {
-        console.log("item", allShops[k]);
-        var marker = new google.maps.Marker({
-        icon: "img/restaurant.png",
-        //icon: "https://lh4.googleusercontent.com/-UjKiveTyTUI/VKJ3RyUC0LI/AAAAAAAAAGc/zxBS9koEx6c/w800-h800/nnkjn.png&chld=" + vehicle.vtype + "|bbT|" + vehicle.routeTag + "|" + vehicleColor + "|eee",
-        position: new google.maps.LatLng(allShops[k].lat, allShops[k].lng),
-        optimized: true,
-        map: map
-      });
+    if($stateParams.shopid) {
+        $scope.title = "Get Direction";
+        console.log("allshops", allShops);
+        console.log("shopid", $stateParams.shopid);
+        var shop = allShops[$stateParams.shopid];
+        console.log("shop", shop);
+        navigator.geolocation.getCurrentPosition(function (pos) {
+            console.log('Got pos', pos);
+            //create route
+            var rendererOptions = {
+                map: map,
+                suppressMarkers : true
+            };
+            directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions);
+            var org = new google.maps.LatLng(25.427152, 51.486740);
+            var dest = new google.maps.LatLng(shop.lat, shop.lng);
+            var request = {
+                origin: org,
+                destination: dest,
+                travelMode: google.maps.DirectionsTravelMode.DRIVING
+            };
+            directionsService = new google.maps.DirectionsService();
+            directionsService.route(request, function(response, status) {
+                if (status == google.maps.DirectionsStatus.OK) {
+                    var myRoute = response.routes[0].legs[0];
+                    var startMarker = new google.maps.Marker({
+                      position: myRoute.steps[0].start_point, 
+                      map: map,
+                      icon: "img/person.png"
+                    });
+                    var endMarker = new google.maps.Marker({
+                      position: myRoute.steps[myRoute.steps.length - 1].end_point, 
+                      map: map,
+                      icon: "img/"+$stateParams.id+".png"
+                    });
+                    directionsDisplay.setDirections(response);
+                    directionsDisplay.setMap(map);
+                } else {
+                    alert('failed to get directions');
+                }
+            });
+        }, function (error) {
+          alert('Unable to get location: ' + error.message);
+        });
+    } else {
+        $scope.title = "Nearby Shops";
+        for(var k in allShops) {
+            console.log("item", allShops[k]);
+            var marker = new google.maps.Marker({
+            icon: "img/restaurant.png",
+            //icon: "https://lh4.googleusercontent.com/-UjKiveTyTUI/VKJ3RyUC0LI/AAAAAAAAAGc/zxBS9koEx6c/w800-h800/nnkjn.png&chld=" + vehicle.vtype + "|bbT|" + vehicle.routeTag + "|" + vehicleColor + "|eee",
+            position: new google.maps.LatLng(allShops[k].lat, allShops[k].lng),
+            optimized: true,
+            map: map
+          });
+        }
     }
 
   };

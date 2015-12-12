@@ -12,9 +12,10 @@
                                          <span>QATAR</span>
                                         </div>
                                         <p>Explore the city to find the best.</p>
-                                        <button ui-sref="app.category" class="button-get-started button button-outline button-light">
+                                        <button ng-click="start()" class="button-get-started button button-outline button-light">
                                             Get Started
                                         </button>
+                                        <div ng-show="loading" class="center padding"><ion-spinner icon="android"></ion-spinner></div>
                                     </div>
                                 </div>
                             </div>
