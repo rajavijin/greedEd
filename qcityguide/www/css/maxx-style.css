@@ -22,7 +22,7 @@ a {
   text-decoration: none; }
   a:hover, a:focus {
     text-decoration: none; }
-
+.center {text-align: center;}
 /* MENU SIDEBAR LEFT */
 .side-menu-logo {
   margin: 30px 0 25px 0;

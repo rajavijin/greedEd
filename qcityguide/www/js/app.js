@@ -152,6 +152,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
                 }
             }
         })
+        .state('app.nearbydirection', {
+            url: "/nearby/:id/:shopid",
+            views: {
+                'menuAppContent': {
+                    templateUrl: "templates/nearby.html",
+                    controller: 'NearbyCtrl'
+                }
+            }
+        })
         .state('app.shopping_cart', {
             url: "/shopping_cart",
             views: {

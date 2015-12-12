@@ -22,7 +22,7 @@
     <div class="list" ng-if="items.length > 0">
         <a ng-repeat="item in items track by $index" class="item item-avatar positive" href ng-click="productDetail({{$index}})">
             <img src="img/shop-icon.png">
-            <h2>{{item.title}} {{item.key}}</h2>
+            <h2>{{item.title}}</h2>
             <p>{{item.type}} <span class="pull-right assertive">{{item.status}}</span></p>
         </a>
     </div>

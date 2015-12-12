@@ -5,6 +5,7 @@
         </div>
     </ion-header-bar>
     <ion-content>
+        <div ng-show="loading" class="center padding"><ion-spinner icon="android"></ion-spinner></div>
         <ul class="cate-lv1">
             <li class="item-background cate-lv1-item" ng-repeat="(k, cate) in cates" ui-sref="product_menu({ cateId: k, cateTitle: cate.title })"
             style="background: url({{cate.img}}) no-repeat; background-size: cover;">
