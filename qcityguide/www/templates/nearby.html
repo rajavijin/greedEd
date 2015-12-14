@@ -1,11 +1,11 @@
-<ion-view>
+<ion-view cache-view="false">
     <ion-header-bar align-title="center" class="bar-light">
         <div class="buttons">
         	<button class="button button-clear button-icon" ng-click="goBack()" ><i class="ion-chevron-left"></i></button>
         </div>
         <h1 class="title">{{title}}</h1>
         <div class="buttons buttons-right">
-            <button class="button button-icon button-clear ion-funnel" ng-click="filterSettings()"></button>
+            <button class="button button-icon button-clear ion-refresh" ng-click="reload()"></button>
         </div>
     </ion-header-bar>
     <ion-content scroll="false" data-tap-disabled="true">

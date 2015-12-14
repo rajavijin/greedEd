@@ -11,6 +11,9 @@ app.factory('Data', function(FB_URL, $rootScope, $firebaseObject) {
   	categories: function() {
   		return (catRef) ? catRef : $firebaseObject(ref.child('categories'));
   	},
+  	shops: function() {
+  		return (shopRef) ? shopRef : $firebaseObject(ref.child('shops'));
+  	},
     all: function() {
       return cates;
     },

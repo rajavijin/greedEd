@@ -5,11 +5,11 @@ var shopRef = null;
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'jett.ionic.filter.bar', 'firebase'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'jett.ionic.filter.bar', 'firebase', 'ngCordova'])
 
 .constant('FB_URL', 'https://qcityguide.firebaseio.com')
 
-.run(function($ionicPlatform, FB_URL, $rootScope, $firebaseObject) {
+.run(function($ionicPlatform, FB_URL, $rootScope, $firebaseObject, $cordovaGeolocation) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -26,45 +26,44 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         console.log("ccsnap", catRef)
     });
     shopRef = $firebaseObject(ref.child('shops'));
-
-    navigator.geolocation.getCurrentPosition(function (pos) {
-      console.log('Got pos', pos);
-      $rootScope.currentP = [pos.coords.latitude, pos.coords.longitude];
-    }, function (error) {
-      alert('Unable to get location: ' + error.message);
-    });
   });
 })
 
-.directive('map', function($rootScope) {
+.directive('map', function($rootScope, $cordovaGeolocation) {
   return {
     restrict: 'E',
     scope: {
       onCreate: '&'
     },
     link: function ($scope, $element, $attr) {
-      var latlng = ($rootScope.currentP) ? $rootScope.currentP : [12.917147, 77.622798];
-      console.log("latlng", latlng);
-      
       function initialize() {
-        var mapOptions = {
-          center: new google.maps.LatLng(latlng[0], latlng[1]),
-          zoom: 16,
-          mapTypeId: google.maps.MapTypeId.ROADMAP,
-          mapTypeControlOptions: {
-            style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-            position: google.maps.ControlPosition.TOP_RIGHT
-        },
-        };
-        var map = new google.maps.Map($element[0], mapOptions);
-  
-        $scope.onCreate({map: map});
+        var posOptions = {timeout: 10000, enableHighAccuracy: false};
+        $cordovaGeolocation
+          .getCurrentPosition(posOptions)
+          .then(function (pos) {
+            console.log("latlng", pos);
+            $rootScope.currentP = [pos.coords.latitude, pos.coords.longitude];
+            var mapOptions = {
+              center: new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude),
+              zoom: 5,
+              mapTypeId: google.maps.MapTypeId.ROADMAP,
+              mapTypeControlOptions: {
+                style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+                position: google.maps.ControlPosition.TOP_RIGHT
+            },
+            };
+            var map = new google.maps.Map($element[0], mapOptions);
+      
+            $scope.onCreate({map: map});
+          // Stop the side bar from dragging when mousedown/tapdown on the map
+            google.maps.event.addDomListener($element[0], 'mousedown', function (e) {
+              e.preventDefault();
+              return false;
+            });
+          }, function(err) {
+            // error
+          });
 
-      // Stop the side bar from dragging when mousedown/tapdown on the map
-        google.maps.event.addDomListener($element[0], 'mousedown', function (e) {
-          e.preventDefault();
-          return false;
-        });
       }
       console.log("document.readyState", document.readyState);
       if (document.readyState === "complete") {
@@ -75,44 +74,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     }
   }
 })
-// .directive('ionSearch', function() {
-//     return {
-//         restrict: 'E',
-//         replace: true,
-//         scope: {
-//             getData: '&source',
-//             model: '=?',
-//             search: '=?filter'
-//         },
-//         link: function(scope, element, attrs) {
-//             attrs.minLength = attrs.minLength || 0;
-//             scope.placeholder = attrs.placeholder || '';
-//             scope.search = {value: ''};
-//             if (attrs.class)
-//               element.addClass(attrs.class);
 
-//             if (attrs.source) {
-//               scope.$watch('search.value', function (newValue, oldValue) {
-//                   if (newValue.length > attrs.minLength) {
-//                     scope.getData({str: newValue}).then(function (results) {
-//                       scope.model = results;
-//                     });
-//                   } else {
-//                     scope.model = [];
-//                   }
-//               });
-//             }
-
-//             scope.clearSearch = function() {
-//                 scope.search.value = '';
-//             };
-//         },
-//         template: '<div class="item-input-wrapper">' +
-//                     '<input type="search" placeholder="{{placeholder}}" ng-model="search.value" class="search">' +
-//                     '<i ng-if="search.value.length > 0" ng-click="clearSearch()" class="icon ion-close"></i>' +
-//                   '</div>'
-//     };
-// })
 .config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider
 
@@ -124,7 +86,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
         .state('product_menu', {
             url: "/product/menu/:cateId/:cateTitle",
-            templateUrl: "templates/app/product_menu.html",
+            templateUrl: "templates/product_menu.html",
             controller: 'ProductMenuCtrl'
         })
 
@@ -132,14 +94,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         .state('app', {
             url: "/app",
             abstract: true,
-            templateUrl: "templates/app/ion_nav_view.html",
+            templateUrl: "templates/ion_nav_view.html",
             controller: 'AppCtrl'
         })
         .state('app.category', {
             url: "/category",
             views: {
                 'menuAppContent': {
-                    templateUrl: "templates/app/category.html"
+                    templateUrl: "templates/category.html"
                 }
             }
         })     
@@ -161,27 +123,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
                 }
             }
         })
-        .state('app.shopping_cart', {
-            url: "/shopping_cart",
-            views: {
-                'menuAppContent': {
-                    templateUrl: "templates/app/shopping_cart.html"
-                }
-            }
-        })
-        .state('app.settings', {
-            url: "/settings",
-            views: {
-                'menuAppContent': {
-                    templateUrl: "templates/app/settings.html"
-                }
-            }
-        })
         .state('app.profile', {
             url: "/profile",
             views: {
                 'menuAppContent': {
-                    templateUrl: "templates/app/profile.html"
+                    templateUrl: "templates/profile.html"
                 }
             }
         });
