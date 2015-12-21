@@ -1,15 +1,12 @@
 // Ionic Hoss - Restaurant App
-var ref = null;
-var catRef = null;
-var shopRef = null;
+var categories = null;
+var shops = null;
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'jett.ionic.filter.bar', 'firebase', 'ngCordova'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'jett.ionic.filter.bar', 'ngCordova'])
 
-.constant('FB_URL', 'https://qcityguide.firebaseio.com')
-
-.run(function($ionicPlatform, FB_URL, $rootScope, $firebaseObject, $cordovaGeolocation) {
+.run(function($ionicPlatform, $rootScope, $cordovaGeolocation, Data) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -19,13 +16,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     if(window.StatusBar) {
       StatusBar.styleDefault();
     }
-
-    ref = new Firebase(FB_URL);
-    catRef = $firebaseObject(ref.child('categories'));
-    catRef.$loaded().then(function(ccsnap) {
-        console.log("ccsnap", catRef)
-    });
-    shopRef = $firebaseObject(ref.child('shops'));
+    categories = Data.categories();
+    shops = Data.shops();
   });
 })
 

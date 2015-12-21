@@ -16,13 +16,13 @@ angular.module('starter.controllers', [])
 
 
 .controller('AppCtrl', function ($scope, Data, $timeout, Products, Carts) {
-    $scope.cates = (catRef) ? catRef : Data.categories();
-    if(catRef) {
-        $scope.loading = true;
-        catRef.$loaded().then(function(csnap) {
-            $scope.loading = false;
-        })
-    }
+    $scope.cates = Data.categories();
+    // if(catRef) {
+    //     $scope.loading = true;
+    //     catRef.$loaded().then(function(csnap) {
+    //         $scope.loading = false;
+    //     })
+    // }
 
     $scope.goBack = function () {
         window.history.back();
@@ -30,18 +30,17 @@ angular.module('starter.controllers', [])
 })
 
 .controller('ProductMenuCtrl', function ( $scope, $ionicModal, $timeout, $state, $ionicFilterBar, $stateParams, Data, Products) {
-    $scope.cate = (catRef) ? catRef[$stateParams.cateId] : '';       
+    $scope.title = $stateParams.cateTitle;       
     $scope.categoryid = $stateParams.cateId;
     var getItems = function() {
-        $scope.items = [];
-        if(shopRef) {
-            for (var sk in shopRef[$stateParams.cateId]) {
-                var item = shopRef[$stateParams.cateId][sk];
-                item.key = sk;
-                console.log("item", item);
-                $scope.items.push(item);
-            }
-        }
+        var allshops = Data.shops();
+        $scope.items = allshops[$stateParams.cateId];
+        // for (var sk in allshops[$stateParams.cateId]) {
+        //     var item = allshops[$stateParams.cateId][sk];
+        //     item.key = sk;
+        //     console.log("item", item);
+        //     $scope.items.push(item);
+        // }
     }
     getItems();
     var filterBarInstance;
@@ -163,6 +162,7 @@ angular.module('starter.controllers', [])
             });
         } else {
             var allShops = shopRef[$stateParams.id]; 
+            console.log("allshops", allShops);
             $scope.title = "Nearby Shops";
             var usermInfoWindow = new google.maps.InfoWindow({
                     content: "You"
@@ -206,9 +206,7 @@ angular.module('starter.controllers', [])
     $scope.mapCreated = function(map) {
         $scope.map = map;
         if(localStorage.getItem('reloadmap')) {
-            shopRef.$loaded().then(function(snap) {
-                $scope.getmap();
-            })
+            $scope.getmap();
         } else {
             $scope.getmap();   
         }

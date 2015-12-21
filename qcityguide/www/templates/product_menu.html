@@ -1,4 +1,4 @@
-<ion-view view-title="{{cate.name}}">
+<ion-view view-title="{{title}}">
     <ion-header-bar align-title="center" class="bar-light">
         <ion-nav-bar align-title="center">
             <ion-nav-buttons>
@@ -23,7 +23,7 @@
         <a ng-repeat="item in items track by $index" class="item item-avatar positive" href ng-click="productDetail({{$index}})">
             <img src="img/shop-icon.png">
             <h2>{{item.title}}</h2>
-            <p>{{item.type}} <span class="pull-right assertive">{{item.status}}</span></p>
+            <p><span ng-repeat="type in item.type track by $index">{{($index == 0) ? type+',' : type}}</span><span class="pull-right assertive">{{item.status}}</span></p>
         </a>
     </div>
     <div ng-if="items !== undefined && !items.length" class="no-results list">
