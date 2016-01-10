@@ -1,0 +1,24 @@
+<ion-view cache-view="false" view-title="{{category.name}}" ng-init="getItems(false)">
+    <ion-nav-buttons side="right">
+        <button class="button button-icon icon ion-ios-search-strong" ng-click="showFilterBar()"></button>
+        <button class="button button-icon button-clear ion-map" ng-click="gotoNearby()"></button>
+    </ion-nav-buttons>
+   <ion-content>
+
+    <ion-refresher pulling-icon="ion-arrow-down-b" on-refresh="getItems(true)">
+    </ion-refresher>
+    <div class="list shops" ng-if="places.length > 0">
+        <a ng-repeat="(K,item) in places | orderBy:['distance']" class="item item-avatar positive" ng-click="getDirection(item)">
+            <img src="{{item.icon}}">
+            <h2>{{item.name}} <span class="pull-right">{{item.distance}} km</span></h2>
+            <p><span>{{item.address}}</span></p>
+        </a>
+    </div>
+    <div ng-if="places !== undefined && !places.length" class="no-results list">
+       <a class="item" href="#">
+          <p>No places found</p>
+       </a>
+    </div>
+
+  </ion-content>
+</ion-view>

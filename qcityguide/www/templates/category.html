@@ -1,13 +1,15 @@
-<ion-view  class="category-list">
+<ion-view  class="category-list" ng-init="getItems(false)">
     <ion-header-bar align-title="center">
         <div class="buttons">
             <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
         </div>
     </ion-header-bar>
     <ion-content>
+        <ion-refresher pulling-icon="ion-arrow-down-b" on-refresh="getItems(true)">
+        </ion-refresher>
         <div ng-show="loading" class="center padding"><ion-spinner icon="android"></ion-spinner></div>
         <ul class="cate-lv1">
-            <li class="item-background cate-lv1-item" ng-repeat="(k, cate) in cates" ui-sref="product_menu({ cateId: cate.id, cateTitle: cate.name })"
+            <li class="item-background cate-lv1-item" ng-repeat="(k, cate) in categories" ui-sref="product_menu({ cateId: cate.id, cateTitle: cate.name, catIndex: k })"
             style="background: url({{cate.img}}) no-repeat; background-size: cover;">
                 <div class="item-wrapper">
                     <h2>{{cate.name}}</h2>

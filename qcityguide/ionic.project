@@ -1,6 +1,12 @@
 {
   "name": "qcityguide",
   "app_id": "",
+  "proxies": [
+    {
+      "path": "/home",
+      "proxyUrl": "http://www.qcityguide.com/home"
+    }
+  ],
   "gulpStartupTasks": [
     "sass",
     "watch"

@@ -1,0 +1,18 @@
+<ion-view cache-view="false" title="{{title}}">
+  <ion-nav-buttons side="secondary">
+    <!-- button class="button button-icon icon ion-refresh" ng-click="getDirection(type, true)" -->
+    <button ng-class="{'positive': showDirection}" class="button button-icon icon ion-android-compass" ng-click="getRouteDetails()">
+    </button>
+  </ion-nav-buttons>
+  <ion-content has-header="true">
+  <p id="directions" ng-show="showDirection">
+  </p>
+  <map on-create="mapCreated(map)" ng-hide="showDirection"></map>
+  </ion-content>
+  <ion-footer class="tab-nav tabs directions">
+    <button class="button button-icon icon ion-model-s col" ng-class="{'positive': type == 'DRIVING'}" ng-click="getDirection('DRIVING', false)"></button>
+    <button class="button button-icon icon ion-android-bus col" ng-class="{'positive': type == 'TRANSIT'}" ng-click="getDirection('TRANSIT', false)"></button>
+    <button class="button button-icon icon ion-android-walk col" ng-class="{'positive': type == 'WALKING'}" ng-click="getDirection('WALKING', false)"></button>
+    <button class="button button-icon icon ion-android-bicycle col" ng-class="{'positive': type == 'BICYCLING'}" ng-click="getDirection('BICYCLING', false)"></button>
+  </ion-footer>
+  </ion-view>

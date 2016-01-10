@@ -6,6 +6,11 @@ var shops = null;
 // the 2nd parameter is an array of 'requires'
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'jett.ionic.filter.bar', 'ngCordova'])
 
+.constant('ApiEndpoint', {
+  url: 'http://www.qcityguide.com/home'
+  //url: 'http://localhost:8100/home'
+})
+
 .run(function($ionicPlatform, $rootScope, $cordovaGeolocation, Data) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -16,8 +21,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     if(window.StatusBar) {
       StatusBar.styleDefault();
     }
-    categories = Data.categories();
-    shops = Data.shops();
+    Data.categories().then(function(categories) {
+      $rootScope.categories = categories;
+    });
+    Data.shops().then(function(allshops) {
+      $rootScope.shops = allshops;
+    });
   });
 })
 
@@ -36,8 +45,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             console.log("latlng", pos);
             $rootScope.currentP = [pos.coords.latitude, pos.coords.longitude];
             var mapOptions = {
-              center: new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude),
-              zoom: 5,
+              center: new google.maps.LatLng(25.427152, 51.486740),
+ //             center: new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude),
+              zoom: 11,
               mapTypeId: google.maps.MapTypeId.ROADMAP,
               mapTypeControlOptions: {
                 style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
@@ -77,7 +87,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         })
 
         .state('product_menu', {
-            url: "/product/menu/:cateId/:cateTitle",
+            url: "/product/menu/:cateId/:cateTitle/:catIndex",
             templateUrl: "templates/product_menu.html",
             controller: 'ProductMenuCtrl'
         })

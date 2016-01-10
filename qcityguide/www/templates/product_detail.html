@@ -6,9 +6,9 @@
         </ion-header-bar>
 
         <form>
-            <div class="product-header" style="background: url({{'img/category/'+categoryid+'.png'}}) no-repeat; background-size: cover;">
+            <div class="product-header" style="background: url({{categories[catIndex].img}}) no-repeat; background-size: cover;">
                 <h2 class="product-name">{{items[shopid].title}}</h2>
-                <div class="product-price">{{items[shopid].type}}</div>
+                <div class="product-price">{{items[shopid].types.toString()}}</div>
             </div>
             <div class="product-body">
                 <div class="product-info">

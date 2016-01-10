@@ -1,0 +1,23 @@
+<ion-modal-view>
+    <ion-header-bar align-title="center">
+        <h1 class="title">{{shopItem.name}}</h1>
+        <button class="button button-clear button-icon icon ion-android-close" ng-click="closeModal()"></button>
+    </ion-header-bar>
+    <ion-content class="header-background">
+
+        <form>
+            <div class="shop-header" style="background: url({{shopItem.image}}) no-repeat; background-size: cover;">
+                <h2 class="shop-name">{{shopItem.address}}</h2>
+                <div class="shop-price" ng-class="{'assertive': shopItem.status == 'Closed', 'balanced': shopItem.status == 'Open'}">{{shopItem.distance}} km</div>
+               
+            </div>
+            <div class="shop-body">
+                <div class="add-to-cart">
+                    <button class="button icon-left ion-map button-block button-balanced" ng-click="getdirection(shopItem.title)">
+                        Get Direction
+                    </button>
+                </div>
+            </div>
+        </form>
+    </ion-content>
+</ion-modal-view>

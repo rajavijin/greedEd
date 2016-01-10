@@ -1,4 +1,4 @@
-<ion-view view-title="{{title}}">
+<ion-view view-title="{{title}}" ng-init="getItems(false)">
     <ion-header-bar align-title="center" class="bar-light">
         <ion-nav-bar align-title="center">
             <ion-nav-buttons>
@@ -8,22 +8,17 @@
                 <button class="button button-icon icon ion-ios-search-strong" ng-click="showFilterBar()"></button>
                 <button class="button button-icon button-clear ion-map" ng-click="gotoNearby()"></button>
             </ion-nav-buttons>
-<!--             <h1 class="title">{{cate.name}}</h1>
-            <div class="buttons buttons-right">
-                <button class="button button-icon icon ion-ios-search-strong" ng-click="showFilterBar()"></button>
-                <button class="button button-icon button-clear ion-map" ng-click="gotoNearby()"></button>
-            </div> -->
         </ion-nav-bar>
     </ion-header-bar>
    <ion-content>
 
-    <ion-refresher pulling-icon="ion-arrow-down-b" on-refresh="refreshItems()">
+    <ion-refresher pulling-icon="ion-arrow-down-b" on-refresh="getItems(true)">
     </ion-refresher>
     <div class="list" ng-if="items.length > 0">
         <a ng-repeat="item in items track by $index" class="item item-avatar positive" href ng-click="productDetail({{$index}})">
             <img src="img/shop-icon.png">
             <h2>{{item.title}}</h2>
-            <p><span ng-repeat="type in item.type track by $index">{{($index == 0) ? type+',' : type}}</span><span class="pull-right assertive">{{item.status}}</span></p>
+            <p><span>{{item.types.toString()}}</span><span class="pull-right assertive">{{item.status}}</span></p>
         </a>
     </div>
     <div ng-if="items !== undefined && !items.length" class="no-results list">

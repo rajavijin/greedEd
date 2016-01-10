@@ -6,6 +6,7 @@
         <h1 class="title">{{title}}</h1>
         <div class="buttons buttons-right">
             <button class="button button-icon button-clear ion-refresh" ng-click="reload()"></button>
+            <button ng-if="filters.types.length > 0" class="button button-icon button-clear ion-funnel" ng-click="filterData()"></button>
         </div>
     </ion-header-bar>
     <ion-content scroll="false" data-tap-disabled="true">

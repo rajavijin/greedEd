@@ -1,0 +1,25 @@
+<ion-view ng-init="getItems()" view-title="Categories">
+    <ion-nav-buttons side="right">
+        <button class="button button-icon icon ion-ios-search-strong" ng-click="showFilterBar()"></button>
+    </ion-nav-buttons>
+    <ion-content>
+        <ion-refresher pulling-icon="ion-arrow-down-b" on-refresh="getItems()">
+        </ion-refresher>
+        <ion-list>
+        <ion-item class="item-icon-left" ng-repeat="(k, category) in items | orderBy:['name']" href="#/app/shops/{{category.key}}/{{category.name}}">
+            <i class="icon positive {{(category.icon) ? category.icon: 'ion-ios-location'}}"></i>
+            <h2>{{category.name}}</h2>
+            <p>{{category.text}}</p>
+        </ion-item>
+        </ion-list>
+        <!-- <div class="cat-list list">
+            <a class="item-background cat-list-item" ng-repeat="(k, cate) in categories" href="#/app/shops/{{cate.key}}"
+            style="background: url({{cate.img}}) no-repeat; background-size: cover;">
+                <div class="item-wrapper">
+                    <h2>{{cate.name}}</h2>
+                    <p>{{cate.text}}</p>
+                </div>
+            </a>
+        </div> -->
+    </ion-content>
+</ion-view>

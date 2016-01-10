@@ -1,0 +1,25 @@
+{
+  "name": "qcityguide",
+  "app_id": "62228c2f",
+  "gulpStartupTasks": [
+    "sass",
+    "watch"
+  ],
+  "watchPatterns": [
+    "www/**/*",
+    "!www/lib/**/*"
+  ],
+  "proxies": [
+    {
+      "path": "/api",
+      "proxyUrl": "https://maps.googleapis.com/maps/api"
+    }
+  ],
+  "browsers": [
+    {
+      "platform": "android",
+      "browser": "crosswalk",
+      "version": "12.41.296.5"
+    }
+  ]
+}
